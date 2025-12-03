@@ -7,7 +7,19 @@ declare(strict_types=1);
  * SPDX-License-Identifier: MIT
  */
 
-$currentYear = (int) \date('Y');
+/**
+ * This ruleset is meant to be used in two ways:
+ * 1) Directly, via `php-cs-fixer fix --config=php-cs-fixer/rules.php`
+ *    In this mode a local Finder is required.
+ *
+ * 2) Imported from a project's root `.php-cs-fixer.php`
+ *    In that mode consumers are expected to override Finder themselves.
+ *
+ * Only the rule definitions here are shared across projects.
+ * Path configuration belongs to the consuming project.
+ */
+
+$currentYear = (int)\date('Y');
 $startYear = 2025;
 
 $header = $currentYear === $startYear

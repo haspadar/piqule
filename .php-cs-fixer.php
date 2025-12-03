@@ -9,6 +9,7 @@ declare(strict_types=1);
  * Local test config that imports the Piqule rules
  */
 
+/** @var PhpCsFixer\Config $rules */
 $rules = require __DIR__ . '/php-cs-fixer/rules.php';
 $rules->setFinder(
     PhpCsFixer\Finder::create()
