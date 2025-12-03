@@ -28,9 +28,16 @@ includes:
 **php-cs-fixer.php**
 
 ```
-<?php
+/** @var PhpCsFixer\Config $rules */
+$rules = require __DIR__ . '/vendor/haspadar/piqule/php-cs-fixer/rules.php';
+$rules->setFinder(
+    PhpCsFixer\Finder::create()
+        ->in(__DIR__)
+        ->exclude('vendor')
+        ->exclude('node_modules')
+);
 
-return require __DIR__.'/vendor/piqule/piqule/config/php-cs-fixer.php';
+return $rules;
 ```
 
 **psalm.xml**
