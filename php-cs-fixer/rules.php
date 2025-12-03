@@ -19,7 +19,7 @@ declare(strict_types=1);
  * Path configuration belongs to the consuming project.
  */
 
-$currentYear = (int)\date('Y');
+$currentYear = (int) \date('Y');
 $startYear = 2025;
 
 $header = $currentYear === $startYear
