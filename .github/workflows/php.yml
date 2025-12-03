@@ -1,0 +1,13 @@
+name: PHP Quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cs:
+    uses: haspadar/piqule/.github/workflows/php-cs-fixer.yml@main
+    with:
+      php-matrix: '["8.2","8.3","8.4","8.5"]'

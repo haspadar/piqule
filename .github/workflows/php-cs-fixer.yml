@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2025 Konstantinas Mesnikas
+# SPDX-License-Identifier: MIT
+
+name: PHP-CS-Fixer
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        type: string
+        required: false
+        default: '8.5'
+
+      php-matrix:
+        type: string
+        required: false
+        default: '' # JSON: ["8.2","8.3","8.4","8.5"]
+
+jobs:
+  cs:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ${{ fromJson(inputs.php-matrix != '' && inputs.php-matrix || format('["{0}"]', inputs.php-version)) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run PHP-CS-Fixer
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
