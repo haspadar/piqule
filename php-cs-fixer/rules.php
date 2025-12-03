@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -101,4 +102,8 @@ return (new PhpCsFixer\Config())
         'single_quote' => true,
         'ternary_operator_spaces' => true,
     ])
-    ->setUnsupportedPhpVersionAllowed(true);
+    ->setUnsupportedPhpVersionAllowed(true)
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in(__DIR__ . '/..'),
+    );
