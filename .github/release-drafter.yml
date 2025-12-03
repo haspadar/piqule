@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: 2025 Konstantinas Mesnikas
+#
+# SPDX-License-Identifier: MIT
+
+name-template: "v$RESOLVED_VERSION"
+tag-template: "v$RESOLVED_VERSION"
+version-template: "$MAJOR.$MINOR.$PATCH"
+
+include-pre-releases: true
+
+version-resolver:
+  minor:
+    labels:
+      - "feat"
+  patch:
+    labels:
+      - "fix"
+      - "refactor"
+      - "docs"
+      - "ci"
+      - "chore"
+  default: patch
+
+categories:
+  - title: "✨ Features"
+    labels:
+      - "feat"
+
+  - title: "🐞 Fixes"
+    labels:
+      - "fix"
+
+  - title: "📚 Documentation"
+    labels:
+      - "docs"
+
+  - title: "🧹 Refactoring"
+    labels:
+      - "refactor"
+
+  - title: "🔧 CI / Maintenance"
+    labels:
+      - "ci"
+      - "chore"
+
+change-template: "- $TITLE (#$NUMBER)"
+
+exclude-labels:
+  - "skip-changelog"
+
+template: |
+  ## Changes
+  $CHANGES
