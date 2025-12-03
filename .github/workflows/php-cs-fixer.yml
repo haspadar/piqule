@@ -23,6 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Use php-matrix (JSON array) if provided, otherwise wrap php-version in array
         php-version: ${{ fromJson(inputs.php-matrix != '' && inputs.php-matrix || format('["{0}"]', inputs.php-version)) }}
 
     steps:
