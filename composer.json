@@ -1,0 +1,24 @@
+{
+    "name": "haspadar/piqule",
+    "description": "Static analysis and linters for PHP projects",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Haspadar\\Piqule\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kanstantsinas Mesnikas",
+            "email": "haspadar@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+      "php": ">=8.2"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.91"
+    }
+}
