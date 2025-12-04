@@ -105,6 +105,14 @@ jobs:
     uses: haspadar/piqule/.github/workflows/markdownlint.yml@v1
 ```
 
+### Actionlint only
+
+```
+jobs:
+  actionlint:
+    uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
+```
+
 ## Contribute
 
 Fork, modify, and open a pull request.  

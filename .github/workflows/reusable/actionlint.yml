@@ -1,0 +1,35 @@
+name: Actionlint
+
+on:
+  workflow_call:
+    inputs:
+      fail_level:
+        type: string
+        required: false
+        default: error
+      reporter:
+        type: string
+        required: false
+        default: github-check
+      actionlint_version:
+        type: string
+        required: false
+        default: latest
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          fail_level: ${{ inputs.fail_level }}
+          reporter: ${{ inputs.reporter }}
+          level: error
+          actionlint_version: ${{ inputs.actionlint_version }}
