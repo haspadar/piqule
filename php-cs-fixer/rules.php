@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * SPDX-FileCopyrightText: 2025 Konstantinas Mesnikas
- * SPDX-License-Identifier: MIT
- */
-
 /**
  * This ruleset is meant to be used in two ways:
  * 1) Directly, via `php-cs-fixer fix --config=php-cs-fixer/rules.php`
@@ -19,23 +14,9 @@ declare(strict_types=1);
  * Path configuration belongs to the consuming project.
  */
 
-$currentYear = (int) \date('Y');
-$startYear = 2025;
-
-$header = $currentYear === $startYear
-    ? "SPDX-FileCopyrightText: $startYear Konstantinas Mesnikas\nSPDX-License-Identifier: MIT"
-    : "SPDX-FileCopyrightText: $startYear-$currentYear Konstantinas Mesnikas\nSPDX-License-Identifier: MIT";
-
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        'header_comment' => [
-            'header' => $header,
-            'comment_type' => 'comment',
-            'location' => 'after_declare_strict',
-            'separate' => 'both',
-        ],
-
         '@PER-CS2.0' => true,
         '@PHP82Migration' => true,
 

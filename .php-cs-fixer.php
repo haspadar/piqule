@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * SPDX-FileCopyrightText: 2025 Konstantinas Mesnikas
- * SPDX-License-Identifier: MIT
- *
- * Local test config that imports the Piqule rules
- */
-
 /** @var PhpCsFixer\Config $rules */
 $rules = require __DIR__ . '/php-cs-fixer/rules.php';
 $rules->setFinder(
