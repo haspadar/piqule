@@ -53,7 +53,7 @@
       ]
     },
     {
-      "description": "Priority for security vulnerabilities",
+      "description": "Prioritize all patch updates",
       "matchUpdateTypes": [
         "patch"
       ],
