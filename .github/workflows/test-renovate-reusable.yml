@@ -1,0 +1,10 @@
+name: Test Renovate Reusable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/renovate-reusable.yml
+    with:
+      config: renovate/config.json
