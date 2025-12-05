@@ -1,0 +1,37 @@
+name: Markdownlint
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: '20'
+
+jobs:
+  markdownlint:
+    name: Markdownlint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+
+      - name: Run markdownlint-cli2 using shared config
+        run: |
+          if [ -f "./vendor/haspadar/piqule/markdownlint/markdownlint-cli2.jsonc" ]; then
+            CONFIG_PATH="./vendor/haspadar/piqule/markdownlint/markdownlint-cli2.jsonc"
+          else
+            CONFIG_PATH="./markdownlint/markdownlint-cli2.jsonc"
+          fi
+
+          echo "Using config: $CONFIG_PATH"
+          markdownlint-cli2 --config "$CONFIG_PATH"
