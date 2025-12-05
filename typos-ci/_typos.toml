@@ -2,6 +2,7 @@
 # Docs: https://github.com/crate-ci/typos
 
 [default]
+binary = false
 extend-ignore-re = [
     "vendor/.*",
 ]
@@ -12,6 +13,3 @@ extend-exclude = [
     "vendor/",
     "node_modules/",
 ]
-
-[check]
-binary = false
