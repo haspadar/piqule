@@ -64,8 +64,8 @@ Piqule includes a shared configuration for `markdownlint-cli2` and a reusable wo
 
 The workflow resolves configuration in this order:
 
-1. `vendor/haspadar/piqule/markdownlint/markdownlint-cli2.jsonc` (when Piqule is installed as a dependency)
-2. `markdownlint/markdownlint-cli2.jsonc` (when running inside the Piqule repository itself)
+1. `vendor/haspadar/piqule/markdownlint/.markdownlint-cli2.jsonc` (when Piqule is installed as a dependency)
+2. `markdownlint/.markdownlint-cli2.jsonc` (when running inside the Piqule repository itself)
 
 Projects do not need to maintain their own `.markdownlint-cli2.jsonc` unless they want to override defaults.
 
