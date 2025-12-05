@@ -24,3 +24,4 @@ jobs:
         uses: renovatebot/github-action@v44.0.5
         env:
           RENOVATE_CONFIG_FILE: ${{ inputs.config }}
+          RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
