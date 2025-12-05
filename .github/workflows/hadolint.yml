@@ -1,0 +1,27 @@
+name: Hadolint
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+      - 'hadolint/.hadolint.yaml'
+      - '.github/workflows/hadolint.yml'
+      - '.github/workflows/hadolint-reusable.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Dockerfile'
+      - 'hadolint/.hadolint.yaml'
+      - '.github/workflows/hadolint.yml'
+      - '.github/workflows/hadolint-reusable.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  hadolint:
+    uses: ./.github/workflows/hadolint-reusable.yml
+    with:
+      dockerfile: Dockerfile
+      config: hadolint/.hadolint.yaml

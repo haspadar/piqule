@@ -69,6 +69,30 @@ The workflow resolves configuration in this order:
 
 Projects do not need to maintain their own `.markdownlint-cli2.jsonc` unless they want to override defaults.
 
+### Hadolint
+
+Piqule provides a shared Hadolint configuration and a reusable workflow:
+
+```
+jobs:
+  hadolint:
+    uses: haspadar/piqule/.github/workflows/hadolint-reusable.yml@v1
+```
+
+Projects may override the config stored in:
+
+```
+hadolint/.hadolint.yaml
+```
+
+### Actionlint
+
+```
+jobs:
+  actionlint:
+    uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
+```
+
 ## Optional helper
 
 ```

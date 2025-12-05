@@ -1,0 +1,31 @@
+name: Hadolint (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      dockerfile:
+        type: string
+        required: false
+        default: Dockerfile
+      config:
+        type: string
+        required: false
+        default: hadolint/.hadolint.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ inputs.dockerfile }}
+          config: ${{ inputs.config }}
+          failure-threshold: warning
