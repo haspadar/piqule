@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": [
+    "before 3am on Monday"
+  ],
+  "timezone": "UTC",
+  "labels": [
+    "dependencies"
+  ],
+  "assignees": [],
+  "reviewers": [],
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 0,
+  "packageRules": [
+    {
+      "description": "Group all PHPStan packages together",
+      "groupName": "PHPStan packages",
+      "matchPackagePatterns": [
+        "^phpstan/"
+      ]
+    },
+    {
+      "description": "Auto-merge patch and minor updates for dev dependencies",
+      "matchDepTypes": [
+        "require-dev"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Separate dev dependencies from production",
+      "matchDepTypes": [
+        "require-dev"
+      ],
+      "groupName": "dev dependencies"
+    },
+    {
+      "description": "Group production dependencies",
+      "matchDepTypes": [
+        "require"
+      ],
+      "groupName": "production dependencies",
+      "excludePackagePatterns": [
+        "^phpstan/"
+      ]
+    },
+    {
+      "description": "Priority for security vulnerabilities",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "enabled": true,
+      "prPriority": 10
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": [
+      "security"
+    ],
+    "assignees": [],
+    "enabled": true
+  },
+  "composer": {
+    "enabled": true
+  }
+}

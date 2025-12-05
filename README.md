@@ -118,6 +118,30 @@ jobs:
     uses: haspadar/piqule/.github/workflows/typos.yml@v1
 ```
 
+### Renovate
+
+Piqule provides a shared Renovate configuration and reusable workflow.
+
+#### Reusable workflow
+
+```
+jobs:
+  renovate:
+    uses: haspadar/piqule/.github/workflows/renovate-reusable.yml@v1
+    with:
+      config: renovate/config.json
+```
+
+#### CI workflow
+
+Projects may also use the preconfigured CI workflow:
+
+```
+jobs:
+  renovate:
+    uses: haspadar/piqule/.github/workflows/renovate.yml@v1
+```
+
 ## Optional helper
 
 ```
