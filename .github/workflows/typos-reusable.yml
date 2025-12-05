@@ -1,0 +1,27 @@
+name: Typos Reusable
+
+on:
+  workflow_call:
+    inputs:
+      config:
+        description: "Path to typos config"
+        required: true
+        type: string
+    secrets: {}
+
+permissions:
+  contents: read
+
+jobs:
+  typos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run Typos
+        uses: crate-ci/typos@v1
+        with:
+          files: .
+          config: ${{ inputs.config }}

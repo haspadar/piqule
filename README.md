@@ -10,6 +10,7 @@ Piqule bundles and standardizes configurations for:
 - Markdownlint  
 - Hadolint  
 - Actionlint  
+- Typos (spell‑checking)
 
 You don’t need to configure these tools manually in every project — Piqule provides shared configs and reusable GitHub workflows.
 
@@ -91,6 +92,30 @@ hadolint/.hadolint.yaml
 jobs:
   actionlint:
     uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
+```
+
+### Typos
+
+Piqule provides a shared configuration and reusable workflow for spell‑checking using Typos.
+
+#### Reusable workflow
+
+```
+jobs:
+  typos:
+    uses: haspadar/piqule/.github/workflows/typos-reusable.yml@v1
+    with:
+      config: typos/_typos.toml
+```
+
+#### CI workflow
+
+Projects may also use the preconfigured CI workflow:
+
+```
+jobs:
+  typos:
+    uses: haspadar/piqule/.github/workflows/typos.yml@v1
 ```
 
 ## Optional helper
