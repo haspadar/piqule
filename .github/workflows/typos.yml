@@ -23,4 +23,4 @@ jobs:
   typos:
     uses: ./.github/workflows/typos-reusable.yml
     with:
-      config: typos/_typos.toml
+      config: typos-ci/_typos.toml
