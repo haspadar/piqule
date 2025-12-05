@@ -26,10 +26,10 @@ jobs:
 
       - name: Run markdownlint-cli2 using shared config
         run: |
-          if [ -f "./vendor/haspadar/piqule/markdownlint/markdownlint-cli2.jsonc" ]; then
-            CONFIG_PATH="./vendor/haspadar/piqule/markdownlint/markdownlint-cli2.jsonc"
+          if [ -f "./vendor/haspadar/piqule/markdownlint/.markdownlint-cli2.jsonc" ]; then
+            CONFIG_PATH="./vendor/haspadar/piqule/markdownlint/.markdownlint-cli2.jsonc"
           else
-            CONFIG_PATH="./markdownlint/markdownlint-cli2.jsonc"
+            CONFIG_PATH="./markdownlint/.markdownlint-cli2.jsonc"
           fi
 
           echo "Using config: $CONFIG_PATH"
