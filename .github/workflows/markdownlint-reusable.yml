@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node-version }}
-          cache: 'npm'
 
       - name: Install markdownlint-cli2
         run: npm install -g markdownlint-cli2
