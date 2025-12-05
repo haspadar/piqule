@@ -11,10 +11,6 @@ on:
         type: string
         required: false
         default: github-check
-      actionlint_version:
-        type: string
-        required: false
-        default: latest
 
 jobs:
   actionlint:
@@ -23,8 +19,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
 
       - name: Run actionlint
         uses: reviewdog/action-actionlint@v1
@@ -32,4 +26,3 @@ jobs:
           fail_level: ${{ inputs.fail_level }}
           reporter: ${{ inputs.reporter }}
           level: error
-          actionlint_version: ${{ inputs.actionlint_version }}
