@@ -1,5 +1,5 @@
 name: Renovate
-'on':
+on:
   workflow_call:
     inputs:
       config:

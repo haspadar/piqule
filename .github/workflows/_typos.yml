@@ -1,5 +1,5 @@
 name: Typos
-'on':
+on:
   workflow_call:
     inputs:
       config:

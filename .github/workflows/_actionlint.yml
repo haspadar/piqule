@@ -1,5 +1,5 @@
 name: Actionlint
-'on':
+on:
   workflow_call:
     inputs:
       fail_level:

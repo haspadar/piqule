@@ -1,5 +1,5 @@
 name: PHP-CS-Fixer
-'on':
+on:
   workflow_call:
     inputs:
       php-version:

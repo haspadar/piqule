@@ -1,5 +1,5 @@
 name: Hadolint
-'on':
+on:
   workflow_call:
     inputs:
       dockerfile:
