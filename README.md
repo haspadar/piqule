@@ -186,6 +186,31 @@ jobs:
     uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
 ```
 
+### PR Size Checker
+
+Piqule provides a reusable workflow for enforcing pull request size limits using
+[`maidsafe/pr_size_checker`](https://github.com/maidsafe/pr_size_checker).
+
+```
+jobs:
+  pr_size:
+    uses: haspadar/piqule/.github/workflows/pr-size-checker-reusable.yml@v1
+    with:
+      max_lines_changed: 200
+```
+
+This workflow fails if a pull request changes more than the configured number of lines.
+
+#### CI workflow
+
+Projects may also use the preconfigured CI workflow:
+
+```
+jobs:
+  pr_size:
+    uses: haspadar/piqule/.github/workflows/pr-size-checker.yml@v1
+```
+
 ## Contribute
 
 Fork, modify, and open a pull request.  
