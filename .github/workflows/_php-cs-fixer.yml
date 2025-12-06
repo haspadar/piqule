@@ -1,28 +1,27 @@
 name: PHP-CS-Fixer
-
-on:
+'on':
   workflow_call:
     inputs:
       php-version:
         type: string
         required: false
-        default: '8.5'
-
+        default: "8.5"
       php-matrix:
         type: string
         required: false
-        default: '' # JSON: ["8.2","8.3","8.4","8.5"]
-
+        default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
 jobs:
   cs:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
-        # Use php-matrix (JSON array) if provided, otherwise wrap php-version in array
-        php-version: ${{ fromJson(inputs.php-matrix != '' && inputs.php-matrix || format('["{0}"]', inputs.php-version)) }}
-
+        php-version: >-
+          ${{ fromJson(
+            inputs.php-matrix != '' &&
+            inputs.php-matrix ||
+            format('["{0}"]', inputs.php-version)
+          ) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

@@ -1,0 +1,97 @@
+name: CI
+
+'on':
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  # YAML Lint
+  yamllint:
+    name: YAML Lint
+    if: github.event_name != 'schedule'
+    uses: ./.github/workflows/_yamllint.yml
+
+  # Actionlint
+  actionlint:
+    name: Actionlint
+    if: github.event_name != 'schedule'
+    needs: yamllint
+    uses: ./.github/workflows/_actionlint.yml
+    concurrency:
+      group: ${{ github.workflow }}-actionlint-${{ github.ref }}
+      cancel-in-progress: true
+
+  # Markdownlint
+  markdownlint:
+    name: Markdownlint
+    if: github.event_name != 'schedule'
+    needs: yamllint
+    uses: ./.github/workflows/_markdownlint.yml
+
+  # Typos
+  typos:
+    name: Typos
+    if: github.event_name != 'schedule'
+    needs: yamllint
+    uses: ./.github/workflows/_typos.yml
+    with:
+      config: typos-ci/_typos.toml
+
+  # PHP-CS-Fixer
+  php_cs_fixer:
+    name: PHP-CS-Fixer
+    if: github.event_name != 'schedule'
+    needs: yamllint
+    uses: ./.github/workflows/_php-cs-fixer.yml
+    with:
+      php-matrix: '["8.2","8.3","8.4","8.5"]'
+
+  # Hadolint
+  hadolint:
+    name: Hadolint
+    if: github.event_name != 'schedule'
+    needs: yamllint
+    uses: ./.github/workflows/_hadolint.yml
+    with:
+      dockerfile: Dockerfile
+      config: hadolint/.hadolint.yaml
+
+  # PR Size Checker
+  pr_size_checker:
+    name: PR Size Checker
+    if: github.event_name == 'pull_request'
+    needs: yamllint
+    uses: ./.github/workflows/_pr-size-checker.yml
+    with:
+      max_lines_changed: 200
+
+  # Renovate
+  renovate:
+    name: Renovate
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/_renovate.yml
+    with:
+      config: renovate/config.json
+
+  # Release Drafter
+  release_drafter:
+    name: Release Drafter
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Update draft release
+        uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
