@@ -201,6 +201,16 @@ jobs:
 
 This workflow fails if a pull request changes more than the configured number of lines.
 
+#### CI workflow
+
+Projects may also use the preconfigured CI workflow:
+
+```
+jobs:
+  pr_size:
+    uses: haspadar/piqule/.github/workflows/pr-size-checker.yml@v1
+```
+
 ## Contribute
 
 Fork, modify, and open a pull request.  

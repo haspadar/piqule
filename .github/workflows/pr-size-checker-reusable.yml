@@ -7,6 +7,9 @@ on:
         required: false
         type: number
         default: 200
+      base_ref:
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -27,4 +30,4 @@ jobs:
         uses: maidsafe/pr_size_checker@v3
         with:
           max_lines_changed: ${{ inputs.max_lines_changed }}
-          base_ref: ${{ github.event.pull_request.base.ref }}
+          base_ref: ${{ inputs.base_ref }}
