@@ -14,7 +14,7 @@ jobs:
   yamllint:
     name: YAML Lint
     if: github.event_name != 'schedule'
-    uses: ./.github/workflows/_yamllint.yml
+    uses: yamllint.yml
 
   # Actionlint
   actionlint:
