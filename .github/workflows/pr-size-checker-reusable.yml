@@ -24,6 +24,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run PR Size Checker
-        uses: maidsafe/pr_size_checker@v2
+        uses: maidsafe/pr_size_checker@v3
         with:
           max_lines_changed: ${{ inputs.max_lines_changed }}
+          base_ref: ${{ github.event.pull_request.base.ref }}
