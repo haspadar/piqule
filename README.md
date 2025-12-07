@@ -142,13 +142,35 @@ jobs:
     uses: haspadar/piqule/.github/workflows/renovate.yml@v1
 ```
 
-## Optional helper
+## Piqule CLI
+
+Piqule provides a unified command‑line interface for running all checks locally.
+
+### Initialize baseline configs
 
 ```
 vendor/bin/piqule init
 ```
 
-This command can generate baseline config files for PHPStan, Psalm, and PHP-CS-Fixer.
+This generates baseline configuration files for PHPStan, Psalm, and PHP‑CS‑Fixer.
+
+### Run all checks
+
+```
+vendor/bin/piqule check
+```
+
+This command runs the full Piqule suite:
+
+- PHPStan  
+- Psalm  
+- PHP‑CS‑Fixer (dry‑run)  
+- Markdownlint  
+- Hadolint  
+- Actionlint  
+- Typos  
+
+It mirrors the same checks executed in Piqule's CI workflows.
 
 ## GitHub Actions
 
