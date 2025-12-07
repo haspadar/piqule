@@ -10,76 +10,67 @@ on:
   workflow_dispatch:
 
 jobs:
-  # YAML Lint
   yamllint:
     name: YAML Lint
     if: github.event_name != 'schedule'
-    uses: yamllint.yml
+    uses: ./.github/workflows/_yamllint.yml@main
 
-  # Actionlint
   actionlint:
     name: Actionlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_actionlint.yml
+    uses: ./.github/workflows/_actionlint.yml@main
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
 
-  # Markdownlint
   markdownlint:
     name: Markdownlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_markdownlint.yml
+    uses: ./.github/workflows/_markdownlint.yml@main
 
-  # Typos
   typos:
     name: Typos
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_typos.yml
+    uses: ./.github/workflows/_typos.yml@main
     with:
       config: typos-ci/_typos.toml
 
-  # PHP-CS-Fixer
   php_cs_fixer:
     name: PHP-CS-Fixer
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_php-cs-fixer.yml
+    uses: ./.github/workflows/_php-cs-fixer.yml@main
     with:
       php-matrix: '["8.2","8.3","8.4","8.5"]'
 
-  # Hadolint
   hadolint:
     name: Hadolint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_hadolint.yml
+    uses: ./.github/workflows/_hadolint.yml@main
     with:
       dockerfile: Dockerfile
       config: hadolint/.hadolint.yml
 
-  # PR Size Checker
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
     needs: yamllint
-    uses: ./.github/workflows/_pr-size-checker.yml
+    uses: ./.github/workflows/_pr-size-checker.yml@main
     with:
       max_lines_changed: 200
 
-  # Renovate
   renovate:
     name: Renovate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/_renovate.yml
+    uses: ./.github/workflows/_renovate.yml@main
     with:
       config: renovate/config.json
 
-  # Release Drafter
   release_drafter:
     name: Release Drafter
-    if: github.event_name == 'push' &&github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/_release-drafter.yml
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/_release-drafter.yml@main
