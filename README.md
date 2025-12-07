@@ -142,14 +142,6 @@ jobs:
     uses: haspadar/piqule/.github/workflows/renovate.yml@v1
 ```
 
-## Optional helper
-
-```
-vendor/bin/piqule init
-```
-
-This command can generate baseline config files for PHPStan, Psalm, and PHP-CS-Fixer.
-
 ## GitHub Actions
 
 Piqule provides reusable CI modules.
