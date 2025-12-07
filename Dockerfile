@@ -22,6 +22,7 @@ ARG ACTIONLINT_VERSION=1.7.9
 ARG MARKDOWNLINT_VERSION=0.19
 ARG PHP_CS_FIXER_VERSION=3.91.1
 ARG TYPOS_VERSION=1.24.6
+ARG HADOLINT_VERSION=2.12.0
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -82,6 +83,8 @@ RUN ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') \
 # ----------------------------------------
 # markdownlint-cli2 + yamllint
 # ----------------------------------------
+# NOTE: --break-system-packages is intentional:
+# we install CLI tools into the system Python environment inside the CI container
 RUN npm install -g markdownlint-cli2@${MARKDOWNLINT_VERSION} \
     && pip3 install --no-cache-dir --break-system-packages \
         yamllint \
@@ -91,7 +94,7 @@ RUN npm install -g markdownlint-cli2@${MARKDOWNLINT_VERSION} \
 # hadolint
 # ----------------------------------------
 RUN curl -sSfL -o /usr/local/bin/hadolint \
-       "https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64" \
+       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64" \
     && chmod +x /usr/local/bin/hadolint
 
 # ----------------------------------------
