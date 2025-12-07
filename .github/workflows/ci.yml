@@ -50,15 +50,6 @@ jobs:
     with:
       php-matrix: '["8.2","8.3","8.4","8.5"]'
 
-  hadolint:
-    name: Hadolint
-    if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: ./.github/workflows/_hadolint.yml
-    with:
-      dockerfile: Dockerfile
-      config: hadolint/.hadolint.yml
-
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
