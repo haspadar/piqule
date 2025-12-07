@@ -1,5 +1,4 @@
 name: Actionlint
-
 on:
   workflow_call:
     inputs:
@@ -11,15 +10,12 @@ on:
         type: string
         required: false
         default: github-check
-
 jobs:
   actionlint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-
       - name: Run actionlint
         uses: reviewdog/action-actionlint@v1
         with:

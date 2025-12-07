@@ -1,5 +1,4 @@
-name: Typos Reusable
-
+name: Typos
 on:
   workflow_call:
     inputs:
@@ -8,18 +7,14 @@ on:
         required: true
         type: string
     secrets: {}
-
 permissions:
   contents: read
-
 jobs:
   typos:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
       - name: Run Typos
         uses: crate-ci/typos@v1
         with:

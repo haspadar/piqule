@@ -1,5 +1,4 @@
-name: Renovate Reusable
-
+name: Renovate
 on:
   workflow_call:
     inputs:
@@ -7,19 +6,15 @@ on:
         description: "Path to renovate.json"
         required: true
         type: string
-
 permissions:
   contents: write
   pull-requests: write
-
 jobs:
   renovate:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
       - name: Run Renovate
         uses: renovatebot/github-action@v44.0.5
         with:

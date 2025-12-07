@@ -1,5 +1,4 @@
-name: Hadolint (reusable)
-
+name: Hadolint
 on:
   workflow_call:
     inputs:
@@ -11,18 +10,14 @@ on:
         type: string
         required: false
         default: hadolint/.hadolint.yaml
-
 permissions:
   contents: read
-
 jobs:
   hadolint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
       - name: Run Hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
