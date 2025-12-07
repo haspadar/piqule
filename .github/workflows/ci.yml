@@ -80,4 +80,7 @@ jobs:
   release_drafter:
     name: Release Drafter
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      pull-requests: read
     uses: ./.github/workflows/_release-drafter.yml
