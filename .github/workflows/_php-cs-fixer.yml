@@ -16,8 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: >-
-          ${{ fromJson(
+        php-version: ${{ fromJson(
             inputs.php-matrix != '' &&
             inputs.php-matrix ||
             format('["{0}"]', inputs.php-version)
