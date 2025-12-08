@@ -56,7 +56,7 @@
   "registryAliases": {
     "NODE_VERSION": "nodejs/node",
     "ACTIONLINT_VERSION": "rhysd/actionlint",
-    "MARKDOWNLINT_VERSION": "igorshubovych/markdownlint-cli",
+    "MARKDOWNLINT_VERSION": "DavidAnson/markdownlint",
     "PHP_CS_FIXER_VERSION": "FriendsOfPHP/PHP-CS-Fixer",
     "TYPOS_VERSION": "crate-ci/typos",
     "HADOLINT_VERSION": "hadolint/hadolint"
