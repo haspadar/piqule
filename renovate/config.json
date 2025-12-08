@@ -1,77 +1,92 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "schedule": [
-    "before 3am on Monday"
-  ],
+  "extends": ["config:recommended"],
+
+  "schedule": ["every hour"],
   "timezone": "UTC",
-  "labels": [
-    "dependencies"
-  ],
+
+  "labels": ["dependencies"],
   "assignees": [],
   "reviewers": [],
+
   "prConcurrentLimit": 3,
   "prHourlyLimit": 0,
+
   "packageRules": [
     {
-      "description": "Group all PHPStan packages together",
-      "groupName": "PHPStan packages",
-      "matchPackagePatterns": [
-        "^phpstan/"
-      ]
-    },
-    {
-      "description": "Auto-merge patch and minor updates for dev dependencies",
-      "matchDepTypes": [
-        "require-dev"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
+      "description": "Auto-merge minor and patch dev dependencies",
+      "matchDepTypes": ["require-dev"],
+      "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "automergeType": "pr",
       "platformAutomerge": true
     },
     {
-      "description": "Separate dev dependencies from production",
-      "matchDepTypes": [
-        "require-dev"
-      ],
+      "description": "Group dev dependencies",
+      "matchDepTypes": ["require-dev"],
       "groupName": "dev dependencies"
     },
     {
       "description": "Group production dependencies",
-      "matchDepTypes": [
-        "require"
-      ],
-      "groupName": "production dependencies",
-      "excludePackagePatterns": [
-        "^phpstan/"
-      ]
+      "matchDepTypes": ["require"],
+      "groupName": "production dependencies"
     },
     {
-      "description": "Prioritize all patch updates",
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "enabled": true,
+      "description": "Prioritize patch updates",
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": ["*"],
       "prPriority": 10
+    },
+    {
+      "description": "Group CI toolchain updates",
+      "groupName": "CI toolchain",
+      "matchManagers": ["regex", "dockerfile", "github-actions"]
     }
   ],
+
   "vulnerabilityAlerts": {
-    "labels": [
-      "security"
-    ],
-    "assignees": [],
+    "labels": ["security"],
     "enabled": true
   },
-  "composer": {
-    "enabled": true
-  }
+
+  "composer": { "enabled": true },
+  "github-actions": { "enabled": true },
+  "dockerfile": { "enabled": true },
+
+  "registryAliases": {
+    "NODE_VERSION": "nodejs/node",
+    "ACTIONLINT_VERSION": "rhysd/actionlint",
+    "MARKDOWNLINT_VERSION": "DavidAnson/markdownlint",
+    "PHP_CS_FIXER_VERSION": "FriendsOfPHP/PHP-CS-Fixer",
+    "TYPOS_VERSION": "crate-ci/typos",
+    "HADOLINT_VERSION": "hadolint/hadolint"
+  },
+
+  "regexManagers": [
+    {
+      "description": "Update Dockerfile ARG version variables",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "description": "Update Docker base image",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "FROM (?<depName>[^:]+):(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update pinned GitHub Actions versions in workflow files",
+      "fileMatch": [".github/workflows/.*\\.ya?ml$"],
+      "matchStrings": [
+        "\\suses: (?<depName>[\\w\\-/]+)@(?<currentValue>v?[0-9][^\\s]*)"
+      ],
+      "datasourceTemplate": "github-tags"
+    }
+  ]
 }
