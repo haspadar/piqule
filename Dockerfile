@@ -14,17 +14,14 @@ LABEL org.opencontainers.image.licenses="MIT"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ----------------------------------------
-# Version arguments (updated by Renovate)
+# Version arguments
 # ----------------------------------------
-ARG NODE_MAJOR=24
+ARG NODE_VERSION=24.11.1
 ARG ACTIONLINT_VERSION=1.7.9
 ARG MARKDOWNLINT_VERSION=0.19
 ARG PHP_CS_FIXER_VERSION=3.91.1
 ARG TYPOS_VERSION=1.24.6
 ARG HADOLINT_VERSION=2.12.0
-
-ENV RENOVATE_PLATFORM=local
-ENV RENOVATE_TOKEN=local
 
 # ----------------------------------------
 # System dependencies
@@ -33,11 +30,16 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git unzip curl bash fish python3 python3-pip \
         libicu-dev libzip-dev zlib1g-dev libonig-dev \
-    && curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
     && docker-php-ext-install intl zip mbstring \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# ----------------------------------------
+# Node.js (official tar.xz)
+# ----------------------------------------
+RUN curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -o node.tar.xz \
+    && tar -xf node.tar.xz -C /usr/local --strip-components=1 \
+    && rm node.tar.xz
 
 # ----------------------------------------
 # Composer

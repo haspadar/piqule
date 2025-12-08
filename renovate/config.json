@@ -53,6 +53,15 @@
   "github-actions": { "enabled": true },
   "dockerfile": { "enabled": true },
 
+  "registryAliases": {
+    "NODE_VERSION": "nodejs/node",
+    "ACTIONLINT_VERSION": "rhysd/actionlint",
+    "MARKDOWNLINT_VERSION": "igorshubovych/markdownlint-cli",
+    "PHP_CS_FIXER_VERSION": "FriendsOfPHP/PHP-CS-Fixer",
+    "TYPOS_VERSION": "crate-ci/typos",
+    "HADOLINT_VERSION": "hadolint/hadolint"
+  },
+
   "regexManagers": [
     {
       "description": "Update Dockerfile ARG version variables",
