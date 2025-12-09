@@ -98,5 +98,5 @@ return (new PhpCsFixer\Config())
     ->setUnsupportedPhpVersionAllowed(true)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(__DIR__ . '/..'),
+            ->in(__DIR__ . '/piqule'),
     );

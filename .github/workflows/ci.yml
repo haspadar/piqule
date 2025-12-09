@@ -16,8 +16,12 @@ permissions:
 jobs:
   yamllint:
     name: YAML Lint
-    if: github.event_name != 'schedule'
+    if: |
+      github.event_name != 'schedule' &&
+      hashFiles('configs/.yamllint.yml') != ''
     uses: haspadar/piqule/.github/workflows/_yamllint.yml@main
+    with:
+      config: configs/.yamllint.yml
 
   actionlint:
     name: Actionlint
@@ -30,26 +34,33 @@ jobs:
 
   markdownlint:
     name: Markdownlint
-    if: github.event_name != 'schedule'
+    if: |
+      github.event_name != 'schedule' &&
+      hashFiles('configs/.markdownlint-cli2.jsonc') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_markdownlint.yml@main
+    with:
+      config: configs/.markdownlint-cli2.jsonc
 
   typos:
     name: Typos
     if: |
       github.event_name != 'schedule' &&
-      hashFiles('typos-ci/_typos.toml') != ''
+      hashFiles('configs/_typos.toml') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_typos.yml@main
     with:
-      config: typos-ci/_typos.toml
+      config: configs/_typos.toml
 
   php_cs_fixer:
     name: PHP-CS-Fixer
-    if: github.event_name != 'schedule'
+    if: |
+      github.event_name != 'schedule' &&
+      hashFiles('.php-cs-fixer.php') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@main
     with:
+      config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
 
   hadolint:
@@ -57,12 +68,12 @@ jobs:
     if: |
       github.event_name != 'schedule' &&
       hashFiles('Dockerfile') != '' &&
-      hashFiles('hadolint/.hadolint.yml') != ''
+      hashFiles('configs/.hadolint.yml') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
     with:
       dockerfile: Dockerfile
-      config: hadolint/.hadolint.yml
+      config: configs/.hadolint.yml
 
   pr_size_checker:
     name: PR Size Checker
@@ -76,13 +87,13 @@ jobs:
     name: Renovate
     if: |
       (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') &&
-      hashFiles('renovate/config.json') != ''
+      hashFiles('configs/renovate.json') != ''
     permissions:
       contents: write
       pull-requests: write
     uses: haspadar/piqule/.github/workflows/_renovate.yml@main
     with:
-      config: renovate/config.json
+      config: configs/renovate.json
 
   release_drafter:
     name: Release Drafter
