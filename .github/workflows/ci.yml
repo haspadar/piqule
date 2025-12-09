@@ -17,13 +17,13 @@ jobs:
   yamllint:
     name: YAML Lint
     if: github.event_name != 'schedule'
-    uses: ./.github/workflows/_yamllint.yml
+    uses: haspadar/piqule/.github/workflows/_yamllint.yml@main
 
   actionlint:
     name: Actionlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_actionlint.yml
+    uses: haspadar/piqule/.github/workflows/_actionlint.yml@main
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
@@ -32,13 +32,13 @@ jobs:
     name: Markdownlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_markdownlint.yml
+    uses: haspadar/piqule/.github/workflows/_markdownlint.yml@main
 
   typos:
     name: Typos
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_typos.yml
+    uses: haspadar/piqule/.github/workflows/_typos.yml@main
     with:
       config: typos-ci/_typos.toml
 
@@ -46,7 +46,7 @@ jobs:
     name: PHP-CS-Fixer
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_php-cs-fixer.yml
+    uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@main
     with:
       php-matrix: '["8.2","8.3","8.4","8.5"]'
 
@@ -54,7 +54,7 @@ jobs:
     name: Hadolint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_hadolint.yml
+    uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
     with:
       dockerfile: Dockerfile
       config: hadolint/.hadolint.yml
@@ -63,7 +63,7 @@ jobs:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
     needs: yamllint
-    uses: ./.github/workflows/_pr-size-checker.yml
+    uses: haspadar/piqule/.github/workflows/_pr-size-checker.yml@main
     with:
       max_lines_changed: 200
 
@@ -73,7 +73,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: ./.github/workflows/_renovate.yml
+    uses: haspadar/piqule/.github/workflows/_renovate.yml@main
     with:
       config: renovate/config.json
 
@@ -83,4 +83,4 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-    uses: ./.github/workflows/_release-drafter.yml
+    uses: haspadar/piqule/.github/workflows/_release-drafter.yml@main
