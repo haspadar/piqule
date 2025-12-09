@@ -36,7 +36,9 @@ jobs:
 
   typos:
     name: Typos
-    if: github.event_name != 'schedule'
+    if: |
+      github.event_name != 'schedule' &&
+      hashFiles('typos-ci/_typos.toml') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_typos.yml@main
     with:
@@ -52,7 +54,10 @@ jobs:
 
   hadolint:
     name: Hadolint
-    if: github.event_name != 'schedule'
+    if: |
+      github.event_name != 'schedule' &&
+      hashFiles('Dockerfile') != '' &&
+      hashFiles('hadolint/.hadolint.yml') != ''
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
     with:
@@ -69,7 +74,9 @@ jobs:
 
   renovate:
     name: Renovate
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: |
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') &&
+      hashFiles('renovate/config.json') != ''
     permissions:
       contents: write
       pull-requests: write
