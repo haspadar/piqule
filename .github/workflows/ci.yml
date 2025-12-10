@@ -17,7 +17,7 @@ jobs:
   yamllint:
     name: YAML Lint
     if: github.event_name != 'schedule'
-    uses: ./.github/workflows/_yamllint.yml@main
+    uses: ./.github/workflows/_yamllint.yml
     with:
       config: configs/.yamllint.yml
 
@@ -25,7 +25,7 @@ jobs:
     name: Actionlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_actionlint.yml@main
+    uses: ./.github/workflows/_actionlint.yml
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
@@ -34,7 +34,7 @@ jobs:
     name: Markdownlint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_markdownlint.yml@main
+    uses: ./.github/workflows/_markdownlint.yml
     with:
       config: configs/.markdownlint-cli2.jsonc
 
@@ -42,7 +42,7 @@ jobs:
     name: Typos
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_typos.yml@main
+    uses: ./.github/workflows/_typos.yml
     with:
       config: configs/_typos.toml
 
@@ -50,7 +50,7 @@ jobs:
     name: PHP-CS-Fixer
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_php-cs-fixer.yml@main
+    uses: ./.github/workflows/_php-cs-fixer.yml
     with:
       config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
@@ -59,7 +59,7 @@ jobs:
     name: Hadolint
     if: github.event_name != 'schedule'
     needs: yamllint
-    uses: ./.github/workflows/_hadolint.yml@main
+    uses: ./.github/workflows/_hadolint.yml
     with:
       dockerfile: Dockerfile
       config: configs/.hadolint.yml
@@ -68,7 +68,7 @@ jobs:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
     needs: yamllint
-    uses: ./.github/workflows/_pr-size-checker.yml@main
+    uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 200
 
@@ -78,7 +78,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: ./.github/workflows/_renovate.yml@main
+    uses: ./.github/workflows/_renovate.yml
     with:
       config: configs/renovate.json
 
@@ -88,4 +88,4 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-    uses: ./.github/workflows/_release-drafter.yml@main
+    uses: ./.github/workflows/_release-drafter.yml
