@@ -3,15 +3,16 @@
 declare(strict_types=1);
 
 /**
- * This ruleset is meant to be used in two ways:
- * 1) Directly, via `php-cs-fixer fix --config=php-cs-fixer/rules.php`
- *    In this mode a local Finder is required.
+ * This ruleset is meant to be reused across projects in two ways:
  *
- * 2) Imported from a project's root `.php-cs-fixer.php`
- *    In that mode consumers are expected to override Finder themselves.
+ * 1) Directly, by running `php-cs-fixer fix --config=configs/php-cs-fixer.php`
+ *    and passing the target paths via CLI arguments.
  *
- * Only the rule definitions here are shared across projects.
- * Path configuration belongs to the consuming project.
+ * 2) Imported from a project's root `.php-cs-fixer.php`, where the project
+ *    defines its own Finder / path configuration.
+ *
+ * Only the rule definitions are shared across projects; path and Finder
+ * configuration belong to the consuming project.
  */
 
 return (new PhpCsFixer\Config())
