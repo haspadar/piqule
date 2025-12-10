@@ -65,7 +65,7 @@ RUN composer global require friendsofphp/php-cs-fixer:${PHP_CS_FIXER_VERSION} \
     && composer clear-cache
 
 RUN mkdir -p /usr/local/piqule
-COPY php-cs-fixer/rules.php /usr/local/piqule/php-cs-fixer.base.php
+COPY configs/php-cs-fixer.php /usr/local/piqule/php-cs-fixer.base.php
 
 # ----------------------------------------
 # actionlint (x86_64 only)
