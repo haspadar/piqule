@@ -1,4 +1,5 @@
 name: Hadolint
+
 on:
   workflow_call:
     inputs:
@@ -10,15 +11,36 @@ on:
         type: string
         required: false
         default: hadolint/.hadolint.yaml
+
 permissions:
   contents: read
+
 jobs:
   hadolint:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+
+      - name: Check required files exist
+        id: check
+        run: |
+          if [[ -f "${{ inputs.dockerfile }}" && -f "${{ inputs.config }}" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip — missing dockerfile or config
+        if: steps.check.outputs.run == 'false'
+        run: |
+          echo "Skipping Hadolint — dockerfile or config not found:"
+          echo "  dockerfile: ${{ inputs.dockerfile }}"
+          echo "  config:     ${{ inputs.config }}"
+
       - name: Run Hadolint
+        if: steps.check.outputs.run == 'true'
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ inputs.dockerfile }}
