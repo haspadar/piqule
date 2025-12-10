@@ -16,9 +16,7 @@ permissions:
 jobs:
   yamllint:
     name: YAML Lint
-    if: |
-      github.event_name != 'schedule' &&
-      hashFiles('configs/.yamllint.yml') != ''
+    if: ${{ github.event_name != 'schedule' && hashFiles('configs/.yamllint.yml') != '' }}
     uses: haspadar/piqule/.github/workflows/_yamllint.yml@main
     with:
       config: configs/.yamllint.yml
@@ -34,9 +32,7 @@ jobs:
 
   markdownlint:
     name: Markdownlint
-    if: |
-      github.event_name != 'schedule' &&
-      hashFiles('configs/.markdownlint-cli2.jsonc') != ''
+    if: ${{ github.event_name != 'schedule' && hashFiles('configs/.markdownlint-cli2.jsonc') != '' }}
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_markdownlint.yml@main
     with:
@@ -44,9 +40,7 @@ jobs:
 
   typos:
     name: Typos
-    if: |
-      github.event_name != 'schedule' &&
-      hashFiles('configs/_typos.toml') != ''
+    if: ${{ github.event_name != 'schedule' && hashFiles('configs/_typos.toml') != '' }}
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_typos.yml@main
     with:
@@ -54,9 +48,7 @@ jobs:
 
   php_cs_fixer:
     name: PHP-CS-Fixer
-    if: |
-      github.event_name != 'schedule' &&
-      hashFiles('.php-cs-fixer.php') != ''
+    if: ${{ github.event_name != 'schedule' && hashFiles('.php-cs-fixer.php') != '' }}
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@main
     with:
@@ -65,10 +57,7 @@ jobs:
 
   hadolint:
     name: Hadolint
-    if: |
-      github.event_name != 'schedule' &&
-      hashFiles('Dockerfile') != '' &&
-      hashFiles('configs/.hadolint.yml') != ''
+    if: ${{ github.event_name != 'schedule' && hashFiles('Dockerfile') != '' && hashFiles('configs/.hadolint.yml') != '' }}
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
     with:
@@ -85,9 +74,7 @@ jobs:
 
   renovate:
     name: Renovate
-    if: |
-      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') &&
-      hashFiles('configs/renovate.json') != ''
+    if: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && hashFiles('configs/renovate.json') != '' }}
     permissions:
       contents: write
       pull-requests: write
