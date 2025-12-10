@@ -1,4 +1,5 @@
 name: Renovate
+
 on:
   workflow_call:
     inputs:
@@ -6,16 +7,34 @@ on:
         description: "Path to renovate.json"
         required: true
         type: string
+
 permissions:
   contents: write
   pull-requests: write
+
 jobs:
   renovate:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Check Renovate config exists
+        id: check
+        run: |
+          if [[ -f "${{ inputs.config }}" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip — no renovate config found
+        if: steps.check.outputs.run == 'false'
+        run: echo "Skipping Renovate — config not found at ${{ inputs.config }}"
+
       - name: Run Renovate
+        if: steps.check.outputs.run == 'true'
         uses: renovatebot/github-action@v44.0.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

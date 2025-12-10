@@ -1,14 +1,37 @@
 name: Yamllint
+
 on:
   workflow_call:
+    inputs:
+      config:
+        description: "Path to yamllint config"
+        required: true
+        type: string
+
 jobs:
   yamllint:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Check config exists
+        id: check
+        run: |
+          if [[ -f "${{ inputs.config }}" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip — no yamllint config found
+        if: steps.check.outputs.run == 'false'
+        run: echo "Skipping Yamllint — config not found at ${{ inputs.config }}"
+
       - name: Run yamllint
+        if: steps.check.outputs.run == 'true'
         uses: ibiqlik/action-yamllint@v3
         with:
-          config_file: yamllint/.yamllint.yml
+          config_file: ${{ inputs.config }}
           format: github
