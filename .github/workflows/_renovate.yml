@@ -41,3 +41,4 @@ jobs:
         env:
           RENOVATE_CONFIG_FILE: ${{ inputs.config }}
           RENOVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
