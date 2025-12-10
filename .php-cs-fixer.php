@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /** @var PhpCsFixer\Config $rules */
-$rules = require __DIR__ . '/configs/php-cs-fixer.php';
+$rules = require __DIR__ . '/php-cs-fixer/rules.php';
 $rules->setFinder(
     PhpCsFixer\Finder::create()
         ->in(__DIR__)
