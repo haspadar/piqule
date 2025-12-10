@@ -57,4 +57,5 @@ jobs:
 
       - name: Run PHP-CS-Fixer
         if: steps.check.outputs.run == 'true'
-        run: vendor/bin/php-cs-fixer fix --dry-ru
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff --config="${{ inputs.config }}"
+
