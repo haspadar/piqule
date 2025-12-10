@@ -24,7 +24,6 @@ jobs:
   actionlint:
     name: Actionlint
     if: github.event_name != 'schedule'
-    needs: yamllint
     uses: ./.github/workflows/_actionlint.yml
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
@@ -33,7 +32,6 @@ jobs:
   markdownlint:
     name: Markdownlint
     if: github.event_name != 'schedule'
-    needs: yamllint
     uses: ./.github/workflows/_markdownlint.yml
     with:
       config: configs/.markdownlint-cli2.jsonc
@@ -41,7 +39,6 @@ jobs:
   typos:
     name: Typos
     if: github.event_name != 'schedule'
-    needs: yamllint
     uses: ./.github/workflows/_typos.yml
     with:
       config: configs/_typos.toml
@@ -49,7 +46,6 @@ jobs:
   php_cs_fixer:
     name: PHP-CS-Fixer
     if: github.event_name != 'schedule'
-    needs: yamllint
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
       config: .php-cs-fixer.php
@@ -58,7 +54,6 @@ jobs:
   hadolint:
     name: Hadolint
     if: github.event_name != 'schedule'
-    needs: yamllint
     uses: ./.github/workflows/_hadolint.yml
     with:
       dockerfile: Dockerfile
@@ -67,7 +62,6 @@ jobs:
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
-    needs: yamllint
     uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 200
