@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
 
-  "schedule": ["every hour"],
+  "schedule": ["20 * * * *"],
   "timezone": "UTC",
 
   "labels": ["dependencies"],
