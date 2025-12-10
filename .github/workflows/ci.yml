@@ -17,13 +17,14 @@ jobs:
   yamllint:
     name: YAML Lint
     if: github.event_name != 'schedule'
-    uses: haspadar/piqule/.github/workflows/_yamllint.yml@main
+    uses: ./.github/workflows/_yamllint.yml
+    with:
+      config: configs/.yamllint.yml
 
   actionlint:
     name: Actionlint
     if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_actionlint.yml@main
+    uses: ./.github/workflows/_actionlint.yml
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
@@ -31,39 +32,37 @@ jobs:
   markdownlint:
     name: Markdownlint
     if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_markdownlint.yml@main
+    uses: ./.github/workflows/_markdownlint.yml
+    with:
+      config: configs/.markdownlint-cli2.jsonc
 
   typos:
     name: Typos
     if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_typos.yml@main
+    uses: ./.github/workflows/_typos.yml
     with:
-      config: typos-ci/_typos.toml
+      config: configs/_typos.toml
 
   php_cs_fixer:
     name: PHP-CS-Fixer
     if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@main
+    uses: ./.github/workflows/_php-cs-fixer.yml
     with:
+      config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
 
   hadolint:
     name: Hadolint
     if: github.event_name != 'schedule'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
+    uses: ./.github/workflows/_hadolint.yml
     with:
       dockerfile: Dockerfile
-      config: hadolint/.hadolint.yml
+      config: configs/.hadolint.yml
 
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
-    needs: yamllint
-    uses: haspadar/piqule/.github/workflows/_pr-size-checker.yml@main
+    uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 200
 
@@ -73,9 +72,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: haspadar/piqule/.github/workflows/_renovate.yml@main
+    uses: ./.github/workflows/_renovate.yml
     with:
-      config: renovate/config.json
+      config: configs/renovate.json
 
   release_drafter:
     name: Release Drafter
@@ -83,4 +82,4 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
-    uses: haspadar/piqule/.github/workflows/_release-drafter.yml@main
+    uses: ./.github/workflows/_release-drafter.yml
