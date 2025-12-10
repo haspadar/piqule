@@ -16,14 +16,14 @@ permissions:
 jobs:
   yamllint:
     name: YAML Lint
-    if: ${{ github.event_name != 'schedule' && hashFiles('configs/.yamllint.yml') != '' }}
+    if: github.event_name != 'schedule'
     uses: haspadar/piqule/.github/workflows/_yamllint.yml@main
     with:
       config: configs/.yamllint.yml
 
   actionlint:
     name: Actionlint
-    if: ${{ github.event_name != 'schedule' }}
+    if: github.event_name != 'schedule'
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_actionlint.yml@main
     concurrency:
@@ -32,15 +32,15 @@ jobs:
 
   markdownlint:
     name: Markdownlint
-    if: ${{ github.event_name != 'schedule' && hashFiles('configs/.markdownlint-cli2.jsonc') != '' }}
+    if: github.event_name != 'schedule'
     needs: yamllint
-    uses: haspaddar/piqule/.github/workflows/_markdownlint.yml@main
+    uses: haspadar/piqule/.github/workflows/_markdownlint.yml@main
     with:
       config: configs/.markdownlint-cli2.jsonc
 
   typos:
     name: Typos
-    if: ${{ github.event_name != 'schedule' && hashFiles('configs/_typos.toml') != '' }}
+    if: github.event_name != 'schedule'
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_typos.yml@main
     with:
@@ -48,7 +48,7 @@ jobs:
 
   php_cs_fixer:
     name: PHP-CS-Fixer
-    if: ${{ github.event_name != 'schedule' && hashFiles('.php-cs-fixer.php') != '' }}
+    if: github.event_name != 'schedule'
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@main
     with:
@@ -57,7 +57,7 @@ jobs:
 
   hadolint:
     name: Hadolint
-    if: ${{ github.event_name != 'schedule' && hashFiles('Dockerfile') != '' && hashFiles('configs/.hadolint.yml') != '' }}
+    if: github.event_name != 'schedule'
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_hadolint.yml@main
     with:
@@ -66,7 +66,7 @@ jobs:
 
   pr_size_checker:
     name: PR Size Checker
-    if: ${{ github.event_name == 'pull_request' }}
+    if: github.event_name == 'pull_request'
     needs: yamllint
     uses: haspadar/piqule/.github/workflows/_pr-size-checker.yml@main
     with:
@@ -74,7 +74,7 @@ jobs:
 
   renovate:
     name: Renovate
-    if: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && hashFiles('configs/renovate.json') != '' }}
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
       pull-requests: write
