@@ -37,7 +37,7 @@ jobs:
         if: steps.check.outputs.run == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ inputs['node-version'] }}
+          node-version: ${{ inputs.node-version }}
 
       - name: Install markdownlint-cli2
         if: steps.check.outputs.run == 'true'
