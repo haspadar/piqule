@@ -56,7 +56,6 @@
   "registryAliases": {
     "NODE_VERSION": "nodejs/node",
     "ACTIONLINT_VERSION": "rhysd/actionlint",
-    "MARKDOWNLINT_VERSION": "markdownlint-cli2",
     "PHP_CS_FIXER_VERSION": "FriendsOfPHP/PHP-CS-Fixer",
     "TYPOS_VERSION": "crate-ci/typos",
     "HADOLINT_VERSION": "hadolint/hadolint"
@@ -71,6 +70,15 @@
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "description": "Update markdownlint-cli2 version (npm)",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "markdownlint-cli2",
+      "datasource": "npm"
     },
     {
       "description": "Update Docker base image",
