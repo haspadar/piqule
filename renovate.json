@@ -44,7 +44,10 @@
     }
   ],
 
-  "vulnerabilityAlerts": { "labels": ["security"], "enabled": true },
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "enabled": true
+  },
 
   "composer": { "enabled": true },
   "github-actions": { "enabled": true },
@@ -53,39 +56,63 @@
   "customManagers": [
     {
       "customType": "regex",
+      "description": "Update Node.js version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG NODE_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node"
+    },
+    {
+      "customType": "regex",
+      "description": "Update actionlint version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG ACTIONLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "rhysd/actionlint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
       "description": "Update markdownlint-cli2 (npm)",
       "fileMatch": ["(^|/)Dockerfile$"],
-      "matchStrings": ["ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"],
+      "matchStrings": [
+        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
       "depNameTemplate": "markdownlint-cli2",
       "datasourceTemplate": "npm"
     },
     {
       "customType": "regex",
-      "description": "Update Dockerfile ARG versions",
+      "description": "Update PHP-CS-Fixer version",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG (?<depName>[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
+        "ARG PHP_CS_FIXER_VERSION=(?<currentValue>[^\\s]+)"
       ],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
+      "depNameTemplate": "FriendsOfPHP/PHP-CS-Fixer",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
-      "description": "Update Docker base image",
+      "description": "Update hadolint version",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "FROM (?<depName>[^:]+):(?<currentValue>[^\\s]+)"
+        "ARG HADOLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
-      "datasourceTemplate": "docker"
+      "depNameTemplate": "hadolint/hadolint",
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "regex",
-      "description": "Update GitHub Actions pinned versions",
-      "fileMatch": [".github/workflows/.*\\.ya?ml$"],
+      "description": "Update typos version",
+      "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "\\suses: (?<depName>[\\w\\-/]+)@(?<currentValue>v?[0-9][^\\s]*)"
+        "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
       ],
-      "datasourceTemplate": "github-tags"
+      "depNameTemplate": "crate-ci/typos",
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
