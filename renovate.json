@@ -51,7 +51,7 @@
 
   "composer": { "enabled": true },
   "github-actions": { "enabled": true },
-  "dockerfile": { "enabled": true },
+  "dockerfile": { "enabled": false },
 
   "registryAliases": {
     "NODE_VERSION": "nodejs/node",
