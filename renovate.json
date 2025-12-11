@@ -63,15 +63,6 @@
 
   "regexManagers": [
     {
-      "description": "Update Dockerfile ARG version variables",
-      "fileMatch": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "ARG (?<depName>[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
-    },
-    {
       "description": "Update markdownlint-cli2 version (npm)",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
@@ -79,6 +70,15 @@
       ],
       "depNameTemplate": "markdownlint-cli2",
       "datasource": "npm"
+    },
+    {
+      "description": "Update Dockerfile ARG version variables",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>(?!MARKDOWNLINT_VERSION)[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
     },
     {
       "description": "Update Docker base image",
