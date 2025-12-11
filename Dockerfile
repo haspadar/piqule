@@ -16,12 +16,12 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # ----------------------------------------
 # Version arguments
 # ----------------------------------------
-ARG NODE_VERSION=24.11.1
+ARG NODE_VERSION=24.12.0
 ARG ACTIONLINT_VERSION=1.7.9
-ARG MARKDOWNLINT_VERSION=0.19
-ARG PHP_CS_FIXER_VERSION=3.91.1
-ARG TYPOS_VERSION=1.24.6
-ARG HADOLINT_VERSION=2.12.0
+ARG MARKDOWNLINT_VERSION=0.20
+ARG PHP_CS_FIXER_VERSION=3.91.3
+ARG TYPOS_VERSION=1.40.0
+ARG HADOLINT_VERSION=2.14.0
 
 # ----------------------------------------
 # System dependencies
