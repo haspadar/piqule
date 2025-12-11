@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
 
-  "schedule": ["every hour"],
+  "schedule": ["* * * * *"],
   "timezone": "UTC",
 
   "labels": ["dependencies"],
@@ -40,14 +40,11 @@
     {
       "description": "Group CI toolchain updates",
       "groupName": "CI toolchain",
-      "matchManagers": ["regex", "github-actions"]
+      "matchManagers": ["custom.regex", "github-actions"]
     }
   ],
 
-  "vulnerabilityAlerts": {
-    "labels": ["security"],
-    "enabled": true
-  },
+  "vulnerabilityAlerts": { "labels": ["security"], "enabled": true },
 
   "composer": { "enabled": true },
   "github-actions": { "enabled": true },
@@ -61,26 +58,27 @@
     "HADOLINT_VERSION": "hadolint/hadolint"
   },
 
-  "regexManagers": [
+  "customManagers": [
     {
-      "description": "Update markdownlint-cli2 version (npm)",
+      "customType": "regex",
+      "description": "Update markdownlint-cli2 (npm)",
       "fileMatch": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
-      ],
+      "matchStrings": ["ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"],
       "depNameTemplate": "markdownlint-cli2",
-      "datasource": "npm"
+      "datasourceTemplate": "npm"
     },
     {
-      "description": "Update Dockerfile ARG version variables (except markdownlint)",
+      "customType": "regex",
+      "description": "Update Dockerfile ARG versions",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG (?<depName>(?!MARKDOWNLINT_VERSION)[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
+        "ARG (?<depName>[A-Z_]+_VERSION)=(?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*)$"
     },
     {
+      "customType": "regex",
       "description": "Update Docker base image",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
@@ -89,7 +87,8 @@
       "datasourceTemplate": "docker"
     },
     {
-      "description": "Update pinned GitHub Actions versions",
+      "customType": "regex",
+      "description": "Update GitHub Actions pinned versions",
       "fileMatch": [".github/workflows/.*\\.ya?ml$"],
       "matchStrings": [
         "\\suses: (?<depName>[\\w\\-/]+)@(?<currentValue>v?[0-9][^\\s]*)"
