@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
 
-  "schedule": ["* * * * *"],
+  "schedule": ["* 4-21 * * *"],
   "timezone": "UTC",
 
   "labels": ["dependencies"],
@@ -49,14 +49,6 @@
   "composer": { "enabled": true },
   "github-actions": { "enabled": true },
   "dockerfile": { "enabled": false },
-
-  "registryAliases": {
-    "NODE_VERSION": "nodejs/node",
-    "ACTIONLINT_VERSION": "rhysd/actionlint",
-    "PHP_CS_FIXER_VERSION": "FriendsOfPHP/PHP-CS-Fixer",
-    "TYPOS_VERSION": "crate-ci/typos",
-    "HADOLINT_VERSION": "hadolint/hadolint"
-  },
 
   "customManagers": [
     {
