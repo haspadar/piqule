@@ -1,0 +1,57 @@
+# Hadolint configuration
+# ------------------------------------------------------------------------------
+# ignored — rules that are explicitly disabled
+# ------------------------------------------------------------------------------
+
+ignored:
+  # DL3008: Pin versions in apt-get install
+  # ---------------------------------------
+  # Hadolint recommends pinning package versions.
+  # We intentionally rely on the latest packages from Debian stable.
+  - DL3008
+
+  # DL3013: Pin versions in pip install
+  # -----------------------------------
+  # Same rationale as DL3008.
+  # We want the latest version of the reuse tool, not pinned releases.
+  - DL3013
+
+
+# ------------------------------------------------------------------------------
+# failure-threshold — minimum severity that will cause the workflow to fail
+# ------------------------------------------------------------------------------
+
+failure-threshold: error
+# Meaning: error → fail; warning → allowed
+
+
+# ------------------------------------------------------------------------------
+# override — change severity level for selected rules
+# ------------------------------------------------------------------------------
+
+override:
+  error:
+    # DL3002: Last USER should not be root
+    # ------------------------------------
+    # Important security best practice.
+    # Raised to "error" to enforce non-root final-stage images.
+    - DL3002
+
+    # DL3025: Use JSON notation for CMD and ENTRYPOINT
+    # ------------------------------------------------
+    # JSON form avoids subtle shell interpretation issues.
+    # Raised to "error" to enforce consistent ENTRYPOINT/CMD formatting.
+    - DL3025
+
+  warning:
+    # DL3009: Delete apt-get cache
+    # ----------------------------
+    # Hadolint prefers removing apt cache to minimize image size.
+    # Not always critical for our builds; lowered to "warning".
+    - DL3009
+
+    # DL3015: Avoid additional packages
+    # ---------------------------------
+    # Suggests avoiding unnecessary packages.
+    # Useful recommendation but not always applicable; lowered to "warning".
+    - DL3015

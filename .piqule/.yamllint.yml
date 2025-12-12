@@ -1,0 +1,14 @@
+extends: default
+
+rules:
+  document-start: disable
+
+  # truthy is disabled intentionally to avoid false-positives
+  # in GitHub Actions and CI-related YAML files
+  truthy: disable
+
+  # line-length is limited to 120 characters; longer limits are common
+  # in CI workflows where commands cannot be easily split across lines
+  line-length:
+    max: 120
+    level: warning
