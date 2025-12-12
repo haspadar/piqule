@@ -21,7 +21,7 @@ ignored:
 # failure-threshold — minimum severity that will cause the workflow to fail
 # ------------------------------------------------------------------------------
 
-failure-threshold: warning
+failure-threshold: error
 # Meaning: error → fail; warning → allowed
 
 
