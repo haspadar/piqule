@@ -1,0 +1,118 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+
+  "schedule": ["* 1-4 * * *"],
+  "timezone": "UTC",
+
+  "labels": ["dependencies"],
+  "assignees": [],
+  "reviewers": [],
+
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 0,
+
+  "packageRules": [
+    {
+      "description": "Auto-merge minor and patch dev dependencies",
+      "matchDepTypes": ["require-dev"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "Group dev dependencies",
+      "matchDepTypes": ["require-dev"],
+      "groupName": "dev dependencies"
+    },
+    {
+      "description": "Group production dependencies",
+      "matchDepTypes": ["require"],
+      "groupName": "production dependencies"
+    },
+    {
+      "description": "Prioritize patch updates",
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": ["*"],
+      "prPriority": 10
+    },
+    {
+      "description": "Group CI toolchain updates",
+      "groupName": "CI toolchain",
+      "matchManagers": ["custom.regex", "github-actions"]
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "enabled": true
+  },
+
+  "composer": { "enabled": true },
+  "github-actions": { "enabled": true },
+  "dockerfile": { "enabled": false },
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Node.js version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG NODE_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node"
+    },
+    {
+      "customType": "regex",
+      "description": "Update actionlint version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG ACTIONLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "rhysd/actionlint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "Update markdownlint-cli2 (npm)",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "markdownlint-cli2",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "Update PHP-CS-Fixer version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG PHP_CS_FIXER_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "FriendsOfPHP/PHP-CS-Fixer",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "Update hadolint version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG HADOLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "hadolint/hadolint",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "Update typos version",
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "crate-ci/typos",
+      "datasourceTemplate": "github-releases"
+    }
+  ]
+}

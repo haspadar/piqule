@@ -19,7 +19,7 @@ jobs:
     if: github.event_name != 'schedule'
     uses: ./.github/workflows/_yamllint.yml
     with:
-      config: configs/.yamllint.yml
+      config: .piqule/.yamllint.yml
 
   actionlint:
     name: Actionlint
@@ -34,14 +34,14 @@ jobs:
     if: github.event_name != 'schedule'
     uses: ./.github/workflows/_markdownlint.yml
     with:
-      config: configs/.markdownlint-cli2.jsonc
+      config: .piqule/.markdownlint-cli2.jsonc
 
   typos:
     name: Typos
     if: github.event_name != 'schedule'
     uses: ./.github/workflows/_typos.yml
     with:
-      config: configs/_typos.toml
+      config: .piqule/_typos.toml
 
   php_cs_fixer:
     name: PHP-CS-Fixer
@@ -57,7 +57,7 @@ jobs:
     uses: ./.github/workflows/_hadolint.yml
     with:
       dockerfile: Dockerfile
-      config: configs/.hadolint.yml
+      config: .piqule/.hadolint.yml
 
   pr_size_checker:
     name: PR Size Checker
