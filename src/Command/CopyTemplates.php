@@ -57,4 +57,3 @@ final readonly class CopyTemplates implements Command
         $this->output->write(new Copied($relative));
     }
 }
-
