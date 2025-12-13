@@ -11,4 +11,7 @@ interface FileSystem
     public function isDirectory(string $path): bool;
 
     public function createDirectory(string $path): void;
+
+    public function ensureDirectory(string $target): void;
+    public function copy(string $source, string $target): void;
 }
