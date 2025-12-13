@@ -13,5 +13,5 @@ interface Line
     public function color(): Color;
 
     /** @return resource */
-    public function stream();
+    public function stream(): mixed;
 }

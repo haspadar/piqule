@@ -21,8 +21,8 @@ final readonly class Error implements Line
         return new Red();
     }
 
-    public function stream()
+    public function stream(): mixed
     {
-        return STDOUT;
+        return STDERR;
     }
 }

@@ -21,7 +21,7 @@ final readonly class Copied implements Line
         return new Green();
     }
 
-    public function stream()
+    public function stream(): mixed
     {
         return STDOUT;
     }

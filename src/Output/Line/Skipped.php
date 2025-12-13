@@ -21,7 +21,7 @@ final readonly class Skipped implements Line
         return new Yellow();
     }
 
-    public function stream()
+    public function stream(): mixed
     {
         return STDOUT;
     }
