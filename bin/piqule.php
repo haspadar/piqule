@@ -11,16 +11,29 @@ use Haspadar\Piqule\Structure\Root;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$output = new Console();
-if (!isset($argv[1])) {
-    $output->write(new Error('Usage: piqule <init|update>'));
+$argument = $argv[1] ?? '';
+$path = getenv('COMPOSER_CWD') ?: getcwd();
+if ($path === false) {
+    (new Console())->write(new Error('Cannot determine working directory'));
     exit(1);
 }
 
-$argument = $argv[1];
-$root = new Root(getenv('COMPOSER_CWD') ?: getcwd());
-match ($argument) {
-    'init' => (new Init($root, new DiskFileSystem(), $output))->run(),
-    'update' => (new Update($root, new DiskFileSystem(), $output))->run(),
-    default => $output->write(new Error("Unknown command: $argument\n"))
-};
+$root = new Root($path);
+
+switch ($argument) {
+    case 'init':
+        (new Init($root, new DiskFileSystem(), new Console()))->run();
+        break;
+
+    case 'update':
+        (new Update($root, new DiskFileSystem(), new Console()))->run();
+        break;
+
+    case '':
+        (new Console())->write(new Error('Usage: piqule <init|update>'));
+        exit(1);
+
+    default:
+        (new Console())->write(new Error("Unknown command: $argument"));
+        exit(1);
+}
