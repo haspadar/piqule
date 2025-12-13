@@ -27,7 +27,7 @@ switch ($argument) {
 
     case 'update':
         (new Update($root, new DiskFileSystem(), new Console()))->run();
-        break;
+        exit(1);
 
     case '':
         (new Console())->write(new Error('Usage: piqule <init|update>'));
