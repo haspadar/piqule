@@ -88,7 +88,7 @@ return (new PhpCsFixer\Config())
         'binary_operator_spaces' => ['default' => 'single_space'],
         'concat_space' => ['spacing' => 'one'],
         'unary_operator_spaces' => true,
-        'not_operator_with_successor_space' => true,
+        'not_operator_with_successor_space' => false,
 
         // Misc
         'encoding' => true,
