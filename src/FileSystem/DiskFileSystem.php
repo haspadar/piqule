@@ -34,7 +34,7 @@ final readonly class DiskFileSystem implements FileSystem
     {
         if (!copy($source, $target)) {
             throw new PiquleException(
-                sprintf('Failed to copy "%s" to "%s"', $source, $target)
+                sprintf('Failed to copy "%s" to "%s"', $source, $target),
             );
         }
     }

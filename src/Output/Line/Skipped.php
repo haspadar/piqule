@@ -6,7 +6,6 @@ namespace Haspadar\Piqule\Output\Line;
 
 use Haspadar\Piqule\Output\Color\Color;
 use Haspadar\Piqule\Output\Color\Grey;
-use Haspadar\Piqule\Output\Color\Yellow;
 
 final readonly class Skipped implements Line
 {

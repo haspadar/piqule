@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Command;
 
-use FilesystemIterator;
 use Haspadar\Piqule\FileSystem\FileSystem;
 use Haspadar\Piqule\Output\Output;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 final readonly class Init implements Command
 {

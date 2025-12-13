@@ -7,9 +7,6 @@ namespace Haspadar\Piqule\Command;
 use Haspadar\Piqule\FileSystem\FileSystem;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Structure\Directory;
-use Haspadar\Piqule\Structure\Root;
-use Haspadar\Piqule\Structure\Templates;
 
 final readonly class Update implements Command
 {

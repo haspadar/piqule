@@ -7,8 +7,6 @@ use Haspadar\Piqule\Command\Update;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
-use Haspadar\Piqule\Structure\Root;
-use Haspadar\Piqule\Structure\Templates;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -27,7 +25,8 @@ switch ($argument) {
             $templates,
             $root,
             new DiskFileSystem(),
-            new Console()))->run();
+            new Console(),
+        ))->run();
         break;
 
     case 'update':
@@ -35,7 +34,8 @@ switch ($argument) {
             $templates,
             $root,
             new DiskFileSystem(),
-            new Console()))->run();
+            new Console(),
+        ))->run();
         exit(1);
 
     case '':
