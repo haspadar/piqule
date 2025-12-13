@@ -9,7 +9,7 @@ use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\Structure\Root;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $output = new Console();
 if (!isset($argv[1])) {

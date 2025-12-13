@@ -6,5 +6,8 @@ namespace Haspadar\Piqule\Command;
 
 final readonly class Update implements Command
 {
-    public function run(): void {}
+    public function run(): void
+    {
+        // TODO: Implement update command logic
+    }
 }
