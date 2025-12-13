@@ -12,7 +12,7 @@ use Haspadar\Piqule\Structure\Root;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $output = new Console();
-if (!isset($argv[1])) {
+if (! isset($argv[1])) {
     $output->write(new Error('Usage: piqule <init|update>'));
     exit(1);
 }
