@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Command;
+namespace Haspadar\Piqule;
 
 use FilesystemIterator;
 use Haspadar\Piqule\FileSystem\FileSystem;
@@ -11,9 +11,8 @@ use Haspadar\Piqule\Output\Line\Skipped;
 use Haspadar\Piqule\Output\Output;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SplFileInfo;
 
-final readonly class CopyTemplates implements Command
+final readonly class CopyTemplates
 {
     public function __construct(
         private string $source,
@@ -33,8 +32,7 @@ final readonly class CopyTemplates implements Command
         );
 
         foreach ($iterator as $item) {
-            /** @var SplFileInfo $item */
-            $relative = $item->getSubPathname();
+            $relative = $iterator->getSubPathName();
             $target = $this->target . DIRECTORY_SEPARATOR . $relative;
 
             if (!$item->isDir()) {

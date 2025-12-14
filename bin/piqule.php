@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Command\Init;
-use Haspadar\Piqule\Command\Update;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
+use Haspadar\Piqule\Init;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
+use Haspadar\Piqule\Update;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -30,12 +30,7 @@ switch ($argument) {
         break;
 
     case 'update':
-        (new Update(
-            $templates,
-            $root,
-            new DiskFileSystem(),
-            new Console(),
-        ))->run();
+        (new Update(new Console()))->run();
         exit(1);
 
     case '':
