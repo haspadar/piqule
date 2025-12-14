@@ -2,23 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Command;
+namespace Haspadar\Piqule;
 
 use Haspadar\Piqule\FileSystem\FileSystem;
-use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\Output\Output;
 
-final readonly class Update implements Command
+final readonly class Init
 {
     public function __construct(
-        private string $templates,
-        private string $root,
+        private string $source,
+        private string $target,
         private FileSystem $fileSystem,
         private Output $output,
     ) {}
 
     public function run(): void
     {
-        $this->output->write(new Error('Update not implemented yet'));
+        (new CopyTemplates(
+            $this->source,
+            $this->target,
+            $this->fileSystem,
+            $this->output,
+        ))->run();
     }
 }
