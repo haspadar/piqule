@@ -13,7 +13,7 @@ final readonly class Copied implements Line
 
     public function text(): string
     {
-        return "Copied $this->filename";
+        return "Copied: $this->filename";
     }
 
     public function color(): Color
