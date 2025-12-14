@@ -11,6 +11,7 @@ use Haspadar\Piqule\Output\Line\Skipped;
 use Haspadar\Piqule\Output\Output;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
 final readonly class CopyTemplates implements Command
 {
@@ -32,13 +33,12 @@ final readonly class CopyTemplates implements Command
         );
 
         foreach ($iterator as $item) {
-            $relative = substr($item->getPathname(), strlen($this->source) + 1);
+            /** @var SplFileInfo $item */
+            $relative = $item->getSubPathname();
             $target = $this->target . DIRECTORY_SEPARATOR . $relative;
-            if ($item->isDir()) {
-                $this->fileSystem->ensureDirectory($target);
-            } else {
-                $this->copyFile($item->getPathname(), $target, $relative);
 
+            if (!$item->isDir()) {
+                $this->copyFile($item->getPathname(), $target, $relative);
             }
         }
     }
@@ -53,6 +53,7 @@ final readonly class CopyTemplates implements Command
             return;
         }
 
+        $this->fileSystem->ensureDirectory($target);
         $this->fileSystem->copy($source, $target);
         $this->output->write(new Copied($relative));
     }
