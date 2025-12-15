@@ -18,7 +18,7 @@ final readonly class Init
 
     public function run(): void
     {
-        (new CopyTemplates(
+        $_copiedFiles = (new CopyTemplates(
             $this->source,
             $this->target,
             $this->fileSystem,

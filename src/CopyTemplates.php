@@ -21,7 +21,8 @@ final readonly class CopyTemplates
         private Output $output,
     ) {}
 
-    public function run(): void
+    /** @return list<CopiedFile> */
+    public function run(): array
     {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(
@@ -31,28 +32,27 @@ final readonly class CopyTemplates
             RecursiveIteratorIterator::SELF_FIRST,
         );
 
+        $copied = [];
         foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                continue;
+            }
+
             $relative = $iterator->getSubPathName();
             $target = $this->target . DIRECTORY_SEPARATOR . $relative;
-
-            if (!$item->isDir()) {
-                $this->copyFile($item->getPathname(), $target, $relative);
+            if ($this->fileSystem->exists($target)) {
+                $this->output->write(
+                    new Skipped("$relative already exists"),
+                );
+                continue;
             }
-        }
-    }
 
-    private function copyFile(string $source, string $target, string $relative): void
-    {
-        if ($this->fileSystem->exists($target)) {
-            $this->output->write(
-                new Skipped("$relative already exists"),
-            );
-
-            return;
+            $this->fileSystem->ensureDirectory($target);
+            $this->fileSystem->copy($item->getPathname(), $target);
+            $copied[] = new CopiedFile($relative, $target, $item->getPathname());
+            $this->output->write(new Copied($relative));
         }
 
-        $this->fileSystem->ensureDirectory($target);
-        $this->fileSystem->copy($source, $target);
-        $this->output->write(new Copied($relative));
+        return $copied;
     }
 }
