@@ -9,4 +9,6 @@ interface File
     public function exists(): bool;
 
     public function hash(): string;
+
+    public function contents(): string;
 }

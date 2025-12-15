@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\FileSystem\DiskFileSystem;
+use Haspadar\Piqule\FileSystem\DiskSourceDirectory;
+use Haspadar\Piqule\FileSystem\DiskTargetDirectory;
 use Haspadar\Piqule\Init;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
@@ -22,9 +23,8 @@ $templates = dirname(__DIR__) . '/templates';
 switch ($argument) {
     case 'init':
         (new Init(
-            $templates,
-            $root,
-            new DiskFileSystem(),
+            new DiskSourceDirectory($templates),
+            new DiskTargetDirectory($root),
             new Console(),
         ))->run();
         break;
