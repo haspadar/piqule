@@ -34,7 +34,6 @@ final readonly class DiskTargetDirectory implements TargetDirectory
 
     /**
      * @param string $dir
-     * @return void
      */
     public function createDirectory(string $dir): void
     {
