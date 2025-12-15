@@ -9,7 +9,7 @@ interface Directory
     public function exists(): bool;
 
     /**
-     * @return list<File>
+     * @return iterable<File>
      */
     public function files(): iterable;
 }

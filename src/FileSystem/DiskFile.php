@@ -19,7 +19,7 @@ final readonly class DiskFile implements File
 
     public function exists(): bool
     {
-        return file_exists($this->path);
+        return is_file($this->path);
     }
 
     public function hash(): string
