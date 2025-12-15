@@ -9,23 +9,18 @@ use Haspadar\Piqule\PiquleException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-final readonly class DiskDirectory implements Directory
+final readonly class DiskSourceDirectory implements SourceDirectory
 {
     public function __construct(
         private string $path,
     ) {}
 
-    public function exists(): bool
-    {
-        return is_dir($this->path);
-    }
-
     /**
-     * @return iterable<File>
+     * @return iterable<SourceFile>
      */
     public function files(): iterable
     {
-        if (!$this->exists()) {
+        if (!is_dir($this->path)) {
             throw new PiquleException(
                 sprintf('Directory does not exist: "%s"', $this->path),
             );
@@ -43,7 +38,10 @@ final readonly class DiskDirectory implements Directory
                 continue;
             }
 
-            yield new DiskFile($item->getPathname());
+            yield new SourceFile(
+                new DiskFile($item->getPathname()),
+                $iterator->getSubPathName(),
+            );
         }
     }
 }

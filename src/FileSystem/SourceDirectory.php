@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\FileSystem;
 
-interface Directory
+interface SourceDirectory
 {
-    public function exists(): bool;
-
     /**
-     * @return iterable<File>
+     * @return iterable<SourceFile>
      */
     public function files(): iterable;
 }

@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule;
 
-use Haspadar\Piqule\FileSystem\FileSystem;
+use Haspadar\Piqule\FileSystem\SourceDirectory;
+use Haspadar\Piqule\FileSystem\TargetDirectory;
 use Haspadar\Piqule\Output\Output;
 
 final readonly class Init
 {
     public function __construct(
-        private string $source,
-        private string $target,
-        private FileSystem $fileSystem,
+        private SourceDirectory $sourceDirectory,
+        private TargetDirectory $targetDirectory,
         private Output $output,
     ) {}
 
     public function run(): void
     {
-        $_copiedFiles = (new CopyTemplates(
-            $this->source,
-            $this->target,
-            $this->fileSystem,
+        (new CopyTemplates(
+            $this->sourceDirectory,
+            $this->targetDirectory,
             $this->output,
         ))->run();
     }
