@@ -22,7 +22,11 @@ final readonly class DiskTargetDirectory implements TargetDirectory
         $target = $this->root . DIRECTORY_SEPARATOR . $relativePath;
         $dir = dirname($target);
         if (!is_dir($dir)) {
-            mkdir($dir, 0o777, true);
+            if (!mkdir($dir, 0o777, true) && !is_dir($dir)) {
+                throw new PiquleException(
+                    sprintf('Failed to create directory: "%s"', $dir),
+                );
+            }
         }
 
         if (!copy($source->path(), $target)) {
