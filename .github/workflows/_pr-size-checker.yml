@@ -6,7 +6,7 @@ on:
       max_lines_changed:
         required: false
         type: number
-        default: 200
+        default: 250
 
 permissions:
   contents: read
