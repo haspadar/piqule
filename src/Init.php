@@ -6,22 +6,23 @@ namespace Haspadar\Piqule;
 
 use Haspadar\Piqule\FileSystem\SourceDirectory;
 use Haspadar\Piqule\FileSystem\TargetDirectory;
-use Haspadar\Piqule\Output\Output;
+use Haspadar\Piqule\FileSystem\TargetFile;
+use Haspadar\Piqule\Step\Step;
 
 final readonly class Init
 {
     public function __construct(
         private SourceDirectory $sourceDirectory,
         private TargetDirectory $targetDirectory,
-        private Output $output,
+        private Step $step,
     ) {}
 
     public function run(): void
     {
-        (new CopyTemplates(
-            $this->sourceDirectory,
-            $this->targetDirectory,
-            $this->output,
-        ))->run();
+        foreach ($this->sourceDirectory->files() as $sourceFile) {
+            $this->step->applyTo(
+                new TargetFile($sourceFile, $this->targetDirectory),
+            );
+        }
     }
 }
