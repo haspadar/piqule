@@ -17,16 +17,12 @@ final readonly class Init
         private Step $step,
     ) {}
 
-    /** @return list<string> */
-    public function run(): array
+    public function run(): void
     {
-        $copied = [];
         foreach ($this->sourceDirectory->files() as $sourceFile) {
             $this->step->applyTo(
                 new TargetFile($sourceFile, $this->targetDirectory),
             );
         }
-
-        return $copied;
     }
 }
