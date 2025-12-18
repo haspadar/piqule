@@ -7,43 +7,39 @@ use Haspadar\Piqule\FileSystem\DiskTargetDirectory;
 use Haspadar\Piqule\Init;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
+use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Step\End;
 use Haspadar\Piqule\Step\MissingTarget;
 use Haspadar\Piqule\Update;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$argument = $argv[1] ?? '';
-$root = getenv('COMPOSER_CWD') ?: getcwd();
 $output = new Console();
-if ($root === false) {
-    $output->write(new Error('Cannot determine working directory'));
-    exit(1);
-}
 
-$templates = dirname(__DIR__) . '/templates';
+try {
+    $run = new RunContext($argv);
 
-switch ($argument) {
-    case 'init':
-        (new Init(
+    $templates = dirname(__DIR__) . '/templates';
+    $root = $run->root();
+
+    match ($run->argument(1)) {
+        'init' => (new Init(
             new DiskSourceDirectory($templates),
             new DiskTargetDirectory($root),
             new MissingTarget(
                 $output,
                 new End($output),
             ),
-        ))->run();
-        break;
+        ))->run(),
 
-    case 'update':
-        (new Update($output))->run();
-        exit(1);
+        'update' => (new Update($output))->run(),
 
-    case '':
-        $output->write(new Error('Usage: piqule <init|update>'));
-        exit(1);
-
-    default:
-        $output->write(new Error("Unknown command: $argument"));
-        exit(1);
+        default => throw new PiquleException(
+            sprintf('Unknown command: %s', $run->argument(1)),
+        ),
+    };
+} catch (PiquleException $e) {
+    $output->write(new Error($e->getMessage()));
+    exit(1);
 }
