@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target;
 
-use Haspadar\Piqule\FileSystem\File;
 use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Source\File;
 
 final readonly class DiskTargetDirectory implements TargetDirectory
 {

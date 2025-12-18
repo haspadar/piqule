@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target;
 
-use Haspadar\Piqule\FileSystem\File;
+use Haspadar\Piqule\Source\File;
 
 interface TargetDirectory
 {
