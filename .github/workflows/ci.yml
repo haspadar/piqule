@@ -64,7 +64,7 @@ jobs:
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/_pr-size-checker.yml
     with:
-      max_lines_changed: 200
+      max_lines_changed: 250
 
   release_drafter:
     name: Release Drafter
