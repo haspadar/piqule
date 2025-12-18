@@ -19,7 +19,7 @@ final class PiquleSentinel
      */
     public function exists(): bool
     {
-        return is_dir($this->path());
+        return is_dir($this->location());
     }
 
     /**
