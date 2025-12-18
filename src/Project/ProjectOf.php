@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
+use Haspadar\Piqule\Step\Scenario;
+
 /**
  * Represents a project determined by the presence of Piqule
  *
@@ -25,9 +27,9 @@ final readonly class ProjectOf implements Project
             : $uninitialized;
     }
 
-    public function init(): void
+    public function init(Scenario $scenario): void
     {
-        $this->origin->init();
+        $this->origin->init($scenario);
     }
 
     public function update(): void
