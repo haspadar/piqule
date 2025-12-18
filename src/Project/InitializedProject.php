@@ -13,8 +13,5 @@ final readonly class InitializedProject implements Project
         throw new PiquleException('Project is already initialized');
     }
 
-    public function update(): void
-    {
-
-    }
+    public function update(): void {}
 }

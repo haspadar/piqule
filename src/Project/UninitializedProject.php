@@ -8,10 +8,7 @@ use Haspadar\Piqule\PiquleException;
 
 final readonly class UninitializedProject implements Project
 {
-    public function init(): void
-    {
-
-    }
+    public function init(): void {}
 
     public function update(): void
     {
