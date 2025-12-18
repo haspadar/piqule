@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
-use Haspadar\Piqule\PiquleSentinel;
-
 /**
  * Represents a project determined by the presence of Piqule
  *
@@ -13,14 +11,14 @@ use Haspadar\Piqule\PiquleSentinel;
  * It delegates behavior to one of the provided projects
  * based on the sentinel state
  */
-final class ProjectOf implements Project
+final readonly class ProjectOf implements Project
 {
-    private readonly Project $origin;
+    private Project $origin;
 
     public function __construct(
-        PiquleSentinel $sentinel,
-        Project $initialized,
-        Project $uninitialized,
+        Sentinel $sentinel,
+        Project  $initialized,
+        Project  $uninitialized,
     ) {
         $this->origin = $sentinel->exists()
             ? $initialized
