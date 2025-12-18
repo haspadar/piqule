@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
-use Haspadar\Piqule\Step\Scenario;
+use Haspadar\Piqule\Target\Materialization\Materialization;
 
 interface Project
 {
-    public function init(Scenario $scenario): void;
+    public function init(Materialization $materialization): void;
 
-    public function update(): void;
+    public function update(Materialization $materialization): void;
 }

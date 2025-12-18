@@ -11,9 +11,9 @@ use Haspadar\Piqule\Project\Sentinel;
 use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Source\DiskSourceDirectory;
-use Haspadar\Piqule\Step\Scenario;
-use Haspadar\Piqule\Step\TargetMaterialization;
 use Haspadar\Piqule\Target\DiskTargetDirectory;
+use Haspadar\Piqule\Target\Materialization\InitMaterialization;
+use Haspadar\Piqule\Target\Materialization\UpdateMaterialization;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -23,7 +23,10 @@ try {
     $context = new RunContext($argv);
     $project = new ProjectOf(
         new Sentinel($context->root()),
-        new InitializedProject(),
+        new InitializedProject(
+            new DiskSourceDirectory(dirname(__DIR__) . '/templates'),
+            new DiskTargetDirectory($context->root()),
+        ),
         new UninitializedProject(
             new DiskSourceDirectory(dirname(__DIR__) . '/templates'),
             new DiskTargetDirectory($context->root()),
@@ -31,10 +34,8 @@ try {
     );
 
     match ($context->command()) {
-        'init' => $project->init(new Scenario([
-            new TargetMaterialization($output),
-        ])),
-        'update' => $project->update(),
+        'init' => $project->init(new InitMaterialization($output)),
+        'update' => $project->update(new UpdateMaterialization($output)),
         default => throw new PiquleException(
             sprintf('Unknown command: %s', $context->command()),
         ),

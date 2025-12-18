@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
-use Haspadar\Piqule\Step\Scenario;
+use Haspadar\Piqule\Target\Materialization\Materialization;
 
 /**
  * Represents a project determined by the presence of Piqule
@@ -27,13 +27,13 @@ final readonly class ProjectOf implements Project
             : $uninitialized;
     }
 
-    public function init(Scenario $scenario): void
+    public function init(Materialization $materialization): void
     {
-        $this->origin->init($scenario);
+        $this->origin->init($materialization);
     }
 
-    public function update(): void
+    public function update(Materialization $materialization): void
     {
-        $this->origin->update();
+        $this->origin->update($materialization);
     }
 }

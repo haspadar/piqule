@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Project;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Source\SourceDirectory;
-use Haspadar\Piqule\Step\Scenario;
+use Haspadar\Piqule\Target\Materialization\Materialization;
 use Haspadar\Piqule\Target\TargetDirectory;
 use Haspadar\Piqule\Target\TargetFile;
 
@@ -17,16 +17,16 @@ final readonly class UninitializedProject implements Project
         private TargetDirectory $targetDirectory,
     ) {}
 
-    public function init(Scenario $scenario): void
+    public function init(Materialization $materialization): void
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
-            $scenario->run(
+            $materialization->applyTo(
                 new TargetFile($sourceFile, $this->targetDirectory),
             );
         }
     }
 
-    public function update(): void
+    public function update(Materialization $materialization): void
     {
         throw new PiquleException('Project is not initialized');
     }
