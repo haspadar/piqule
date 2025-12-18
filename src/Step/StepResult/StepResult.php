@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\StepResult;
+namespace Haspadar\Piqule\Step\StepResult;
 
 interface StepResult
 {

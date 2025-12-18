@@ -11,8 +11,8 @@ use Haspadar\Piqule\Project\Sentinel;
 use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Source\DiskSourceDirectory;
-use Haspadar\Piqule\Step\MissingTarget;
 use Haspadar\Piqule\Step\Scenario;
+use Haspadar\Piqule\Step\TargetMaterialization;
 use Haspadar\Piqule\Target\DiskTargetDirectory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -32,7 +32,7 @@ try {
 
     match ($context->command()) {
         'init' => $project->init(new Scenario([
-            new MissingTarget($output),
+            new TargetMaterialization($output),
         ])),
         'update' => $project->update(),
         default => throw new PiquleException(

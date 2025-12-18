@@ -7,12 +7,11 @@ namespace Haspadar\Piqule\Step;
 use Haspadar\Piqule\Output\Color\Green;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\StepResult\ContinueResult;
-use Haspadar\Piqule\StepResult\StepResult;
-use Haspadar\Piqule\StepResult\StopResult;
+use Haspadar\Piqule\Step\StepResult\ContinueResult;
+use Haspadar\Piqule\Step\StepResult\StepResult;
 use Haspadar\Piqule\Target\TargetFile;
 
-final readonly class MissingTarget implements Step
+final readonly class TargetMaterialization implements Step
 {
     public function __construct(
         private Output $output,
@@ -20,7 +19,8 @@ final readonly class MissingTarget implements Step
 
     public function applyTo(TargetFile $target): StepResult
     {
-        if (!$target->exists()) {
+        $state = $target->state();
+        if (!$state->exists() || !$state->same()) {
             $target->materialize();
             $this->output->write(
                 new Text(
@@ -32,6 +32,6 @@ final readonly class MissingTarget implements Step
             return new ContinueResult();
         }
 
-        return new StopResult();
+        return new ContinueResult();
     }
 }

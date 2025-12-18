@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target;
 
-use Haspadar\Piqule\Source\File;
+use Haspadar\Piqule\File\File;
 
 interface TargetDirectory
 {
@@ -18,4 +18,6 @@ interface TargetDirectory
      * creating parent directories if needed
      */
     public function write(string $relativePath, File $source): void;
+
+    public function read(string $relativePath): File;
 }
