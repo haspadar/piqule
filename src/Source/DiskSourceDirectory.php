@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\FileSystem;
+namespace Haspadar\Piqule\Source;
 
 use FilesystemIterator;
+use Haspadar\Piqule\FileSystem\DiskFile;
 use Haspadar\Piqule\PiquleException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -38,9 +39,13 @@ final readonly class DiskSourceDirectory implements SourceDirectory
                 continue;
             }
 
+            /**
+             * @var $directoryIterator RecursiveDirectoryIterator
+             */
+            $directoryIterator = $iterator->getSubIterator();
             yield new SourceFile(
                 new DiskFile($item->getPathname()),
-                $iterator->getSubPathName(),
+                $directoryIterator->getSubPathName(),
             );
         }
     }
