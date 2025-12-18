@@ -21,14 +21,12 @@ $output = new Console();
 
 try {
     $context = new RunContext($argv);
-    $sourceDirectory = new DiskSourceDirectory(dirname(__DIR__) . '/templates');
-    $targetDirectory = new DiskTargetDirectory($context->root());
     $project = new ProjectOf(
         new Sentinel($context->root()),
-        new InitializedProject($output),
+        new InitializedProject(),
         new UninitializedProject(
-            $sourceDirectory,
-            $targetDirectory,
+            new DiskSourceDirectory(dirname(__DIR__) . '/templates'),
+            new DiskTargetDirectory($context->root()),
             new MissingTarget(
                 $output,
                 new End($output),
@@ -36,11 +34,11 @@ try {
         ),
     );
 
-    match ($context->argument(1)) {
+    match ($context->command()) {
         'init' => $project->init(),
         'update' => $project->update(),
         default => throw new PiquleException(
-            sprintf('Unknown command: %s', $context->argument(1)),
+            sprintf('Unknown command: %s', $context->command()),
         ),
     };
 } catch (PiquleException $e) {

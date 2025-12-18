@@ -36,6 +36,11 @@ final class RunContext
         return $root;
     }
 
+    public function command(): string
+    {
+        return $this->argument(1);
+    }
+
     /**
      * Returns the CLI argument at the given index.
      *
@@ -44,9 +49,7 @@ final class RunContext
     public function argument(int $index): string
     {
         if (!array_key_exists($index, $this->argv)) {
-            throw new PiquleException(
-                sprintf('Missing argument #%d. Usage: piqule <init|update>', $index),
-            );
+            throw new PiquleException(sprintf('Missing argument #%d', $index));
         }
 
         return $this->argv[$index];
