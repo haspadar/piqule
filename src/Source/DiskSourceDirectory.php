@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Source;
 
 use FilesystemIterator;
+use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\PiquleException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

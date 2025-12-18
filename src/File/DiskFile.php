@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Source;
+namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\PiquleException;
 
@@ -17,21 +17,9 @@ final readonly class DiskFile implements File
         return $this->path;
     }
 
-    public function exists(): bool
-    {
-        return is_file($this->path);
-    }
-
     public function hash(): string
     {
-        if (!$this->exists()) {
-            throw new PiquleException(
-                sprintf('File does not exist: "%s"', $this->path),
-            );
-        }
-
         $hash = hash_file('sha256', $this->path);
-
         if ($hash === false) {
             throw new PiquleException(
                 sprintf('Failed to hash file: "%s"', $this->path),

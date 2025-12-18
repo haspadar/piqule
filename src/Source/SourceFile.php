@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Source;
 
+use Haspadar\Piqule\File\File;
+
 final readonly class SourceFile
 {
     public function __construct(

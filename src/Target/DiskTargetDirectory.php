@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target;
 
+use Haspadar\Piqule\File\DiskFile;
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Source\File;
 
 final readonly class DiskTargetDirectory implements TargetDirectory
 {
@@ -31,6 +32,13 @@ final readonly class DiskTargetDirectory implements TargetDirectory
                 sprintf('Failed to write file: "%s"', $relativePath),
             );
         }
+    }
+
+    public function read(string $relativePath): File
+    {
+        return new DiskFile(
+            $this->root . DIRECTORY_SEPARATOR . $relativePath,
+        );
     }
 
     /**
