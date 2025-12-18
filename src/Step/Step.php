@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Step;
 
-use Haspadar\Piqule\FileSystem\TargetFile;
+use Haspadar\Piqule\Target\TargetFile;
 
 interface Step
 {

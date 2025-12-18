@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Step;
 
-use Haspadar\Piqule\FileSystem\TargetFile;
 use Haspadar\Piqule\Output\Line\Copied;
 use Haspadar\Piqule\Output\Output;
+use Haspadar\Piqule\Target\TargetFile;
 
 final readonly class MissingTarget implements Step
 {

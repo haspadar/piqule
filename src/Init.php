@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule;
 
-use Haspadar\Piqule\FileSystem\SourceDirectory;
-use Haspadar\Piqule\FileSystem\TargetDirectory;
-use Haspadar\Piqule\FileSystem\TargetFile;
+use Haspadar\Piqule\Source\SourceDirectory;
 use Haspadar\Piqule\Step\Step;
+use Haspadar\Piqule\Target\TargetDirectory;
+use Haspadar\Piqule\Target\TargetFile;
 
 final readonly class Init
 {
