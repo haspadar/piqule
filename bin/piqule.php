@@ -21,16 +21,12 @@ $output = new Console();
 
 try {
     $context = new RunContext($argv);
+    $sourceDirectory = new DiskSourceDirectory(dirname(__DIR__) . '/templates');
+    $targetDirectory = new DiskTargetDirectory($context->root());
     $project = new ProjectOf(
         new Sentinel($context->root()),
-        new InitializedProject(
-            new DiskSourceDirectory(dirname(__DIR__) . '/templates'),
-            new DiskTargetDirectory($context->root()),
-        ),
-        new UninitializedProject(
-            new DiskSourceDirectory(dirname(__DIR__) . '/templates'),
-            new DiskTargetDirectory($context->root()),
-        ),
+        new InitializedProject($sourceDirectory, $targetDirectory),
+        new UninitializedProject($sourceDirectory, $targetDirectory),
     );
 
     match ($context->command()) {
