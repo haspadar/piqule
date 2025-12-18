@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule;
+namespace Haspadar\Piqule\Project;
+
+use Haspadar\Piqule\PiquleException;
 
 /**
  * Represents the presence of Piqule in a filesystem location
@@ -10,7 +12,7 @@ namespace Haspadar\Piqule;
  * This object acts as a sentinel: it does not decide what to do,
  * it only witnesses whether Piqule has been initialized here
  */
-final class PiquleSentinel
+final class Sentinel
 {
     public function __construct(private string $root) {}
 
