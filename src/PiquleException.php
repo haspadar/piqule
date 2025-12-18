@@ -6,4 +6,7 @@ namespace Haspadar\Piqule;
 
 use RuntimeException;
 
+/**
+ * The only exception type used by Piqule
+ */
 final class PiquleException extends RuntimeException {}
