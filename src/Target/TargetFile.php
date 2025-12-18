@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Target;
 
 use Haspadar\Piqule\Source\SourceFile;
-use Haspadar\Piqule\Target\TargetState\ChangedTarget;
-use Haspadar\Piqule\Target\TargetState\MissingTarget;
-use Haspadar\Piqule\Target\TargetState\TargetState;
-use Haspadar\Piqule\Target\TargetState\UnchangedTarget;
 
 final class TargetFile
 {
@@ -35,17 +31,16 @@ final class TargetFile
         return $this->source->relativePath();
     }
 
-    public function state(): TargetState
+    public function hashDiffers(): bool
     {
         if (!$this->exists()) {
-            return new MissingTarget();
+            return true;
         }
 
-        $targetFile = $this->target->read($this->relativePath());
-        if ($targetFile->hash() !== $this->source->file()->hash()) {
-            return new ChangedTarget();
-        }
+        $targetFile = $this->target->read(
+            $this->source->relativePath(),
+        );
 
-        return new UnchangedTarget();
+        return $targetFile->hash() !== $this->source->file()->hash();
     }
 }
