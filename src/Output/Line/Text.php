@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Output\Line;
 
 use Haspadar\Piqule\Output\Color\Color;
-use Haspadar\Piqule\Output\Color\Grey;
 
-final readonly class Skipped implements Line
+final readonly class Text implements Line
 {
-    public function __construct(private string $message) {}
+    public function __construct(
+        private string $text,
+        private Color $color,
+    ) {}
 
     public function text(): string
     {
-        return "Skipped: $this->message";
+        return $this->text;
     }
 
     public function color(): Color
     {
-        return new Grey();
+        return $this->color;
     }
 
     public function stream(): mixed
