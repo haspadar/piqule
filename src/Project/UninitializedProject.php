@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Project;
 
 use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Source\SourceDirectory;
 use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Materialization\Materialization;
@@ -17,16 +18,19 @@ final readonly class UninitializedProject implements Project
         private TargetDirectory $targetDirectory,
     ) {}
 
-    public function init(Materialization $materialization): void
+    public function init(Materialization $materialization, Lock $lock): void
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
             $materialization->applyTo(
                 new DiskTarget($sourceFile, $this->targetDirectory),
+                $lock,
             );
         }
+
+        $lock->store();
     }
 
-    public function update(Materialization $materialization): void
+    public function update(Materialization $materialization, Lock $lock): void
     {
         throw new PiquleException('Project is not initialized');
     }

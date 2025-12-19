@@ -6,10 +6,10 @@ namespace Haspadar\Piqule\Target\Materialization;
 
 use Haspadar\Piqule\Output\Color\Green;
 use Haspadar\Piqule\Output\Color\Grey;
-use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Target\DiskTarget;
+use Haspadar\Piqule\Project\Lock\Lock;
+use Haspadar\Piqule\Target\Target;
 
 final readonly class UpdateMaterialization implements Materialization
 {
@@ -17,7 +17,7 @@ final readonly class UpdateMaterialization implements Materialization
         private Output $output,
     ) {}
 
-    public function applyTo(DiskTarget $target): void
+    public function applyTo(Target $target, Lock $lock): Lock
     {
         if (!$target->exists()) {
             $target->materialize();
@@ -28,19 +28,7 @@ final readonly class UpdateMaterialization implements Materialization
                 ),
             );
 
-            return;
-        }
-
-        if ($target->hashDiffers()) {
-            $target->materialize();
-            $this->output->write(
-                new Text(
-                    sprintf('Updated: %s', $target->relativePath()),
-                    new Yellow(),
-                ),
-            );
-
-            return;
+            return $lock;
         }
 
         $this->output->write(
@@ -49,5 +37,7 @@ final readonly class UpdateMaterialization implements Materialization
                 new Grey(),
             ),
         );
+
+        return $lock;
     }
 }

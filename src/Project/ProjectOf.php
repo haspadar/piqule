@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
+use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Target\Materialization\Materialization;
 
 /**
@@ -15,25 +16,26 @@ use Haspadar\Piqule\Target\Materialization\Materialization;
  */
 final readonly class ProjectOf implements Project
 {
-    private Project $origin;
-
     public function __construct(
-        Sentinel $sentinel,
-        Project  $initialized,
-        Project  $uninitialized,
-    ) {
-        $this->origin = $sentinel->exists()
-            ? $initialized
-            : $uninitialized;
+        private DiskPiquleDirectory $piqule,
+        private Project             $initialized,
+        private Project             $uninitialized,
+    ) {}
+
+    private function project(): Project
+    {
+        return $this->piqule->exists()
+            ? $this->initialized
+            : $this->uninitialized;
     }
 
-    public function init(Materialization $materialization): void
+    public function init(Materialization $materialization, Lock $lock): void
     {
-        $this->origin->init($materialization);
+        $this->project()->init($materialization, $lock);
     }
 
-    public function update(Materialization $materialization): void
+    public function update(Materialization $materialization, Lock $lock): void
     {
-        $this->origin->update($materialization);
+        $this->project()->update($materialization, $lock);
     }
 }
