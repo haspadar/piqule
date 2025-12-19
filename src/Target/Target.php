@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target;
 
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Source\SourceFile;
 
-final class TargetFile
+final class Target
 {
     public function __construct(
         private SourceFile $source,
@@ -31,16 +32,15 @@ final class TargetFile
         return $this->source->relativePath();
     }
 
-    public function hashDiffers(): bool
+    public function sourceFile(): File
     {
-        if (!$this->exists()) {
-            return true;
-        }
+        return $this->source->file();
+    }
 
-        $targetFile = $this->target->read(
+    public function file(): File
+    {
+        return $this->target->read(
             $this->source->relativePath(),
         );
-
-        return $targetFile->hash() !== $this->source->file()->hash();
     }
 }
