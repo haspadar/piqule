@@ -17,9 +17,9 @@ use Haspadar\Piqule\Target\Materialization\Materialization;
 final readonly class ProjectOf implements Project
 {
     public function __construct(
-        private PiquleDirectory $piqule,
-        private Project $initialized,
-        private Project $uninitialized,
+        private DiskPiquleDirectory $piqule,
+        private Project             $initialized,
+        private Project             $uninitialized,
     ) {}
 
     private function project(): Project

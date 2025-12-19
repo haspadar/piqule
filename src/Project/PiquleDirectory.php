@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
-final readonly class PiquleDirectory
+use Haspadar\Piqule\PiquleException;
+
+interface PiquleDirectory
 {
-    public function __construct(
-        private string $path,
-    ) {}
+    public function exists(): bool;
 
-    public function exists(): bool
-    {
-        return is_dir($this->path);
-    }
+    /**
+     * @throws PiquleException if not initialized
+     */
+    public function path(): string;
 
-    public function path(): string
-    {
-        return $this->path;
-    }
-
-    public function lockFile(): string
-    {
-        return $this->path() . '/lock.json';
-    }
+    public function lockFile(): string;
 }
