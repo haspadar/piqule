@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target\Materialization;
 
-use Haspadar\Piqule\Target\TargetFile;
+use Haspadar\Piqule\Target\DiskTarget;
 
 interface Materialization
 {
-    public function applyTo(TargetFile $target): void;
+    public function applyTo(DiskTarget $target): void;
 }

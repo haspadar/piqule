@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Target\Materialization;
 use Haspadar\Piqule\Output\Color\Green;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Target\TargetFile;
+use Haspadar\Piqule\Target\DiskTarget;
 
 final readonly class InitMaterialization implements Materialization
 {
@@ -15,7 +15,7 @@ final readonly class InitMaterialization implements Materialization
         private Output $output,
     ) {}
 
-    public function applyTo(TargetFile $target): void
+    public function applyTo(DiskTarget $target): void
     {
         $target->materialize();
         $this->output->write(
