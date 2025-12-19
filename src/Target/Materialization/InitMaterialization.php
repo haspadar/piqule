@@ -26,6 +26,6 @@ final readonly class InitMaterialization implements Materialization
             ),
         );
 
-        return $lock;
+        return $lock->withRemembered($target);
     }
 }

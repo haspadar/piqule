@@ -21,7 +21,7 @@ final readonly class UninitializedProject implements Project
     public function init(Materialization $materialization, Lock $lock): void
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
-            $materialization->applyTo(
+            $lock = $materialization->applyTo(
                 new DiskTarget($sourceFile, $this->targetDirectory),
                 $lock,
             );
