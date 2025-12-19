@@ -7,8 +7,8 @@ namespace Haspadar\Piqule\Project;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Source\SourceDirectory;
+use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Materialization\Materialization;
-use Haspadar\Piqule\Target\Target;
 use Haspadar\Piqule\Target\TargetDirectory;
 
 final readonly class UninitializedProject implements Project
@@ -21,8 +21,8 @@ final readonly class UninitializedProject implements Project
     public function init(Materialization $materialization, Lock $lock): void
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
-            $lock = $materialization->applyTo(
-                new Target($sourceFile, $this->targetDirectory),
+            $materialization->applyTo(
+                new DiskTarget($sourceFile, $this->targetDirectory),
                 $lock,
             );
         }

@@ -67,24 +67,30 @@ final readonly class JsonLock implements Lock
         );
     }
 
+    /**
+     * @throws JsonException
+     */
     public function store(): void
     {
         $dir = dirname($this->lockFile);
 
         if (!is_dir($dir)) {
-            if (!mkdir($dir, 0o777, true) && !is_dir($dir)) {
+            if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
                 throw new PiquleException(
                     sprintf('Cannot create lock directory: %s', $dir),
                 );
             }
         }
 
-        file_put_contents(
-            $this->lockFile,
-            json_encode(
-                $this->hashes,
-                JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR,
-            ),
+        $json = json_encode(
+            $this->hashes,
+            JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR,
         );
+
+        if (file_put_contents($this->lockFile, $json) === false) {
+            throw new PiquleException(
+                sprintf('Failed to write lock file: "%s"', $this->lockFile),
+            );
+        }
     }
 }
