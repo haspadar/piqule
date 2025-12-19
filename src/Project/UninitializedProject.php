@@ -6,9 +6,9 @@ namespace Haspadar\Piqule\Project;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Source\SourceDirectory;
+use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Materialization\Materialization;
 use Haspadar\Piqule\Target\TargetDirectory;
-use Haspadar\Piqule\Target\TargetFile;
 
 final readonly class UninitializedProject implements Project
 {
@@ -21,7 +21,7 @@ final readonly class UninitializedProject implements Project
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
             $materialization->applyTo(
-                new TargetFile($sourceFile, $this->targetDirectory),
+                new DiskTarget($sourceFile, $this->targetDirectory),
             );
         }
     }

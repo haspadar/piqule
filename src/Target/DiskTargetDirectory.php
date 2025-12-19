@@ -46,7 +46,7 @@ final readonly class DiskTargetDirectory implements TargetDirectory
      */
     public function createDirectory(string $dir): void
     {
-        if (!mkdir($dir, 0o777, true) && !is_dir($dir)) {
+        if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
             throw new PiquleException(
                 sprintf('Failed to create directory: "%s"', $dir),
             );

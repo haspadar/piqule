@@ -9,7 +9,7 @@ use Haspadar\Piqule\Output\Color\Grey;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Target\TargetFile;
+use Haspadar\Piqule\Target\DiskTarget;
 
 final readonly class UpdateMaterialization implements Materialization
 {
@@ -17,7 +17,7 @@ final readonly class UpdateMaterialization implements Materialization
         private Output $output,
     ) {}
 
-    public function applyTo(TargetFile $target): void
+    public function applyTo(DiskTarget $target): void
     {
         if (!$target->exists()) {
             $target->materialize();
