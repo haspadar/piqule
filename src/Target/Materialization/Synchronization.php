@@ -35,7 +35,7 @@ final readonly class Synchronization implements Materialization
             $target->materialize();
             $this->output->write(
                 new Text(
-                    sprintf('Updated: %s', $target->relativePath()),
+                    sprintf('Synchronized: %s', $target->relativePath()),
                     new Green(),
                 ),
             );
