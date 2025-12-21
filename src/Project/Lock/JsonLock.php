@@ -84,7 +84,7 @@ final readonly class JsonLock implements Lock
 
         $json = json_encode(
             $this->hashes,
-            JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR,
+            JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
         );
 
         if (file_put_contents($this->lockFile, $json) === false) {

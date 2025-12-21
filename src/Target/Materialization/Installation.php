@@ -26,6 +26,6 @@ final readonly class Installation implements Materialization
             ),
         );
 
-        return $lock;
+        return $lock->withRemembered($target);
     }
 }
