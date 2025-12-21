@@ -13,8 +13,8 @@ use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Source\DiskSourceDirectory;
 use Haspadar\Piqule\Target\DiskTargetDirectory;
-use Haspadar\Piqule\Target\Materialization\InitMaterialization;
-use Haspadar\Piqule\Target\Materialization\UpdateMaterialization;
+use Haspadar\Piqule\Target\Materialization\Installation;
+use Haspadar\Piqule\Target\Materialization\Synchronization;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -34,11 +34,11 @@ try {
 
     match ($context->command()) {
         'init' => $project->init(
-            new InitMaterialization($output),
+            new Installation($output),
             new JsonLock($piqule->lockFile()),
         ),
         'update' => $project->update(
-            new UpdateMaterialization($output),
+            new Synchronization($output),
             new JsonLock($piqule->lockFile()),
         ),
         default => throw new PiquleException(

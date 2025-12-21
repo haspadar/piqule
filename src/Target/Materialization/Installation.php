@@ -10,7 +10,7 @@ use Haspadar\Piqule\Output\Output;
 use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Target\Target;
 
-final readonly class InitMaterialization implements Materialization
+final readonly class Installation implements Materialization
 {
     public function __construct(
         private Output $output,

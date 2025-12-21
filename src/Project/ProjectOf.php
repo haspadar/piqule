@@ -18,8 +18,8 @@ final readonly class ProjectOf implements Project
 {
     public function __construct(
         private DiskPiquleDirectory $piqule,
-        private Project             $initialized,
-        private Project             $uninitialized,
+        private Project $initialized,
+        private Project $uninitialized,
     ) {}
 
     private function project(): Project

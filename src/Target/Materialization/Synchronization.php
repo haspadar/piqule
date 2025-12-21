@@ -11,7 +11,7 @@ use Haspadar\Piqule\Output\Output;
 use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Target\Target;
 
-final readonly class UpdateMaterialization implements Materialization
+final readonly class Synchronization implements Materialization
 {
     public function __construct(
         private Output $output,
@@ -28,7 +28,19 @@ final readonly class UpdateMaterialization implements Materialization
                 ),
             );
 
-            return $lock;
+            return $lock->withRemembered($target);
+        }
+
+        if ($lock->isUnchanged($target)) {
+            $target->materialize();
+            $this->output->write(
+                new Text(
+                    sprintf('Updated: %s', $target->relativePath()),
+                    new Green(),
+                ),
+            );
+
+            return $lock->withRemembered($target);
         }
 
         $this->output->write(
