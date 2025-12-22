@@ -26,10 +26,12 @@ final readonly class InitializedProject implements Project
     public function update(Materialization $materialization, Lock $lock): void
     {
         foreach ($this->sourceDirectory->files() as $sourceFile) {
-            $materialization->applyTo(
+            $lock = $materialization->applyTo(
                 new DiskTarget($sourceFile, $this->targetDirectory),
                 $lock,
             );
         }
+
+        $lock->store();
     }
 }

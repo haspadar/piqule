@@ -31,15 +31,15 @@ try {
         new InitializedProject($sourceDirectory, $targetDirectory),
         new UninitializedProject($sourceDirectory, $targetDirectory),
     );
-
+    $lock = new JsonLock($root . '/piqule.lock');
     match ($context->command()) {
         'init' => $project->init(
             new Installation($output),
-            new JsonLock($piqule->lockFile()),
+            $lock,
         ),
         'update' => $project->update(
             new Synchronization($output),
-            new JsonLock($piqule->lockFile()),
+            $lock,
         ),
         default => throw new PiquleException(
             sprintf('Unknown command: %s', $context->command()),

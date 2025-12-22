@@ -9,6 +9,4 @@ interface PiquleDirectory
     public function exists(): bool;
 
     public function path(): string;
-
-    public function lockFile(): string;
 }

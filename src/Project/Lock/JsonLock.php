@@ -11,58 +11,75 @@ use JsonException;
 final readonly class JsonLock implements Lock
 {
     /**
-     * @param array<string, string> $hashes
+     * @param array<string,string> $remembered
      */
     public function __construct(
-        private string $lockFile,
-        private array $hashes = [],
+        private string $file,
+        private array  $remembered = [],
     ) {}
 
     /**
      * @throws JsonException
+     *
+     * @return array<string,string>
      */
-    public static function load(string $lockFile): self
+    private function stored(): array
     {
-        if (!is_file($lockFile)) {
-            return new self($lockFile);
+        if (!is_file($this->file)) {
+            return [];
         }
 
-        $content = file_get_contents($lockFile);
+        $content = file_get_contents($this->file);
         if ($content === false) {
             throw new PiquleException(
-                sprintf('Cannot read lock file: %s', $lockFile),
+                sprintf('Cannot read lock file: %s', $this->file),
             );
         }
 
-        return new self(
-            $lockFile,
-            json_decode($content, true, flags: JSON_THROW_ON_ERROR),
+        return json_decode(
+            $content,
+            true,
+            flags: JSON_THROW_ON_ERROR,
         );
     }
 
+    /**
+     * @throws JsonException
+     *
+     * @return array<string,string>
+     */
+    private function hashes(): array
+    {
+        return $this->remembered + $this->stored();
+    }
+
+    /**
+     * @throws JsonException
+     */
     public function knows(Target $target): bool
     {
         return array_key_exists(
             $target->relativePath(),
-            $this->hashes,
+            $this->hashes(),
         );
     }
 
+    /**
+     * @throws JsonException
+     */
     public function isUnchanged(Target $target): bool
     {
         return $this->knows($target)
             && $target->exists()
-            && $this->hashes[$target->relativePath()]
-            === $target->file()->hash();
+            && $this->hashes()[$target->relativePath()] === $target->file()->hash();
     }
 
     public function withRemembered(Target $target): Lock
     {
         return new self(
-            $this->lockFile,
-            $this->hashes + [
-                $target->relativePath()
-                => $target->sourceFile()->hash(),
+            $this->file,
+            $this->remembered + [
+                $target->relativePath() => $target->file()->hash(),
             ],
         );
     }
@@ -72,8 +89,7 @@ final readonly class JsonLock implements Lock
      */
     public function store(): void
     {
-        $dir = dirname($this->lockFile);
-
+        $dir = dirname($this->file);
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
                 throw new PiquleException(
@@ -83,13 +99,13 @@ final readonly class JsonLock implements Lock
         }
 
         $json = json_encode(
-            $this->hashes,
+            $this->hashes(),
             JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
         );
 
-        if (file_put_contents($this->lockFile, $json) === false) {
+        if (file_put_contents($this->file, $json) === false) {
             throw new PiquleException(
-                sprintf('Failed to write lock file: "%s"', $this->lockFile),
+                sprintf('Failed to write lock file: "%s"', $this->file),
             );
         }
     }

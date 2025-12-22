@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Target\Materialization;
 
 use Haspadar\Piqule\Output\Color\Green;
-use Haspadar\Piqule\Output\Color\Grey;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
 use Haspadar\Piqule\Project\Lock\Lock;
@@ -43,13 +42,14 @@ final readonly class Synchronization implements Materialization
             return $lock->withRemembered($target);
         }
 
+        $target->materialize();
         $this->output->write(
             new Text(
-                sprintf('Skipped: %s', $target->relativePath()),
-                new Grey(),
+                sprintf('Updated: %s', $target->relativePath()),
+                new Green(),
             ),
         );
 
-        return $lock;
+        return $lock->withRemembered($target);
     }
 }

@@ -9,4 +9,4 @@
 /.idea/
 /*.log
 /.php-cs-fixer.cache
-/.piqule/lock.json
+/piqule.lock
