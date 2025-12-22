@@ -43,33 +43,31 @@ final readonly class Synchronization implements Materialization
 
     private function copy(Target $target, Lock $lock): Lock
     {
-        $target->materialize();
-        $this->output->write(new Text(
-            sprintf('Copied: %s', $target->relativePath()),
-            new Green(),
-        ));
-
-        return $lock->with($target);
+        return $this->materializeWithMessage($target, $lock, 'Copied');
     }
 
     private function synchronize(Target $target, Lock $lock): Lock
     {
-        $target->materialize();
-        $this->output->write(new Text(
-            sprintf('Synchronized: %s', $target->relativePath()),
-            new Green(),
-        ));
-
-        return $lock->with($target);
+        return $this->materializeWithMessage($target, $lock, 'Synchronized');
     }
 
     private function update(Target $target, Lock $lock): Lock
     {
+        return $this->materializeWithMessage($target, $lock, 'Updated');
+    }
+
+    private function materializeWithMessage(
+        Target $target,
+        Lock   $lock,
+        string $message,
+    ): Lock {
         $target->materialize();
-        $this->output->write(new Text(
-            sprintf('Updated: %s', $target->relativePath()),
-            new Green(),
-        ));
+        $this->output->write(
+            new Text(
+                sprintf('%s: %s', $message, $target->relativePath()),
+                new Green(),
+            ),
+        );
 
         return $lock->with($target);
     }
