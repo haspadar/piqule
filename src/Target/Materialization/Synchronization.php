@@ -8,7 +8,7 @@ use Haspadar\Piqule\Output\Color\Green;
 use Haspadar\Piqule\Output\Color\Grey;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Project\Lock\Lock;
+use Haspadar\Piqule\Project\Snapshot\Snapshot;
 use Haspadar\Piqule\Target\Target;
 
 final readonly class Synchronization implements Materialization
@@ -17,10 +17,10 @@ final readonly class Synchronization implements Materialization
         private Output $output,
     ) {}
 
-    public function applyTo(Target $target, Lock $lock): Lock
+    public function applyTo(Target $target, Snapshot $snapshot): Snapshot
     {
         if (!$target->exists()) {
-            return $this->copy($target, $lock);
+            return $this->copy($target, $snapshot);
         }
 
         if ($this->isUpToDate($target)) {
@@ -31,36 +31,36 @@ final readonly class Synchronization implements Materialization
                 ),
             );
 
-            return $lock;
+            return $snapshot;
         }
 
-        if ($this->canOverwrite($target, $lock)) {
-            return $this->synchronize($target, $lock);
+        if ($this->canOverwrite($target, $snapshot)) {
+            return $this->synchronize($target, $snapshot);
         }
 
-        return $this->update($target, $lock);
+        return $this->update($target, $snapshot);
     }
 
-    private function copy(Target $target, Lock $lock): Lock
+    private function copy(Target $target, Snapshot $snapshot): Snapshot
     {
-        return $this->materializeWithMessage($target, $lock, 'Copied');
+        return $this->materializeWithMessage($target, $snapshot, 'Copied');
     }
 
-    private function synchronize(Target $target, Lock $lock): Lock
+    private function synchronize(Target $target, Snapshot $snapshot): Snapshot
     {
-        return $this->materializeWithMessage($target, $lock, 'Synchronized');
+        return $this->materializeWithMessage($target, $snapshot, 'Synchronized');
     }
 
-    private function update(Target $target, Lock $lock): Lock
+    private function update(Target $target, Snapshot $snapshot): Snapshot
     {
-        return $this->materializeWithMessage($target, $lock, 'Updated');
+        return $this->materializeWithMessage($target, $snapshot, 'Updated');
     }
 
     private function materializeWithMessage(
-        Target $target,
-        Lock   $lock,
-        string $message,
-    ): Lock {
+        Target   $target,
+        Snapshot $snapshot,
+        string   $message,
+    ): Snapshot {
         $target->materialize();
         $this->output->write(
             new Text(
@@ -69,14 +69,14 @@ final readonly class Synchronization implements Materialization
             ),
         );
 
-        return $lock->with($target);
+        return $snapshot->with($target);
     }
 
-    private function canOverwrite(Target $target, Lock $lock): bool
+    private function canOverwrite(Target $target, Snapshot $snapshot): bool
     {
-        return $lock->has($target)
+        return $snapshot->has($target)
             && $target->exists()
-            && $lock->hashOf($target) === $target->file()->hash();
+            && $snapshot->hashOf($target) === $target->file()->hash();
     }
 
     private function isUpToDate(Target $target): bool
