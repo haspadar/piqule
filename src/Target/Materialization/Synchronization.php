@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Target\Materialization;
 
 use Haspadar\Piqule\Output\Color\Green;
-use Haspadar\Piqule\Output\Color\Grey;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
-use Haspadar\Piqule\Project\Registry\Registry;
+use Haspadar\Piqule\Project\Lock\Lock;
 use Haspadar\Piqule\Target\Target;
 
 final readonly class Synchronization implements Materialization
@@ -17,7 +16,7 @@ final readonly class Synchronization implements Materialization
         private Output $output,
     ) {}
 
-    public function applyTo(Target $target, Registry $lock): Registry
+    public function applyTo(Target $target, Lock $lock): Lock
     {
         if (!$target->exists()) {
             $target->materialize();

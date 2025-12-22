@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Project\Registry;
+namespace Haspadar\Piqule\Project\Lock;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Target\Target;
 use JsonException;
 
-final readonly class JsonRegistry implements Registry
+final readonly class JsonLock implements Lock
 {
     /**
      * @param array<string,string> $remembered
@@ -32,7 +32,7 @@ final readonly class JsonRegistry implements Registry
         $content = file_get_contents($this->file);
         if ($content === false) {
             throw new PiquleException(
-                sprintf('Cannot read registry file: %s', $this->file),
+                sprintf('Cannot read lock file: %s', $this->file),
             );
         }
 
@@ -71,11 +71,10 @@ final readonly class JsonRegistry implements Registry
     {
         return $this->knows($target)
             && $target->exists()
-            && $this->hashes()[$target->relativePath()]
-            === $target->file()->hash();
+            && $this->hashes()[$target->relativePath()] === $target->file()->hash();
     }
 
-    public function withRemembered(Target $target): Registry
+    public function withRemembered(Target $target): Lock
     {
         return new self(
             $this->file,
@@ -94,7 +93,7 @@ final readonly class JsonRegistry implements Registry
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
                 throw new PiquleException(
-                    sprintf('Cannot create registry directory: %s', $dir),
+                    sprintf('Cannot create lock directory: %s', $dir),
                 );
             }
         }
@@ -106,7 +105,7 @@ final readonly class JsonRegistry implements Registry
 
         if (file_put_contents($this->file, $json) === false) {
             throw new PiquleException(
-                sprintf('Failed to write registry file: "%s"', $this->file),
+                sprintf('Failed to write lock file: "%s"', $this->file),
             );
         }
     }

@@ -7,7 +7,7 @@ use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Project\DiskPiquleDirectory;
 use Haspadar\Piqule\Project\InitializedProject;
-use Haspadar\Piqule\Project\Registry\JsonRegistry;
+use Haspadar\Piqule\Project\Lock\JsonLock;
 use Haspadar\Piqule\Project\ProjectOf;
 use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
@@ -31,15 +31,15 @@ try {
         new InitializedProject($sourceDirectory, $targetDirectory),
         new UninitializedProject($sourceDirectory, $targetDirectory),
     );
-    $registry = new JsonRegistry($piqule->path() . '/registry.json');
+    $lock = new JsonLock($root . '/piqule.lock');
     match ($context->command()) {
         'init' => $project->init(
             new Installation($output),
-            $registry,
+            $lock,
         ),
         'update' => $project->update(
             new Synchronization($output),
-            $registry,
+            $lock,
         ),
         default => throw new PiquleException(
             sprintf('Unknown command: %s', $context->command()),
