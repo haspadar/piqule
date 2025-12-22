@@ -8,11 +8,11 @@ use Haspadar\Piqule\Target\Target;
 
 interface Lock
 {
-    public function knows(Target $target): bool;
+    public function has(Target $target): bool;
 
-    public function isUnchanged(Target $target): bool;
+    public function hashOf(Target $target): string;
 
-    public function withRemembered(Target $target): Lock;
+    public function with(Target $target): Lock;
 
     public function store(): void;
 }
