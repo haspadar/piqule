@@ -56,7 +56,7 @@ final readonly class JsonLock implements Lock
     /**
      * @throws JsonException
      */
-    public function knows(Target $target): bool
+    public function has(Target $target): bool
     {
         return array_key_exists(
             $target->relativePath(),
@@ -67,14 +67,18 @@ final readonly class JsonLock implements Lock
     /**
      * @throws JsonException
      */
-    public function isUnchanged(Target $target): bool
+    public function hashOf(Target $target): string
     {
-        return $this->knows($target)
-            && $target->exists()
-            && $this->hashes()[$target->relativePath()] === $target->file()->hash();
+        if (!$this->has($target)) {
+            throw new PiquleException(
+                sprintf('Target not found in lock: %s', $target->relativePath()),
+            );
+        }
+
+        return $this->hashes()[$target->relativePath()];
     }
 
-    public function withRemembered(Target $target): Lock
+    public function with(Target $target): Lock
     {
         return new self(
             $this->file,
