@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project;
 
-use Haspadar\Piqule\Project\Snapshot\Snapshot;
 use Haspadar\Piqule\Target\Materialization\Materialization;
 
 /**
@@ -29,13 +28,13 @@ final readonly class ProjectOf implements Project
             : $this->uninitialized;
     }
 
-    public function init(Materialization $materialization, Snapshot $snapshot): void
+    public function init(Materialization $materialization): void
     {
-        $this->project()->init($materialization, $snapshot);
+        $this->project()->init($materialization);
     }
 
-    public function update(Materialization $materialization, Snapshot $snapshot): void
+    public function update(Materialization $materialization): void
     {
-        $this->project()->update($materialization, $snapshot);
+        $this->project()->update($materialization);
     }
 }
