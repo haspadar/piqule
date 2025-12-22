@@ -1,0 +1,19 @@
+{
+    "renovate.json": "bd4bc064a30beef717fc75e295f3ddee97c989333d31e5ff048a5e30cff3be07",
+    ".piqule/_typos.toml": "fc42ce698569844d319d9865d6bad6da76ee2b8bbc0a5be34ec83a4cf13e5632",
+    ".piqule/.markdownlint-cli2.jsonc": "09d0965fa97e95095a6d78be79d137f54fde7649dea2533cc92b189a8ee1254e",
+    ".piqule/.yamllint.yml": "c22061b58490f512b211dc5c22d7d1f07e2c09dc2fb8381320f4c880c2c89295",
+    ".piqule/php-cs-fixer.php": "48ec80949a2a0d94fe28a4f84f6ec0e0f85352fa9f1797d6a5338cc4569bd020",
+    ".piqule/.hadolint.yml": "42e701f60ee4dffe5c8e7e1c8b553fc79c80bb24fe8c04b23acf43bacf55ba92",
+    ".github/workflows/_pr-size-checker.yml": "3b84301029dc776b48ce3be2091cd8fa1d9eca4028025869af46ba29091935fd",
+    ".github/workflows/_markdownlint.yml": "30ed23eefae3fd1e060b006ffdc733071af59590344fc91ac949235f34e94d56",
+    ".github/workflows/_hadolint.yml": "c0d9fbf9129ad2b3bfbbc4d358b23690df0e43e7abee30865efb182e363f2ec5",
+    ".github/workflows/_php-cs-fixer.yml": "700a0934c4f307cd4c46873052369ba78307500d7dcad76babfb85f15e8b93c8",
+    ".github/workflows/_typos.yml": "6f3ff7b6ae1eb2854747b836d11b04beb96b02120b737d6a5686956b7e997bea",
+    ".github/workflows/_release-drafter.yml": "8f3f5e6c462fec709cf84e5e52a96c23d60da437382e559094fcfb88f1d48adc",
+    ".github/workflows/_actionlint.yml": "258c5e044b1a5958ff4c1cad54e0e8ac641747ef1fcf9d3d92af6422d7363bbf",
+    ".github/workflows/_yamllint.yml": "c28efa5983c1ec81d996ff52be701d8fa09187931542f6ab60902c8ee36f1bef",
+    ".github/workflows/ci.yml": "6274c8dd1ea8cecca32eac3a716f73968c24a4464e6b6dcdee075e0015ebd993",
+    ".github/release-drafter.yml": "13db14f2c666d7456f752838384c977436581e97e8ce48ae70402089bd75ddc8",
+    ".php-cs-fixer.php": "95a76e394d162500ae624b646d73709344a51738c2d5325b7c3f6be00b6364f2"
+}

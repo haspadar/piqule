@@ -19,9 +19,4 @@ final readonly class DiskPiquleDirectory implements PiquleDirectory
     {
         return $this->path;
     }
-
-    public function lockFile(): string
-    {
-        return $this->path() . '/lock.json';
-    }
 }
