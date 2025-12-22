@@ -23,7 +23,7 @@ final readonly class Synchronization implements Materialization
             return $this->copy($target, $snapshot);
         }
 
-        if ($this->isUpToDate($target)) {
+        if ($this->isUpToDate($target, $snapshot)) {
             $this->output->write(
                 new Text(
                     sprintf('Skipped: %s', $target->relativePath()),
@@ -79,9 +79,16 @@ final readonly class Synchronization implements Materialization
             && $snapshot->hashOf($target) === $target->file()->hash();
     }
 
-    private function isUpToDate(Target $target): bool
+    private function isUpToDate(Target $target, Snapshot $snapshot): bool
     {
-        return $target->exists()
-            && $target->file()->hash() === $target->sourceFile()->hash();
+        if (!$target->exists()) {
+            return false;
+        }
+
+        if (!$snapshot->has($target)) {
+            return false;
+        }
+
+        return $snapshot->hashOf($target) === $target->file()->hash();
     }
 }
