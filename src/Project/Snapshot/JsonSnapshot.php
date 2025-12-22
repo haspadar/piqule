@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Project\Lock;
+namespace Haspadar\Piqule\Project\Snapshot;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Target\Target;
 use JsonException;
 
-final readonly class JsonLock implements Lock
+final readonly class JsonSnapshot implements Snapshot
 {
     /**
      * @param array<string,string> $remembered
@@ -32,7 +32,7 @@ final readonly class JsonLock implements Lock
         $content = file_get_contents($this->file);
         if ($content === false) {
             throw new PiquleException(
-                sprintf('Cannot read lock file: %s', $this->file),
+                sprintf('Cannot read snapshot file: %s', $this->file),
             );
         }
 
@@ -71,14 +71,14 @@ final readonly class JsonLock implements Lock
     {
         if (!$this->has($target)) {
             throw new PiquleException(
-                sprintf('Target not found in lock: %s', $target->relativePath()),
+                sprintf('Target not found in snapshot: %s', $target->relativePath()),
             );
         }
 
         return $this->hashes()[$target->relativePath()];
     }
 
-    public function with(Target $target): Lock
+    public function with(Target $target): Snapshot
     {
         return new self(
             $this->file,
@@ -97,7 +97,7 @@ final readonly class JsonLock implements Lock
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
                 throw new PiquleException(
-                    sprintf('Cannot create lock directory: %s', $dir),
+                    sprintf('Cannot create snapshot directory: %s', $dir),
                 );
             }
         }
@@ -109,7 +109,7 @@ final readonly class JsonLock implements Lock
 
         if (file_put_contents($this->file, $json) === false) {
             throw new PiquleException(
-                sprintf('Failed to write lock file: "%s"', $this->file),
+                sprintf('Failed to write snapshot file: "%s"', $this->file),
             );
         }
     }

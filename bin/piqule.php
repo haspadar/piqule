@@ -7,8 +7,8 @@ use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Project\DiskPiquleDirectory;
 use Haspadar\Piqule\Project\InitializedProject;
-use Haspadar\Piqule\Project\Lock\JsonLock;
 use Haspadar\Piqule\Project\ProjectOf;
+use Haspadar\Piqule\Project\Snapshot\JsonSnapshot;
 use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Source\DiskSourceDirectory;
@@ -31,15 +31,15 @@ try {
         new InitializedProject($sourceDirectory, $targetDirectory),
         new UninitializedProject($sourceDirectory, $targetDirectory),
     );
-    $lock = new JsonLock($root . '/piqule.lock');
+    $snapshot = new JsonSnapshot($root . '/piqule.lock');
     match ($context->command()) {
         'init' => $project->init(
             new Installation($output),
-            $lock,
+            $snapshot,
         ),
         'update' => $project->update(
             new Synchronization($output),
-            $lock,
+            $snapshot,
         ),
         default => throw new PiquleException(
             sprintf('Unknown command: %s', $context->command()),
