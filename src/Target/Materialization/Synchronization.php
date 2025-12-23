@@ -69,14 +69,14 @@ final readonly class Synchronization implements Materialization
             ),
         );
 
-        return $snapshot->with($target);
+        return $snapshot->with($target->id(), $target->source()->file()->hash());
     }
 
     private function canOverwrite(Target $target, Snapshot $snapshot): bool
     {
-        return $snapshot->has($target)
+        return $snapshot->has($target->id())
             && $target->exists()
-            && $snapshot->hashOf($target) === $target->file()->hash();
+            && $snapshot->hashOf($target->id()) === $target->file()->hash();
     }
 
     private function isUpToDate(Target $target, Snapshot $snapshot): bool
@@ -85,10 +85,10 @@ final readonly class Synchronization implements Materialization
             return false;
         }
 
-        if (!$snapshot->has($target)) {
+        if (!$snapshot->has($target->id())) {
             return false;
         }
 
-        return $snapshot->hashOf($target) === $target->file()->hash();
+        return $snapshot->hashOf($target->id()) === $target->file()->hash();
     }
 }
