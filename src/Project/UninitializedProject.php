@@ -21,10 +21,11 @@ final readonly class UninitializedProject implements Project
 
     public function init(Materialization $materialization): void
     {
+        $snapshot = $this->snapshotStore->snapshot();
         foreach ($this->sourceDirectory->files() as $sourceFile) {
             $snapshot = $materialization->applyTo(
                 new DiskTarget($sourceFile, $this->targetDirectory),
-                $this->snapshotStore->snapshot(),
+                $snapshot,
             );
         }
 

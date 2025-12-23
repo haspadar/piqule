@@ -41,10 +41,7 @@ final readonly class DiskTargetStorage implements TargetStorage
         );
     }
 
-    /**
-     * @param string $dir
-     */
-    public function createDirectory(string $dir): void
+    private function createDirectory(string $dir): void
     {
         if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
             throw new PiquleException(

@@ -21,6 +21,9 @@ final readonly class Snapshot
         return $this->hashes->get($target->id());
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return $this->hashes->values();
