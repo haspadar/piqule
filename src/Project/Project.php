@@ -8,7 +8,5 @@ use Haspadar\Piqule\Target\Materialization\Materialization;
 
 interface Project
 {
-    public function init(Materialization $materialization): void;
-
-    public function update(Materialization $materialization): void;
+    public function sync(Materialization $materialization): void;
 }

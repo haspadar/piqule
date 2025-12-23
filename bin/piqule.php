@@ -7,13 +7,10 @@ use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Project\DiskPiquleDirectory;
 use Haspadar\Piqule\Project\InitializedProject;
-use Haspadar\Piqule\Project\ProjectOf;
 use Haspadar\Piqule\Project\Snapshot\JsonSnapshotStorage;
-use Haspadar\Piqule\Project\UninitializedProject;
 use Haspadar\Piqule\RunContext;
 use Haspadar\Piqule\Source\DiskSources;
 use Haspadar\Piqule\Target\DiskTargetStorage;
-use Haspadar\Piqule\Target\Materialization\Installation;
 use Haspadar\Piqule\Target\Materialization\Synchronization;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -27,19 +24,10 @@ try {
     $sources = new DiskSources(dirname(__DIR__) . '/templates');
     $targetStorage = new DiskTargetStorage($root);
     $snapshotStorage = new JsonSnapshotStorage($root . '/piqule.lock');
-    $project = new ProjectOf(
-        $piqule,
-        new InitializedProject($sources, $targetStorage, $snapshotStorage),
-        new UninitializedProject($sources, $targetStorage, $snapshotStorage),
-    );
+    $project = new InitializedProject($sources, $targetStorage, $snapshotStorage);
 
     match ($context->command()) {
-        'init' => $project->init(
-            new Installation($output),
-        ),
-        'update' => $project->update(
-            new Synchronization($output),
-        ),
+        'sync' => $project->sync(new Synchronization($output)),
         default => throw new PiquleException(
             sprintf('Unknown command: %s', $context->command()),
         ),
