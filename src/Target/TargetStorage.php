@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Target;
 
 use Haspadar\Piqule\File\File;
 
-interface TargetDirectory
+interface TargetStorage
 {
     /**
      * Returns true if a file exists at the given relative path

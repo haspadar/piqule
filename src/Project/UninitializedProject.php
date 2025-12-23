@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Project;
 
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Project\Snapshot\SnapshotStore;
-use Haspadar\Piqule\Source\SourceDirectory;
+use Haspadar\Piqule\Project\Snapshot\SnapshotStorage;
+use Haspadar\Piqule\Source\Sources;
 use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Materialization\Materialization;
-use Haspadar\Piqule\Target\TargetDirectory;
+use Haspadar\Piqule\Target\TargetStorage;
 
 final readonly class UninitializedProject implements Project
 {
     public function __construct(
-        private SourceDirectory $sourceDirectory,
-        private TargetDirectory $targetDirectory,
-        private SnapshotStore $snapshotStore,
+        private Sources         $sourceDirectory,
+        private TargetStorage   $targetDirectory,
+        private SnapshotStorage $snapshotStore,
     ) {}
 
     public function init(Materialization $materialization): void

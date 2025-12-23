@@ -10,14 +10,14 @@ use Haspadar\Piqule\PiquleException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-final readonly class DiskSourceDirectory implements SourceDirectory
+final readonly class DiskSources implements Sources
 {
     public function __construct(
         private string $path,
     ) {}
 
     /**
-     * @return iterable<SourceFile>
+     * @return iterable<Source>
      */
     public function files(): iterable
     {
@@ -43,7 +43,7 @@ final readonly class DiskSourceDirectory implements SourceDirectory
              * @var $directoryIterator RecursiveDirectoryIterator
              */
             $directoryIterator = $iterator->getSubIterator();
-            yield new SourceFile(
+            yield new Source(
                 new DiskFile($item->getPathname()),
                 $directoryIterator->getSubPathName(),
             );
