@@ -13,24 +13,27 @@ final readonly class Snapshot
 
     public function has(Target $target): bool
     {
-        return $this->hashes->has($target->relativePath());
+        return $this->hashes->has($target->id());
     }
 
     public function hashOf(Target $target): string
     {
-        return $this->hashes->get($target->relativePath());
+        return $this->hashes->get($target->id());
     }
 
-    public function hashes(): Hashes
+    /**
+     * @return array<string, string>
+     */
+    public function toArray(): array
     {
-        return $this->hashes;
+        return $this->hashes->values();
     }
 
     public function with(Target $target): Snapshot
     {
         return new self(
             $this->hashes->with(
-                $target->relativePath(),
+                $target->id(),
                 $target->file()->hash(),
             ),
         );

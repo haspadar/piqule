@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Source;
 
-interface SourceDirectory
+interface Sources
 {
     /**
-     * @return iterable<SourceFile>
+     * @return iterable<Source>
      */
     public function files(): iterable;
 }

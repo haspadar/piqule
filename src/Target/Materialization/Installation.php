@@ -21,7 +21,7 @@ final readonly class Installation implements Materialization
         $target->materialize();
         $this->output->write(
             new Text(
-                sprintf('Copied: %s', $target->relativePath()),
+                sprintf('Copied: %s', $target->id()),
                 new Green(),
             ),
         );

@@ -8,7 +8,7 @@ use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 
-final readonly class DiskTargetDirectory implements TargetDirectory
+final readonly class DiskTargetStorage implements TargetStorage
 {
     public function __construct(
         private string $root,
@@ -41,10 +41,7 @@ final readonly class DiskTargetDirectory implements TargetDirectory
         );
     }
 
-    /**
-     * @param string $dir
-     */
-    public function createDirectory(string $dir): void
+    private function createDirectory(string $dir): void
     {
         if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
             throw new PiquleException(

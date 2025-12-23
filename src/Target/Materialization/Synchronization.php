@@ -26,7 +26,7 @@ final readonly class Synchronization implements Materialization
         if ($this->isUpToDate($target, $snapshot)) {
             $this->output->write(
                 new Text(
-                    sprintf('Skipped: %s', $target->relativePath()),
+                    sprintf('Skipped: %s', $target->id()),
                     new Grey(),
                 ),
             );
@@ -64,7 +64,7 @@ final readonly class Synchronization implements Materialization
         $target->materialize();
         $this->output->write(
             new Text(
-                sprintf('%s: %s', $message, $target->relativePath()),
+                sprintf('%s: %s', $message, $target->id()),
                 new Green(),
             ),
         );

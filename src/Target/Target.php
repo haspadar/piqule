@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Target;
 
 use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Source\Source;
 
 interface Target
 {
     public function exists(): bool;
 
-    public function relativePath(): string;
+    public function id(): string;
 
     public function file(): File;
 
-    public function sourceFile(): File;
+    public function source(): Source;
 }

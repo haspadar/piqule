@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Project\Snapshot;
 
-interface SnapshotStore
+interface SnapshotStorage
 {
     public function snapshot(): Snapshot;
 

@@ -8,7 +8,7 @@ use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Project\Hashes;
 use JsonException;
 
-final readonly class JsonSnapshotStore implements SnapshotStore
+final readonly class JsonSnapshotStorage implements SnapshotStorage
 {
     public function __construct(
         private string $file,
@@ -29,7 +29,7 @@ final readonly class JsonSnapshotStore implements SnapshotStore
         $this->ensureDirectory();
 
         $json = json_encode(
-            $snapshot->hashes()->values(),
+            $snapshot->toArray(),
             JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES,
         );
 

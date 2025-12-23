@@ -6,16 +6,16 @@ namespace Haspadar\Piqule\Source;
 
 use Haspadar\Piqule\File\File;
 
-final readonly class SourceFile
+final readonly class Source
 {
     public function __construct(
         private File $file,
-        private string $relativePath,
+        private string $id,
     ) {}
 
-    public function relativePath(): string
+    public function id(): string
     {
-        return $this->relativePath;
+        return $this->id;
     }
 
     public function file(): File
