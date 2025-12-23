@@ -26,6 +26,6 @@ final readonly class Installation implements Materialization
             ),
         );
 
-        return $snapshot->with($target);
+        return $snapshot->with($target->id(), $target->source()->file()->hash());
     }
 }

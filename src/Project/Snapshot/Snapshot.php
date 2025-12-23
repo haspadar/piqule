@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Project\Snapshot;
 
 use Haspadar\Piqule\Project\Hashes;
-use Haspadar\Piqule\Target\Target;
 
 final readonly class Snapshot
 {
     public function __construct(private Hashes $hashes) {}
 
-    public function has(Target $target): bool
+    public function has(string $id): bool
     {
-        return $this->hashes->has($target->id());
+        return $this->hashes->has($id);
     }
 
-    public function hashOf(Target $target): string
+    public function hashOf(string $id): string
     {
-        return $this->hashes->get($target->id());
+        return $this->hashes->get($id);
     }
 
     /**
@@ -29,13 +28,10 @@ final readonly class Snapshot
         return $this->hashes->values();
     }
 
-    public function with(Target $target): Snapshot
+    public function with(string $id, string $hash): Snapshot
     {
         return new self(
-            $this->hashes->with(
-                $target->id(),
-                $target->file()->hash(),
-            ),
+            $this->hashes->with($id, $hash),
         );
     }
 }
