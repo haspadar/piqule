@@ -13,17 +13,19 @@ use Haspadar\Piqule\Target\TargetStorage;
 final readonly class InitializedProject implements Project
 {
     public function __construct(
-        private Sources         $sourceDirectory,
+        private Sources         $sources,
         private TargetStorage   $targetDirectory,
         private SnapshotStorage $snapshotStore,
     ) {}
 
     public function sync(Materialization $materialization): void
     {
-        foreach ($this->sourceDirectory->files() as $sourceFile) {
+        $snapshot = $this->snapshotStore->snapshot();
+
+        foreach ($this->sources->files() as $sourceFile) {
             $snapshot = $materialization->applyTo(
                 new DiskTarget($sourceFile, $this->targetDirectory),
-                $this->snapshotStore->snapshot(),
+                $snapshot,
             );
         }
 

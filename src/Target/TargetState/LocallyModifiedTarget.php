@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Target\TargetState;
 use Haspadar\Piqule\Project\Snapshot\Snapshot;
 use Haspadar\Piqule\Target\Target;
 
-final readonly class ModifiedTarget implements TargetState
+final readonly class LocallyModifiedTarget implements TargetState
 {
     public function matches(Target $target, Snapshot $snapshot): bool
     {
@@ -21,6 +21,6 @@ final readonly class ModifiedTarget implements TargetState
 
     public function name(): string
     {
-        return 'modified';
+        return 'locally-modified';
     }
 }

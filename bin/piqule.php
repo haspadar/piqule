@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Project\DiskPiquleDirectory;
 use Haspadar\Piqule\Project\InitializedProject;
 use Haspadar\Piqule\Project\Snapshot\JsonSnapshotStorage;
 use Haspadar\Piqule\RunContext;
@@ -20,7 +19,6 @@ $output = new Console();
 try {
     $context = new RunContext($argv);
     $root = $context->root();
-    $piqule = new DiskPiquleDirectory($root . '/.piqule');
     $sources = new DiskSources(dirname(__DIR__) . '/templates');
     $targetStorage = new DiskTargetStorage($root);
     $snapshotStorage = new JsonSnapshotStorage($root . '/piqule.lock');
