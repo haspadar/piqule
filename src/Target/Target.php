@@ -16,4 +16,6 @@ interface Target
     public function file(): File;
 
     public function source(): Source;
+
+    public function materialize(): void;
 }
