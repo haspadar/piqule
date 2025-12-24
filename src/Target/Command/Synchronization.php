@@ -27,6 +27,8 @@ final readonly class Synchronization implements Command
             $target = new DiskTarget($source, $this->targetDirectory);
 
             if (!$target->exists()) {
+                $target->materialize();
+
                 $this->output->write(
                     new Text(
                         sprintf('Created: %s', $target->id()),
@@ -34,6 +36,8 @@ final readonly class Synchronization implements Command
                     ),
                 );
             } elseif ($target->file()->contents() !== $source->file()->contents()) {
+                $target->materialize();
+
                 $this->output->write(
                     new Text(
                         sprintf('Updated: %s', $target->id()),
@@ -41,6 +45,8 @@ final readonly class Synchronization implements Command
                     ),
                 );
             } else {
+                $target->materialize();
+
                 $this->output->write(
                     new Text(
                         sprintf('Skipped: %s', $target->id()),
@@ -48,8 +54,6 @@ final readonly class Synchronization implements Command
                     ),
                 );
             }
-
-            $target->materialize();
         }
     }
 }
