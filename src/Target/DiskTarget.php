@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Target;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Source\Source;
+use Haspadar\Piqule\Target\Storage\TargetStorage;
 
 final readonly class DiskTarget implements Target
 {

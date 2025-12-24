@@ -36,22 +36,16 @@ final class RunContext
         return $root;
     }
 
-    public function command(): string
+    public function commandLine(): string
     {
-        return $this->argument(1);
+        return implode(
+            ' ',
+            array_slice($this->argv, 1),
+        );
     }
 
-    /**
-     * Returns the CLI argument at the given index.
-     *
-     * @throws PiquleException If the argument is missing
-     */
-    public function argument(int $index): string
+    public function isDryRun(): bool
     {
-        if (!array_key_exists($index, $this->argv)) {
-            throw new PiquleException(sprintf('Missing argument #%d', $index));
-        }
-
-        return $this->argv[$index];
+        return in_array('--dry-run', $this->argv, true);
     }
 }
