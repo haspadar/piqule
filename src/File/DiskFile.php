@@ -8,30 +8,33 @@ use Haspadar\Piqule\PiquleException;
 
 final readonly class DiskFile implements File
 {
+    /**
+     * Absolute or relative filesystem path
+     */
     public function __construct(
         private string $path,
     ) {}
 
+    /**
+     * Returns the filesystem path of the file
+     *
+     * This method is intentionally not part of the File interface,
+     * as paths are an infrastructure concern.
+     */
     public function path(): string
     {
         return $this->path;
     }
 
-    public function hash(): string
-    {
-        $hash = hash_file('sha256', $this->path);
-        if ($hash === false) {
-            throw new PiquleException(
-                sprintf('Failed to hash file: "%s"', $this->path),
-            );
-        }
-
-        return $hash;
-    }
-
+    /**
+     * Reads and returns the file contents
+     *
+     * @throws PiquleException If the file cannot be read
+     */
     public function contents(): string
     {
         $contents = file_get_contents($this->path);
+
         if ($contents === false) {
             throw new PiquleException(
                 sprintf('Failed to read file: "%s"', $this->path),
