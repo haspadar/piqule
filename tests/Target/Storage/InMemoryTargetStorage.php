@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Target\Storage;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 
-final class InMemoryTargetStorage implements TargetStorage
+final class InMemoryTargetStorage implements \Haspadar\Piqule\Target\Storage\TargetStorage
 {
     /**
      * @var array<string, File>
