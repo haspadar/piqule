@@ -45,7 +45,7 @@ Create or extend `phpstan.neon`:
 ```
 includes:
 - vendor/haspadar/piqule/config/phpstan.neon
-  ```
+```
 
 ---
 
