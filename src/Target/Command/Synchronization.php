@@ -11,7 +11,7 @@ use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
 use Haspadar\Piqule\Source\Sources;
 use Haspadar\Piqule\Target\DiskTarget;
-use Haspadar\Piqule\Target\TargetStorage;
+use Haspadar\Piqule\Target\Storage\TargetStorage;
 
 final readonly class Synchronization implements Command
 {

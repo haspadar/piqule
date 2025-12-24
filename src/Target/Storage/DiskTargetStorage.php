@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Target;
+namespace Haspadar\Piqule\Target\Storage;
 
 use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\File\File;

@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule;
 
-final readonly class RunContext
+/**
+ * Represents the execution context of the Piqule process.
+ */
+final class RunContext
 {
-    /**
-     * Raw CLI arguments as received from the entry point
-     *
-     * @var array<int, string>
-     */
-    private array $argv;
+    /** @var array<int, string> */
+    private readonly array $argv;
 
     /**
-     * @param array<int, string> $argv Raw CLI arguments (usually $argv)
+     * @param array<int, string> $argv
      */
     public function __construct(array $argv)
     {
@@ -22,11 +21,7 @@ final readonly class RunContext
     }
 
     /**
-     * Returns the working directory of the invocation
-     *
-     * The directory is resolved in the following order:
-     * - COMPOSER_CWD environment variable (when executed via Composer)
-     * - current working directory
+     * Returns the working directory of the invocation.
      *
      * @throws PiquleException If the working directory cannot be determined
      */
@@ -41,29 +36,16 @@ final readonly class RunContext
         return $root;
     }
 
-    /**
-     * Returns the requested command name
-     *
-     * This is a convenience shortcut for argument(1).
-     *
-     * @throws PiquleException If the command argument is missing
-     */
-    public function command(): string
+    public function commandLine(): string
     {
-        return $this->argument(1);
+        return implode(
+            ' ',
+            array_slice($this->argv, 1),
+        );
     }
 
-    /**
-     * Returns the CLI argument at the given index
-     *
-     * @throws PiquleException If the argument is missing
-     */
-    public function argument(int $index): string
+    public function isDryRun(): bool
     {
-        if (!array_key_exists($index, $this->argv)) {
-            throw new PiquleException(sprintf('Missing argument #%d', $index));
-        }
-
-        return $this->argv[$index];
+        return in_array('--dry-run', $this->argv, true);
     }
 }
