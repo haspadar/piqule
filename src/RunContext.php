@@ -7,10 +7,10 @@ namespace Haspadar\Piqule;
 /**
  * Represents the execution context of the Piqule process.
  */
-final class RunContext
+final readonly class RunContext
 {
     /** @var array<int, string> */
-    private readonly array $argv;
+    private array $argv;
 
     /**
      * @param array<int, string> $argv

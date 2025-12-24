@@ -1,41 +1,61 @@
 # Piqule
 
-Static analysis and linters for PHP projects.  
-Piqule bundles and standardizes configurations for:
+**Piqule (PHP Quality Laws)** is a curated set of static analysis tools, linters, and CI workflows for PHP projects.
 
-- PHPStan  
-- Psalm  
-- PHP-CS-Fixer  
-- PhpMetrics  
-- Markdownlint  
-- Hadolint  
-- Actionlint  
-- Typos (spell‑checking)
+Piqule provides **managed configurations** and **reusable GitHub Actions workflows** to avoid duplicating the same setup across multiple repositories.
 
-You don’t need to configure these tools manually in every project — Piqule provides shared configs and reusable GitHub workflows.
+---
 
-## Usage
+## Included tools
 
-Add Piqule to your project:
+### PHP tools
+
+- **PHPStan** — static analysis
+- **Psalm** — static analysis
+- **PHP-CS-Fixer** — code style enforcement
+- **PhpMetrics** — code quality and complexity metrics
+
+### Linters and CI tools
+
+- **Markdownlint** — Markdown linting
+- **Hadolint** — Dockerfile linting
+- **Actionlint** — GitHub Actions workflow linting
+- **Typos** — spell checking
+- **Renovate** — dependency update automation
+- **PR Size Checker** — pull request size enforcement
+
+---
+
+## Installation
+
+Add Piqule as a development dependency:
 
 ```
 composer require --dev haspadar/piqule
 ```
 
+---
+
+## Tool configuration
+
 ### PHPStan
 
-Create your `phpstan.neon`:
+Create or extend `phpstan.neon`:
 
 ```
 includes:
-  - vendor/haspadar/piqule/config/phpstan.neon
+- vendor/haspadar/piqule/config/phpstan.neon
 ```
+
+---
 
 ### PHP-CS-Fixer
 
-Create your `.php-cs-fixer.php`:
+Create `.php-cs-fixer.php`:
 
 ```
+<?php
+
 /** @var PhpCsFixer\Config $rules */
 $rules = require __DIR__ . '/vendor/haspadar/piqule/php-cs-fixer/rules.php';
 
@@ -48,6 +68,7 @@ $rules->setFinder(
 
 return $rules;
 ```
+---
 
 ### Psalm
 
@@ -59,155 +80,178 @@ Create or extend `psalm.xml`:
 </psalm>
 ```
 
+---
+
 ### Markdownlint
 
-Piqule includes a shared configuration for `markdownlint-cli2` and a reusable workflow that automatically selects the correct config depending on context.
+Piqule ships a managed configuration for `markdownlint-cli2`:
 
-The workflow resolves configuration in this order:
+```
+.piqule/.markdownlint-cli2.jsonc
+```
 
-1. `vendor/haspadar/piqule/markdownlint/.markdownlint-cli2.jsonc` (when Piqule is installed as a dependency)
-2. `markdownlint/.markdownlint-cli2.jsonc` (when running inside the Piqule repository itself)
+Reusable workflows automatically resolve the correct configuration depending on context.
 
-Projects do not need to maintain their own `.markdownlint-cli2.jsonc` unless they want to override defaults.
+Projects do not need to add their own `.markdownlint-cli2.jsonc` unless overrides are required.
+
+---
 
 ### Hadolint
 
-Piqule provides a shared Hadolint configuration and a reusable workflow:
+Managed config:
+
+```
+.piqule/.hadolint.yml
+```
+
+Reusable workflow:
 
 ```
 jobs:
   hadolint:
-    uses: haspadar/piqule/.github/workflows/hadolint-reusable.yml@v1
+    uses: haspadar/piqule/.github/workflows/_hadolint.yml@v1
 ```
 
-Projects may override the config stored in:
-
-```
-hadolint/.hadolint.yaml
-```
+---
 
 ### Actionlint
+
+Reusable workflow:
 
 ```
 jobs:
   actionlint:
-    uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
+    uses: haspadar/piqule/.github/workflows/_actionlint.yml@v1
 ```
+
+---
 
 ### Typos
 
-Piqule provides a shared configuration and reusable workflow for spell‑checking using Typos.
+Managed config:
 
-#### Reusable workflow
+```
+.piqule/_typos.toml
+```
+
+Reusable workflow:
 
 ```
 jobs:
   typos:
-    uses: haspadar/piqule/.github/workflows/typos-reusable.yml@v1
-    with:
-      config: typos/_typos.toml
+    uses: haspadar/piqule/.github/workflows/_typos.yml@v1
 ```
 
-#### CI workflow
-
-Projects may also use the preconfigured CI workflow:
-
-```
-jobs:
-  typos:
-    uses: haspadar/piqule/.github/workflows/typos.yml@v1
-```
+---
 
 ### Renovate
 
-Piqule provides a shared Renovate configuration and reusable workflow.
+Managed config:
 
-#### Reusable workflow
+```
+renovate.json
+```
+
+Reusable workflow:
 
 ```
 jobs:
   renovate:
-    uses: haspadar/piqule/.github/workflows/renovate-reusable.yml@v1
-    with:
-      config: renovate/config.json
+    uses: haspadar/piqule/.github/workflows/_renovate.yml@v1
 ```
 
-#### CI workflow
-
-Projects may also use the preconfigured CI workflow:
-
-```
-jobs:
-  renovate:
-    uses: haspadar/piqule/.github/workflows/renovate.yml@v1
-```
+---
 
 ## GitHub Actions
 
-Piqule provides reusable CI modules.
+Piqule provides reusable workflow modules stored in `.github/workflows`.
 
-### PHPStan
-
-```
-jobs:
-  phpstan:
-    uses: haspadar/piqule/.github/workflows/phpstan.yml@v1
-```
-
-### Lint suite (CS + Markdownlint + Hadolint + Actionlint)
+### Full CI pipeline
 
 ```
 jobs:
-  lint:
-    uses: haspadar/piqule/.github/workflows/lint.yml@v1
+  ci:
+    uses: haspadar/piqule/.github/workflows/ci.yml@v1
 ```
 
-### Markdownlint only
+---
+
+### Individual workflows
+
+PHP-CS-Fixer:
+
+```
+jobs:
+  php_cs_fixer:
+    uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@v1
+```
+
+Markdownlint:
 
 ```
 jobs:
   markdownlint:
-    uses: haspadar/piqule/.github/workflows/markdownlint.yml@v1
+    uses: haspadar/piqule/.github/workflows/_markdownlint.yml@v1
 ```
 
-### Actionlint only
+Hadolint:
+
+```
+jobs:
+  hadolint:
+    uses: haspadar/piqule/.github/workflows/_hadolint.yml@v1
+```
+
+Typos:
+
+```
+jobs:
+  typos:
+    uses: haspadar/piqule/.github/workflows/_typos.yml@v1
+```
+
+Yamllint:
+
+```
+jobs:
+  yamllint:
+    uses: haspadar/piqule/.github/workflows/_yamllint.yml@v1
+```
+
+Actionlint:
 
 ```
 jobs:
   actionlint:
-    uses: haspadar/piqule/.github/workflows/reusable/actionlint.yml@v1
+    uses: haspadar/piqule/.github/workflows/_actionlint.yml@v1
 ```
+
+---
 
 ### PR Size Checker
 
-Piqule provides a reusable workflow for enforcing pull request size limits using
-[`maidsafe/pr_size_checker`](https://github.com/maidsafe/pr_size_checker).
+Reusable workflow:
 
 ```
 jobs:
   pr_size:
-    uses: haspadar/piqule/.github/workflows/pr-size-checker-reusable.yml@v1
+    uses: haspadar/piqule/.github/workflows/_pr-size-checker.yml@v1
     with:
       max_lines_changed: 200
 ```
 
-This workflow fails if a pull request changes more than the configured number of lines.
+Fails the workflow if a pull request exceeds the configured size.
 
-#### CI workflow
+---
 
-Projects may also use the preconfigured CI workflow:
+## Contributing
 
-```
-jobs:
-  pr_size:
-    uses: haspadar/piqule/.github/workflows/pr-size-checker.yml@v1
-```
+Fork the repository, apply changes, and open a pull request.
 
-## Contribute
+Before submitting, ensure all Piqule checks pass locally or in CI.
 
-Fork, modify, and open a pull request.  
-Before submitting a PR, run all Piqule checks locally or via GitHub Actions.
+---
 
 ## License
 
-MIT.
+MIT
