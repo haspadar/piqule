@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Target;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Source\Source;
 
-final class DiskTarget implements Target
+final readonly class DiskTarget implements Target
 {
     public function __construct(
         private Source $source,

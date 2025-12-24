@@ -27,25 +27,33 @@ final readonly class Synchronization implements Command
             $target = new DiskTarget($source, $this->targetDirectory);
 
             if (!$target->exists()) {
-                $message = new Text(
-                    sprintf('Created: %s', $target->id()),
-                    new Green(),
+                $target->materialize();
+
+                $this->output->write(
+                    new Text(
+                        sprintf('Created: %s', $target->id()),
+                        new Green(),
+                    ),
                 );
             } elseif ($target->file()->contents() !== $source->file()->contents()) {
-                $message = new Text(
-                    sprintf('Updated: %s', $target->id()),
-                    new Yellow(),
+                $target->materialize();
+
+                $this->output->write(
+                    new Text(
+                        sprintf('Updated: %s', $target->id()),
+                        new Yellow(),
+                    ),
                 );
             } else {
-                $message = new Text(
-                    sprintf('Skipped: %s', $target->id()),
-                    new Grey(),
+                $target->materialize();
+
+                $this->output->write(
+                    new Text(
+                        sprintf('Skipped: %s', $target->id()),
+                        new Grey(),
+                    ),
                 );
             }
-
-            $target->materialize();
-
-            $this->output->write($message);
         }
     }
 }
