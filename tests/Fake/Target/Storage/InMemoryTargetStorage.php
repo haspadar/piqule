@@ -35,4 +35,10 @@ final class InMemoryTargetStorage implements TargetStorage
 
         return $this->files[$relativePath];
     }
+
+    /** @return array<string, File> */
+    public function all(): array
+    {
+        return $this->files;
+    }
 }
