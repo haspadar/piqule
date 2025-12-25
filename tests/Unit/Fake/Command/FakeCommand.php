@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Fake\Command;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Command;
 
 use Haspadar\Piqule\Target\Command\Command;
 

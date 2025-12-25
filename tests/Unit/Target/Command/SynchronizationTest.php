@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Target\Command;
+namespace Haspadar\Piqule\Tests\Unit\Target\Command;
 
 use Haspadar\Piqule\Source\Source;
 use Haspadar\Piqule\Target\Command\Synchronization;
-use Haspadar\Piqule\Tests\Fake\File\FakeFile;
-use Haspadar\Piqule\Tests\Fake\Output\FakeOutput;
-use Haspadar\Piqule\Tests\Fake\Source\FakeSources;
-use Haspadar\Piqule\Tests\Fake\Target\Storage\FakeTargetStorage;
+use Haspadar\Piqule\Tests\Unit\Fake\File\FakeFile;
+use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
+use Haspadar\Piqule\Tests\Unit\Fake\Source\FakeSources;
+use Haspadar\Piqule\Tests\Unit\Fake\Target\Storage\FakeTargetStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

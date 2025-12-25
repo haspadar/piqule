@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Fake\Output;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Output;
 
 use Haspadar\Piqule\Output\Line\Line;
 use Haspadar\Piqule\Output\Output;

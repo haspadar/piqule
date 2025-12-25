@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Fake\Source;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Source;
 
 use Haspadar\Piqule\Source\Source;
 use Haspadar\Piqule\Source\Sources;

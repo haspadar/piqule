@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Target\Command;
+namespace Haspadar\Piqule\Tests\Unit\Target\Command;
 
 use Haspadar\Piqule\Target\Command\WithDryRunNotice;
-use Haspadar\Piqule\Tests\Fake\Command\FakeCommand;
-use Haspadar\Piqule\Tests\Fake\Output\FakeOutput;
+use Haspadar\Piqule\Tests\Unit\Fake\Command\FakeCommand;
+use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
