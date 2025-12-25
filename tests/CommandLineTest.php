@@ -17,13 +17,4 @@ final class CommandLineTest extends TestCase
             'Command must be extracted from argv',
         );
     }
-
-    #[Test]
-    public function detectsDryRun(): void
-    {
-        self::assertTrue(
-            (new CommandLine(['piqule', 'sync', '--dry-run']))->isDryRun(),
-            'Dry run flag must be detected',
-        );
-    }
 }

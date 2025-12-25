@@ -18,9 +18,4 @@ final readonly class CommandLine
             array_slice($this->argv, 1),
         );
     }
-
-    public function isDryRun(): bool
-    {
-        return in_array('--dry-run', $this->argv, true);
-    }
 }

@@ -8,6 +8,11 @@
             "Haspadar\\Piqule\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Haspadar\\Piqule\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Kanstantsinas Mesnikas",
