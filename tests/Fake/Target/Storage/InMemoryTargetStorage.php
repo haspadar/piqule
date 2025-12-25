@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Target\Storage;
+namespace Haspadar\Piqule\Tests\Fake\Target\Storage;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Target\Storage\TargetStorage;
 
 final class InMemoryTargetStorage implements TargetStorage
 {
