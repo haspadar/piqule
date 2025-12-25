@@ -19,7 +19,7 @@ $output = new Console();
 try {
     $cli = new CommandLine($argv);
     $sources = new DiskSources(dirname(__DIR__) . '/templates');
-    $root = getenv('PIQULE_ROOT') ?: getcwd()
+    $root = getenv('COMPOSER_CWD') ?: getcwd()
         ?: throw new PiquleException('Cannot determine project root');
 
     $targetStorage = new DiskTargetStorage($root);
