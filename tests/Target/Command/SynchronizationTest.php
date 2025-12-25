@@ -9,7 +9,7 @@ use Haspadar\Piqule\Target\Command\Synchronization;
 use Haspadar\Piqule\Tests\Fake\File\FakeFile;
 use Haspadar\Piqule\Tests\Fake\Output\FakeOutput;
 use Haspadar\Piqule\Tests\Fake\Source\FakeSources;
-use Haspadar\Piqule\Tests\Fake\Target\Storage\InMemoryTargetStorage;
+use Haspadar\Piqule\Tests\Fake\Target\Storage\FakeTargetStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ final class SynchronizationTest extends TestCase
                 'example.txt',
             ),
         ]);
-        $storage = new InMemoryTargetStorage();
+        $storage = new FakeTargetStorage();
         (new Synchronization($sources, $storage, new FakeOutput()))->run();
 
         self::assertArrayHasKey(
@@ -43,7 +43,7 @@ final class SynchronizationTest extends TestCase
                 'example.txt',
             ),
         ]);
-        $storage = new InMemoryTargetStorage();
+        $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('old'));
 
         (new Synchronization($sources, $storage, new FakeOutput()))->run();
@@ -64,7 +64,7 @@ final class SynchronizationTest extends TestCase
                 'example.txt',
             ),
         ]);
-        $storage = new InMemoryTargetStorage();
+        $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('same'));
 
         (new Synchronization($sources, $storage, new FakeOutput()))->run();

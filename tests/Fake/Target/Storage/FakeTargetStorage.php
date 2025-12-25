@@ -8,7 +8,7 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Target\Storage\TargetStorage;
 
-final class InMemoryTargetStorage implements TargetStorage
+final class FakeTargetStorage implements TargetStorage
 {
     /**
      * @var array<string, File>
