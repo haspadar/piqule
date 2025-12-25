@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests;
+namespace Haspadar\Piqule\Tests\Unit;
 
 use Haspadar\Piqule\CommandLine;
 use PHPUnit\Framework\Attributes\Test;

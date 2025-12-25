@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Fake\File;
+namespace Haspadar\Piqule\Tests\Unit\Fake\File;
 
 use Haspadar\Piqule\File\File;
 
