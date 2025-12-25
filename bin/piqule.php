@@ -17,12 +17,16 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $output = new Console();
 
 try {
-    $cli = new CommandLine($argv);
-    $sources = new DiskSources(dirname(__DIR__) . '/templates');
-    $root = getenv('COMPOSER_CWD') ?: getcwd()
+    $projectRoot = Composer\InstalledVersions::getRootPackage()['install_path']
         ?: throw new PiquleException('Cannot determine project root');
 
-    $targetStorage = new DiskTargetStorage($root);
+    $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
+        ?: throw new PiquleException('Cannot determine piqule install path');
+
+    $sources = new DiskSources($libraryRoot . '/templates');
+    $targetStorage = new DiskTargetStorage($projectRoot);
+
+    $cli = new CommandLine($argv);
     match ($cli->command()) {
         'sync' => (new Synchronization($sources, $targetStorage, $output))->run(),
         'sync --dry-run' => (new WithDryRunNotice(
