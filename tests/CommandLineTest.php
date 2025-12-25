@@ -19,4 +19,14 @@ final class CommandLineTest extends TestCase
             'Command must be extracted from argv',
         );
     }
+
+    #[Test]
+    public function normalizesWhitespaceInArguments(): void
+    {
+        self::assertSame(
+            'sync --dry-run',
+            (new CommandLine(['piqule', 'sync', '   --dry-run']))->command(),
+            'CommandLine must normalize whitespace in arguments',
+        );
+    }
 }
