@@ -18,7 +18,7 @@ $output = new Console();
 
 try {
     $projectRoot = Composer\InstalledVersions::getRootPackage()['install_path']
-        ?? throw new PiquleException('Cannot determine project root');
+        ?: throw new PiquleException('Cannot determine project root');
 
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
         ?: throw new PiquleException('Cannot determine piqule install path');
