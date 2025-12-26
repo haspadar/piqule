@@ -33,11 +33,6 @@ final readonly class DiskTarget implements Target
         return $this->source->id();
     }
 
-    public function source(): Source
-    {
-        return $this->source;
-    }
-
     public function file(): File
     {
         return $this->target->read(
