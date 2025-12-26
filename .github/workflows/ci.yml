@@ -1,63 +1,79 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pull-requests: read
-
 jobs:
   yamllint:
     name: YAML Lint
     uses: ./.github/workflows/_yamllint.yml
     with:
       config: .piqule/.yamllint.yml
-
   actionlint:
     name: Actionlint
     uses: ./.github/workflows/_actionlint.yml
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
-
   markdownlint:
     name: Markdownlint
     uses: ./.github/workflows/_markdownlint.yml
     with:
       config: .piqule/.markdownlint-cli2.jsonc
-
   typos:
     name: Typos
     uses: ./.github/workflows/_typos.yml
     with:
       config: .piqule/_typos.toml
-
   php_cs_fixer:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
       config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
-
   hadolint:
     name: Hadolint
     uses: ./.github/workflows/_hadolint.yml
     with:
       dockerfile: Dockerfile
       config: .piqule/.hadolint.yml
-
+  tests:
+    name: Tests with coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup PHP
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
+        with:
+          php-version: '8.2'
+          coverage: xdebug
+          extensions: mbstring, dom, json
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+      - name: Validate composer.json
+        run: composer validate
+      - name: PHPUnit (with coverage)
+        run: composer test-coverage
+      - name: Upload coverage to Codecov
+        if: hashFiles('tests/**') != ''
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage-xml/index.xml
+          codecov_yml_path: .piqule/codecov.yml
+          fail_ci_if_error: true
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 250
-
   release_drafter:
     name: Release Drafter
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
