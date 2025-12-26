@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\Fixtures;
 
-use RuntimeException;
+use Haspadar\Piqule\PiquleException;
 
 final readonly class DirectoryFixture
 {
@@ -20,7 +20,7 @@ final readonly class DirectoryFixture
         );
 
         if (!mkdir($this->path, 0o755, true) && !is_dir($this->path)) {
-            throw new RuntimeException(
+            throw new PiquleException(
                 sprintf(
                     'Failed to create test directory: "%s"',
                     $this->path,
@@ -35,13 +35,13 @@ final readonly class DirectoryFixture
         $dir = dirname($file);
 
         if (!is_dir($dir) && !mkdir($dir, 0o755, true) && !is_dir($dir)) {
-            throw new RuntimeException(
+            throw new PiquleException(
                 sprintf('Failed to create test directory: "%s"', $dir),
             );
         }
 
         if (file_put_contents($file, $contents) === false) {
-            throw new RuntimeException(
+            throw new PiquleException(
                 sprintf('Failed to create test file: "%s"', $file),
             );
         }
