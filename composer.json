@@ -13,6 +13,10 @@
             "Haspadar\\Piqule\\Tests\\": "tests/"
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-xml=coverage-xml"
+    },
     "authors": [
         {
             "name": "Kanstantsinas Mesnikas",
