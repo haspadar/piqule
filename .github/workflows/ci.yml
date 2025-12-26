@@ -65,8 +65,7 @@ jobs:
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: haspadar/piqule
-          files: coverage-xml/index.xml
+          files: coverage-xml/*.xml
           fail_ci_if_error: true
   pr_size_checker:
     name: PR Size Checker
