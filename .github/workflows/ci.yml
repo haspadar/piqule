@@ -66,6 +66,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage-xml/*.xml
+          root_dir: .
           fail_ci_if_error: true
   pr_size_checker:
     name: PR Size Checker
