@@ -65,7 +65,14 @@ final readonly class DirectoryFixture
             return;
         }
 
-        foreach (scandir($dir) as $item) {
+        $items = scandir($dir);
+        if ($items === false) {
+            throw new PiquleException(
+                sprintf('Failed to scan test directory: "%s"', $dir),
+            );
+        }
+
+        foreach ($items as $item) {
             if ($item === '.' || $item === '..') {
                 continue;
             }
