@@ -31,14 +31,20 @@ final readonly class DirectoryFixture
 
     public function withFile(string $relativePath, string $contents): self
     {
-        $fullPath = $this->path . '/' . $relativePath;
-        $dir = dirname($fullPath);
+        $file = $this->path . '/' . $relativePath;
+        $dir = dirname($file);
 
-        if (!is_dir($dir)) {
-            mkdir($dir, recursive: true);
+        if (!is_dir($dir) && !mkdir($dir, 0o755, true) && !is_dir($dir)) {
+            throw new RuntimeException(
+                sprintf('Failed to create test directory: "%s"', $dir),
+            );
         }
 
-        file_put_contents($fullPath, $contents);
+        if (file_put_contents($file, $contents) === false) {
+            throw new RuntimeException(
+                sprintf('Failed to create test file: "%s"', $file),
+            );
+        }
 
         return $this;
     }
