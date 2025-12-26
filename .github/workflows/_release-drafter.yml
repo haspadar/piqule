@@ -1,7 +1,6 @@
 name: Release Drafter
 on:
   workflow_call: {}
-
 jobs:
   release_drafter:
     runs-on: ubuntu-latest

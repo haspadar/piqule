@@ -1,5 +1,4 @@
 name: PHP-CS-Fixer
-
 on:
   workflow_call:
     inputs:
@@ -7,30 +6,24 @@ on:
         type: string
         required: false
         default: "8.5"
-
       php-matrix:
         type: string
         required: false
-        default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
-
+        default: "" # JSON: ["8.2","8.3","8.4","8.5"]
       config:
         type: string
         required: false
         default: .php-cs-fixer.php
-
 jobs:
   cs:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
         php-version: ${{ fromJson(inputs.php-matrix != '' && inputs.php-matrix || format('["{0}"]', inputs.php-version)) }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
-
       - name: Check config exists
         id: check
         run: |
@@ -39,22 +32,18 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
-
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
         run: echo "Skipping PHP-CS-Fixer — config not found at ${{ inputs.config }}"
-
       - name: Setup PHP
         if: steps.check.outputs.run == 'true'
         uses: shivammathur/setup-php@2.36.0
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-
       - name: Install dependencies
         if: steps.check.outputs.run == 'true'
         run: composer install --no-interaction --no-progress --prefer-dist
-
       - name: Run PHP-CS-Fixer
         if: steps.check.outputs.run == 'true'
         run: vendor/bin/php-cs-fixer fix --dry-run --diff --config="${{ inputs.config }}"
