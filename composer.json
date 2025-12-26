@@ -14,8 +14,9 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-xml=coverage-xml"
+        "test": "phpunit --order-by=random --random-order-seed=$(date +%s)",
+        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-filter=src",
+        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit --coverage-html=coverage-report --coverage-filter=src"
     },
     "authors": [
         {
