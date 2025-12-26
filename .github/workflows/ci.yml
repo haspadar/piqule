@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -65,3 +65,13 @@ jobs:
       contents: write
       pull-requests: read
     uses: ./.github/workflows/_release-drafter.yml
+
+  codecov:
+    name: Upload coverage to Codecov
+    if: hashFiles('tests/**') != ''
+    uses: codecov/codecov-action@v5
+    with:
+      token: ${{ secrets.CODECOV_TOKEN }}
+      files: coverage-xml/index.xml
+      config: .piqule/.codecov.yml
+      fail_ci_if_error: true
