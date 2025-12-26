@@ -16,16 +16,14 @@ final readonly class DiskTargetStorage implements TargetStorage
 
     public function exists(string $relativePath): bool
     {
-        return is_file($this->root . DIRECTORY_SEPARATOR . $relativePath);
+        return is_file($this->root . '/' . $relativePath);
     }
 
     public function write(string $relativePath, File $source): void
     {
-        $target = $this->root . DIRECTORY_SEPARATOR . $relativePath;
+        $target = $this->root . '/' . $relativePath;
         $dir = dirname($target);
-        if (!is_dir($dir)) {
-            $this->createDirectory($dir);
-        }
+        $this->createDirectory($dir);
 
         if (file_put_contents($target, $source->contents()) === false) {
             throw new PiquleException(
@@ -37,13 +35,23 @@ final readonly class DiskTargetStorage implements TargetStorage
     public function read(string $relativePath): File
     {
         return new DiskFile(
-            $this->root . DIRECTORY_SEPARATOR . $relativePath,
+            $this->root . '/' . $relativePath,
         );
     }
 
     private function createDirectory(string $dir): void
     {
-        if (!mkdir($dir, 0o755, true) && !is_dir($dir)) {
+        if (is_dir($dir)) {
+            return;
+        }
+
+        if (file_exists($dir)) {
+            throw new PiquleException(
+                sprintf('Failed to create directory: "%s"', $dir),
+            );
+        }
+
+        if (!mkdir($dir, 0o755, true)) {
             throw new PiquleException(
                 sprintf('Failed to create directory: "%s"', $dir),
             );

@@ -16,23 +16,18 @@ final readonly class DiskFile implements File
     ) {}
 
     /**
-     * Returns the filesystem path of the file
-     *
-     * This method is intentionally not part of the File interface,
-     * as paths are an infrastructure concern.
-     */
-    public function path(): string
-    {
-        return $this->path;
-    }
-
-    /**
      * Reads and returns the file contents
      *
      * @throws PiquleException If the file cannot be read
      */
     public function contents(): string
     {
+        if (!is_file($this->path)) {
+            throw new PiquleException(
+                sprintf('Failed to read file: "%s"', $this->path),
+            );
+        }
+
         $contents = file_get_contents($this->path);
 
         if ($contents === false) {
