@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\Fixtures;
 
+use RuntimeException;
+
 final readonly class DirectoryFixture
 {
     private string $path;
@@ -17,7 +19,14 @@ final readonly class DirectoryFixture
             bin2hex(random_bytes(6)),
         );
 
-        mkdir($this->path, recursive: true);
+        if (!mkdir($this->path, 0o755, true) && !is_dir($this->path)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Failed to create test directory: "%s"',
+                    $this->path,
+                ),
+            );
+        }
     }
 
     public function withFile(string $relativePath, string $contents): self
