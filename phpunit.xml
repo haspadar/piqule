@@ -24,4 +24,13 @@
             <directory suffix=".php">src</directory>
         </include>
     </source>
+
+    <coverage
+            pathCoverage="true"
+            processUncoveredFiles="true"
+    >
+        <report>
+            <text outputFile="php://stdout"/>
+        </report>
+    </coverage>
 </phpunit>

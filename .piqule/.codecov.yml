@@ -1,17 +1,19 @@
 coverage:
   precision: 2
   round: down
-  range: "80...100"
+  range: "68...100"
 
   status:
     project:
       default:
-        target: 85%
+        metric: paths
+        target: 70%
         threshold: 2%
 
     patch:
       default:
-        target: 80%
+        metric: paths
+        target: 75%
         threshold: 5%
 
 comment:
