@@ -35,10 +35,6 @@ final readonly class DiskSources implements Sources
         );
 
         foreach ($iterator as $item) {
-            if ($item->isDir()) {
-                continue;
-            }
-
             /**
              * @var $directoryIterator RecursiveDirectoryIterator
              */
