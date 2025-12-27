@@ -26,13 +26,18 @@ jobs:
           extensions: mbstring, dom, json
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Validate composer.json
-        run: composer validate
+        run: composer validate --strict
 
-      - name: PHPUnit (with coverage)
-        run: composer test-coverage
+      - name: PHPUnit (path coverage)
+        run: |
+          mkdir -p coverage-xml
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/phpunit \
+            --coverage-clover=coverage-xml/coverage.xml
 
       - name: Upload coverage to Codecov
         if: ${{ hashFiles('coverage-xml/*.xml') != '' }}

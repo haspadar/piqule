@@ -10,3 +10,4 @@
 /*.log
 /.php-cs-fixer.cache
 /piqule.lock
+/coverage-xml/
