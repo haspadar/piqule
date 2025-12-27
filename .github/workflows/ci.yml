@@ -45,6 +45,8 @@ jobs:
   tests:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
