@@ -44,30 +44,7 @@ jobs:
       config: .piqule/.hadolint.yml
   tests:
     name: Tests with coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
-      - name: Setup PHP
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
-        with:
-          php-version: '8.2'
-          coverage: xdebug
-          extensions: mbstring, dom, json
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-      - name: Validate composer.json
-        run: composer validate
-      - name: PHPUnit (with coverage)
-        run: composer test-coverage
-      - name: Upload coverage to Codecov
-        if: hashFiles('tests/**') != ''
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage-xml/*.xml
-          codecov_yml_path: .piqule/.codecov.yml
-          fail_ci_if_error: true
+    uses: ./.github/workflows/_tests.yml
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
