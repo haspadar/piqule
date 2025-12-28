@@ -1,4 +1,5 @@
 name: PHP-CS-Fixer
+
 on:
   workflow_call:
     inputs:
@@ -10,10 +11,7 @@ on:
         type: string
         required: false
         default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
-      config:
-        type: string
-        required: false
-        default: .php-cs-fixer.php
+
 jobs:
   cs:
     runs-on: ubuntu-latest
@@ -26,22 +24,21 @@ jobs:
             inputs.php-matrix ||
             format('["{0}"]', inputs.php-version)
           ) }}
+
     steps:
       # ------------------------------------------------------------
       # Checkout repository
       # ------------------------------------------------------------
       - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
 
       # ------------------------------------------------------------
       # Check PHP-CS-Fixer config existence
       # ------------------------------------------------------------
       - name: Check config exists
         id: check
-        env:
-          PHP_CS_FIXER_CONFIG: ${{ inputs.config }}
         run: |
-          if [[ -f "$PHP_CS_FIXER_CONFIG" ]]; then
+          if [[ -f ".piqule/php-cs-fixer.project.php" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -52,16 +49,32 @@ jobs:
       # ------------------------------------------------------------
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
-        env:
-          PHP_CS_FIXER_CONFIG: ${{ inputs.config }}
-        run: echo "Skipping PHP-CS-Fixer — config not found at $PHP_CS_FIXER_CONFIG"
+        run: echo "Skipping PHP-CS-Fixer — no .piqule/php-cs-fixer.project.php"
 
       # ------------------------------------------------------------
       # Setup PHP
       # ------------------------------------------------------------
       - name: Setup PHP
         if: steps.check.outputs.run == 'true'
-        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
+
+      # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        if: steps.check.outputs.run == 'true'
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # Run PHP-CS-Fixer (dry-run)
+      # ------------------------------------------------------------
+      - name: PHP-CS-Fixer
+        if: steps.check.outputs.run == 'true'
+        run: |
+          vendor/bin/php-cs-fixer fix \
+            --config=.piqule/php-cs-fixer.project.php \
+            --cache-file=.piqule/.php-cs-fixer.cache \
+            --dry-run --diff

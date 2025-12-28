@@ -49,7 +49,6 @@ jobs:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
-      config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
   # ------------------------------------------------------------
   # Dockerfile lint
