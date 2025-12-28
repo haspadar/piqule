@@ -14,6 +14,11 @@
 
   "packageRules": [
     {
+      "description": "Pin GitHub Actions to commit SHA",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
       "description": "Auto-merge minor and patch dev dependencies",
       "matchDepTypes": ["require-dev"],
       "matchUpdateTypes": ["patch", "minor"],
