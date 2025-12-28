@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ----------------------------------------
-# Version arguments (allowed before FROM)
+# Tool versions (reproducible CI)
 # ----------------------------------------
 ARG NODE_VERSION=24.12.0
 ARG ACTIONLINT_VERSION=1.7.9
@@ -12,11 +12,26 @@ ARG TYPOS_VERSION=1.40.0
 ARG HADOLINT_VERSION=2.14.0
 
 # ----------------------------------------
+# System package versions (Debian trixie, arm64)
+# ----------------------------------------
+ARG GIT_VERSION=1:2.47.3-0+deb13u1
+ARG UNZIP_VERSION=6.0-29
+ARG CURL_VERSION=8.14.1-2+deb13u2
+ARG BASH_VERSION=5.2.37-2+b5
+ARG FISH_VERSION=4.0.2-1
+ARG PYTHON3_VERSION=3.13.5-1
+ARG PYTHON3_PIP_VERSION=25.1.1+dfsg-1
+ARG LIBICU_DEV_VERSION=76.1-4
+ARG LIBZIP_DEV_VERSION=1.11.3-2
+ARG ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+b1
+ARG LIBONIG_DEV_VERSION=6.9.9-1+b1
+
+# ----------------------------------------
 # Base image
 # ----------------------------------------
 FROM php:8.5-cli
 
-# Re-declare ARGs after FROM (Docker scope rule)
+# Re-declare ARGs after FROM
 ARG NODE_VERSION
 ARG ACTIONLINT_VERSION
 ARG MARKDOWNLINT_VERSION
@@ -25,11 +40,23 @@ ARG PHP_CS_FIXER_VERSION
 ARG TYPOS_VERSION
 ARG HADOLINT_VERSION
 
+ARG GIT_VERSION
+ARG UNZIP_VERSION
+ARG CURL_VERSION
+ARG BASH_VERSION
+ARG FISH_VERSION
+ARG PYTHON3_VERSION
+ARG PYTHON3_PIP_VERSION
+ARG LIBICU_DEV_VERSION
+ARG LIBZIP_DEV_VERSION
+ARG ZLIB1G_DEV_VERSION
+ARG LIBONIG_DEV_VERSION
+
 # ----------------------------------------
 # OCI labels
 # ----------------------------------------
 LABEL org.opencontainers.image.title="Piqule"
-LABEL org.opencontainers.image.description="Quality control for PHP projects"
+LABEL org.opencontainers.image.description="Piqule — PHP Quality Laws"
 LABEL org.opencontainers.image.source="https://github.com/haspadar/piqule"
 LABEL org.opencontainers.image.licenses="MIT"
 
@@ -41,20 +68,19 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # ----------------------------------------
 # System dependencies + Node.js
 # ----------------------------------------
-# hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        git \
-        unzip \
-        curl \
-        bash \
-        fish \
-        python3 \
-        python3-pip \
-        libicu-dev \
-        libzip-dev \
-        zlib1g-dev \
-        libonig-dev \
+        git=${GIT_VERSION} \
+        unzip=${UNZIP_VERSION} \
+        curl=${CURL_VERSION} \
+        bash=${BASH_VERSION} \
+        fish=${FISH_VERSION} \
+        python3=${PYTHON3_VERSION} \
+        python3-pip=${PYTHON3_PIP_VERSION} \
+        libicu-dev=${LIBICU_DEV_VERSION} \
+        libzip-dev=${LIBZIP_DEV_VERSION} \
+        zlib1g-dev=${ZLIB1G_DEV_VERSION} \
+        libonig-dev=${LIBONIG_DEV_VERSION} \
     && docker-php-ext-install intl zip mbstring \
     && curl -fsSL \
         "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
