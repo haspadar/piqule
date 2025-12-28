@@ -6,6 +6,9 @@ namespace Haspadar\Piqule;
 
 final readonly class CommandLine
 {
+    /**
+     * @param array<int,string> $argv
+     */
     public function __construct(private array $argv) {}
 
     /**

@@ -9,6 +9,7 @@ use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\PiquleException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
 final readonly class DiskSources implements Sources
 {
@@ -34,14 +35,18 @@ final readonly class DiskSources implements Sources
             ),
         );
 
+        /** @var SplFileInfo $item */
         foreach ($iterator as $item) {
-            /**
-             * @var $directoryIterator RecursiveDirectoryIterator
-             */
-            $directoryIterator = $iterator->getSubIterator();
+            $absolutePath = $item->getPathname();
+
+            $relativePath = ltrim(
+                substr($absolutePath, strlen($this->path)),
+                DIRECTORY_SEPARATOR,
+            );
+
             yield new Source(
-                new DiskFile($item->getPathname()),
-                $directoryIterator->getSubPathName(),
+                new DiskFile($absolutePath),
+                $relativePath,
             );
         }
     }
