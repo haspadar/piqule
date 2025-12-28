@@ -67,4 +67,9 @@ jobs:
       - name: Infection
         env:
           INFECTION_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-        run: composer infection
+        run: |
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/infection \
+            --threads=$(nproc) \
+            --only-covered
