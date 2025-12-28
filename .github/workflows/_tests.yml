@@ -29,7 +29,6 @@ jobs:
           XDEBUG_MODE=coverage \
           php -d memory_limit=1G \
           vendor/bin/phpunit \
-            --configuration=.piqule/phpunit.xml \
             --coverage-clover=coverage-xml/coverage.xml
       - name: Upload coverage to Codecov
         if: ${{ hashFiles('coverage-xml/*.xml') != '' }}
