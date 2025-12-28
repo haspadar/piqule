@@ -13,8 +13,14 @@ jobs:
   typos:
     runs-on: ubuntu-latest
     steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
       - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      # ------------------------------------------------------------
+      # Check whether typos config exists
+      # ------------------------------------------------------------
       - name: Check config exists
         id: check
         env:
@@ -25,14 +31,20 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
+      # ------------------------------------------------------------
+      # Skip if config file is missing
+      # ------------------------------------------------------------
       - name: Skip — no typos config found
         if: steps.check.outputs.run == 'false'
         env:
           TYPOS_CONFIG: ${{ inputs.config }}
         run: echo "Skipping Typos — config not found at $TYPOS_CONFIG"
+      # ------------------------------------------------------------
+      # Run typos spell checker
+      # ------------------------------------------------------------
       - name: Run Typos
         if: steps.check.outputs.run == 'true'
-        uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06  # v1.40.0
+        uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06 # v1.40.0
         with:
           files: .
           config: ${{ inputs.config }}
