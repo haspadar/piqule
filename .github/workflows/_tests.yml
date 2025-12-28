@@ -107,7 +107,7 @@ jobs:
           INFECTION_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         run: |
           XDEBUG_MODE=coverage \
-          php -d memory_limit=1024M \
+          php -d memory_limit=1G \
           vendor/bin/infection \
             --configuration=.piqule/infection.json5 \
             --threads=max

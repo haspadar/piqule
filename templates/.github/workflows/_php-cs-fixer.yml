@@ -62,6 +62,13 @@ jobs:
           coverage: none
 
       # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        if: steps.check.outputs.run == 'true'
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
       # Run PHP-CS-Fixer (dry-run)
       # ------------------------------------------------------------
       - name: PHP-CS-Fixer
