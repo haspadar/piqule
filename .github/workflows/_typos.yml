@@ -17,15 +17,19 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: Check config exists
         id: check
+        env:
+          TYPOS_CONFIG: ${{ inputs.config }}
         run: |
-          if [[ -f "${{ inputs.config }}" ]]; then
+          if [[ -f "$TYPOS_CONFIG" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Skip — no typos config found
         if: steps.check.outputs.run == 'false'
-        run: echo "Skipping Typos — config not found at ${{ inputs.config }}"
+        env:
+          TYPOS_CONFIG: ${{ inputs.config }}
+        run: echo "Skipping Typos — config not found at $TYPOS_CONFIG"
       - name: Run Typos
         if: steps.check.outputs.run == 'true'
         uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06  # v1.40.0

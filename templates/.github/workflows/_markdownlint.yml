@@ -1,5 +1,4 @@
 name: Markdownlint
-
 on:
   workflow_call:
     inputs:
@@ -10,41 +9,40 @@ on:
         type: string
         required: false
         default: .markdownlint-cli2.jsonc
-
 jobs:
   markdownlint:
     name: Markdownlint
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: Check config exists
         id: check
+        env:
+          MARKDOWNLINT_CONFIG: ${{ inputs.config }}
         run: |
-          if [[ -f "${{ inputs.config }}" ]]; then
+          if [[ -f "$MARKDOWNLINT_CONFIG" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
-
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
-        run: echo "Skipping Markdownlint — no config found at ${{ inputs.config }}"
-
+        env:
+          MARKDOWNLINT_CONFIG: ${{ inputs.config }}
+        run: echo "Skipping Markdownlint — no config found at $MARKDOWNLINT_CONFIG"
       - name: Setup Node.js
         if: steps.check.outputs.run == 'true'
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version: ${{ inputs.node-version }}
-
       - name: Install markdownlint-cli2
         if: steps.check.outputs.run == 'true'
         run: npm install -g markdownlint-cli2
-
       - name: Run markdownlint-cli2
         if: steps.check.outputs.run == 'true'
+        env:
+          MARKDOWNLINT_CONFIG: ${{ inputs.config }}
         run: |
-          echo "Using config: ${{ inputs.config }}"
-          markdownlint-cli2 --config "${{ inputs.config }}"
+          echo "Using config: $MARKDOWNLINT_CONFIG"
+          markdownlint-cli2 --config "$MARKDOWNLINT_CONFIG"
