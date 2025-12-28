@@ -14,9 +14,14 @@
         }
     },
     "scripts": {
-        "test": "phpunit --order-by=random --random-order-seed=$(date +%s)",
-        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-filter=src",
-        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit --coverage-html=coverage-report --coverage-filter=src"
+        "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache",
+        "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache --dry-run --diff",
+
+        "test": "phpunit -c .piqule/phpunit.xml --order-by=random --random-order-seed=$(date +%s)",
+        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --coverage-clover=.piqule/coverage.xml",
+        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --coverage-html=.piqule/coverage-report",
+
+        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1024M ./vendor/bin/infection --configuration=.piqule/infection.json5 --threads=max"
     },
     "authors": [
         {

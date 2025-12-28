@@ -1,11 +1,16 @@
 {
-  "$schema": "vendor/infection/infection/resources/schema.json",
+  "$schema": "../vendor/infection/infection/resources/schema.json",
 
   "source": {
-    "directories": ["src"]
+    "directories": ["../src"]
   },
 
   "testFramework": "phpunit",
+
+  "phpUnit": {
+    "configDir": "."
+  },
+
   "initialTestsPhpOptions": "-d memory_limit=1G",
 
   "timeout": 30,

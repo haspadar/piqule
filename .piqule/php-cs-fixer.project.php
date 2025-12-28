@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+use PhpCsFixer\Finder;
+
 /** @var PhpCsFixer\Config $rules */
-$rules = require __DIR__ . '/.piqule/php-cs-fixer.php';
+$rules = require __DIR__ . '/php-cs-fixer.php';
+
 $rules->setFinder(
-    PhpCsFixer\Finder::create()
+    Finder::create()
         ->in(__DIR__)
-        ->exclude('vendor')
+        ->exclude('vendor'),
 );
 
 return $rules;
