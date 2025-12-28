@@ -1,0 +1,57 @@
+name: PHPStan
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout source code
+      # ------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------
+      # Setup PHP (no Xdebug)
+      # ------------------------------------------------------------
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+          coverage: none
+
+      # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # Check PHPStan config exists
+      # ------------------------------------------------------------
+      - name: Check PHPStan config exists
+        id: phpstan
+        run: |
+          if [[ -f ".piqule/phpstan.neon" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ------------------------------------------------------------
+      # Run PHPStan
+      # ------------------------------------------------------------
+      - name: Run PHPStan
+        if: steps.phpstan.outputs.run == 'true'
+        run: composer phpstan
+
+      - name: Skip PHPStan
+        if: steps.phpstan.outputs.run == 'false'
+        run: echo "Skipping PHPStan — no .piqule/phpstan.neon"
