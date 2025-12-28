@@ -71,5 +71,4 @@ jobs:
           XDEBUG_MODE=coverage \
           php -d memory_limit=1G \
           vendor/bin/infection \
-            --threads=$(nproc) \
-            --only-covered
+            --threads=$(nproc)
