@@ -20,10 +20,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ${{ fromJson(inputs.php-matrix != '' && inputs.php-matrix || format('["{0}"]', inputs.php-version)) }}
+        php-version: >-
+          ${{ fromJson(
+            inputs.php-matrix != '' &&
+            inputs.php-matrix ||
+            format('["{0}"]', inputs.php-version)
+          ) }}
     steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Check PHP-CS-Fixer config existence
+      # ------------------------------------------------------------
       - name: Check config exists
         id: check
         env:
@@ -34,26 +46,22 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
+
+      # ------------------------------------------------------------
+      # Skip PHP-CS-Fixer when config is missing
+      # ------------------------------------------------------------
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
         env:
           PHP_CS_FIXER_CONFIG: ${{ inputs.config }}
         run: echo "Skipping PHP-CS-Fixer — config not found at $PHP_CS_FIXER_CONFIG"
+
+      # ------------------------------------------------------------
+      # Setup PHP
+      # ------------------------------------------------------------
       - name: Setup PHP
         if: steps.check.outputs.run == 'true'
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-      - name: Install dependencies
-        if: steps.check.outputs.run == 'true'
-        run: composer install --no-interaction --no-progress --prefer-dist
-      - name: Run PHP-CS-Fixer
-        if: steps.check.outputs.run == 'true'
-        env:
-          PHP_CS_FIXER_CONFIG: ${{ inputs.config }}
-        run: |
-          vendor/bin/php-cs-fixer fix \
-            --dry-run \
-            --diff \
-            --config="$PHP_CS_FIXER_CONFIG"

@@ -9,47 +9,74 @@ permissions:
   contents: read
   pull-requests: read
 jobs:
+  # ------------------------------------------------------------
+  # YAML lint
+  # ------------------------------------------------------------
   yamllint:
     name: YAML Lint
     uses: ./.github/workflows/_yamllint.yml
     with:
       config: .piqule/.yamllint.yml
+  # ------------------------------------------------------------
+  # GitHub Actions lint
+  # ------------------------------------------------------------
   actionlint:
     name: Actionlint
     uses: ./.github/workflows/_actionlint.yml
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
+  # ------------------------------------------------------------
+  # Markdown lint
+  # ------------------------------------------------------------
   markdownlint:
     name: Markdownlint
     uses: ./.github/workflows/_markdownlint.yml
     with:
       config: .piqule/.markdownlint-cli2.jsonc
+  # ------------------------------------------------------------
+  # Typo checker
+  # ------------------------------------------------------------
   typos:
     name: Typos
     uses: ./.github/workflows/_typos.yml
     with:
       config: .piqule/_typos.toml
+  # ------------------------------------------------------------
+  # PHP-CS-Fixer (matrix)
+  # ------------------------------------------------------------
   php_cs_fixer:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
       config: .php-cs-fixer.php
       php-matrix: '["8.2","8.3","8.4","8.5"]'
+  # ------------------------------------------------------------
+  # Dockerfile lint
+  # ------------------------------------------------------------
   hadolint:
     name: Hadolint
     uses: ./.github/workflows/_hadolint.yml
+  # ------------------------------------------------------------
+  # PHPUnit + Coverage + Infection
+  # ------------------------------------------------------------
   tests:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  # ------------------------------------------------------------
+  # PR size guard
+  # ------------------------------------------------------------
   pr_size_checker:
     name: PR Size Checker
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 250
+  # ------------------------------------------------------------
+  # Release drafter (main only)
+  # ------------------------------------------------------------
   release_drafter:
     name: Release Drafter
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
