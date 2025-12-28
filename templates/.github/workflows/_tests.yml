@@ -4,32 +4,61 @@ on:
     secrets:
       CODECOV_TOKEN:
         required: true
-        description: 'Token for uploading coverage to Codecov'
+        description: Token for uploading coverage to Codecov
+      STRYKER_DASHBOARD_API_KEY:
+        required: false
+        description: API key for Stryker Dashboard (mutation testing)
 permissions:
   contents: read
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      # ------------------------------------------------------------
+      # Checkout source code
+      # ------------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Setup PHP with Xdebug
+      # Xdebug is required for both coverage and mutation testing
+      # ------------------------------------------------------------
       - name: Setup PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
         with:
           php-version: '8.2'
           coverage: xdebug
           extensions: mbstring, dom, json
+
+      # ------------------------------------------------------------
+      # Install Composer dependencies
+      # ------------------------------------------------------------
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # Validate composer.json for consistency and correctness
+      # ------------------------------------------------------------
       - name: Validate composer.json
         run: composer validate --strict
+
+      # ------------------------------------------------------------
+      # Run PHPUnit with code coverage enabled
+      # Coverage is exported in Clover XML format for Codecov
+      # ------------------------------------------------------------
       - name: PHPUnit (path coverage)
         run: |
           mkdir -p coverage-xml
           XDEBUG_MODE=coverage \
           php -d memory_limit=1G \
           vendor/bin/phpunit \
+            --configuration=phpunit.xml \
             --coverage-clover=coverage-xml/coverage.xml
+
+      # ------------------------------------------------------------
+      # Upload coverage report to Codecov
+      # ------------------------------------------------------------
       - name: Upload coverage to Codecov
         if: ${{ hashFiles('coverage-xml/*.xml') != '' }}
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
@@ -38,3 +67,17 @@ jobs:
           files: coverage-xml/*.xml
           codecov_yml_path: .piqule/.codecov.yml
           fail_ci_if_error: true
+
+      # ------------------------------------------------------------
+      # Mutation testing with Infection
+      # Results are published to Stryker Dashboard when API key is provided
+      # This step is informational unless thresholds are configured
+      # ------------------------------------------------------------
+      - name: Infection
+        env:
+          INFECTION_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+        run: |
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/infection \
+            --threads=$(nproc)
