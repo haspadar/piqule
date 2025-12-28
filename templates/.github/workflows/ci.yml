@@ -65,6 +65,7 @@ jobs:
     uses: ./.github/workflows/_tests.yml
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
   # ------------------------------------------------------------
   # PR size guard
   # ------------------------------------------------------------
