@@ -8,6 +8,7 @@ use Haspadar\Piqule\Output\Line\Line;
 
 final readonly class Console implements Output
 {
+    #[\Override]
     public function write(Line $line): void
     {
         fwrite(

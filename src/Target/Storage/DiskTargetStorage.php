@@ -14,11 +14,13 @@ final readonly class DiskTargetStorage implements TargetStorage
         private string $root,
     ) {}
 
+    #[\Override]
     public function exists(string $relativePath): bool
     {
         return is_file($this->root . '/' . $relativePath);
     }
 
+    #[\Override]
     public function write(string $relativePath, File $source): void
     {
         $target = $this->root . '/' . $relativePath;
@@ -32,6 +34,7 @@ final readonly class DiskTargetStorage implements TargetStorage
         }
     }
 
+    #[\Override]
     public function read(string $relativePath): File
     {
         return new DiskFile(

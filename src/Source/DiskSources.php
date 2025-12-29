@@ -20,6 +20,7 @@ final readonly class DiskSources implements Sources
     /**
      * @return iterable<Source>
      */
+    #[\Override]
     public function files(): iterable
     {
         if (!is_dir($this->path)) {

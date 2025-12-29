@@ -21,6 +21,7 @@ final readonly class Synchronization implements Command
         private Output $output,
     ) {}
 
+    #[\Override]
     public function run(): void
     {
         foreach ($this->sources->files() as $source) {

@@ -15,6 +15,7 @@ final readonly class WithDryRunNotice implements Command
         private Output  $output,
     ) {}
 
+    #[\Override]
     public function run(): void
     {
         $this->output->write(

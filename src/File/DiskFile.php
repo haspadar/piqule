@@ -20,6 +20,7 @@ final readonly class DiskFile implements File
      *
      * @throws PiquleException If the file cannot be read
      */
+    #[\Override]
     public function contents(): string
     {
         if (!is_file($this->path)) {

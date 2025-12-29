@@ -11,16 +11,19 @@ final readonly class Error implements Line
 {
     public function __construct(private string $message) {}
 
+    #[\Override]
     public function text(): string
     {
         return "Error: $this->message";
     }
 
+    #[\Override]
     public function color(): Color
     {
         return new Red();
     }
 
+    #[\Override]
     public function stream(): mixed
     {
         return STDERR;

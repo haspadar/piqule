@@ -13,16 +13,19 @@ final readonly class Text implements Line
         private Color $color,
     ) {}
 
+    #[\Override]
     public function text(): string
     {
         return $this->text;
     }
 
+    #[\Override]
     public function color(): Color
     {
         return $this->color;
     }
 
+    #[\Override]
     public function stream(): mixed
     {
         return STDOUT;
