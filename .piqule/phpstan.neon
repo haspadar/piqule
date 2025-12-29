@@ -4,7 +4,7 @@ parameters:
         - ../src
 
     errorFormat: table
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
 
     checkUninitializedProperties: true
     checkClassCaseSensitivity: true
