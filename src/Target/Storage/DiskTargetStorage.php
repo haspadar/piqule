@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Target\Storage;
 use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
+use Override;
 
 final readonly class DiskTargetStorage implements TargetStorage
 {
@@ -14,13 +15,13 @@ final readonly class DiskTargetStorage implements TargetStorage
         private string $root,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function exists(string $relativePath): bool
     {
         return is_file($this->root . '/' . $relativePath);
     }
 
-    #[\Override]
+    #[Override]
     public function write(string $relativePath, File $source): void
     {
         $target = $this->root . '/' . $relativePath;
@@ -34,7 +35,7 @@ final readonly class DiskTargetStorage implements TargetStorage
         }
     }
 
-    #[\Override]
+    #[Override]
     public function read(string $relativePath): File
     {
         return new DiskFile(

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Target\Storage;
 
 use Haspadar\Piqule\File\File;
+use Override;
 
 final readonly class DryRunTargetStorage implements TargetStorage
 {
@@ -12,19 +13,19 @@ final readonly class DryRunTargetStorage implements TargetStorage
         private TargetStorage $origin,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function exists(string $relativePath): bool
     {
         return $this->origin->exists($relativePath);
     }
 
-    #[\Override]
+    #[Override]
     public function read(string $relativePath): File
     {
         return $this->origin->read($relativePath);
     }
 
-    #[\Override]
+    #[Override]
     public function write(string $relativePath, File $source): void
     {
         // intentionally no-op

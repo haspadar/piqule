@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Output;
 
 use Haspadar\Piqule\Output\Line\Line;
+use Override;
 
 final readonly class Console implements Output
 {
-    #[\Override]
+    #[Override]
     public function write(Line $line): void
     {
         fwrite(

@@ -6,24 +6,25 @@ namespace Haspadar\Piqule\Output\Line;
 
 use Haspadar\Piqule\Output\Color\Color;
 use Haspadar\Piqule\Output\Color\Red;
+use Override;
 
 final readonly class Error implements Line
 {
     public function __construct(private string $message) {}
 
-    #[\Override]
+    #[Override]
     public function text(): string
     {
         return "Error: $this->message";
     }
 
-    #[\Override]
+    #[Override]
     public function color(): Color
     {
         return new Red();
     }
 
-    #[\Override]
+    #[Override]
     public function stream(): mixed
     {
         return STDERR;

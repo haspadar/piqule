@@ -12,6 +12,7 @@ use Haspadar\Piqule\Output\Output;
 use Haspadar\Piqule\Source\Sources;
 use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Storage\TargetStorage;
+use Override;
 
 final readonly class Synchronization implements Command
 {
@@ -21,7 +22,7 @@ final readonly class Synchronization implements Command
         private Output $output,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function run(): void
     {
         foreach ($this->sources->files() as $source) {

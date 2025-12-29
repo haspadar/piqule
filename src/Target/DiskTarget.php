@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Target;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Source\Source;
 use Haspadar\Piqule\Target\Storage\TargetStorage;
+use Override;
 
 final readonly class DiskTarget implements Target
 {
@@ -15,13 +16,13 @@ final readonly class DiskTarget implements Target
         private TargetStorage $target,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function exists(): bool
     {
         return $this->target->exists($this->source->id());
     }
 
-    #[\Override]
+    #[Override]
     public function materialize(): void
     {
         $this->target->write(
@@ -30,13 +31,13 @@ final readonly class DiskTarget implements Target
         );
     }
 
-    #[\Override]
+    #[Override]
     public function id(): string
     {
         return $this->source->id();
     }
 
-    #[\Override]
+    #[Override]
     public function file(): File
     {
         return $this->target->read(

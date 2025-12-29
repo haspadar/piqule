@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Source;
 use FilesystemIterator;
 use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\PiquleException;
+use Override;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -20,7 +21,7 @@ final readonly class DiskSources implements Sources
     /**
      * @return iterable<Source>
      */
-    #[\Override]
+    #[Override]
     public function files(): iterable
     {
         if (!is_dir($this->path)) {
