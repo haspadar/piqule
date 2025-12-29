@@ -16,12 +16,11 @@
     "scripts": {
         "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache",
         "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache --dry-run --diff",
-
         "test": "phpunit -c .piqule/phpunit.xml --order-by=random --random-order-seed=$(date +%s)",
-        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --coverage-clover=.piqule/coverage.xml",
-        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --coverage-html=.piqule/coverage-report",
-
-        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection.json5 --threads=max"
+        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/coverage.xml",
+        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-html=.piqule/coverage-report",
+        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection.json5 --threads=max",
+        "phpstan": "phpstan analyse -c .piqule/phpstan.neon"
     },
     "authors": [
         {
@@ -36,7 +35,8 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.91",
         "phpunit/phpunit": ">=11.5 <12.0",
-        "infection/infection": "^0.32.0"
+        "infection/infection": "^0.32.0",
+        "phpstan/phpstan": "^2.1"
     },
     "config": {
         "allow-plugins": {

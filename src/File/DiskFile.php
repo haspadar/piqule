@@ -28,6 +28,11 @@ final readonly class DiskFile implements File
             );
         }
 
-        return file_get_contents($this->path);
+        $contents = file_get_contents($this->path);
+        if ($contents === false) {
+            throw new PiquleException(sprintf('File is not readable: "%s"', $this->path));
+        }
+
+        return $contents;
     }
 }
