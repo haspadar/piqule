@@ -10,5 +10,4 @@
             <directory name="../vendor" />
         </ignoreFiles>
     </projectFiles>
-
 </psalm>
