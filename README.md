@@ -1,3 +1,5 @@
+# Piqule
+
 [![CI](https://github.com/haspadar/piqule/actions/workflows/ci.yml/badge.svg)](https://github.com/haspadar/piqule/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/haspadar/piqule/branch/main/graph/badge.svg)](https://codecov.io/gh/haspadar/piqule)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fhaspadar%2Fpiqule%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/haspadar/piqule/main)
@@ -7,31 +9,35 @@
 [![Hits-of-Code](https://hitsofcode.com/github/haspadar/piqule?branch=main)](https://hitsofcode.com/github/haspadar/piqule/view?branch=main)
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/haspadar/piqule?labelColor=171717&color=FF570A&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
-# Piqule
+## Piqule (PHP Quality Laws)
 
-**Piqule (PHP Quality Laws)** is a curated set of static analysis tools, linters, and CI workflows for PHP projects.
+**Piqule** is a managed quality stack for PHP projects.
 
-Piqule provides **managed configurations** and **reusable GitHub Actions workflows** to avoid duplicating the same setup across multiple repositories.
+It provides a curated set of static analysis tools, linters, and CI workflows,
+together with a synchronization mechanism that installs and updates
+project-level configuration files in a predictable and repeatable way.
+
+Piqule acts as a **single source of truth** for PHP project quality tooling
+and helps avoid configuration drift across repositories.
 
 ---
 
-## Included tools
+## Tooling overview
 
-### PHP tools
-
-- **PHPStan** — static analysis
-- **Psalm** — static analysis
-- **PHP-CS-Fixer** — code style enforcement
-- **PhpMetrics** — code quality and complexity metrics
-
-### Linters and CI tools
-
-- **Markdownlint** — Markdown linting
-- **Hadolint** — Dockerfile linting
-- **Actionlint** — GitHub Actions workflow linting
-- **Typos** — spell checking
-- **Renovate** — dependency update automation
-- **PR Size Checker** — pull request size enforcement
+| Tool            | Purpose               | What Piqule provides                           |
+|-----------------|-----------------------|------------------------------------------------|
+| PHPStan         | Static analysis       | Strict ruleset and high analysis level         |
+| Psalm           | Static analysis       | Complementary checks and early error detection |
+| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                 |
+| PhpMetrics      | Code metrics          | Complexity and maintainability insights        |
+| Infection       | Mutation testing      | Test quality validation                        |
+| Markdownlint    | Markdown linting      | Consistent documentation style                 |
+| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles            |
+| Actionlint      | CI linting            | GitHub Actions correctness                     |
+| Yamllint        | YAML linting          | Configuration consistency                      |
+| Typos           | Spell checking        | Low-noise typo detection                       |
+| Renovate        | Dependency automation | Managed dependency update rules                |
+| PR Size Checker | Process guard         | Pull request reviewability enforcement         |
 
 ---
 
@@ -45,211 +51,48 @@ composer require --dev haspadar/piqule
 
 ---
 
-## Tool configuration
+## Configuration synchronization
 
-### PHPStan
-
-Create or extend `phpstan.neon`:
+Piqule manages project configuration files via an explicit synchronization step.
 
 ```
-includes:
-- vendor/haspadar/piqule/config/phpstan.neon
+bin/piqule.php sync
 ```
+
+During synchronization:
+
+- canonical configurations are installed into the project workspace
+- files are written to fixed locations:
+    - Renovate configuration is placed in the project root
+    - tool configurations are placed in `.piqule/`
+    - CI workflows are placed in `.github/workflows/`
+- **existing files are overwritten**
+
+Piqule does **not** merge configuration files automatically.
+If local changes are overwritten, merging must be done manually.
 
 ---
 
-### PHP-CS-Fixer
+### Dry run mode
 
-Create `.php-cs-fixer.php`:
-
-```
-<?php
-
-/** @var PhpCsFixer\Config $rules */
-$rules = require __DIR__ . '/vendor/haspadar/piqule/php-cs-fixer/rules.php';
-
-$rules->setFinder(
-    PhpCsFixer\Finder::create()
-        ->in(__DIR__)
-        ->exclude('vendor')
-        ->exclude('node_modules')
-);
-
-return $rules;
-```
----
-
-### Psalm
-
-Create or extend `psalm.xml`:
+To preview changes without modifying files, run:
 
 ```
-<psalm>
-  <import name="vendor/haspadar/piqule/config/psalm.xml" />
-</psalm>
+bin/piqule.php sync --dry-run
 ```
+
+This mode shows what files would be created, updated, or overwritten,
+allowing verification before applying changes.
 
 ---
 
-### Markdownlint
+## Design principles
 
-Piqule ships a managed configuration for `markdownlint-cli2`:
-
-```
-.piqule/.markdownlint-cli2.jsonc
-```
-
-Reusable workflows automatically resolve the correct configuration depending on context.
-
-Projects do not need to add their own `.markdownlint-cli2.jsonc` unless overrides are required.
-
----
-
-### Hadolint
-
-Managed config:
-
-```
-.piqule/.hadolint.yml
-```
-
-Reusable workflow:
-
-```
-jobs:
-  hadolint:
-    uses: haspadar/piqule/.github/workflows/_hadolint.yml@v1
-```
-
----
-
-### Actionlint
-
-Reusable workflow:
-
-```
-jobs:
-  actionlint:
-    uses: haspadar/piqule/.github/workflows/_actionlint.yml@v1
-```
-
----
-
-### Typos
-
-Managed config:
-
-```
-.piqule/_typos.toml
-```
-
-Reusable workflow:
-
-```
-jobs:
-  typos:
-    uses: haspadar/piqule/.github/workflows/_typos.yml@v1
-```
-
----
-
-### Renovate
-
-Managed config:
-
-```
-renovate.json
-```
-
-Reusable workflow:
-
-```
-jobs:
-  renovate:
-    uses: haspadar/piqule/.github/workflows/_renovate.yml@v1
-```
-
----
-
-## GitHub Actions
-
-Piqule provides reusable workflow modules stored in `.github/workflows`.
-
-### Full CI pipeline
-
-```
-jobs:
-  ci:
-    uses: haspadar/piqule/.github/workflows/ci.yml@v1
-```
-
----
-
-### Individual workflows
-
-PHP-CS-Fixer:
-
-```
-jobs:
-  php_cs_fixer:
-    uses: haspadar/piqule/.github/workflows/_php-cs-fixer.yml@v1
-```
-
-Markdownlint:
-
-```
-jobs:
-  markdownlint:
-    uses: haspadar/piqule/.github/workflows/_markdownlint.yml@v1
-```
-
-Hadolint:
-
-```
-jobs:
-  hadolint:
-    uses: haspadar/piqule/.github/workflows/_hadolint.yml@v1
-```
-
-Typos:
-
-```
-jobs:
-  typos:
-    uses: haspadar/piqule/.github/workflows/_typos.yml@v1
-```
-
-Yamllint:
-
-```
-jobs:
-  yamllint:
-    uses: haspadar/piqule/.github/workflows/_yamllint.yml@v1
-```
-
-Actionlint:
-
-```
-jobs:
-  actionlint:
-    uses: haspadar/piqule/.github/workflows/_actionlint.yml@v1
-```
-
----
-
-### PR Size Checker
-
-Reusable workflow:
-
-```
-jobs:
-  pr_size:
-    uses: haspadar/piqule/.github/workflows/_pr-size-checker.yml@v1
-    with:
-      max_lines_changed: 200
-```
-
-Fails the workflow if a pull request exceeds the configured size.
+- **Template-driven** — configuration is generated from canonical sources
+- **Managed, not merged** — files are overwritten deterministically
+- **Explicit ownership** — local modifications are intentional and manual
+- **Repeatable setup** — the same command produces the same layout everywhere
+- **Low noise** — tooling is curated to avoid redundant checks
 
 ---
 
