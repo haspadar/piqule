@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\PiquleException;
+use Override;
 
 final readonly class DiskFile implements File
 {
@@ -20,6 +21,7 @@ final readonly class DiskFile implements File
      *
      * @throws PiquleException If the file cannot be read
      */
+    #[Override]
     public function contents(): string
     {
         if (!is_file($this->path)) {

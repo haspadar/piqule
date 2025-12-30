@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Target\Command;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
+use Override;
 
 final readonly class WithDryRunNotice implements Command
 {
@@ -15,6 +16,7 @@ final readonly class WithDryRunNotice implements Command
         private Output  $output,
     ) {}
 
+    #[Override]
     public function run(): void
     {
         $this->output->write(

@@ -1,4 +1,4 @@
-name: PHPStan
+name: Psalm
 
 on:
   workflow_call:
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  phpstan:
+  psalm:
     runs-on: ubuntu-latest
 
     strategy:
@@ -37,43 +37,42 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
 
       # ------------------------------------------------------------
-      # Setup PHP (no Xdebug)
+      # Setup PHP runtime
       # ------------------------------------------------------------
       - name: Setup PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
         with:
           php-version: ${{ matrix.php-version }}
-          tools: composer
           coverage: none
 
       # ------------------------------------------------------------
-      # Install dependencies
+      # Install Composer dependencies
       # ------------------------------------------------------------
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+        run: composer install --no-interaction --prefer-dist
 
       # ------------------------------------------------------------
-      # Check PHPStan config exists
+      # Check Psalm config exists
       # ------------------------------------------------------------
-      - name: Check PHPStan config exists
-        id: phpstan
+      - name: Check Psalm config exists
+        id: psalm
         run: |
-          if [[ -f ".piqule/phpstan.neon" ]]; then
+          if [[ -f ".piqule/psalm.xml" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
 
       # ------------------------------------------------------------
-      # Run PHPStan
+      # Run Psalm static analysis
       # ------------------------------------------------------------
-      - name: Run PHPStan
-        if: steps.phpstan.outputs.run == 'true'
-        run: composer phpstan
+      - name: Run Psalm
+        if: steps.psalm.outputs.run == 'true'
+        run: vendor/bin/psalm --config=.piqule/psalm.xml
 
       # ------------------------------------------------------------
-      # Skip PHPStan when config is missing
+      # Skip Psalm when config is missing
       # ------------------------------------------------------------
-      - name: Skip PHPStan
-        if: steps.phpstan.outputs.run == 'false'
-        run: echo "Skipping PHPStan — no .piqule/phpstan.neon"
+      - name: Skip Psalm
+        if: steps.psalm.outputs.run == 'false'
+        run: echo "Skipping Psalm — no .piqule/psalm.xml"

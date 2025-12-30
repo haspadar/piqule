@@ -20,7 +20,8 @@
         "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/coverage.xml",
         "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-html=.piqule/coverage-report",
         "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection.json5 --threads=max",
-        "phpstan": "phpstan analyse -c .piqule/phpstan.neon"
+        "phpstan": "phpstan analyse -c .piqule/phpstan.neon",
+        "psalm": "psalm --config=.piqule/psalm.xml"
     },
     "authors": [
         {
@@ -36,7 +37,8 @@
         "friendsofphp/php-cs-fixer": "^3.91",
         "phpunit/phpunit": ">=11.5 <12.0",
         "infection/infection": "^0.32.0",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "vimeo/psalm": "^6.14"
     },
     "config": {
         "allow-plugins": {

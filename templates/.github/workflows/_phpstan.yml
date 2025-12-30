@@ -2,6 +2,15 @@ name: PHPStan
 
 on:
   workflow_call:
+    inputs:
+      php-version:
+        type: string
+        required: false
+        default: "8.5"
+      php-matrix:
+        type: string
+        required: false
+        default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
 
 permissions:
   contents: read
@@ -9,6 +18,16 @@ permissions:
 jobs:
   phpstan:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: >-
+          ${{ fromJson(
+            inputs.php-matrix != '' &&
+            inputs.php-matrix ||
+            format('["{0}"]', inputs.php-version)
+          ) }}
 
     steps:
       # ------------------------------------------------------------
@@ -23,7 +42,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
         with:
-          php-version: '8.2'
+          php-version: ${{ matrix.php-version }}
           tools: composer
           coverage: none
 
@@ -52,6 +71,9 @@ jobs:
         if: steps.phpstan.outputs.run == 'true'
         run: composer phpstan
 
+      # ------------------------------------------------------------
+      # Skip PHPStan when config is missing
+      # ------------------------------------------------------------
       - name: Skip PHPStan
         if: steps.phpstan.outputs.run == 'false'
         run: echo "Skipping PHPStan — no .piqule/phpstan.neon"
