@@ -45,9 +45,9 @@ and helps avoid configuration drift across repositories.
 
 Add Piqule as a development dependency:
 
-'''
+```
 composer require --dev haspadar/piqule
-'''
+```
 
 ---
 
@@ -55,9 +55,9 @@ composer require --dev haspadar/piqule
 
 Piqule manages project configuration files via an explicit synchronization step.
 
-'''
+```
 bin/piqule.php sync
-'''
+```
 
 During synchronization:
 
@@ -77,9 +77,9 @@ If local changes are overwritten, merging must be done manually.
 
 To preview changes without modifying files, run:
 
-'''
+```
 bin/piqule.php sync --dry-run
-'''
+```
 
 This mode shows what files would be created, updated, or overwritten,
 allowing verification before applying changes.
