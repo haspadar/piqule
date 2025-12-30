@@ -8,7 +8,7 @@ if ($argc < 2) {
 }
 
 $metricsPath = $argv[1];
-$configPath  = __DIR__ . '/../.piqule/phpmetrics.php';
+$configPath = __DIR__ . '/../.piqule/phpmetrics.php';
 
 if (!file_exists($metricsPath)) {
     fwrite(STDERR, "Metrics file not found: {$metricsPath}\n");
@@ -29,7 +29,7 @@ if (!is_array($data)) {
 
 $config = require $configPath;
 
-$thresholds        = $config['thresholds'] ?? [];
+$thresholds = $config['thresholds'] ?? [];
 
 $violations = [];
 
