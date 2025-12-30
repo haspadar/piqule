@@ -24,20 +24,20 @@ and helps avoid configuration drift across repositories.
 
 ## Tooling overview
 
-| Tool            | Purpose               | What Piqule provides                           |
-|-----------------|-----------------------|------------------------------------------------|
-| PHPStan         | Static analysis       | Strict ruleset and high analysis level         |
-| Psalm           | Static analysis       | Complementary checks and early error detection |
-| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                 |
-| PhpMetrics      | Code metrics          | Complexity and maintainability insights        |
-| Infection       | Mutation testing      | Test quality validation                        |
-| Markdownlint    | Markdown linting      | Consistent documentation style                 |
-| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles            |
-| Actionlint      | CI linting            | GitHub Actions correctness                     |
-| Yamllint        | YAML linting          | Configuration consistency                      |
-| Typos           | Spell checking        | Low-noise typo detection                       |
-| Renovate        | Dependency automation | Managed dependency update rules                |
-| PR Size Checker | Process guard         | Pull request reviewability enforcement         |
+| Tool            | Purpose               | What Piqule provides                                               |
+|-----------------|-----------------------|--------------------------------------------------------------------|
+| PHPStan         | Static analysis       | Strict ruleset and high analysis level                             |
+| Psalm           | Static analysis       | Complementary checks and early error detection                     |
+| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                                     |
+| PhpMetrics      | Code metrics          | Enforced limits (complexity, size, coupling) and metrics reporting |
+| Infection       | Mutation testing      | Test quality validation                                            |
+| Markdownlint    | Markdown linting      | Consistent documentation style                                     |
+| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles                                |
+| Actionlint      | CI linting            | GitHub Actions correctness                                         |
+| Yamllint        | YAML linting          | Configuration consistency                                          |
+| Typos           | Spell checking        | Low-noise typo detection                                           |
+| Renovate        | Dependency automation | Managed dependency update rules                                    |
+| PR Size Checker | Process guard         | Pull request reviewability enforcement                             |
 
 ---
 
