@@ -9,7 +9,7 @@ return [
 
         // Size
         'nbMethods'        => 10,
-        'loc'              => 100, // ~ 50 LOC per method × 4
+        'loc'              => 100, // Max lines per class
 
         // Coupling
         'efferentCoupling' => 5,

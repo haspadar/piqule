@@ -20,16 +20,48 @@ if (!file_exists($configPath)) {
     exit(2);
 }
 
-$data = json_decode(file_get_contents($metricsPath), true);
-
-if (!is_array($data)) {
-    fwrite(STDERR, "Invalid JSON in {$metricsPath}\n");
+/**
+ * Load and parse metrics JSON
+ */
+$json = file_get_contents($metricsPath);
+if ($json === false) {
+    fwrite(STDERR, "Failed to read metrics file: {$metricsPath}\n");
     exit(2);
 }
 
+$data = json_decode($json, true);
+if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+    fwrite(
+        STDERR,
+        "Invalid JSON in {$metricsPath}: " . json_last_error_msg() . "\n",
+    );
+    exit(2);
+}
+
+if (!is_array($data)) {
+    fwrite(STDERR, "Invalid PhpMetrics JSON structure: {$metricsPath}\n");
+    exit(2);
+}
+
+/**
+ * Load and validate config
+ */
 $config = require $configPath;
 
-$thresholds = $config['thresholds'] ?? [];
+if (!is_array($config)) {
+    fwrite(STDERR, "Config file must return an array: {$configPath}\n");
+    exit(2);
+}
+
+$thresholds = $config['thresholds'] ?? null;
+
+if (!is_array($thresholds)) {
+    fwrite(
+        STDERR,
+        "Config 'thresholds' must be an array in: {$configPath}\n",
+    );
+    exit(2);
+}
 
 $violations = [];
 
@@ -59,11 +91,17 @@ foreach ($data as $name => $metric) {
         $classErrors[] = "CC too high ({$metric['ccn']})";
     }
 
-    if (isset($thresholds['ccnMethodMax']) && ($metric['ccnMethodMax'] ?? 0) > $thresholds['ccnMethodMax']) {
+    if (
+        isset($thresholds['ccnMethodMax']) &&
+        ($metric['ccnMethodMax'] ?? 0) > $thresholds['ccnMethodMax']
+    ) {
         $classErrors[] = "Method CC too high ({$metric['ccnMethodMax']})";
     }
 
-    if (isset($thresholds['nbMethods']) && ($metric['nbMethods'] ?? 0) > $thresholds['nbMethods']) {
+    if (
+        isset($thresholds['nbMethods']) &&
+        ($metric['nbMethods'] ?? 0) > $thresholds['nbMethods']
+    ) {
         $classErrors[] = "Too many methods ({$metric['nbMethods']})";
     }
 
@@ -71,7 +109,10 @@ foreach ($data as $name => $metric) {
         $classErrors[] = "Too many lines ({$metric['loc']})";
     }
 
-    if (isset($thresholds['efferentCoupling']) && ($metric['efferentCoupling'] ?? 0) > $thresholds['efferentCoupling']) {
+    if (
+        isset($thresholds['efferentCoupling']) &&
+        ($metric['efferentCoupling'] ?? 0) > $thresholds['efferentCoupling']
+    ) {
         $classErrors[] = "Too many dependencies ({$metric['efferentCoupling']})";
     }
 
