@@ -14,4 +14,11 @@ return [
         // Coupling
         'efferentCoupling' => 5,
     ],
+
+    'metrics' => [
+        // min required
+        'maintainabilityIndex' => [
+            'min' => 70,
+        ],
+    ],
 ];
