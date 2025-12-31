@@ -27,7 +27,10 @@
         "psalm": "psalm --config=.piqule/psalm.xml",
 
         "phpmetrics": "mkdir -p .piqule/build && php vendor/bin/phpmetrics src --report-json=.piqule/build/metrics.json",
-        "phpmetrics-check": "php bin/phpmetrics-verify.php .piqule/build/metrics.json"
+        "phpmetrics-check": [
+            "@phpmetrics",
+            "php bin/phpmetrics-verify.php .piqule/build/metrics.json"
+        ]
     },
     "authors": [
         {
