@@ -11,7 +11,7 @@ if ($argc < 2) {
 }
 
 $metricsPath = $argv[1];
-$configPath  = __DIR__ . '/../.piqule/phpmetrics.php';
+$configPath = __DIR__ . '/../.piqule/phpmetrics.php';
 
 /**
  * File checks
@@ -73,34 +73,34 @@ if (!is_array($thresholds) || !is_array($metricsCfg)) {
  */
 $rules = [
     'ccnMethodMax' => [
-        'field'    => 'ccnMethodMax',
-        'label'    => 'Method CC too high',
+        'field' => 'ccnMethodMax',
+        'label' => 'Method CC too high',
         'operator' => '>',
-        'limit'    => fn () => $thresholds['ccnMethodMax'] ?? null,
+        'limit' => fn() => $thresholds['ccnMethodMax'] ?? null,
     ],
     'nbMethods' => [
-        'field'    => 'nbMethods',
-        'label'    => 'Too many methods',
+        'field' => 'nbMethods',
+        'label' => 'Too many methods',
         'operator' => '>',
-        'limit'    => fn () => $thresholds['nbMethods'] ?? null,
+        'limit' => fn() => $thresholds['nbMethods'] ?? null,
     ],
     'loc' => [
-        'field'    => 'loc',
-        'label'    => 'Too many lines',
+        'field' => 'loc',
+        'label' => 'Too many lines',
         'operator' => '>',
-        'limit'    => fn () => $thresholds['loc'] ?? null,
+        'limit' => fn() => $thresholds['loc'] ?? null,
     ],
     'efferentCoupling' => [
-        'field'    => 'efferentCoupling',
-        'label'    => 'Too many dependencies',
+        'field' => 'efferentCoupling',
+        'label' => 'Too many dependencies',
         'operator' => '>',
-        'limit'    => fn () => $thresholds['efferentCoupling'] ?? null,
+        'limit' => fn() => $thresholds['efferentCoupling'] ?? null,
     ],
     'maintainabilityIndex' => [
-        'field'    => 'maintainabilityIndex',
-        'label'    => 'Maintainability index too low',
+        'field' => 'maintainabilityIndex',
+        'label' => 'Maintainability index too low',
         'operator' => '<',
-        'limit'    => fn () => $metricsCfg['maintainabilityIndex']['min'] ?? null,
+        'limit' => fn() => $metricsCfg['maintainabilityIndex']['min'] ?? null,
     ],
 ];
 
