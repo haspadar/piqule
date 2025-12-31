@@ -94,34 +94,34 @@ $data = loadJson($metricsPath);
  */
 $rules = [
     [
-        'field'    => 'ccnMethodMax',
-        'label'    => 'Method CC too high',
+        'field' => 'ccnMethodMax',
+        'label' => 'Method CC too high',
         'operator' => '>',
-        'limit'    => $thresholds['ccnMethodMax'] ?? null,
+        'limit' => $thresholds['ccnMethodMax'] ?? null,
     ],
     [
-        'field'    => 'nbMethods',
-        'label'    => 'Too many methods',
+        'field' => 'nbMethods',
+        'label' => 'Too many methods',
         'operator' => '>',
-        'limit'    => $thresholds['nbMethods'] ?? null,
+        'limit' => $thresholds['nbMethods'] ?? null,
     ],
     [
-        'field'    => 'loc',
-        'label'    => 'Too many lines',
+        'field' => 'loc',
+        'label' => 'Too many lines',
         'operator' => '>',
-        'limit'    => $thresholds['loc'] ?? null,
+        'limit' => $thresholds['loc'] ?? null,
     ],
     [
-        'field'    => 'efferentCoupling',
-        'label'    => 'Too many dependencies',
+        'field' => 'efferentCoupling',
+        'label' => 'Too many dependencies',
         'operator' => '>',
-        'limit'    => $thresholds['efferentCoupling'] ?? null,
+        'limit' => $thresholds['efferentCoupling'] ?? null,
     ],
     [
-        'field'    => 'maintainabilityIndex',
-        'label'    => 'Maintainability index too low',
+        'field' => 'maintainabilityIndex',
+        'label' => 'Maintainability index too low',
         'operator' => '<',
-        'limit'    => $metricsCfg['maintainabilityIndex']['min'] ?? null,
+        'limit' => $metricsCfg['maintainabilityIndex']['min'] ?? null,
     ],
 ];
 
