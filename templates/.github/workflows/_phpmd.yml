@@ -26,7 +26,7 @@ jobs:
         with:
           php-version: '8.2'
           tools: composer
-          # ------------------------------------------------------------
+      # ------------------------------------------------------------
       # Install dependencies
       # ------------------------------------------------------------
       - name: Install dependencies
@@ -42,9 +42,13 @@ jobs:
       # Validate PHPMD ruleset XML
       # ------------------------------------------------------------
       - name: Validate PHPMD ruleset
-        run: xmllint --noout "${{ inputs.ruleset }}"
+        env:
+          PHPMD_RULESET: ${{ inputs.ruleset }}
+        run: xmllint --noout "$PHPMD_RULESET"
       # ------------------------------------------------------------
       # Run PHPMD
       # ------------------------------------------------------------
       - name: Run PHPMD
-        run: vendor/bin/phpmd src text "${{ inputs.ruleset }}"
+        env:
+          PHPMD_RULESET: ${{ inputs.ruleset }}
+        run: vendor/bin/phpmd src text "$PHPMD_RULESET"
