@@ -3,27 +3,23 @@ name: PHP-CS-Fixer
 on:
   workflow_call:
     inputs:
-      php-version:
-        type: string
-        required: false
-        default: "8.5"
       php-matrix:
+        description: JSON array of PHP versions to run against
         type: string
-        required: false
-        default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
+        required: true
+
+permissions:
+  contents: read
 
 jobs:
   cs:
+    name: PHP-CS-Fixer (PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        php-version: >-
-          ${{ fromJson(
-            inputs.php-matrix != '' &&
-            inputs.php-matrix ||
-            format('["{0}"]', inputs.php-version)
-          ) }}
+        php-version: ${{ fromJson(inputs.php-matrix) }}
 
     steps:
       # ------------------------------------------------------------
