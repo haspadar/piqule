@@ -30,6 +30,7 @@ and helps avoid configuration drift across repositories.
 | Psalm           | Static analysis       | Complementary checks and early error detection          |
 | PHP-CS-Fixer    | Code style            | Deterministic formatting rules                          |
 | AST Metrics     | Code metrics          | Complexity, coupling, and maintainability quality gates |
+| PHPMD           | Code metrics          | Numeric complexity and size quality gates               |
 | Infection       | Mutation testing      | Test quality validation                                 |
 | Markdownlint    | Markdown linting      | Consistent documentation style                          |
 | Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles                     |
