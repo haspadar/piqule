@@ -1,7 +1,7 @@
 parameters:
     level: 9
     paths:
-        - ../src
+        - ../../src
 
     errorFormat: table
     reportUnmatchedIgnoredErrors: true

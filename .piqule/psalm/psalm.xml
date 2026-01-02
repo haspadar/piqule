@@ -5,9 +5,9 @@
         findUnusedCode="false"
 >
     <projectFiles>
-        <directory name="../src" />
+        <directory name="../../src" />
         <ignoreFiles>
-            <directory name="../vendor" />
+            <directory name="../../vendor" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        bootstrap="../vendor/autoload.php"
+        bootstrap="../../vendor/autoload.php"
         colors="true"
         executionOrder="random"
         failOnWarning="true"
@@ -11,17 +11,17 @@
 >
     <testsuites>
         <testsuite name="unit">
-            <directory suffix="Test.php">../tests/Unit</directory>
+            <directory suffix="Test.php">../../tests/Unit</directory>
         </testsuite>
 
         <testsuite name="integration">
-            <directory suffix="Test.php">../tests/Integration</directory>
+            <directory suffix="Test.php">../../tests/Integration</directory>
         </testsuite>
     </testsuites>
 
     <source>
         <include>
-            <directory suffix=".php">../src</directory>
+            <directory suffix=".php">../../src</directory>
         </include>
     </source>
 </phpunit>
