@@ -34,7 +34,7 @@ jobs:
       - name: Check config exists
         id: check
         run: |
-          if [[ -f ".piqule/php-cs-fixer.project.php" ]]; then
+          if [[ -f ".piqule/php-cs-fixer/php-cs-fixer.project.php" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -45,7 +45,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
-        run: echo "Skipping PHP-CS-Fixer — no .piqule/php-cs-fixer.project.php"
+        run: echo "Skipping PHP-CS-Fixer — no .piqule/php-cs-fixer/php-cs-fixer.project.php"
 
       # ------------------------------------------------------------
       # Setup PHP
@@ -71,6 +71,6 @@ jobs:
         if: steps.check.outputs.run == 'true'
         run: |
           vendor/bin/php-cs-fixer fix \
-            --config=.piqule/php-cs-fixer.project.php \
-            --cache-file=.piqule/.php-cs-fixer.cache \
+            --config=.piqule/php-cs-fixer/php-cs-fixer.project.php \
+            --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache \
             --dry-run --diff

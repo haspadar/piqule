@@ -1,17 +1,17 @@
 /vendor/
 
 /.phpunit.cache/
-/.piqule/.phpunit.result.cache
+/.piqule/phpunit/.phpunit.result.cache
 
 /.phpstan
 /.phpstan.cache
 
 /.idea/
 /*.log
-/.piqule/.php-cs-fixer.cache
+/.piqule/php-cs-fixer/.php-cs-fixer.cache
 /piqule.lock
 
-/.piqule/coverage-report/
-/.piqule/coverage.xml
-/.piqule/infection.log
-/.piqule/infection-summary.log
+/.piqule/codecov/coverage-report/
+/.piqule/codecov/coverage.xml
+/.piqule/infection/infection.log
+/.piqule/infection/infection-summary.log

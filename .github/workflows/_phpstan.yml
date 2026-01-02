@@ -50,7 +50,7 @@ jobs:
       - name: Check PHPStan config exists
         id: phpstan
         run: |
-          if [[ -f ".piqule/phpstan.neon" ]]; then
+          if [[ -f ".piqule/phpstan/phpstan.neon" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -68,4 +68,4 @@ jobs:
       # ------------------------------------------------------------
       - name: Skip PHPStan
         if: steps.phpstan.outputs.run == 'false'
-        run: echo "Skipping PHPStan — no .piqule/phpstan.neon"
+        run: echo "Skipping PHPStan — no .piqule/phpstan/phpstan.neon"

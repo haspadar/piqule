@@ -49,7 +49,7 @@ jobs:
       - name: Check Psalm config exists
         id: psalm
         run: |
-          if [[ -f ".piqule/psalm.xml" ]]; then
+          if [[ -f ".piqule/psalm/psalm.xml" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
@@ -60,11 +60,11 @@ jobs:
       # ------------------------------------------------------------
       - name: Run Psalm
         if: steps.psalm.outputs.run == 'true'
-        run: vendor/bin/psalm --config=.piqule/psalm.xml
+        run: vendor/bin/psalm --config=.piqule/psalm/psalm.xml
 
       # ------------------------------------------------------------
       # Skip Psalm when config is missing
       # ------------------------------------------------------------
       - name: Skip Psalm
         if: steps.psalm.outputs.run == 'false'
-        run: echo "Skipping Psalm — no .piqule/psalm.xml"
+        run: echo "Skipping Psalm — no .piqule/psalm/psalm.xml"

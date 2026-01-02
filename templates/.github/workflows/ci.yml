@@ -19,7 +19,7 @@ jobs:
     name: YAML Lint
     uses: ./.github/workflows/_yamllint.yml
     with:
-      config: .piqule/.yamllint.yml
+      config: .piqule/yamllint/.yamllint.yml
 
   # ------------------------------------------------------------
   # GitHub Actions lint
@@ -38,7 +38,7 @@ jobs:
     name: Markdownlint
     uses: ./.github/workflows/_markdownlint.yml
     with:
-      config: .piqule/.markdownlint-cli2.jsonc
+      config: .piqule/markdownlint/.markdownlint-cli2.jsonc
 
   # ------------------------------------------------------------
   # Typo checker
@@ -47,7 +47,7 @@ jobs:
     name: Typos
     uses: ./.github/workflows/_typos.yml
     with:
-      config: .piqule/_typos.toml
+      config: .piqule/typos/_typos.toml
 
   # ------------------------------------------------------------
   # PHP-CS-Fixer (min + max)
@@ -83,7 +83,7 @@ jobs:
     name: AST Metrics
     uses: ./.github/workflows/_ast-metrics.yml
     with:
-      config: .piqule/ast-metrics.yaml
+      config: .piqule/ast-metrics/ast-metrics.yaml
 
   # ------------------------------------------------------------
   # PHPMD (numeric metrics)
@@ -93,7 +93,7 @@ jobs:
     uses: ./.github/workflows/_phpmd.yml
     with:
       php-version: '8.2'
-      ruleset: .piqule/phpmd.xml
+      ruleset: .piqule/phpmd/phpmd.xml
 
   # ------------------------------------------------------------
   # Dockerfile lint
