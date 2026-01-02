@@ -8,7 +8,7 @@
   "testFramework": "phpunit",
 
   "phpUnit": {
-    "configDir": "."
+    "configDir": "../phpunit"
   },
 
   "initialTestsPhpOptions": "-d memory_limit=1G",
