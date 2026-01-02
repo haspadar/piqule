@@ -14,14 +14,14 @@
         }
     },
     "scripts": {
-        "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache",
-        "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer.project.php --cache-file=.piqule/.php-cs-fixer.cache --dry-run --diff",
-        "test": "phpunit -c .piqule/phpunit.xml --order-by=random --random-order-seed=$(date +%s)",
-        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/coverage.xml",
-        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit.xml --path-coverage --coverage-html=.piqule/coverage-report",
-        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection.json5 --threads=max",
-        "phpstan": "phpstan analyse -c .piqule/phpstan.neon",
-        "psalm": "psalm --config=.piqule/psalm.xml"
+        "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
+        "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache --dry-run --diff",
+        "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random --random-order-seed=$(date +%s)",
+        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/codecov/coverage.xml",
+        "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
+        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection/infection.json5 --threads=max",
+        "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
+        "psalm": "psalm --config=.piqule/psalm/psalm.xml"
     },
     "authors": [
         {
