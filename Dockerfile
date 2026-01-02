@@ -1,148 +1,163 @@
 # syntax=docker/dockerfile:1
 
-# ----------------------------------------
-# Tool versions (reproducible CI)
-# ----------------------------------------
-ARG NODE_VERSION=24.12.0
-ARG ACTIONLINT_VERSION=1.7.9
-ARG MARKDOWNLINT_VERSION=0.20
-ARG YAMLLINT_VERSION=1.35.1
-ARG PHP_CS_FIXER_VERSION=3.92.3
-ARG TYPOS_VERSION=1.40.1
+ARG PHP_IMAGE=php:8.2-cli-bookworm
+ARG NODE_IMAGE=node:24.12.0-bookworm
+
+# ============================================================
+# Linters (aligned with CI)
+# ============================================================
+ARG ACTIONLINT_VERSION=1.7.10
 ARG HADOLINT_VERSION=2.14.0
+ARG MARKDOWNLINT_VERSION=0.20.0
+ARG YAMLLINT_VERSION=1.37.1
+ARG TYPOS_VERSION=1.40.1
 
-# ----------------------------------------
-# System package versions (Debian trixie, arm64)
-# ----------------------------------------
-ARG GIT_VERSION=1:2.47.3-0+deb13u1
-ARG UNZIP_VERSION=6.0-29
-ARG CURL_VERSION=8.14.1-2+deb13u2
-ARG BASH_VERSION=5.2.37-2+b5
-ARG FISH_VERSION=4.0.2-1
-ARG PYTHON3_VERSION=3.13.5-1
-ARG PYTHON3_PIP_VERSION=25.1.1+dfsg-1
-ARG LIBICU_DEV_VERSION=76.1-4
-ARG LIBZIP_DEV_VERSION=1.11.3-2
-ARG ZLIB1G_DEV_VERSION=1:1.3.dfsg+really1.3.1-1+b1
-ARG LIBONIG_DEV_VERSION=6.9.9-1+b1
+# ============================================================
+# Composer tools
+# ============================================================
+ARG PHP_CS_FIXER_VERSION=3.92.3
+ARG PHPUNIT_VERSION=11.5.46
+ARG INFECTION_VERSION=0.32.0
+ARG PHPSTAN_VERSION=2.1.33
+ARG PSALM_VERSION=6.14.3
+ARG PHPMD_VERSION=2.15.0
 
-# ----------------------------------------
-# Base image
-# ----------------------------------------
-FROM php:8.5-cli
+# AST Metrics
+ARG AST_METRICS_VERSION=0.31.0
 
-# Re-declare ARGs after FROM
-ARG NODE_VERSION
-ARG ACTIONLINT_VERSION
-ARG MARKDOWNLINT_VERSION
-ARG YAMLLINT_VERSION
-ARG PHP_CS_FIXER_VERSION
-ARG TYPOS_VERSION
-ARG HADOLINT_VERSION
+# ============================================================
+# Node.js stage (official image, source of node/npm)
+# ============================================================
+FROM ${NODE_IMAGE} AS node
 
-ARG GIT_VERSION
-ARG UNZIP_VERSION
-ARG CURL_VERSION
-ARG BASH_VERSION
-ARG FISH_VERSION
-ARG PYTHON3_VERSION
-ARG PYTHON3_PIP_VERSION
-ARG LIBICU_DEV_VERSION
-ARG LIBZIP_DEV_VERSION
-ARG ZLIB1G_DEV_VERSION
-ARG LIBONIG_DEV_VERSION
+# ============================================================
+# PHP base stage
+# ============================================================
+FROM ${PHP_IMAGE}
 
-# ----------------------------------------
-# OCI labels
-# ----------------------------------------
-LABEL org.opencontainers.image.title="Piqule"
-LABEL org.opencontainers.image.description="Piqule — PHP Quality Laws"
-LABEL org.opencontainers.image.source="https://github.com/haspadar/piqule"
-LABEL org.opencontainers.image.licenses="MIT"
-
-# ----------------------------------------
-# Shell
-# ----------------------------------------
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# ----------------------------------------
-# System dependencies + Node.js
-# ----------------------------------------
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        git=${GIT_VERSION} \
-        unzip=${UNZIP_VERSION} \
-        curl=${CURL_VERSION} \
-        bash=${BASH_VERSION} \
-        fish=${FISH_VERSION} \
-        python3=${PYTHON3_VERSION} \
-        python3-pip=${PYTHON3_PIP_VERSION} \
-        libicu-dev=${LIBICU_DEV_VERSION} \
-        libzip-dev=${LIBZIP_DEV_VERSION} \
-        zlib1g-dev=${ZLIB1G_DEV_VERSION} \
-        libonig-dev=${LIBONIG_DEV_VERSION} \
-    && docker-php-ext-install intl zip mbstring \
-    && curl -fsSL \
-        "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
-        -o node.tar.xz \
-    && tar -xf node.tar.xz -C /usr/local --strip-components=1 \
-    && rm node.tar.xz \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# ------------------------------------------------------------
+# Re-declare ARGs for this stage
+# ------------------------------------------------------------
+ARG ACTIONLINT_VERSION
+ARG HADOLINT_VERSION
+ARG MARKDOWNLINT_VERSION
+ARG YAMLLINT_VERSION
+ARG TYPOS_VERSION
 
-# ----------------------------------------
-# Composer + PHP-CS-Fixer
-# ----------------------------------------
+ARG PHP_CS_FIXER_VERSION
+ARG PHPUNIT_VERSION
+ARG INFECTION_VERSION
+ARG PHPSTAN_VERSION
+ARG PSALM_VERSION
+ARG PHPMD_VERSION
+
+ARG AST_METRICS_VERSION
+
+# ============================================================
+# System packages (pinned)
+# ============================================================
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    ca-certificates=20230311+deb12u1 \
+    bash=5.2.15-2+b9 \
+    git=1:2.39.5-0+deb12u2 \
+    curl=7.88.1-10+deb12u14 \
+    unzip=6.0-28 \
+    fish=3.6.0-3.1+deb12u1 \
+    python3=3.11.2-1+b1 \
+    python3-pip=23.0.1+dfsg-1 \
+    libicu-dev=72.1-3+deb12u1 \
+    libzip-dev=1.7.3-1+b1 \
+    zlib1g-dev=1:1.2.13.dfsg-1 \
+    libonig-dev=6.9.8-1 \
+ && rm -rf /var/lib/apt/lists/*
+
+# ============================================================
+# PHP extensions
+# ============================================================
+RUN docker-php-ext-install intl zip mbstring
+
+# ============================================================
+# Node.js (copied from official image)
+# ============================================================
+COPY --from=node /usr/local /usr/local
+ENV PATH="/usr/local/lib/node_modules/.bin:${PATH}"
+
+# ============================================================
+# Composer (binary)
+# ============================================================
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/usr/local/composer
 ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
 
-RUN mkdir -p /usr/local/composer /usr/local/piqule \
-    && curl -sS https://getcomposer.org/download/latest-stable/composer.phar \
-        -o composer.phar \
-    && curl -sS https://getcomposer.org/download/latest-stable/composer.phar.sha256sum \
-        -o composer.phar.sha256sum \
-    && sha256sum -c composer.phar.sha256sum \
-    && mv composer.phar /usr/local/bin/composer \
-    && rm composer.phar.sha256sum \
-    && chmod +x /usr/local/bin/composer \
-    && composer global require "friendsofphp/php-cs-fixer:${PHP_CS_FIXER_VERSION}" \
-    && ln -s /usr/local/composer/vendor/bin/php-cs-fixer /usr/local/bin/php-cs-fixer \
-    && composer clear-cache
+RUN curl -sS https://getcomposer.org/download/latest-stable/composer.phar \
+    -o /usr/local/bin/composer \
+ && chmod +x /usr/local/bin/composer
 
-COPY configs/php-cs-fixer.php /usr/local/piqule/php-cs-fixer.base.php
+# ============================================================
+# Linters
+# ============================================================
+RUN set -eux; \
+    \
+    # actionlint
+    curl -sSfL \
+      "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+      -o /tmp/actionlint.tar.gz; \
+    tar -xzf /tmp/actionlint.tar.gz -C /usr/local/bin; \
+    chmod +x /usr/local/bin/actionlint; \
+    rm /tmp/actionlint.tar.gz; \
+    \
+    # markdownlint-cli2
+    npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
+    \
+    # yamllint
+    pip3 install --no-cache-dir --break-system-packages \
+      "yamllint==${YAMLLINT_VERSION}"; \
+    \
+    # hadolint (arm64, matches CI runner)
+    curl -sSfL \
+      "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-arm64" \
+      -o /usr/local/bin/hadolint; \
+    chmod +x /usr/local/bin/hadolint; \
+    \
+    # typos
+    curl -sSfL \
+      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-aarch64-unknown-linux-musl.tar.gz" \
+      -o /tmp/typos.tar.gz; \
+    tar -xzf /tmp/typos.tar.gz -C /usr/local/bin; \
+    chmod +x /usr/local/bin/typos; \
+    rm /tmp/typos.tar.gz
 
-# ----------------------------------------
-# Linters & tooling (ONE RUN – required by Sonar)
-# ----------------------------------------
-RUN curl -sSfL \
-        "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
-        -o actionlint.tar.gz \
-    && tar -xzf actionlint.tar.gz \
-    && mv actionlint /usr/local/bin/actionlint \
-    && chmod +x /usr/local/bin/actionlint \
-    && rm -f actionlint.tar.gz \
-    \
-    && npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
-    && pip3 install --no-cache-dir --break-system-packages \
-        "yamllint==${YAMLLINT_VERSION}" \
-    \
-    && curl -sSfL \
-        "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-x86_64" \
-        -o /usr/local/bin/hadolint \
-    && chmod +x /usr/local/bin/hadolint \
-    \
-    && curl -sSfL \
-        "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
-        -o typos.tar.gz \
-    && tar -xzf typos.tar.gz \
-    && mv typos /usr/local/bin/typos \
-    && chmod +x /usr/local/bin/typos \
-    && rm -f typos.tar.gz
+RUN set -eux; \
+    ARCH="$(uname -m)"; \
+    case "$ARCH" in \
+      x86_64)  BIN="ast-metrics_Linux_x86_64" ;; \
+      aarch64) BIN="ast-metrics_Linux_arm64" ;; \
+      *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
+    esac; \
+    curl -sSfL \
+      "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/${BIN}" \
+      -o /usr/local/bin/ast-metrics; \
+    chmod +x /usr/local/bin/ast-metrics
 
-# ----------------------------------------
-# Entrypoint
-# ----------------------------------------
+# ============================================================
+# Composer tools (global)
+# ============================================================
+RUN set -eux; \
+    composer global config --no-plugins allow-plugins.infection/extension-installer true; \
+    composer global require --no-interaction --no-progress --prefer-dist \
+      friendsofphp/php-cs-fixer:${PHP_CS_FIXER_VERSION} \
+      phpunit/phpunit:${PHPUNIT_VERSION} \
+      phpstan/phpstan:${PHPSTAN_VERSION} \
+      vimeo/psalm:${PSALM_VERSION} \
+      phpmd/phpmd:${PHPMD_VERSION} \
+      infection/infection:${INFECTION_VERSION}; \
+    composer clear-cache
+
+# ============================================================
+# Runtime
+# ============================================================
 WORKDIR /app
-
 CMD ["bash"]

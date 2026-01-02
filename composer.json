@@ -21,7 +21,9 @@
         "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
         "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection/infection.json5 --threads=max",
         "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
-        "psalm": "psalm --config=.piqule/psalm/psalm.xml"
+        "psalm": "psalm --config=.piqule/psalm/psalm.xml",
+        "phpmd": "vendor/bin/phpmd src text .piqule/phpmd/phpmd.xml",
+        "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml"
     },
     "authors": [
         {

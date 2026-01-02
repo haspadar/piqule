@@ -1,4 +1,5 @@
 name: AST Metrics
+
 on:
   workflow_call:
     inputs:
@@ -6,28 +7,45 @@ on:
         description: Path to AST Metrics config file
         type: string
         required: true
+
 permissions:
   contents: read
+
 jobs:
   ast-metrics:
     name: AST Metrics lint
     runs-on: ubuntu-latest
+
+    env:
+      AST_METRICS_VERSION: "0.31.0"
+
     steps:
       # ------------------------------------------------------------
       # Checkout repository
       # ------------------------------------------------------------
-      # v6.0.1
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
       # ------------------------------------------------------------
-      # Install AST Metrics
+      # Install AST Metrics (official release binary)
       # ------------------------------------------------------------
       - name: Install AST Metrics
         run: |
-          # ast-metrics v0.31.0
-          AST_METRICS_URL="https://raw.githubusercontent.com/Halleck45/ast-metrics/d056054c4b05eac672a132f877de310ddc68bfed/scripts/download.sh"
-          curl -s "$AST_METRICS_URL" | bash
+          set -eux
+
+          ARCH="$(uname -m)"
+          case "$ARCH" in
+            x86_64)  BIN="ast-metrics_Linux_x86_64" ;;
+            aarch64) BIN="ast-metrics_Linux_arm64" ;;
+            *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
+          esac
+
+          curl -sSfL \
+            "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/${BIN}" \
+            -o ast-metrics
+
           chmod +x ast-metrics
+
       # ------------------------------------------------------------
       # Run AST Metrics lint
       # ------------------------------------------------------------

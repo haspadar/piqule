@@ -53,7 +53,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Install markdownlint-cli2
         if: steps.check.outputs.run == 'true'
-        run: npm install -g markdownlint-cli2
+        run: npm install -g markdownlint-cli2@0.20.0
       # ------------------------------------------------------------
       # Run markdownlint-cli2
       # ------------------------------------------------------------
