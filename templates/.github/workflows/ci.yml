@@ -56,8 +56,7 @@ jobs:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
-      php-matrix: >-
-        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
+      php-matrix: '["8.2","8.5"]'
 
   # ------------------------------------------------------------
   # PHPStan (min + max)
@@ -66,8 +65,7 @@ jobs:
     name: PHPStan
     uses: ./.github/workflows/_phpstan.yml
     with:
-      php-matrix: >-
-        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
+      php-matrix: '["8.2","8.5"]'
 
   # ------------------------------------------------------------
   # Psalm (min + max)
@@ -76,8 +74,7 @@ jobs:
     name: Psalm
     uses: ./.github/workflows/_psalm.yml
     with:
-      php-matrix: >-
-        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
+      php-matrix: '["8.2","8.5"]'
 
   # ------------------------------------------------------------
   # AST Metrics
@@ -95,7 +92,7 @@ jobs:
     name: PHPMD
     uses: ./.github/workflows/_phpmd.yml
     with:
-      php-version: ${{ vars.PHP_MIN_VERSION }}
+      php-version: '8.2'
       ruleset: .piqule/phpmd.xml
 
   # ------------------------------------------------------------
@@ -112,7 +109,7 @@ jobs:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
     with:
-      php-version: ${{ vars.PHP_MIN_VERSION }}
+      php-version: '8.2'
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
