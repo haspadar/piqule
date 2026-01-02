@@ -1,37 +1,32 @@
 name: PHP-CS-Fixer
+
 on:
   workflow_call:
     inputs:
-      php-version:
-        type: string
-        required: false
-        default: ""
       php-matrix:
+        description: JSON array of PHP versions to run against
         type: string
-        required: false
-        default: ""
+        required: true
+
 permissions:
   contents: read
+
 jobs:
   cs:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        php-version: >-
-          ${{ fromJson(
+        php-version: ${{ fromJson(inputs.php-matrix) }}
 
-
-            inputs.php-matrix != '' &&
-            inputs.php-matrix ||
-            format('["{0}"]', inputs.php-version)
-          ) }}
     steps:
       # ------------------------------------------------------------
       # Checkout repository
       # ------------------------------------------------------------
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
       # ------------------------------------------------------------
       # Check PHP-CS-Fixer config existence
       # ------------------------------------------------------------
@@ -43,12 +38,14 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
+
       # ------------------------------------------------------------
       # Skip PHP-CS-Fixer when config is missing
       # ------------------------------------------------------------
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
         run: echo "Skipping PHP-CS-Fixer — no .piqule/php-cs-fixer.project.php"
+
       # ------------------------------------------------------------
       # Setup PHP
       # ------------------------------------------------------------
@@ -58,12 +55,14 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
+
       # ------------------------------------------------------------
       # Install dependencies
       # ------------------------------------------------------------
       - name: Install dependencies
         if: steps.check.outputs.run == 'true'
         run: composer install --prefer-dist --no-progress --no-interaction
+
       # ------------------------------------------------------------
       # Run PHP-CS-Fixer (dry-run)
       # ------------------------------------------------------------

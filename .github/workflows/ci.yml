@@ -11,10 +11,6 @@ permissions:
   contents: read
   pull-requests: read
 
-env:
-  PHP_MIN_VERSION: '8.2'
-  PHP_MAX_VERSION: '8.5'
-
 jobs:
   # ------------------------------------------------------------
   # YAML lint
@@ -60,8 +56,8 @@ jobs:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
-      php-min-version: ${{ env.PHP_MIN_VERSION }}
-      php-max-version: ${{ env.PHP_MAX_VERSION }}
+      php-matrix: >-
+        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
 
   # ------------------------------------------------------------
   # PHPStan (min + max)
@@ -70,8 +66,8 @@ jobs:
     name: PHPStan
     uses: ./.github/workflows/_phpstan.yml
     with:
-      php-min-version: ${{ env.PHP_MIN_VERSION }}
-      php-max-version: ${{ env.PHP_MAX_VERSION }}
+      php-matrix: >-
+        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
 
   # ------------------------------------------------------------
   # Psalm (min + max)
@@ -80,8 +76,8 @@ jobs:
     name: Psalm
     uses: ./.github/workflows/_psalm.yml
     with:
-      php-min-version: ${{ env.PHP_MIN_VERSION }}
-      php-max-version: ${{ env.PHP_MAX_VERSION }}
+      php-matrix: >-
+        ["${{ vars.PHP_MIN_VERSION }}","${{ vars.PHP_MAX_VERSION }}"]
 
   # ------------------------------------------------------------
   # AST Metrics
@@ -99,6 +95,7 @@ jobs:
     name: PHPMD
     uses: ./.github/workflows/_phpmd.yml
     with:
+      php-version: ${{ vars.PHP_MIN_VERSION }}
       ruleset: .piqule/phpmd.xml
 
   # ------------------------------------------------------------
@@ -109,13 +106,13 @@ jobs:
     uses: ./.github/workflows/_hadolint.yml
 
   # ------------------------------------------------------------
-  # PHPUnit + Coverage + Infection (только min)
+  # PHPUnit + Coverage + Infection (min PHP version only)
   # ------------------------------------------------------------
   tests:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
     with:
-      php-version: ${{ env.PHP_MIN_VERSION }}
+      php-version: ${{ vars.PHP_MIN_VERSION }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}

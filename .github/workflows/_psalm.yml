@@ -3,14 +3,10 @@ name: Psalm
 on:
   workflow_call:
     inputs:
-      php-version:
-        type: string
-        required: false
-        default: ""
       php-matrix:
+        description: JSON array of PHP versions to run against
         type: string
-        required: false
-        default: ""
+        required: true
 
 permissions:
   contents: read
@@ -22,12 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: >-
-          ${{ fromJson(
-            inputs.php-matrix != '' &&
-            inputs.php-matrix ||
-            format('["{0}"]', inputs.php-version)
-          ) }}
+        php-version: ${{ fromJson(inputs.php-matrix) }}
 
     steps:
       # ------------------------------------------------------------
