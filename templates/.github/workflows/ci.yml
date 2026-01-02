@@ -75,6 +75,14 @@ jobs:
     with:
       config: .piqule/ast-metrics.yaml
   # ------------------------------------------------------------
+  # PHPMD (numeric metrics)
+  # ------------------------------------------------------------
+  phpmd:
+    name: PHPMD
+    uses: ./.github/workflows/_phpmd.yml
+    with:
+      ruleset: .piqule/phpmd.xml
+  # ------------------------------------------------------------
   # Dockerfile lint
   # ------------------------------------------------------------
   hadolint:
