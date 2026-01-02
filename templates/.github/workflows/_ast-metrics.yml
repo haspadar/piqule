@@ -1,0 +1,38 @@
+name: AST Metrics
+on:
+  workflow_call:
+    inputs:
+      config:
+        description: Path to AST Metrics config file
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  ast-metrics:
+    name: AST Metrics lint
+    runs-on: ubuntu-latest
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      # v6.0.1
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      # ------------------------------------------------------------
+      # Install AST Metrics
+      # ------------------------------------------------------------
+      - name: Install AST Metrics
+        run: |
+          # ast-metrics v0.31.0
+          AST_METRICS_URL="https://raw.githubusercontent.com/Halleck45/ast-metrics/d056054c4b05eac672a132f877de310ddc68bfed/scripts/download.sh"
+          curl -s "$AST_METRICS_URL" | bash
+          chmod +x ast-metrics
+      # ------------------------------------------------------------
+      # Run AST Metrics lint
+      # ------------------------------------------------------------
+      - name: Run AST Metrics lint
+        env:
+          AST_METRICS_CONFIG: ${{ inputs.config }}
+        run: |
+          ./ast-metrics lint --config "$AST_METRICS_CONFIG"
