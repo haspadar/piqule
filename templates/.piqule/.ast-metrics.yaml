@@ -1,0 +1,43 @@
+# AST Metrics quality policy
+
+sources:
+  # Production code only
+  - src
+
+exclude:
+  # Third-party and non-production code
+  - /vendor/
+  - /tests/
+  - /build/
+  - /bin/
+  - /var/
+  - /node_modules/
+
+# Reports are disabled by default (metrics are used as a quality gate)
+reports: {}
+
+requirements:
+  rules:
+    # Fail the build on any rule violation
+    fail_on_error: true
+
+    # Maximum cyclomatic complexity per method
+    cyclomatic_complexity:
+      max: 10
+      exclude: []
+
+    # Maximum number of lines per file
+    volume:
+      loc:
+        max: 100
+        exclude: []
+
+    # Maximum number of outgoing dependencies per component
+    architecture:
+      coupling:
+        efferent:
+          max: 5
+
+    # Minimum maintainability index per component
+    maintainability:
+      min: 70
