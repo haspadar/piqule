@@ -1,13 +1,20 @@
 name: CI
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pull-requests: read
+
+env:
+  PHP_MIN_VERSION: '8.2'
+  PHP_MAX_VERSION: '8.5'
+
 jobs:
   # ------------------------------------------------------------
   # YAML lint
@@ -17,6 +24,7 @@ jobs:
     uses: ./.github/workflows/_yamllint.yml
     with:
       config: .piqule/.yamllint.yml
+
   # ------------------------------------------------------------
   # GitHub Actions lint
   # ------------------------------------------------------------
@@ -26,6 +34,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-actionlint-${{ github.ref }}
       cancel-in-progress: true
+
   # ------------------------------------------------------------
   # Markdown lint
   # ------------------------------------------------------------
@@ -34,6 +43,7 @@ jobs:
     uses: ./.github/workflows/_markdownlint.yml
     with:
       config: .piqule/.markdownlint-cli2.jsonc
+
   # ------------------------------------------------------------
   # Typo checker
   # ------------------------------------------------------------
@@ -42,30 +52,37 @@ jobs:
     uses: ./.github/workflows/_typos.yml
     with:
       config: .piqule/_typos.toml
+
   # ------------------------------------------------------------
-  # PHP-CS-Fixer (matrix)
+  # PHP-CS-Fixer (min + max)
   # ------------------------------------------------------------
   php_cs_fixer:
     name: PHP-CS-Fixer
     uses: ./.github/workflows/_php-cs-fixer.yml
     with:
-      php-matrix: '["8.2","8.3","8.4","8.5"]'
+      php-min-version: ${{ env.PHP_MIN_VERSION }}
+      php-max-version: ${{ env.PHP_MAX_VERSION }}
+
   # ------------------------------------------------------------
-  # PHPStan (matrix)
+  # PHPStan (min + max)
   # ------------------------------------------------------------
   phpstan:
     name: PHPStan
     uses: ./.github/workflows/_phpstan.yml
     with:
-      php-matrix: '["8.2","8.3","8.4","8.5"]'
+      php-min-version: ${{ env.PHP_MIN_VERSION }}
+      php-max-version: ${{ env.PHP_MAX_VERSION }}
+
   # ------------------------------------------------------------
-  # Psalm (matrix)
+  # Psalm (min + max)
   # ------------------------------------------------------------
   psalm:
     name: Psalm
     uses: ./.github/workflows/_psalm.yml
     with:
-      php-matrix: '["8.2","8.3","8.4","8.5"]'
+      php-min-version: ${{ env.PHP_MIN_VERSION }}
+      php-max-version: ${{ env.PHP_MAX_VERSION }}
+
   # ------------------------------------------------------------
   # AST Metrics
   # ------------------------------------------------------------
@@ -74,6 +91,7 @@ jobs:
     uses: ./.github/workflows/_ast-metrics.yml
     with:
       config: .piqule/ast-metrics.yaml
+
   # ------------------------------------------------------------
   # PHPMD (numeric metrics)
   # ------------------------------------------------------------
@@ -82,21 +100,26 @@ jobs:
     uses: ./.github/workflows/_phpmd.yml
     with:
       ruleset: .piqule/phpmd.xml
+
   # ------------------------------------------------------------
   # Dockerfile lint
   # ------------------------------------------------------------
   hadolint:
     name: Hadolint
     uses: ./.github/workflows/_hadolint.yml
+
   # ------------------------------------------------------------
-  # PHPUnit + Coverage + Infection
+  # PHPUnit + Coverage + Infection (только min)
   # ------------------------------------------------------------
   tests:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
+    with:
+      php-version: ${{ env.PHP_MIN_VERSION }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+
   # ------------------------------------------------------------
   # PR size guard
   # ------------------------------------------------------------
@@ -106,8 +129,9 @@ jobs:
     uses: ./.github/workflows/_pr-size-checker.yml
     with:
       max_lines_changed: 250
+
   # ------------------------------------------------------------
-  # Release drafter (main only)
+  # Release drafter
   # ------------------------------------------------------------
   release_drafter:
     name: Release Drafter

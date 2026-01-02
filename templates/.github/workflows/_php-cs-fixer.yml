@@ -1,17 +1,17 @@
 name: PHP-CS-Fixer
-
 on:
   workflow_call:
     inputs:
       php-version:
         type: string
         required: false
-        default: "8.5"
+        default: ""
       php-matrix:
         type: string
         required: false
-        default: ""  # JSON: ["8.2","8.3","8.4","8.5"]
-
+        default: ""
+permissions:
+  contents: read
 jobs:
   cs:
     runs-on: ubuntu-latest
@@ -20,18 +20,18 @@ jobs:
       matrix:
         php-version: >-
           ${{ fromJson(
+
+
             inputs.php-matrix != '' &&
             inputs.php-matrix ||
             format('["{0}"]', inputs.php-version)
           ) }}
-
     steps:
       # ------------------------------------------------------------
       # Checkout repository
       # ------------------------------------------------------------
       - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
-
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       # ------------------------------------------------------------
       # Check PHP-CS-Fixer config existence
       # ------------------------------------------------------------
@@ -43,31 +43,27 @@ jobs:
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
           fi
-
       # ------------------------------------------------------------
       # Skip PHP-CS-Fixer when config is missing
       # ------------------------------------------------------------
       - name: Skip — no config found
         if: steps.check.outputs.run == 'false'
         run: echo "Skipping PHP-CS-Fixer — no .piqule/php-cs-fixer.project.php"
-
       # ------------------------------------------------------------
       # Setup PHP
       # ------------------------------------------------------------
       - name: Setup PHP
         if: steps.check.outputs.run == 'true'
-        uses: shivammathur/setup-php@5efa2a774eb6c55954af5652a1f947afbc8dd282
+        uses: shivammathur/setup-php@5efa2a774eb6c55954af5652a1f947afbc8dd282  # v2.36.0
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-
       # ------------------------------------------------------------
       # Install dependencies
       # ------------------------------------------------------------
       - name: Install dependencies
         if: steps.check.outputs.run == 'true'
         run: composer install --prefer-dist --no-progress --no-interaction
-
       # ------------------------------------------------------------
       # Run PHP-CS-Fixer (dry-run)
       # ------------------------------------------------------------
