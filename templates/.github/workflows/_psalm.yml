@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   psalm:
+    name: Psalm (PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
 
     strategy:

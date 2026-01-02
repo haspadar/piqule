@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   phpstan:
+    name: PHPStan (PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
 
     strategy:

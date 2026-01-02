@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   phpmd:
-    name: PHPMD (numeric metrics)
+    name: PHPMD (PHP ${{ inputs.php-version }})
     runs-on: ubuntu-latest
 
     steps:
