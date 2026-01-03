@@ -28,7 +28,7 @@ ARG PHPMD_VERSION=2.15.0
 ARG AST_METRICS_VERSION=0.31.0
 
 # ============================================================
-# Node.js stage (official image)
+# Node.js stage (official image, source of node/npm)
 # ============================================================
 FROM ${NODE_IMAGE} AS node
 
@@ -37,13 +37,13 @@ FROM ${NODE_IMAGE} AS node
 # ============================================================
 FROM ${PHP_IMAGE}
 
-# Explicitly run as root during build (tooling image)
+# Explicitly document root usage (CI / tooling image)
 USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------
-# Re-declare ARGs
+# Re-declare ARGs for this stage
 # ------------------------------------------------------------
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
@@ -61,23 +61,30 @@ ARG PHPMD_VERSION
 ARG AST_METRICS_VERSION
 
 # ============================================================
-# System packages (pinned)
+# System packages + Composer (single layer, pinned)
 # ============================================================
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    ca-certificates=20230311+deb12u1 \
-    bash=5.2.15-2+b9 \
-    git=1:2.39.5-0+deb12u2 \
-    curl=7.88.1-10+deb12u14 \
-    unzip=6.0-28 \
-    fish=3.6.0-3.1+deb12u1 \
-    python3=3.11.2-1+b1 \
-    python3-pip=23.0.1+dfsg-1 \
-    libicu-dev=72.1-3+deb12u1 \
-    libzip-dev=1.7.3-1+b1 \
-    zlib1g-dev=1:1.2.13.dfsg-1 \
-    libonig-dev=6.9.8-1 \
- && rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+    \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      ca-certificates=20230311+deb12u1 \
+      bash=5.2.15-2+b9 \
+      git=1:2.39.5-0+deb12u2 \
+      curl=7.88.1-10+deb12u14 \
+      unzip=6.0-28 \
+      fish=3.6.0-3.1+deb12u1 \
+      python3=3.11.2-1+b1 \
+      python3-pip=23.0.1+dfsg-1 \
+      libicu-dev=72.1-3+deb12u1 \
+      libzip-dev=1.7.3-1+b1 \
+      zlib1g-dev=1:1.2.13.dfsg-1 \
+      libonig-dev=6.9.8-1; \
+    \
+    rm -rf /var/lib/apt/lists/*; \
+    \
+    curl -sS https://getcomposer.org/installer | php -- \
+      --install-dir=/usr/local/bin \
+      --filename=composer
 
 # ============================================================
 # PHP extensions
@@ -91,16 +98,11 @@ COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/lib/node_modules/.bin:${PATH}"
 
 # ============================================================
-# Composer (official installer with verification)
+# Composer environment
 # ============================================================
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/usr/local/composer
 ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
-
-RUN set -eux; \
-    curl -sS https://getcomposer.org/installer | php -- \
-      --install-dir=/usr/local/bin \
-      --filename=composer
 
 # ============================================================
 # Linters (architecture-aware)
@@ -108,18 +110,12 @@ RUN set -eux; \
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "$ARCH" in \
-      x86_64) \
-        ACTIONLINT_ARCH="amd64"; \
-        HADOLINT_ARCH="x86_64"; \
-        TYPOS_ARCH="x86_64-unknown-linux-musl" ;; \
-      aarch64) \
-        ACTIONLINT_ARCH="arm64"; \
-        HADOLINT_ARCH="arm64"; \
-        TYPOS_ARCH="aarch64-unknown-linux-musl" ;; \
+      x86_64)  ACTIONLINT_ARCH="amd64"; HADOLINT_ARCH="x86_64"; TYPOS_ARCH="x86_64" ;; \
+      aarch64) ACTIONLINT_ARCH="arm64"; HADOLINT_ARCH="arm64"; TYPOS_ARCH="aarch64" ;; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
-    # actionlint
+    # actionlint \
     curl -sSfL \
       "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
       -o /tmp/actionlint.tar.gz; \
@@ -127,22 +123,22 @@ RUN set -eux; \
     chmod +x /usr/local/bin/actionlint; \
     rm /tmp/actionlint.tar.gz; \
     \
-    # markdownlint-cli2
+    # markdownlint-cli2 \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
     \
-    # yamllint
+    # yamllint \
     pip3 install --no-cache-dir --break-system-packages \
       "yamllint==${YAMLLINT_VERSION}"; \
     \
-    # hadolint
+    # hadolint \
     curl -sSfL \
       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
-    # typos
+    # typos \
     curl -sSfL \
-      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}.tar.gz" \
+      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       -o /tmp/typos.tar.gz; \
     tar -xzf /tmp/typos.tar.gz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
@@ -180,9 +176,7 @@ RUN set -eux; \
 # ============================================================
 # Runtime user (non-root)
 # ============================================================
-RUN useradd --uid 1000 --create-home --shell /bin/bash appuser \
- && mkdir -p /app \
- && chown -R appuser:appuser /app
+RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
 
 USER appuser
 
