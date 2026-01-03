@@ -1,16 +1,17 @@
 # syntax=docker/dockerfile:1
 
-ARG PHP_IMAGE=php:8.2-cli-bookworm
+ARG PHP_IMAGE=php:8.3-cli-bookworm
 ARG NODE_IMAGE=node:24.12.0-bookworm
 
 # ============================================================
-# Linters (aligned with CI)
+# Linters (tracked by Renovate)
 # ============================================================
 ARG ACTIONLINT_VERSION=1.7.10
 ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.37.1
-ARG TYPOS_VERSION=1.40.1
+ARG TYPOS_VERSION=1.41.0
+ARG AST_METRICS_VERSION=0.31.0
 
 # ============================================================
 # Composer tools
@@ -23,12 +24,7 @@ ARG PSALM_VERSION=6.14.3
 ARG PHPMD_VERSION=2.15.0
 
 # ============================================================
-# AST Metrics
-# ============================================================
-ARG AST_METRICS_VERSION=0.31.0
-
-# ============================================================
-# Node.js stage (official image, source of node/npm)
+# Node.js stage
 # ============================================================
 FROM ${NODE_IMAGE} AS node
 
@@ -37,19 +33,20 @@ FROM ${NODE_IMAGE} AS node
 # ============================================================
 FROM ${PHP_IMAGE}
 
-# Explicitly document root usage (CI / tooling image)
+# Explicitly run as root (tooling / CI image)
 USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------
-# Re-declare ARGs for this stage
+# Re-declare ARGs for this stage (required for set -u)
 # ------------------------------------------------------------
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
+ARG AST_METRICS_VERSION
 
 ARG PHP_CS_FIXER_VERSION
 ARG PHPUNIT_VERSION
@@ -58,33 +55,27 @@ ARG PHPSTAN_VERSION
 ARG PSALM_VERSION
 ARG PHPMD_VERSION
 
-ARG AST_METRICS_VERSION
-
 # ============================================================
-# System packages + Composer (single layer, pinned)
+# System packages
 # ============================================================
 RUN set -eux; \
-    \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-      ca-certificates=20230311+deb12u1 \
-      bash=5.2.15-2+b9 \
-      git=1:2.39.5-0+deb12u2 \
-      curl=7.88.1-10+deb12u14 \
-      unzip=6.0-28 \
-      fish=3.6.0-3.1+deb12u1 \
-      python3=3.11.2-1+b1 \
-      python3-pip=23.0.1+dfsg-1 \
-      libicu-dev=72.1-3+deb12u1 \
-      libzip-dev=1.7.3-1+b1 \
-      zlib1g-dev=1:1.2.13.dfsg-1 \
-      libonig-dev=6.9.8-1; \
-    \
-    rm -rf /var/lib/apt/lists/*; \
-    \
-    curl -sS https://getcomposer.org/installer | php -- \
-      --install-dir=/usr/local/bin \
-      --filename=composer
+        ca-certificates \
+        bash \
+        git \
+        curl \
+        unzip \
+        fish \
+        python3 \
+        python3-pip \
+        python3-venv \
+        pipx \
+        libicu-dev \
+        libzip-dev \
+        zlib1g-dev \
+        libonig-dev; \
+    rm -rf /var/lib/apt/lists/*
 
 # ============================================================
 # PHP extensions
@@ -92,17 +83,22 @@ RUN set -eux; \
 RUN docker-php-ext-install intl zip mbstring
 
 # ============================================================
-# Node.js (copied from official image)
+# Node.js (from official image)
 # ============================================================
 COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/lib/node_modules/.bin:${PATH}"
 
 # ============================================================
-# Composer environment
+# Composer (official installer with verification)
 # ============================================================
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/usr/local/composer
 ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
+
+RUN set -eux; \
+    curl -sS https://getcomposer.org/installer | php -- \
+      --install-dir=/usr/local/bin \
+      --filename=composer
 
 # ============================================================
 # Linters (architecture-aware)
@@ -110,52 +106,47 @@ ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "$ARCH" in \
-      x86_64)  ACTIONLINT_ARCH="amd64"; HADOLINT_ARCH="x86_64"; TYPOS_ARCH="x86_64" ;; \
-      aarch64) ACTIONLINT_ARCH="arm64"; HADOLINT_ARCH="arm64"; TYPOS_ARCH="aarch64" ;; \
+      x86_64) \
+        ACTIONLINT_ARCH="amd64"; \
+        HADOLINT_ARCH="x86_64"; \
+        TYPOS_ARCH="x86_64"; \
+        AST_ARCH="x86_64" ;; \
+      aarch64) \
+        ACTIONLINT_ARCH="arm64"; \
+        HADOLINT_ARCH="arm64"; \
+        TYPOS_ARCH="aarch64"; \
+        AST_ARCH="arm64" ;; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
-    # actionlint \
+    # actionlint
     curl -sSfL \
       "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
-      -o /tmp/actionlint.tar.gz; \
-    tar -xzf /tmp/actionlint.tar.gz -C /usr/local/bin; \
+      | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/actionlint; \
-    rm /tmp/actionlint.tar.gz; \
     \
-    # markdownlint-cli2 \
+    # markdownlint-cli2
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
+    npm cache clean --force; \
     \
-    # yamllint \
-    pip3 install --no-cache-dir --break-system-packages \
-      "yamllint==${YAMLLINT_VERSION}"; \
+    # yamllint (via pipx)
+    pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
-    # hadolint \
+    # hadolint
     curl -sSfL \
       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
-    # typos \
+    # typos
     curl -sSfL \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
-      -o /tmp/typos.tar.gz; \
-    tar -xzf /tmp/typos.tar.gz -C /usr/local/bin; \
+      | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
-    rm /tmp/typos.tar.gz
-
-# ============================================================
-# AST Metrics
-# ============================================================
-RUN set -eux; \
-    ARCH="$(uname -m)"; \
-    case "$ARCH" in \
-      x86_64)  BIN="ast-metrics_Linux_x86_64" ;; \
-      aarch64) BIN="ast-metrics_Linux_arm64" ;; \
-      *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
-    esac; \
+    \
+    # AST Metrics
     curl -sSfL \
-      "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/${BIN}" \
+      "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
       -o /usr/local/bin/ast-metrics; \
     chmod +x /usr/local/bin/ast-metrics
 
@@ -174,10 +165,9 @@ RUN set -eux; \
     composer clear-cache
 
 # ============================================================
-# Runtime user (non-root)
+# Runtime user
 # ============================================================
 RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
-
 USER appuser
 
 # ============================================================
