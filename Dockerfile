@@ -22,7 +22,9 @@ ARG PHPSTAN_VERSION=2.1.33
 ARG PSALM_VERSION=6.14.3
 ARG PHPMD_VERSION=2.15.0
 
+# ============================================================
 # AST Metrics
+# ============================================================
 ARG AST_METRICS_VERSION=0.31.0
 
 # ============================================================
@@ -34,6 +36,9 @@ FROM ${NODE_IMAGE} AS node
 # PHP base stage
 # ============================================================
 FROM ${PHP_IMAGE}
+
+# Explicitly run as root (CI / tooling image)
+USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -86,24 +91,32 @@ COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/lib/node_modules/.bin:${PATH}"
 
 # ============================================================
-# Composer (binary)
+# Composer (official installer with verification)
 # ============================================================
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/usr/local/composer
 ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
 
-RUN curl -sS https://getcomposer.org/download/latest-stable/composer.phar \
-    -o /usr/local/bin/composer \
- && chmod +x /usr/local/bin/composer
+RUN set -eux; \
+    curl -sS https://getcomposer.org/installer | php -- \
+      --install-dir=/usr/local/bin \
+      --filename=composer
 
 # ============================================================
 # Linters
 # ============================================================
 RUN set -eux; \
+    ARCH="$(uname -m)"; \
+    \
+    case "$ARCH" in \
+      x86_64)  ACTIONLINT_ARCH="amd64"; HADOLINT_ARCH="x86_64"; TYPOS_ARCH="x86_64" ;; \
+      aarch64) ACTIONLINT_ARCH="arm64"; HADOLINT_ARCH="arm64"; TYPOS_ARCH="aarch64" ;; \
+      *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
+    esac; \
     \
     # actionlint
     curl -sSfL \
-      "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
+      "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
       -o /tmp/actionlint.tar.gz; \
     tar -xzf /tmp/actionlint.tar.gz -C /usr/local/bin; \
     chmod +x /usr/local/bin/actionlint; \
@@ -116,20 +129,23 @@ RUN set -eux; \
     pip3 install --no-cache-dir --break-system-packages \
       "yamllint==${YAMLLINT_VERSION}"; \
     \
-    # hadolint (arm64, matches CI runner)
+    # hadolint
     curl -sSfL \
-      "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-arm64" \
+      "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
     # typos
     curl -sSfL \
-      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-aarch64-unknown-linux-musl.tar.gz" \
+      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       -o /tmp/typos.tar.gz; \
     tar -xzf /tmp/typos.tar.gz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
     rm /tmp/typos.tar.gz
 
+# ============================================================
+# AST Metrics
+# ============================================================
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "$ARCH" in \

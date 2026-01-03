@@ -136,7 +136,7 @@
       "description": "Update AST Metrics version",
       "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "AST_METRICS_VERSION=(?<currentValue>[^\\s]+)"
+        "ARG AST_METRICS_VERSION=(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "Halleck45/ast-metrics",
       "datasourceTemplate": "github-releases"
