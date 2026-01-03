@@ -28,7 +28,7 @@ ARG PHPMD_VERSION=2.15.0
 ARG AST_METRICS_VERSION=0.31.0
 
 # ============================================================
-# Node.js stage (official image, source of node/npm)
+# Node.js stage (official image)
 # ============================================================
 FROM ${NODE_IMAGE} AS node
 
@@ -37,13 +37,13 @@ FROM ${NODE_IMAGE} AS node
 # ============================================================
 FROM ${PHP_IMAGE}
 
-# Explicitly run as root (CI / tooling image)
+# Explicitly run as root during build (tooling image)
 USER root
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------
-# Re-declare ARGs for this stage
+# Re-declare ARGs
 # ------------------------------------------------------------
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
@@ -103,14 +103,19 @@ RUN set -eux; \
       --filename=composer
 
 # ============================================================
-# Linters
+# Linters (architecture-aware)
 # ============================================================
 RUN set -eux; \
     ARCH="$(uname -m)"; \
-    \
     case "$ARCH" in \
-      x86_64)  ACTIONLINT_ARCH="amd64"; HADOLINT_ARCH="x86_64"; TYPOS_ARCH="x86_64" ;; \
-      aarch64) ACTIONLINT_ARCH="arm64"; HADOLINT_ARCH="arm64"; TYPOS_ARCH="aarch64" ;; \
+      x86_64) \
+        ACTIONLINT_ARCH="amd64"; \
+        HADOLINT_ARCH="x86_64"; \
+        TYPOS_ARCH="x86_64-unknown-linux-musl" ;; \
+      aarch64) \
+        ACTIONLINT_ARCH="arm64"; \
+        HADOLINT_ARCH="arm64"; \
+        TYPOS_ARCH="aarch64-unknown-linux-musl" ;; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
@@ -137,7 +142,7 @@ RUN set -eux; \
     \
     # typos
     curl -sSfL \
-      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
+      "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}.tar.gz" \
       -o /tmp/typos.tar.gz; \
     tar -xzf /tmp/typos.tar.gz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
@@ -171,6 +176,15 @@ RUN set -eux; \
       phpmd/phpmd:${PHPMD_VERSION} \
       infection/infection:${INFECTION_VERSION}; \
     composer clear-cache
+
+# ============================================================
+# Runtime user (non-root)
+# ============================================================
+RUN useradd --uid 1000 --create-home --shell /bin/bash appuser \
+ && mkdir -p /app \
+ && chown -R appuser:appuser /app
+
+USER appuser
 
 # ============================================================
 # Runtime
