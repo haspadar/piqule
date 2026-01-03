@@ -119,32 +119,32 @@ RUN set -eux; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
-    # actionlint
+    # actionlint \
     curl -sSfL \
       "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/actionlint; \
     \
-    # markdownlint-cli2
+    # markdownlint-cli2 \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
     npm cache clean --force; \
     \
     # yamllint (via pipx)
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
-    # hadolint
+    # hadolint \
     curl -sSfL \
       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
-    # typos
+    # typos \
     curl -sSfL \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
     \
-    # AST Metrics
+    # AST Metrics \
     curl -sSfL \
       "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
       -o /usr/local/bin/ast-metrics; \
