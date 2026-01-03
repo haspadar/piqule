@@ -4,7 +4,7 @@ ARG PHP_IMAGE=php:8.3-cli-bookworm
 ARG NODE_IMAGE=node:24.12.0-bookworm
 
 # ============================================================
-# Linters (tracked by Renovate)
+# Linters (aligned with CI)
 # ============================================================
 ARG ACTIONLINT_VERSION=1.7.10
 ARG HADOLINT_VERSION=2.14.0
@@ -33,13 +33,19 @@ FROM ${NODE_IMAGE} AS node
 # ============================================================
 FROM ${PHP_IMAGE}
 
-# Explicitly run as root (tooling / CI image)
-USER root
+# ----------------------------------------
+# OCI labels (from original commit)
+# ----------------------------------------
+LABEL org.opencontainers.image.title="Piqule" \
+      org.opencontainers.image.description="Piqule — PHP Quality Laws" \
+      org.opencontainers.image.source="https://github.com/haspadar/piqule" \
+      org.opencontainers.image.licenses="MIT"
 
+USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------
-# Re-declare ARGs for this stage (required for set -u)
+# Re-declare ARGs for this stage
 # ------------------------------------------------------------
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
@@ -56,9 +62,19 @@ ARG PSALM_VERSION
 ARG PHPMD_VERSION
 
 # ============================================================
-# System packages
+# Node.js (copied from official image)
+# ============================================================
+COPY --from=node /usr/local /usr/local
+ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:${PATH}"
+
+# ============================================================
+# System + PHP extensions + tools
 # ============================================================
 RUN set -eux; \
+    \
+    # --------------------------------------------------------
+    # System packages
+    # --------------------------------------------------------
     apt-get update; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -68,42 +84,22 @@ RUN set -eux; \
         unzip \
         fish \
         python3 \
-        python3-pip \
         python3-venv \
         pipx \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
         libonig-dev; \
-    rm -rf /var/lib/apt/lists/*
-
-# ============================================================
-# PHP extensions
-# ============================================================
-RUN docker-php-ext-install intl zip mbstring
-
-# ============================================================
-# Node.js (from official image)
-# ============================================================
-COPY --from=node /usr/local /usr/local
-ENV PATH="/usr/local/lib/node_modules/.bin:${PATH}"
-
-# ============================================================
-# Composer (official installer with verification)
-# ============================================================
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV COMPOSER_HOME=/usr/local/composer
-ENV PATH="/usr/local/composer/vendor/bin:${PATH}"
-
-RUN set -eux; \
-    curl -sS https://getcomposer.org/installer | php -- \
-      --install-dir=/usr/local/bin \
-      --filename=composer
-
-# ============================================================
-# Linters (architecture-aware)
-# ============================================================
-RUN set -eux; \
+    rm -rf /var/lib/apt/lists/*; \
+    \
+    # --------------------------------------------------------
+    # PHP extensions
+    # --------------------------------------------------------
+    docker-php-ext-install intl zip mbstring; \
+    \
+    # --------------------------------------------------------
+    # Architecture detection
+    # --------------------------------------------------------
     ARCH="$(uname -m)"; \
     case "$ARCH" in \
       x86_64) \
@@ -119,49 +115,70 @@ RUN set -eux; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
-    # actionlint \
+    # --------------------------------------------------------
+    # Composer (official installer)
+    # --------------------------------------------------------
+    curl -sS https://getcomposer.org/installer | php -- \
+        --install-dir=/usr/local/bin \
+        --filename=composer; \
+    export COMPOSER_ALLOW_SUPERUSER=1; \
+    export COMPOSER_HOME=/usr/local/composer; \
+    export PATH="/usr/local/composer/vendor/bin:${PATH}"; \
+    \
+    # --------------------------------------------------------
+    # actionlint
+    # --------------------------------------------------------
     curl -sSfL \
       "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/actionlint; \
     \
-    # markdownlint-cli2 \
+    # --------------------------------------------------------
+    # markdownlint-cli2
+    # --------------------------------------------------------
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
     npm cache clean --force; \
     \
-    # yamllint (via pipx) \
+    # --------------------------------------------------------
+    # yamllint (pipx)
+    # --------------------------------------------------------
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
-    # hadolint \
+    # --------------------------------------------------------
+    # hadolint
+    # --------------------------------------------------------
     curl -sSfL \
       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
-    # typos \
+    # --------------------------------------------------------
+    # typos
+    # --------------------------------------------------------
     curl -sSfL \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
     \
-    # AST Metrics \
+    # --------------------------------------------------------
+    # AST Metrics
+    # --------------------------------------------------------
     curl -sSfL \
       "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
       -o /usr/local/bin/ast-metrics; \
-    chmod +x /usr/local/bin/ast-metrics
-
-# ============================================================
-# Composer tools (global)
-# ============================================================
-RUN set -eux; \
+    chmod +x /usr/local/bin/ast-metrics; \
+    \
+    # --------------------------------------------------------
+    # Composer global tools
+    # --------------------------------------------------------
     composer global config --no-plugins allow-plugins.infection/extension-installer true; \
     composer global require --no-interaction --no-progress --prefer-dist \
-      friendsofphp/php-cs-fixer:${PHP_CS_FIXER_VERSION} \
-      phpunit/phpunit:${PHPUNIT_VERSION} \
-      phpstan/phpstan:${PHPSTAN_VERSION} \
-      vimeo/psalm:${PSALM_VERSION} \
-      phpmd/phpmd:${PHPMD_VERSION} \
-      infection/infection:${INFECTION_VERSION}; \
+        friendsofphp/php-cs-fixer:${PHP_CS_FIXER_VERSION} \
+        phpunit/phpunit:${PHPUNIT_VERSION} \
+        phpstan/phpstan:${PHPSTAN_VERSION} \
+        vimeo/psalm:${PSALM_VERSION} \
+        phpmd/phpmd:${PHPMD_VERSION} \
+        infection/infection:${INFECTION_VERSION}; \
     composer clear-cache
 
 # ============================================================
@@ -170,8 +187,5 @@ RUN set -eux; \
 RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
 USER appuser
 
-# ============================================================
-# Runtime
-# ============================================================
 WORKDIR /app
 CMD ["bash"]
