@@ -4,14 +4,13 @@ ARG PHP_IMAGE=php:8.3-cli-bookworm
 ARG NODE_IMAGE=node:24.12.0-bookworm
 
 # ============================================================
-# Linters (aligned with CI)
+# Linters
 # ============================================================
 ARG ACTIONLINT_VERSION=1.7.10
 ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.37.1
 ARG TYPOS_VERSION=1.41.0
-ARG AST_METRICS_VERSION=0.31.0
 
 # ============================================================
 # Composer tools
@@ -24,7 +23,12 @@ ARG PSALM_VERSION=6.14.3
 ARG PHPMD_VERSION=2.15.0
 
 # ============================================================
-# Node.js stage
+# AST Metrics
+# ============================================================
+ARG AST_METRICS_VERSION=0.31.0
+
+# ============================================================
+# Node.js stage (source of node + npm)
 # ============================================================
 FROM ${NODE_IMAGE} AS node
 
@@ -34,25 +38,23 @@ FROM ${NODE_IMAGE} AS node
 FROM ${PHP_IMAGE}
 
 # ----------------------------------------
-# OCI labels (from original commit)
+# OCI labels
 # ----------------------------------------
-LABEL org.opencontainers.image.title="Piqule" \
-      org.opencontainers.image.description="Piqule — PHP Quality Laws" \
-      org.opencontainers.image.source="https://github.com/haspadar/piqule" \
-      org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.title="Piqule"
+LABEL org.opencontainers.image.description="Piqule — PHP Quality Laws"
+LABEL org.opencontainers.image.source="https://github.com/haspadar/piqule"
+LABEL org.opencontainers.image.licenses="MIT"
 
-USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # ------------------------------------------------------------
-# Re-declare ARGs for this stage
+# Re-declare ARGs
 # ------------------------------------------------------------
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
-ARG AST_METRICS_VERSION
 
 ARG PHP_CS_FIXER_VERSION
 ARG PHPUNIT_VERSION
@@ -61,15 +63,17 @@ ARG PHPSTAN_VERSION
 ARG PSALM_VERSION
 ARG PHPMD_VERSION
 
-# ============================================================
-# Node.js (copied from official image)
-# ============================================================
+ARG AST_METRICS_VERSION
+
+# ------------------------------------------------------------
+# Node.js (copy runtime from node image)
+# ------------------------------------------------------------
 COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:${PATH}"
 
-# ============================================================
-# System + PHP extensions + tools
-# ============================================================
+# ------------------------------------------------------------
+# Unified build step
+# ------------------------------------------------------------
 RUN set -eux; \
     \
     # --------------------------------------------------------
@@ -116,14 +120,13 @@ RUN set -eux; \
     esac; \
     \
     # --------------------------------------------------------
-    # Composer (official installer)
+    # Composer (verified installer)
     # --------------------------------------------------------
     curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin \
         --filename=composer; \
     export COMPOSER_ALLOW_SUPERUSER=1; \
     export COMPOSER_HOME=/usr/local/composer; \
-    export PATH="/usr/local/composer/vendor/bin:${PATH}"; \
     \
     # --------------------------------------------------------
     # actionlint
@@ -179,13 +182,16 @@ RUN set -eux; \
         vimeo/psalm:${PSALM_VERSION} \
         phpmd/phpmd:${PHPMD_VERSION} \
         infection/infection:${INFECTION_VERSION}; \
-    composer clear-cache
+    composer clear-cache; \
+    \
+    # --------------------------------------------------------
+    # Runtime user
+    # --------------------------------------------------------
+    useradd --uid 1000 --create-home --shell /bin/bash appuser
 
 # ============================================================
-# Runtime user
+# Runtime
 # ============================================================
-RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
 USER appuser
-
 WORKDIR /app
 CMD ["bash"]
