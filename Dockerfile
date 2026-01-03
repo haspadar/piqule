@@ -129,7 +129,7 @@ RUN set -eux; \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
     npm cache clean --force; \
     \
-    # yamllint (via pipx)
+    # yamllint (via pipx) \
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
     # hadolint \
