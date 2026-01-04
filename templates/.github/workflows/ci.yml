@@ -115,6 +115,15 @@ jobs:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
   # ------------------------------------------------------------
+  # PMD CPD (duplicate code detection)
+  # ------------------------------------------------------------
+  pmd_cpd:
+    name: PMD CPD
+    uses: ./.github/workflows/_pmd-cpd.yml
+    with:
+      min_tokens: 100
+
+  # ------------------------------------------------------------
   # PR size guard
   # ------------------------------------------------------------
   pr_size_checker:

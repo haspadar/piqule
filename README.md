@@ -24,21 +24,22 @@ and helps avoid configuration drift across repositories.
 
 ## Tooling overview
 
-| Tool            | Purpose               | What Piqule provides                                    |
-|-----------------|-----------------------|---------------------------------------------------------|
-| PHPStan         | Static analysis       | Strict ruleset and high analysis level                  |
-| Psalm           | Static analysis       | Complementary checks and early error detection          |
-| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                          |
-| AST Metrics     | Code metrics          | Complexity, coupling, and maintainability quality gates |
-| PHPMD           | Code metrics          | Numeric complexity and size quality gates               |
-| Infection       | Mutation testing      | Test quality validation                                 |
-| Markdownlint    | Markdown linting      | Consistent documentation style                          |
-| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles                     |
-| Actionlint      | CI linting            | GitHub Actions correctness                              |
-| Yamllint        | YAML linting          | Configuration consistency                               |
-| Typos           | Spell checking        | Low-noise typo detection                                |
-| Renovate        | Dependency automation | Managed dependency update rules                         |
-| PR Size Checker | Process guard         | Pull request reviewability enforcement                  |
+| Tool            | Purpose               | What Piqule provides                                |
+|-----------------|-----------------------|-----------------------------------------------------|
+| PHPStan         | Static analysis       | Strict ruleset and high analysis level              |
+| Psalm           | Static analysis       | Complementary checks and early error detection      |
+| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                      |
+| AST Metrics     | Structural metrics    | Architecture, coupling, complexity, maintainability |
+| PHPMD           | Numeric metrics       | Size and complexity thresholds (methods, classes)   |
+| PMD (CPD)       | Duplication detection | Copy-paste / duplicated code detection              | 
+| Infection       | Mutation testing      | Test quality validation                             |
+| Markdownlint    | Markdown linting      | Consistent documentation style                      |
+| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles                 |
+| Actionlint      | CI linting            | GitHub Actions correctness                          |
+| Yamllint        | YAML linting          | Configuration consistency                           |
+| Typos           | Spell checking        | Low-noise typo detection                            |
+| Renovate        | Dependency automation | Managed dependency update rules                     |
+| PR Size Checker | Process guard         | Pull request reviewability enforcement              |
 
 ---
 
@@ -116,14 +117,32 @@ Copy this section into your `composer.json`:
   "scripts": {
     "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
     "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache --dry-run --diff",
-    "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
-    "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/codecov/coverage.xml",
-    "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
-    "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
+
     "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
     "psalm": "psalm --config=.piqule/psalm/psalm.xml",
     "phpmd": "phpmd src text .piqule/phpmd/phpmd.xml",
-    "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml"
+    "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml",
+    "cpd": "pmd cpd --language php --minimum-tokens 100 --dir src",
+
+    "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
+    "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
+    "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
+
+    "fix": [
+      "@format"
+    ],
+    "check": [
+      "@format-check",
+      "@phpstan",
+      "@psalm",
+      "@phpmd",
+      "@ast-metrics",
+      "@cpd"
+    ],
+    "ci": [
+      "@check",
+      "@test"
+    ]
   }
 }
 ```
@@ -144,6 +163,7 @@ The Docker image contains:
 - yamllint
 - typos
 - ast-metrics
+- pmd (CPD)
 
 The Docker image is provided as a **ready-to-use local environment**
 for running linters and AST Metrics without installing them on the host system.

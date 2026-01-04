@@ -1,0 +1,47 @@
+name: PMD CPD
+
+on:
+  workflow_call:
+    inputs:
+      min-tokens:
+        description: Minimum token threshold for duplication
+        type: number
+        required: false
+        default: 100
+      source-dir:
+        description: Source directory to analyze
+        type: string
+        required: false
+        default: src
+
+permissions:
+  contents: read
+
+jobs:
+  cpd:
+    name: Code Duplication (PMD CPD)
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Run CPD via Piqule image
+      # ------------------------------------------------------------
+      - name: Run PMD CPD
+        env:
+          CPD_MIN_TOKENS: ${{ inputs.min-tokens }}
+          CPD_SOURCE_DIR: ${{ inputs.source-dir }}
+        run: |
+          docker run --rm \
+            -v "$PWD:/app" \
+            -w /app \
+            piqule \
+            pmd cpd \
+              --language php \
+              --minimum-tokens "$CPD_MIN_TOKENS" \
+              --dir "$CPD_SOURCE_DIR"

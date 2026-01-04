@@ -18,7 +18,12 @@ ARG TYPOS_VERSION=1.41.0
 ARG AST_METRICS_VERSION=0.31.1-haspadar.1
 
 # ============================================================
-# Node.js stage (source of node + npm)
+# PMD (CPD)
+# ============================================================
+ARG PMD_VERSION=7.20.0
+
+# ============================================================
+# Node.js stage
 # ============================================================
 FROM ${NODE_IMAGE} AS node
 
@@ -46,9 +51,10 @@ ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
 ARG AST_METRICS_VERSION
+ARG PMD_VERSION
 
 # ------------------------------------------------------------
-# Node.js (copy runtime from node image)
+# Node.js runtime
 # ------------------------------------------------------------
 COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:${PATH}"
@@ -75,7 +81,8 @@ RUN set -eux; \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
-        libonig-dev; \
+        libonig-dev \
+        openjdk-17-jre-headless; \
     rm -rf /var/lib/apt/lists/*; \
     \
     # -------------------------------------------------------- \
@@ -102,7 +109,7 @@ RUN set -eux; \
     esac; \
     \
     # -------------------------------------------------------- \
-    # Composer (verified installer) \
+    # Composer \
     # -------------------------------------------------------- \
     curl -sS https://getcomposer.org/installer | php -- \
         --install-dir=/usr/local/bin \
@@ -125,7 +132,7 @@ RUN set -eux; \
     npm cache clean --force; \
     \
     # -------------------------------------------------------- \
-    # yamllint (pipx) \
+    # yamllint \
     # -------------------------------------------------------- \
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
@@ -152,6 +159,16 @@ RUN set -eux; \
       "https://github.com/haspadar/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
       -o /usr/local/bin/ast-metrics; \
     chmod +x /usr/local/bin/ast-metrics; \
+    \
+    # -------------------------------------------------------- \
+    # PMD (CPD) \
+    # -------------------------------------------------------- \
+    curl -sSfL \
+      "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VERSION}/pmd-dist-${PMD_VERSION}-bin.zip" \
+      -o /tmp/pmd.zip; \
+    unzip /tmp/pmd.zip -d /opt; \
+    ln -s "/opt/pmd-dist-${PMD_VERSION}/bin/pmd" /usr/local/bin/pmd; \
+    rm -f /tmp/pmd.zip; \
     \
     # -------------------------------------------------------- \
     # Runtime user \
