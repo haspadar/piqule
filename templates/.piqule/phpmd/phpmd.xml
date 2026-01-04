@@ -61,10 +61,10 @@
     <!-- Boolean argument flag -->
     <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
 
-    <!-- Excessive class complexity -->
+    <!-- Excessive class complexity (WMC) -->
     <rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
         <properties>
-            <property name="minimum" value="50"/>
+            <property name="maximum" value="50"/>
         </properties>
     </rule>
 

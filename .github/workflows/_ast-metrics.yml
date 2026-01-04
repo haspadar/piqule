@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   ast-metrics:
-    name: AST Metrics lint
+    name: AST Metrics
     runs-on: ubuntu-latest
 
     env:
@@ -47,9 +47,9 @@ jobs:
           chmod +x ast-metrics
 
       # ------------------------------------------------------------
-      # Run AST Metrics lint
+      # Run AST Metrics
       # ------------------------------------------------------------
-      - name: Run AST Metrics lint
+      - name: Run AST Metrics
         env:
           AST_METRICS_CONFIG: ${{ inputs.config }}
         run: |
