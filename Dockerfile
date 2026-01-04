@@ -15,7 +15,7 @@ ARG TYPOS_VERSION=1.41.0
 # ============================================================
 # AST Metrics
 # ============================================================
-ARG AST_METRICS_VERSION=0.31.0
+ARG AST_METRICS_VERSION=0.31.1-haspadar.1
 
 # ============================================================
 # Node.js stage (source of node + npm)
@@ -149,7 +149,7 @@ RUN set -eux; \
     # AST Metrics \
     # -------------------------------------------------------- \
     curl -sSfL \
-      "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
+      "https://github.com/haspadar/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
       -o /usr/local/bin/ast-metrics; \
     chmod +x /usr/local/bin/ast-metrics; \
     \
