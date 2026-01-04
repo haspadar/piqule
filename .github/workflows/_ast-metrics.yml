@@ -13,11 +13,11 @@ permissions:
 
 jobs:
   ast-metrics:
-    name: AST Metrics lint
+    name: AST Metrics
     runs-on: ubuntu-latest
 
     env:
-      AST_METRICS_VERSION: "0.31.0"
+      AST_METRICS_VERSION: "0.31.1-haspadar.1"
 
     steps:
       # ------------------------------------------------------------
@@ -41,16 +41,16 @@ jobs:
           esac
 
           curl -sSfL \
-            "https://github.com/Halleck45/ast-metrics/releases/download/v${AST_METRICS_VERSION}/${BIN}" \
+            "https://github.com/haspadar/ast-metrics/releases/download/v${AST_METRICS_VERSION}/${BIN}" \
             -o ast-metrics
 
           chmod +x ast-metrics
 
       # ------------------------------------------------------------
-      # Run AST Metrics lint
+      # Run AST Metrics
       # ------------------------------------------------------------
-      - name: Run AST Metrics lint
+      - name: Run AST Metrics
         env:
           AST_METRICS_CONFIG: ${{ inputs.config }}
         run: |
-          ./ast-metrics lint --config "$AST_METRICS_CONFIG"
+          ./ast-metrics ci --config "$AST_METRICS_CONFIG"
