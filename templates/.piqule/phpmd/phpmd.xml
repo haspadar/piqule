@@ -59,7 +59,7 @@
     </rule>
 
     <!-- Boolean argument flag -->
-    <rule ref="rulesets/cleanCode.xml/BooleanArgumentFlag"/>
+    <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
 
     <!-- Excessive class complexity -->
     <rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
