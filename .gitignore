@@ -13,5 +13,6 @@
 
 /.piqule/codecov/coverage-report/
 /.piqule/codecov/coverage.xml
-/.piqule/infection/infection.log
-/.piqule/infection/infection-summary.log
+/.piqule/infection/*.log
+/.piqule/ast-metrics/reports/
+/metrics.txt

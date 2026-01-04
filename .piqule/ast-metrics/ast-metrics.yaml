@@ -1,11 +1,11 @@
+# ============================================================
 # AST Metrics quality policy
+# ============================================================
 
 sources:
-  # Production code only
   - src
 
 exclude:
-  # Third-party and non-production code
   - /vendor/
   - /tests/
   - /build/
@@ -13,31 +13,31 @@ exclude:
   - /var/
   - /node_modules/
 
-# Reports are disabled by default (metrics are used as a quality gate)
-reports: {}
+reports:
+  html: .piqule/ast-metrics/reports/html
+  markdown: .piqule/ast-metrics/reports/report.md
+  sarif: .piqule/ast-metrics/reports/report.sarif
+  json: .piqule/ast-metrics/reports/report.json
 
 requirements:
   rules:
-    # Fail the build on any rule violation
-    fail_on_error: true
-
-    # Maximum cyclomatic complexity per method
-    cyclomatic_complexity:
-      max: 10
-      exclude: []
-
-    # Maximum number of lines per file
-    volume:
-      loc:
-        max: 100
-        exclude: []
-
-    # Maximum number of outgoing dependencies per component
     architecture:
-      coupling:
-        efferent:
-          max: 5
+      max_afferent_coupling: 10
+      max_efferent_coupling: 10
+      min_maintainability: 70
+      no_circular_dependencies: true
+      max_responsibilities: 1
+      no_god_class: true
 
-    # Minimum maintainability index per component
-    maintainability:
-      min: 70
+    volume:
+      max_loc: 1000
+      max_logical_loc: 600
+      max_loc_by_method: 30
+      max_logical_loc_by_method: 20
+      max_methods_per_class: 10
+      max_public_methods: 7
+      max_parameters_per_method: 5
+      max_nested_blocks: 4
+
+    complexity:
+      max_cyclomatic: 10
