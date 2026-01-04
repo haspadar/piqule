@@ -116,19 +116,22 @@ Copy this section into your `composer.json`:
   "scripts": {
     "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
     "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache --dry-run --diff",
-    "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random --random-order-seed=$(date +%s)",
-    "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/codecov/coverage.xml",
-    "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M ./vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
-    "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G ./vendor/bin/infection --configuration=.piqule/infection/infection.json5 --threads=max",
+    "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
+    "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/codecov/coverage.xml",
+    "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
+    "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
     "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
     "psalm": "psalm --config=.piqule/psalm/psalm.xml",
-    "phpmd": "vendor/bin/phpmd src text .piqule/phpmd/phpmd.xml",
+    "phpmd": "phpmd src text .piqule/phpmd/phpmd.xml",
     "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml"
   }
 }
 ```
 
-## 3) Docker image
+> Notes:
+> - `ast-metrics` is provided by the Piqule Docker image and is not installed locally.
+
+### 3) Docker image
 
 Piqule includes a Dockerfile that builds a Docker image with
 infrastructure-level linters and AST Metrics.
@@ -144,9 +147,14 @@ The Docker image contains:
 
 The Docker image is provided as a **ready-to-use local environment**
 for running linters and AST Metrics without installing them on the host system.
-
 Usage of the Docker image is optional and independent of the CI workflows.
 
+Example local usage:
+
+```bash
+docker build -t piqule .
+docker run --rm -v "$PWD:/app" -w /app piqule markdownlint-cli2 "**/*.md"
+```
 
 ---
 
