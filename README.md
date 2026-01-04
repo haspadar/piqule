@@ -46,7 +46,7 @@ and helps avoid configuration drift across repositories.
 
 Add Piqule as a development dependency:
 
-```
+```bash
 composer require --dev haspadar/piqule
 ```
 
@@ -54,9 +54,9 @@ composer require --dev haspadar/piqule
 
 ## Configuration synchronization
 
-Piqule manages project configuration files via an explicit synchronization step.
+Piqule manages project configuration files via an explicit synchronization step:
 
-```
+```bash
 bin/piqule.php sync
 ```
 
@@ -72,13 +72,11 @@ During synchronization:
 Piqule does **not** merge configuration files automatically.
 If local changes are overwritten, merging must be done manually.
 
----
-
 ### Dry run mode
 
 To preview changes without modifying files, run:
 
-```
+```bash
 bin/piqule.php sync --dry-run
 ```
 
@@ -87,13 +85,76 @@ allowing verification before applying changes.
 
 ---
 
-## Design principles
+## PHP tooling (copy-paste)
 
-- **Template-driven** — configuration is generated from canonical sources
-- **Managed, not merged** — files are overwritten deterministically
-- **Explicit ownership** — local modifications are intentional and manual
-- **Repeatable setup** — the same command produces the same layout everywhere
-- **Low noise** — tooling is curated to avoid redundant checks
+Piqule synchronizes configuration files, but PHP developer tools are installed
+**per-project** via Composer.
+
+This keeps tool versions under project control and avoids hidden dependencies
+inside the Docker image.
+
+### 1) Install required Composer tools
+
+Copy and run:
+
+```bash
+composer require --dev \
+  friendsofphp/php-cs-fixer \
+  phpunit/phpunit \
+  phpstan/phpstan \
+  vimeo/psalm \
+  phpmd/phpmd \
+  infection/infection
+```
+
+### 2) Add Composer scripts
+
+Copy this section into your `composer.json`:
+
+```json
+{
+  "scripts": {
+    "format": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
+    "format-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache --dry-run --diff",
+    "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
+    "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-text --coverage-clover=.piqule/codecov/coverage.xml",
+    "test-coverage-html": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-html=.piqule/codecov/coverage-report",
+    "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
+    "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
+    "psalm": "psalm --config=.piqule/psalm/psalm.xml",
+    "phpmd": "phpmd src text .piqule/phpmd/phpmd.xml",
+    "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml"
+  }
+}
+```
+
+> Notes:
+> - `ast-metrics` is provided by the Piqule Docker image and is not installed locally.
+
+### 3) Docker image
+
+Piqule includes a Dockerfile that builds a Docker image with
+infrastructure-level linters and AST Metrics.
+
+The Docker image contains:
+
+- actionlint
+- hadolint
+- markdownlint-cli2
+- yamllint
+- typos
+- ast-metrics
+
+The Docker image is provided as a **ready-to-use local environment**
+for running linters and AST Metrics without installing them on the host system.
+Usage of the Docker image is optional and independent of the CI workflows.
+
+Example local usage:
+
+```bash
+docker build -t piqule .
+docker run --rm -v "$PWD:/app" -w /app piqule markdownlint-cli2 "**/*.md"
+```
 
 ---
 
