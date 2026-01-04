@@ -53,4 +53,4 @@ jobs:
         env:
           AST_METRICS_CONFIG: ${{ inputs.config }}
         run: |
-          ./ast-metrics lint --config "$AST_METRICS_CONFIG"
+          ./ast-metrics ci --config "$AST_METRICS_CONFIG"
