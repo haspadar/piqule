@@ -102,6 +102,15 @@ RUN set -eux; \
     esac; \
     \
     # -------------------------------------------------------- \
+    # Composer (verified installer) \
+    # -------------------------------------------------------- \
+    curl -sS https://getcomposer.org/installer | php -- \
+        --install-dir=/usr/local/bin \
+        --filename=composer; \
+    export COMPOSER_ALLOW_SUPERUSER=1; \
+    export COMPOSER_HOME=/usr/local/composer; \
+    \
+    # -------------------------------------------------------- \
     # actionlint \
     # -------------------------------------------------------- \
     curl -sSfL \
