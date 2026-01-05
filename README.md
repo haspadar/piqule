@@ -147,9 +147,6 @@ Copy this section into your `composer.json`:
 }
 ```
 
-> Notes:
-> - `ast-metrics` is provided by the Piqule Docker image and is not installed locally.
-
 ### 3) Docker image
 
 Piqule includes a Dockerfile that builds a Docker image with
