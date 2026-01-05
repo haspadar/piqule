@@ -167,7 +167,7 @@ RUN set -eux; \
       "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VERSION}/pmd-dist-${PMD_VERSION}-bin.zip" \
       -o /tmp/pmd.zip; \
     unzip /tmp/pmd.zip -d /opt; \
-    ln -s "/opt/pmd-dist-${PMD_VERSION}/bin/pmd" /usr/local/bin/pmd; \
+    ln -s "/opt/pmd-bin-${PMD_VERSION}/bin/pmd" /usr/local/bin/pmd; \
     rm -f /tmp/pmd.zip; \
     \
     # -------------------------------------------------------- \
