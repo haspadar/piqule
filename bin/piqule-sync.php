@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\CommandLine;
+use Haspadar\Piqule\Options;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
@@ -25,18 +25,16 @@ try {
 
     $sources = new DiskSources($libraryRoot . '/templates');
     $targetStorage = new DiskTargetStorage($projectRoot);
+    $options = new Options($argv);
+    if ($options->isDryRun()) {
+        $targetStorage = new DryRunTargetStorage($targetStorage);
+    }
 
-    $cli = new CommandLine($argv);
-    match ($cli->command()) {
-        'sync' => (new Synchronization($sources, $targetStorage, $output))->run(),
-        'sync --dry-run' => (new WithDryRunNotice(
-            new Synchronization($sources, new DryRunTargetStorage($targetStorage), $output),
-            $output,
-        ))->run(),
-        default => throw new PiquleException(
-            sprintf('Unknown command: "%s"', $cli->command()),
-        ),
-    };
+    $command = new Synchronization($sources, $targetStorage, $output);
+
+    $options->isDryRun()
+        ? (new WithDryRunNotice($command, $output))->run()
+        : $command->run();
 } catch (PiquleException $e) {
     $output->write(new Error($e->getMessage()));
     exit(1);
