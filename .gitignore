@@ -16,3 +16,5 @@
 /.piqule/infection/*.log
 /.piqule/ast-metrics/reports/
 /metrics.txt
+/.piqule/phpmetrics/phpmetrics.json
+/.piqule/phpmetrics/html/
