@@ -1,0 +1,74 @@
+name: PHPMetrics
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  phpmetrics:
+    name: PHPMetrics
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+
+      # ------------------------------------------------------------
+      # Check phpmetrics config existence
+      # ------------------------------------------------------------
+      - name: Check config exists
+        id: check
+        run: |
+          if [[ -f ".piqule/phpmetrics/rules.php" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ------------------------------------------------------------
+      # Skip when config is missing
+      # ------------------------------------------------------------
+      - name: Skip — no phpmetrics config
+        if: steps.check.outputs.run == 'false'
+        run: echo "Skipping PHPMetrics — no rules.php"
+
+      # ------------------------------------------------------------
+      # Setup PHP
+      # ------------------------------------------------------------
+      - name: Setup PHP
+        if: steps.check.outputs.run == 'true'
+        uses: shivammathur/setup-php@5efa2a774eb6c55954af5652a1f947afbc8dd282
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        if: steps.check.outputs.run == 'true'
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # Run PhpMetrics (generate JSON only)
+      # ------------------------------------------------------------
+      - name: Run PhpMetrics
+        if: steps.check.outputs.run == 'true'
+        run: |
+          php -d error_reporting='E_ALL & ~E_DEPRECATED' \
+            vendor/bin/phpmetrics src \
+            --exclude=vendor,tests,build,bin,var,node_modules \
+            --report-json=.piqule/phpmetrics/phpmetrics.json
+
+      # ------------------------------------------------------------
+      # Enforce metrics rules (hard gate)
+      # ------------------------------------------------------------
+      - name: Enforce PHPMetrics rules
+        if: steps.check.outputs.run == 'true'
+        run: |
+          php .piqule/phpmetrics/phpmetrics.php
