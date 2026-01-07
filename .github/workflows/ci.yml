@@ -86,6 +86,13 @@ jobs:
       config: .piqule/ast-metrics/ast-metrics.yaml
 
   # ------------------------------------------------------------
+  # PHPMetrics (hard gate)
+  # ------------------------------------------------------------
+  phpmetrics:
+    name: PHPMetrics
+    uses: ./.github/workflows/_phpmetrics.yml
+
+  # ------------------------------------------------------------
   # PHPMD (numeric metrics)
   # ------------------------------------------------------------
   phpmd:
