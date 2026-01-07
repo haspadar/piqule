@@ -23,11 +23,13 @@ foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php
 $output = new Console();
 
 try {
-    $projectRoot = Composer\InstalledVersions::getRootPackage()['install_path']
-        ?: throw new PiquleException('Cannot determine project root');
+    $projectRoot = getcwd();
+    if ($projectRoot === false) {
+        throw new PiquleException('Cannot determine current working directory');
+    }
 
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
-        ?: throw new PiquleException('Cannot determine piqule install path');
+            ?: throw new PiquleException('Cannot determine piqule install path');
 
     $sources = new DiskSources($libraryRoot . '/templates');
     $targetStorage = new DiskTargetStorage($projectRoot);
@@ -37,10 +39,9 @@ try {
     }
 
     $command = new Synchronization($sources, $targetStorage, $output);
-
     $options->isDryRun()
-        ? (new WithDryRunNotice($command, $output))->run()
-        : $command->run();
+            ? (new WithDryRunNotice($command, $output))->run()
+            : $command->run();
 } catch (PiquleException $e) {
     $output->write(new Error($e->getMessage()));
     exit(1);
