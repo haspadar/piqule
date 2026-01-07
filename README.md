@@ -26,7 +26,6 @@ conflicts and deviations are resolved explicitly through Git.
 | PHPStan         | Static analysis       | Strict ruleset and high analysis level              |
 | Psalm           | Static analysis       | Complementary checks and early error detection      |
 | PHP-CS-Fixer    | Code style            | Deterministic formatting rules                      |
-| AST Metrics     | Structural metrics    | Architecture, coupling, complexity, maintainability |
 | PHPMD           | Numeric metrics       | Size and complexity thresholds (methods, classes)   |
 | PMD (CPD)       | Duplication detection | Copy-paste / duplicated code detection              | 
 | Infection       | Mutation testing      | Test quality validation                             |
@@ -87,7 +86,7 @@ https://github.com/haspadar/piqule/blob/main/composer.json
 ## Docker image
 
 Piqule includes a Dockerfile that builds a Docker image with
-infrastructure-level linters and AST Metrics.
+infrastructure-level linters.
 
 The Docker image contains:
 
@@ -96,11 +95,10 @@ The Docker image contains:
 - markdownlint-cli2
 - yamllint
 - typos
-- ast-metrics
 - pmd (CPD)
 
 The Docker image is provided as a **ready-to-use local environment**
-for running linters and AST Metrics without installing them on the host system.
+for running linters without installing them on the host system.
 The Docker image is optional and independent of CI workflows.
 
 Example local usage:

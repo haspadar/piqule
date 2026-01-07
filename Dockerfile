@@ -13,11 +13,6 @@ ARG YAMLLINT_VERSION=1.37.1
 ARG TYPOS_VERSION=1.41.0
 
 # ============================================================
-# AST Metrics
-# ============================================================
-ARG AST_METRICS_VERSION=0.31.1-haspadar.1
-
-# ============================================================
 # PMD (CPD)
 # ============================================================
 ARG PMD_VERSION=7.20.0
@@ -50,7 +45,6 @@ ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
-ARG AST_METRICS_VERSION
 ARG PMD_VERSION
 
 # ------------------------------------------------------------
@@ -98,13 +92,11 @@ RUN set -eux; \
       x86_64) \
         ACTIONLINT_ARCH="amd64"; \
         HADOLINT_ARCH="x86_64"; \
-        TYPOS_ARCH="x86_64"; \
-        AST_ARCH="x86_64" ;; \
+        TYPOS_ARCH="x86_64" ;; \
       aarch64) \
         ACTIONLINT_ARCH="arm64"; \
         HADOLINT_ARCH="arm64"; \
-        TYPOS_ARCH="aarch64"; \
-        AST_ARCH="arm64" ;; \
+        TYPOS_ARCH="aarch64" ;; \
       *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;; \
     esac; \
     \
@@ -151,14 +143,6 @@ RUN set -eux; \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
-    \
-    # -------------------------------------------------------- \
-    # AST Metrics \
-    # -------------------------------------------------------- \
-    curl -sSfL \
-      "https://github.com/haspadar/ast-metrics/releases/download/v${AST_METRICS_VERSION}/ast-metrics_Linux_${AST_ARCH}" \
-      -o /usr/local/bin/ast-metrics; \
-    chmod +x /usr/local/bin/ast-metrics; \
     \
     # -------------------------------------------------------- \
     # PMD (CPD) \

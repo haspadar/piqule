@@ -77,15 +77,6 @@ jobs:
       php-matrix: '["8.3","8.5"]'
 
   # ------------------------------------------------------------
-  # AST Metrics
-  # ------------------------------------------------------------
-  ast_metrics:
-    name: AST Metrics
-    uses: ./.github/workflows/_ast-metrics.yml
-    with:
-      config: .piqule/ast-metrics/ast-metrics.yaml
-
-  # ------------------------------------------------------------
   # PHPMetrics (hard gate)
   # ------------------------------------------------------------
   phpmetrics:
