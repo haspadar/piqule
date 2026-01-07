@@ -101,6 +101,8 @@ The Docker image is provided as a **ready-to-use local environment**
 for running linters without installing them on the host system.
 The Docker image is optional and independent of CI workflows.
 
+Before building the Docker image, ensure managed files are synchronized using `bin/piqule.php sync`.
+
 Example local usage:
 
 ```bash

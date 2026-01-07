@@ -103,9 +103,12 @@ RUN set -eux; \
     # -------------------------------------------------------- \
     # Composer \
     # -------------------------------------------------------- \
-    curl -sS https://getcomposer.org/installer | php -- \
-        --install-dir=/usr/local/bin \
-        --filename=composer; \
+    EXPECTED_CHECKSUM="$(curl -sS https://composer.github.io/installer.sig)"; \
+        curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php; \
+        ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', '/tmp/composer-setup.php');")"; \
+        [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ] || { echo "Installer corrupt"; exit 1; }; \
+        php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+        rm /tmp/composer-setup.php; \
     export COMPOSER_ALLOW_SUPERUSER=1; \
     export COMPOSER_HOME=/usr/local/composer; \
     \
