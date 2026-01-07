@@ -3,12 +3,12 @@ name: PMD CPD
 on:
   workflow_call:
     inputs:
-      min-tokens:
+      min_tokens:
         description: Minimum token threshold for duplication
         type: number
         required: false
         default: 100
-      source-dir:
+      source_dir:
         description: Source directory to analyze
         type: string
         required: false
@@ -54,8 +54,8 @@ jobs:
       # ------------------------------------------------------------
       - name: Run PMD CPD
         env:
-          CPD_MIN_TOKENS: ${{ inputs.min-tokens }}
-          CPD_SOURCE_DIR: ${{ inputs.source-dir }}
+          CPD_MIN_TOKENS: ${{ inputs.min_tokens }}
+          CPD_SOURCE_DIR: ${{ inputs.source_dir }}
         run: |
           pmd cpd \
             --language php \
