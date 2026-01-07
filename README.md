@@ -86,7 +86,7 @@ https://github.com/haspadar/piqule/blob/main/composer.json
 ## Docker image
 
 Piqule includes a Dockerfile that builds a Docker image with
-infrastructure-level linters and AST Metrics.
+infrastructure-level linters.
 
 The Docker image contains:
 
