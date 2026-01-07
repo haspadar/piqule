@@ -104,7 +104,7 @@ The Docker image is optional and independent of CI workflows.
 Example local usage:
 
 ```bash
-docker build -t piqule .
+docker build -t piqule -f .piqule/Dockerfile .
 docker run --rm -v "$PWD:/app" -w /app piqule markdownlint-cli2 "**/*.md"
 ```
 
