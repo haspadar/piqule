@@ -3,6 +3,9 @@
     "description": "Static analysis and linters for PHP projects",
     "type": "library",
     "license": "MIT",
+    "bin": [
+        "bin/piqule-sync.php"
+    ],
     "autoload": {
         "psr-4": {
             "Haspadar\\Piqule\\": "src/"

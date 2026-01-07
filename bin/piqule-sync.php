@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 declare(strict_types=1);
@@ -12,7 +13,12 @@ use Haspadar\Piqule\Target\Command\WithDryRunNotice;
 use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require $file;
+        break;
+    }
+}
 
 $output = new Console();
 
