@@ -23,7 +23,7 @@
         "ast-metrics": "ast-metrics lint --config .piqule/ast-metrics/ast-metrics.yaml",
 
         "phpmetrics:generate": "php -d error_reporting='E_ALL & ~E_DEPRECATED' vendor/bin/phpmetrics src --exclude=vendor,tests,build,bin,var,node_modules --report-json=.piqule/phpmetrics/phpmetrics.json --report-html=.piqule/phpmetrics/html",
-        "phpmetrics:verify": "php bin/phpmetrics.php",
+        "phpmetrics:verify": "php .piqule/phpmetrics/verify.php",
         "phpmetrics:check": [
             "@phpmetrics:generate",
             "@phpmetrics:verify"

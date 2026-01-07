@@ -3,9 +3,9 @@
 
 declare(strict_types=1);
 
-$config = require __DIR__ . '/../.piqule/phpmetrics/rules.php';
+$config = require __DIR__ . '/../../.piqule/phpmetrics/rules.php';
 $report = json_decode(
-    file_get_contents(__DIR__ . '/../.piqule/phpmetrics/phpmetrics.json'),
+    file_get_contents(__DIR__ . '/../../.piqule/phpmetrics/phpmetrics.json'),
     true,
     flags: JSON_THROW_ON_ERROR,
 );
