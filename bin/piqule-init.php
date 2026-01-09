@@ -13,8 +13,14 @@ use Haspadar\Piqule\Target\Command\WithDryRunNotice;
 use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
 
+// TODO(#193): CLI bootstrap logic is duplicated between init and sync entrypoints.
+// This duplication is intentional for now and will be addressed by introducing a shared entrypoint.
+
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $file) {
     if (file_exists($file)) {
+        // NOTE: require is used intentionally instead of require_once to ensure deterministic execution
+        // require_once may silently skip execution depending on global include state
+        // NOSONAR
         require $file;
         break;
     }
