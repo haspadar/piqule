@@ -9,7 +9,7 @@ $rules = require __DIR__ . '/php-cs-fixer.php';
 
 $rules->setFinder(
     Finder::create()
-        ->in(__DIR__ . '/../..')
+        ->in(__DIR__ . '/../templates')
         ->exclude('vendor'),
 );
 

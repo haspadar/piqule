@@ -31,7 +31,7 @@ try {
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
             ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $sources = new DiskSources($libraryRoot . '/templates');
+    $sources = new DiskSources($libraryRoot . '/templates/always');
     $targetStorage = new DiskTargetStorage($projectRoot);
     $options = new Options($argv);
     if ($options->isDryRun()) {
