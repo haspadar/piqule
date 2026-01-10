@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Fake\Command;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Sync;
 
-use Haspadar\Piqule\Target\Command\Command;
+use Haspadar\Piqule\Target\Sync\Sync;
 
-final class FakeCommand implements Command
+final class FakeSync implements Sync
 {
     private bool $ran = false;
 
-    public function run(): void
+    public function apply(): void
     {
         $this->ran = true;
     }

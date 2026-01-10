@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Target\Command;
+namespace Haspadar\Piqule\Tests\Unit\Target\Sync;
 
-use Haspadar\Piqule\Target\Command\WithDryRunNotice;
-use Haspadar\Piqule\Tests\Unit\Fake\Command\FakeCommand;
+use Haspadar\Piqule\Target\Sync\WithDryRunSync;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
+use Haspadar\Piqule\Tests\Unit\Fake\Sync\FakeSync;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class WithDryRunNoticeTest extends TestCase
+final class WithDryRunSyncTest extends TestCase
 {
     #[Test]
-    public function runsOriginalCommand(): void
+    public function runsOriginalSync(): void
     {
-        $origin = new FakeCommand();
+        $origin = new FakeSync();
         $output = new FakeOutput();
 
-        (new WithDryRunNotice($origin, $output))->run();
+        (new WithDryRunSync($origin, $output))->apply();
 
         self::assertTrue(
             $origin->isRan(),
-            'Original command must be executed',
+            'Original sync must be executed',
         );
     }
 
@@ -31,7 +31,7 @@ final class WithDryRunNoticeTest extends TestCase
     {
         $output = new FakeOutput();
 
-        (new WithDryRunNotice(new FakeCommand(), $output))->run();
+        (new WithDryRunSync(new FakeSync(), $output))->apply();
 
         self::assertCount(
             2,

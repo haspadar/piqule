@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Target\Command;
+namespace Haspadar\Piqule\Target\Sync;
 
 use Haspadar\Piqule\Output\Color\Green;
 use Haspadar\Piqule\Output\Color\Grey;
@@ -14,7 +14,7 @@ use Haspadar\Piqule\Target\DiskTarget;
 use Haspadar\Piqule\Target\Storage\TargetStorage;
 use Override;
 
-final readonly class Synchronization implements Command
+final readonly class ReplaceSync implements Sync
 {
     public function __construct(
         private Sources $sources,
@@ -23,7 +23,7 @@ final readonly class Synchronization implements Command
     ) {}
 
     #[Override]
-    public function run(): void
+    public function apply(): void
     {
         foreach ($this->sources->files() as $source) {
             $target = new DiskTarget($source, $this->targetDirectory);

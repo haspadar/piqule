@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Target\Command;
+namespace Haspadar\Piqule\Target\Sync;
 
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
 use Override;
 
-final readonly class WithDryRunNotice implements Command
+final readonly class WithDryRunSync implements Sync
 {
     public function __construct(
-        private Command $origin,
+        private Sync $origin,
         private Output  $output,
     ) {}
 
     #[Override]
-    public function run(): void
+    public function apply(): void
     {
         $this->output->write(
             new Text(
@@ -26,7 +26,7 @@ final readonly class WithDryRunNotice implements Command
             ),
         );
 
-        $this->origin->run();
+        $this->origin->apply();
 
         $this->output->write(
             new Text(
