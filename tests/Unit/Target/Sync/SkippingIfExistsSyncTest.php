@@ -26,7 +26,7 @@ final class SkippingIfExistsSyncTest extends TestCase
         ]);
         $storage = new FakeTargetStorage();
 
-        (new SkippingIfExistsSync($sources, $storage, new FakeOutput()))->apply();
+        (new SkippingIfExistsSync($sources, new FakeOutput()))->apply($storage);
 
         self::assertArrayHasKey(
             'example.txt',
@@ -47,7 +47,7 @@ final class SkippingIfExistsSyncTest extends TestCase
         $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('old'));
 
-        (new SkippingIfExistsSync($sources, $storage, new FakeOutput()))->apply();
+        (new SkippingIfExistsSync($sources, new FakeOutput()))->apply($storage);
 
         self::assertSame(
             'old',

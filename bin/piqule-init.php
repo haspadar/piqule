@@ -10,6 +10,8 @@ use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Source\DiskSources;
 use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
+use Haspadar\Piqule\Target\Sync\Chain;
+use Haspadar\Piqule\Target\Sync\ReplaceSync;
 use Haspadar\Piqule\Target\Sync\SkippingIfExistsSync;
 use Haspadar\Piqule\Target\Sync\WithDryRunSync;
 
@@ -39,19 +41,19 @@ try {
     }
 
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
-            ?: throw new PiquleException('Cannot determine piqule install path');
+        ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $sources = new DiskSources($libraryRoot . '/templates/once');
     $targetStorage = new DiskTargetStorage($projectRoot);
-    $options = new Options($argv);
-    if ($options->isDryRun()) {
-        $targetStorage = new DryRunTargetStorage($targetStorage);
+    $sync = new Chain([
+        new SkippingIfExistsSync(new DiskSources($libraryRoot . '/templates/once'), $output),
+        new ReplaceSync(new DiskSources($libraryRoot . '/templates/always'), $output),
+    ]);
+    if ((new Options($argv))->isDryRun()) {
+        (new WithDryRunSync($sync, $output))
+            ->apply(new DryRunTargetStorage($targetStorage));
+    } else {
+        $sync->apply($targetStorage);
     }
-
-    $sync = new SkippingIfExistsSync($sources, $targetStorage, $output);
-    $options->isDryRun()
-        ? (new WithDryRunSync($sync, $output))->apply()
-        : $sync->apply();
 } catch (PiquleException $e) {
     $output->write(new Error($e->getMessage()));
     exit(1);

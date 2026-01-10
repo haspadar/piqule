@@ -18,15 +18,14 @@ final readonly class ReplaceSync implements Sync
 {
     public function __construct(
         private Sources $sources,
-        private TargetStorage $targetDirectory,
         private Output $output,
     ) {}
 
     #[Override]
-    public function apply(): void
+    public function apply(TargetStorage $targetStorage): void
     {
         foreach ($this->sources->files() as $source) {
-            $target = new DiskTarget($source, $this->targetDirectory);
+            $target = new DiskTarget($source, $targetStorage);
 
             if (!$target->exists()) {
                 $target->materialize();

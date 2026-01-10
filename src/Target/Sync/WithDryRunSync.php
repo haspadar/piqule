@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Target\Sync;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
+use Haspadar\Piqule\Target\Storage\TargetStorage;
 use Override;
 
 final readonly class WithDryRunSync implements Sync
@@ -17,7 +18,7 @@ final readonly class WithDryRunSync implements Sync
     ) {}
 
     #[Override]
-    public function apply(): void
+    public function apply(TargetStorage $targetStorage): void
     {
         $this->output->write(
             new Text(
@@ -26,7 +27,7 @@ final readonly class WithDryRunSync implements Sync
             ),
         );
 
-        $this->origin->apply();
+        $this->origin->apply($targetStorage);
 
         $this->output->write(
             new Text(
