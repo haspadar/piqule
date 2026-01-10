@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Target\Command;
 
 use Haspadar\Piqule\Source\Source;
-use Haspadar\Piqule\Target\Command\Synchronization;
+use Haspadar\Piqule\Target\Sync\ReplaceSync;
 use Haspadar\Piqule\Tests\Unit\Fake\File\FakeFile;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use Haspadar\Piqule\Tests\Unit\Fake\Source\FakeSources;
@@ -25,7 +25,7 @@ final class SynchronizationTest extends TestCase
             ),
         ]);
         $storage = new FakeTargetStorage();
-        (new Synchronization($sources, $storage, new FakeOutput()))->run();
+        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
 
         self::assertArrayHasKey(
             'example.txt',
@@ -46,7 +46,7 @@ final class SynchronizationTest extends TestCase
         $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('old'));
 
-        (new Synchronization($sources, $storage, new FakeOutput()))->run();
+        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
 
         self::assertSame(
             'new',
@@ -67,7 +67,7 @@ final class SynchronizationTest extends TestCase
         $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('same'));
 
-        (new Synchronization($sources, $storage, new FakeOutput()))->run();
+        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
 
         self::assertSame(
             'same',

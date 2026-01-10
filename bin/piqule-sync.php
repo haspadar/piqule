@@ -8,10 +8,10 @@ use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Source\DiskSources;
-use Haspadar\Piqule\Target\Command\Synchronization;
-use Haspadar\Piqule\Target\Command\WithDryRunNotice;
 use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
+use Haspadar\Piqule\Target\Sync\ReplaceSync;
+use Haspadar\Piqule\Target\Sync\WithDryRunSync;
 
 // TODO(#193): CLI bootstrap logic is duplicated between init and sync entrypoints
 // This duplication is intentional for now and will be addressed by introducing a shared entrypoint
@@ -49,10 +49,10 @@ try {
         $targetStorage = new DryRunTargetStorage($targetStorage);
     }
 
-    $command = new Synchronization($sources, $targetStorage, $output);
+    $sync = new ReplaceSync($sources, $targetStorage, $output);
     $options->isDryRun()
-            ? (new WithDryRunNotice($command, $output))->run()
-            : $command->run();
+        ? (new WithDryRunSync($sync, $output))->apply()
+        : $sync->apply();
 } catch (PiquleException $e) {
     $output->write(new Error($e->getMessage()));
     exit(1);
