@@ -55,25 +55,4 @@ final class SkippingIfExistsSyncTest extends TestCase
             'Target contents must remain unchanged when target already exists',
         );
     }
-
-    #[Test]
-    public function doesNotCompareContentsWhenTargetExists(): void
-    {
-        $sources = new FakeSources([
-            new Source(
-                new FakeFile('different'),
-                'example.txt',
-            ),
-        ]);
-        $storage = new FakeTargetStorage();
-        $storage->write('example.txt', new FakeFile('original'));
-
-        (new SkippingIfExistsSync($sources, $storage, new FakeOutput()))->apply();
-
-        self::assertSame(
-            'original',
-            $storage->all()['example.txt']->contents(),
-            'Existing target must never be replaced regardless of source contents',
-        );
-    }
 }
