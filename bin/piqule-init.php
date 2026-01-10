@@ -10,7 +10,7 @@ use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Source\DiskSources;
 use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
-use Haspadar\Piqule\Target\Sync\ReplaceSync;
+use Haspadar\Piqule\Target\Sync\SkippingIfExistsSync;
 use Haspadar\Piqule\Target\Sync\WithDryRunSync;
 
 // TODO(#193): CLI bootstrap logic is duplicated between init and sync entrypoints
@@ -48,7 +48,7 @@ try {
         $targetStorage = new DryRunTargetStorage($targetStorage);
     }
 
-    $sync = new ReplaceSync($sources, $targetStorage, $output);
+    $sync = new SkippingIfExistsSync($sources, $targetStorage, $output);
     $options->isDryRun()
         ? (new WithDryRunSync($sync, $output))->apply()
         : $sync->apply();
