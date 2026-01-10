@@ -17,7 +17,7 @@ final readonly class SkippingIfExistsSync implements Sync
 {
     public function __construct(
         private Sources $sources,
-        private TargetStorage $targetDirectory,
+        private TargetStorage $targetStorage,
         private Output $output,
     ) {}
 
@@ -25,7 +25,7 @@ final readonly class SkippingIfExistsSync implements Sync
     public function apply(): void
     {
         foreach ($this->sources->files() as $source) {
-            $target = new DiskTarget($source, $this->targetDirectory);
+            $target = new DiskTarget($source, $this->targetStorage);
 
             if ($target->exists()) {
                 $this->output->write(
