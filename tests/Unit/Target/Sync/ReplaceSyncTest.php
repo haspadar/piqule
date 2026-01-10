@@ -25,7 +25,7 @@ final class ReplaceSyncTest extends TestCase
             ),
         ]);
         $storage = new FakeTargetStorage();
-        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
+        (new ReplaceSync($sources, new FakeOutput()))->apply($storage);
 
         self::assertArrayHasKey(
             'example.txt',
@@ -46,7 +46,7 @@ final class ReplaceSyncTest extends TestCase
         $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('old'));
 
-        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
+        (new ReplaceSync($sources, new FakeOutput()))->apply($storage);
 
         self::assertSame(
             'new',
@@ -67,7 +67,7 @@ final class ReplaceSyncTest extends TestCase
         $storage = new FakeTargetStorage();
         $storage->write('example.txt', new FakeFile('same'));
 
-        (new ReplaceSync($sources, $storage, new FakeOutput()))->apply();
+        (new ReplaceSync($sources, new FakeOutput()))->apply($storage);
 
         self::assertSame(
             'same',

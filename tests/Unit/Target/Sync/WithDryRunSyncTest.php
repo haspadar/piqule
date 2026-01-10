@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Target\Sync;
 use Haspadar\Piqule\Target\Sync\WithDryRunSync;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use Haspadar\Piqule\Tests\Unit\Fake\Sync\FakeSync;
+use Haspadar\Piqule\Tests\Unit\Fake\Target\Storage\FakeTargetStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +19,7 @@ final class WithDryRunSyncTest extends TestCase
         $origin = new FakeSync();
         $output = new FakeOutput();
 
-        (new WithDryRunSync($origin, $output))->apply();
+        (new WithDryRunSync($origin, $output))->apply(new FakeTargetStorage());
 
         self::assertTrue(
             $origin->isRan(),
@@ -31,7 +32,7 @@ final class WithDryRunSyncTest extends TestCase
     {
         $output = new FakeOutput();
 
-        (new WithDryRunSync(new FakeSync(), $output))->apply();
+        (new WithDryRunSync(new FakeSync(), $output))->apply(new FakeTargetStorage());
 
         self::assertCount(
             2,

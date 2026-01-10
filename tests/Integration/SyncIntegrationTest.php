@@ -24,9 +24,8 @@ final class SyncIntegrationTest extends TestCase
 
         (new ReplaceSync(
             new DiskSources($sources->path()),
-            new DiskTargetStorage($targets->path()),
             new FakeOutput(),
-        ))->apply();
+        ))->apply(new DiskTargetStorage($targets->path()));
 
         self::assertFileExists(
             $targets->path() . '/example.txt',
