@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Fake\Command;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Sync;
 
 use Haspadar\Piqule\Target\Sync\Sync;
 

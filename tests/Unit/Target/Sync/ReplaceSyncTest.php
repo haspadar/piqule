@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Target\Command;
+namespace Haspadar\Piqule\Tests\Unit\Target\Sync;
 
 use Haspadar\Piqule\Source\Source;
 use Haspadar\Piqule\Target\Sync\ReplaceSync;
@@ -13,7 +13,7 @@ use Haspadar\Piqule\Tests\Unit\Fake\Target\Storage\FakeTargetStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class SynchronizationTest extends TestCase
+final class ReplaceSyncTest extends TestCase
 {
     #[Test]
     public function createsFileWhenTargetDoesNotExist(): void
