@@ -15,8 +15,7 @@ final readonly class WithDryRunSync implements Sync
     public function __construct(
         private Sync $origin,
         private Output $output,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function apply(TargetStorage $targetStorage): void

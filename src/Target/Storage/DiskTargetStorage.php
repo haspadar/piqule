@@ -13,8 +13,7 @@ final readonly class DiskTargetStorage implements TargetStorage
 {
     public function __construct(
         private string $root,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function exists(string $relativePath): bool

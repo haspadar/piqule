@@ -12,8 +12,7 @@ final readonly class Chain implements Sync
     /** @param Sync[] $syncs */
     public function __construct(
         private array $syncs,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function apply(TargetStorage $targetStorage): void

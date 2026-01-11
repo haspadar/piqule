@@ -14,8 +14,7 @@ final readonly class DiskTarget implements Target
     public function __construct(
         private Source $source,
         private TargetStorage $target,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function exists(): bool

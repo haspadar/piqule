@@ -16,8 +16,7 @@ final readonly class DiskSources implements Sources
 {
     public function __construct(
         private string $path,
-    ) {
-    }
+    ) {}
 
     /**
      * @return iterable<Source>

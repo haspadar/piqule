@@ -12,8 +12,7 @@ final readonly class Text implements Line
     public function __construct(
         private string $text,
         private Color $color,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function text(): string

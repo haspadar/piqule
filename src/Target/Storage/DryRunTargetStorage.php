@@ -11,8 +11,7 @@ final readonly class DryRunTargetStorage implements TargetStorage
 {
     public function __construct(
         private TargetStorage $origin,
-    ) {
-    }
+    ) {}
 
     #[Override]
     public function exists(string $relativePath): bool
