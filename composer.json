@@ -31,24 +31,30 @@
             "@phpmetrics:verify"
         ],
 
-        "cpd": "pmd cpd --language php --minimum-tokens 100 --dir src",
+        "actionlint": "actionlint",
+        "hadolint": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
+        "markdownlint": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
+        "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
+        "typos": "typos --config .piqule/typos/_typos.toml",
 
-        "test": "phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
-        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
+        "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
+        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
         "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
 
         "fix": [
             "@format"
         ],
         "check": [
+            "@actionlint",
+            "@hadolint",
+            "@markdownlint",
+            "@yamllint",
+            "@typos",
+
             "@format-check",
             "@phpstan",
             "@psalm",
             "@phpmd",
-            "@cpd"
-        ],
-        "ci": [
-            "@check",
             "@test"
         ]
     },

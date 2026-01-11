@@ -13,11 +13,6 @@ ARG YAMLLINT_VERSION=1.37.1
 ARG TYPOS_VERSION=1.42.0
 
 # ============================================================
-# PMD (CPD)
-# ============================================================
-ARG PMD_VERSION=7.20.0
-
-# ============================================================
 # Node.js stage
 # ============================================================
 FROM ${NODE_IMAGE} AS node
@@ -45,13 +40,18 @@ ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
-ARG PMD_VERSION
 
 # ------------------------------------------------------------
 # Node.js runtime
 # ------------------------------------------------------------
 COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:${PATH}"
+
+# ------------------------------------------------------------
+# pipx global contract (CI-safe)
+# ------------------------------------------------------------
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/usr/local/bin
 
 # ------------------------------------------------------------
 # Unified build step
@@ -83,6 +83,8 @@ RUN set -eux; \
     # PHP extensions \
     # -------------------------------------------------------- \
     docker-php-ext-install intl zip mbstring; \
+    pecl install xdebug; \
+    docker-php-ext-enable xdebug; \
     \
     # -------------------------------------------------------- \
     # Architecture detection \
@@ -104,11 +106,11 @@ RUN set -eux; \
     # Composer \
     # -------------------------------------------------------- \
     EXPECTED_CHECKSUM="$(curl -sS https://composer.github.io/installer.sig)"; \
-        curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php; \
-        ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', '/tmp/composer-setup.php');")"; \
-        [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ] || { echo "Installer corrupt"; exit 1; }; \
-        php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-        rm /tmp/composer-setup.php; \
+    curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php; \
+    ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', '/tmp/composer-setup.php');")"; \
+    [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ] || { echo "Installer corrupt"; exit 1; }; \
+    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+    rm /tmp/composer-setup.php; \
     export COMPOSER_ALLOW_SUPERUSER=1; \
     export COMPOSER_HOME=/usr/local/composer; \
     \
@@ -127,7 +129,7 @@ RUN set -eux; \
     npm cache clean --force; \
     \
     # -------------------------------------------------------- \
-    # yamllint \
+    # yamllint (pipx, user-agnostic) \
     # -------------------------------------------------------- \
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
@@ -146,16 +148,6 @@ RUN set -eux; \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
       | tar -xz -C /usr/local/bin; \
     chmod +x /usr/local/bin/typos; \
-    \
-    # -------------------------------------------------------- \
-    # PMD (CPD) \
-    # -------------------------------------------------------- \
-    curl -sSfL \
-      "https://github.com/pmd/pmd/releases/download/pmd_releases%2F${PMD_VERSION}/pmd-dist-${PMD_VERSION}-bin.zip" \
-      -o /tmp/pmd.zip; \
-    unzip /tmp/pmd.zip -d /opt; \
-    ln -s "/opt/pmd-bin-${PMD_VERSION}/bin/pmd" /usr/local/bin/pmd; \
-    rm -f /tmp/pmd.zip; \
     \
     # -------------------------------------------------------- \
     # Runtime user \
