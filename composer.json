@@ -17,7 +17,7 @@
         }
     },
     "scripts": {
-        "format": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml || [ $? -eq 2 ]",
+        "format": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml",
         "format-check": "vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml",
 
         "fixer": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
