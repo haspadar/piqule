@@ -71,8 +71,7 @@
     },
     "config": {
         "allow-plugins": {
-            "infection/extension-installer": true,
-            "phpro/grumphp": true
+            "infection/extension-installer": true
         }
     }
 }
