@@ -14,7 +14,7 @@ final readonly class WithDryRunSync implements Sync
 {
     public function __construct(
         private Sync $origin,
-        private Output  $output,
+        private Output $output,
     ) {}
 
     #[Override]

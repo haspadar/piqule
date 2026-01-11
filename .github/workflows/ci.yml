@@ -50,11 +50,11 @@ jobs:
       config: .piqule/typos/_typos.toml
 
   # ------------------------------------------------------------
-  # PHP-CS-Fixer (min + max)
+  # PHPCS (min + max)
   # ------------------------------------------------------------
-  php_cs_fixer:
-    name: PHP-CS-Fixer
-    uses: ./.github/workflows/_php-cs-fixer.yml
+  phpcs:
+    name: PHPCS
+    uses: ./.github/workflows/_phpcs.yml
     with:
       php-matrix: '["8.3","8.5"]'
 
