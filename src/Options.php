@@ -11,7 +11,8 @@ final readonly class Options
      */
     public function __construct(
         private array $argv,
-    ) {}
+    ) {
+    }
 
     public function isDryRun(): bool
     {

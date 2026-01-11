@@ -10,7 +10,9 @@ use Override;
 
 final readonly class Error implements Line
 {
-    public function __construct(private string $message) {}
+    public function __construct(private string $message)
+    {
+    }
 
     #[Override]
     public function text(): string

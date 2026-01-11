@@ -19,7 +19,8 @@ final readonly class ReplaceSync implements Sync
     public function __construct(
         private Sources $sources,
         private Output $output,
-    ) {}
+    ) {
+    }
 
     #[Override]
     public function apply(TargetStorage $targetStorage): void

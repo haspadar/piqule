@@ -14,7 +14,8 @@ final readonly class DiskFile implements File
      */
     public function __construct(
         private string $path,
-    ) {}
+    ) {
+    }
 
     /**
      * Reads and returns the file contents
