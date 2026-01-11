@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Options;
+use Haspadar\Piqule\Cli;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
@@ -14,9 +14,6 @@ use Haspadar\Piqule\Target\Sync\Chain;
 use Haspadar\Piqule\Target\Sync\ReplaceSync;
 use Haspadar\Piqule\Target\Sync\SkippingIfExistsSync;
 use Haspadar\Piqule\Target\Sync\WithDryRunSync;
-
-// TODO(#193): CLI bootstrap logic is duplicated between init and sync entrypoints
-// This duplication is intentional for now and will be addressed by introducing a shared entrypoint
 
 $autoloaded = false;
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $file) {
@@ -44,11 +41,26 @@ try {
         ?: throw new PiquleException('Cannot determine piqule install path');
 
     $targetStorage = new DiskTargetStorage($projectRoot);
-    $sync = new Chain([
-        new SkippingIfExistsSync(new DiskSources($libraryRoot . '/templates/once'), $output),
-        new ReplaceSync(new DiskSources($libraryRoot . '/templates/always'), $output),
-    ]);
-    if ((new Options($argv))->isDryRun()) {
+    $cli = new Cli($argv);
+    $sync = match ($cli->command()) {
+        'init' => new Chain([
+            new SkippingIfExistsSync(
+                new DiskSources($libraryRoot . '/templates/once'),
+                $output,
+            ),
+            new ReplaceSync(
+                new DiskSources($libraryRoot . '/templates/always'),
+                $output,
+            ),
+        ]),
+        'sync' => new ReplaceSync(
+            new DiskSources($libraryRoot . '/templates/always'),
+            $output,
+        ),
+        default => throw new PiquleException('Unknown command'),
+    };
+
+    if ($cli->isDryRun()) {
         (new WithDryRunSync($sync, $output))
             ->apply(new DryRunTargetStorage($targetStorage));
     } else {
