@@ -41,7 +41,7 @@ try {
         ?: throw new PiquleException('Cannot determine piqule install path');
 
     $targetStorage = new DiskTargetStorage($projectRoot);
-    $cli = new Options($argv);
+    $options = new Options($argv);
     $sync = new Chain([
         new SkippingIfExistsSync(
             new DiskSources($libraryRoot . '/templates/once'),
@@ -53,7 +53,7 @@ try {
         ),
     ]);
 
-    if ($cli->isDryRun()) {
+    if ($options->isDryRun()) {
         (new WithDryRunSync($sync, $output))
             ->apply(new DryRunTargetStorage($targetStorage));
     } else {

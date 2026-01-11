@@ -14,7 +14,7 @@ final class OptionsTest extends TestCase
     public function detectsDryRunWhenFlagIsPresent(): void
     {
         self::assertTrue(
-            (new Options(['bin/piqule', '--dry-run']))->isDryRun(),
+            (new Options(['bin/piqule-sync.php', '--dry-run']))->isDryRun(),
             'Expected --dry-run to be detected',
         );
     }
@@ -23,7 +23,7 @@ final class OptionsTest extends TestCase
     public function doesNotDetectDryRunWhenFlagIsAbsent(): void
     {
         self::assertFalse(
-            (new Options(['bin/piqule']))->isDryRun(),
+            (new Options(['bin/piqule-sync.php']))->isDryRun(),
             'Expected dry-run to be false when flag is absent',
         );
     }
