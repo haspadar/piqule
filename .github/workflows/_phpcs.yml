@@ -1,0 +1,72 @@
+name: PHPCS
+
+on:
+  workflow_call:
+    inputs:
+      php-matrix:
+        description: JSON array of PHP versions to run against
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  phpcs:
+    name: PHPCS (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ${{ fromJson(inputs.php-matrix) }}
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Check PHPCS config existence
+      # ------------------------------------------------------------
+      - name: Check config exists
+        id: check
+        run: |
+          if [[ -f ".piqule/phpcs/phpcs.xml" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ------------------------------------------------------------
+      # Skip when config is missing
+      # ------------------------------------------------------------
+      - name: Skip — no config found
+        if: steps.check.outputs.run == 'false'
+        run: echo "Skipping PHPCS — no .piqule/phpcs/phpcs.xml"
+
+      # ------------------------------------------------------------
+      # Setup PHP
+      # ------------------------------------------------------------
+      - name: Setup PHP
+        if: steps.check.outputs.run == 'true'
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+
+      # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        if: steps.check.outputs.run == 'true'
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # Run PHPCS
+      # ------------------------------------------------------------
+      - name: PHPCS
+        if: steps.check.outputs.run == 'true'
+        run: vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml
