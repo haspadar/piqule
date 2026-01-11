@@ -67,12 +67,13 @@ infection/infection
 
 ## Configuration synchronization
 
-Copies predefined configuration files into the project, overwriting existing ones.
+Synchronizes predefined configuration files into the project.
+Some files are applied only if missing, while others are always kept in sync.
 No merging is performed; conflicts are resolved via Git.
 
 ```bash
-bin/piqule.php sync
-bin/piqule.php sync --dry-run
+bin/piqule-sync.php
+bin/piqule-sync.php --dry-run
 ```
 
 ## Composer scripts (optional)
@@ -101,13 +102,14 @@ The Docker image is provided as a **ready-to-use local environment**
 for running linters without installing them on the host system.
 The Docker image is optional and independent of CI workflows.
 
-Before building the Docker image, ensure managed files are synchronized using `bin/piqule.php sync`.
+Before building the Docker image, ensure managed files are synchronized using `bin/piqule-sync.php`.
 
 Example local usage:
 
 ```bash
 docker build -t piqule -f .piqule/Dockerfile .
 docker run --rm -v "$PWD:/app" -w /app piqule markdownlint-cli2 "**/*.md"
+docker run --rm -it -v "$PWD:/app" piqule fish
 ```
 
 ---

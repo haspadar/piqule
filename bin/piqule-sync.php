@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Cli;
+use Haspadar\Piqule\Options;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Error;
 use Haspadar\Piqule\PiquleException;
@@ -41,26 +41,19 @@ try {
         ?: throw new PiquleException('Cannot determine piqule install path');
 
     $targetStorage = new DiskTargetStorage($projectRoot);
-    $cli = new Cli($argv);
-    $sync = match ($cli->command()) {
-        'init' => new Chain([
-            new SkippingIfExistsSync(
-                new DiskSources($libraryRoot . '/templates/once'),
-                $output,
-            ),
-            new ReplaceSync(
-                new DiskSources($libraryRoot . '/templates/always'),
-                $output,
-            ),
-        ]),
-        'sync' => new ReplaceSync(
+    $options = new Options($argv);
+    $sync = new Chain([
+        new SkippingIfExistsSync(
+            new DiskSources($libraryRoot . '/templates/once'),
+            $output,
+        ),
+        new ReplaceSync(
             new DiskSources($libraryRoot . '/templates/always'),
             $output,
         ),
-        default => throw new PiquleException('Unknown command'),
-    };
+    ]);
 
-    if ($cli->isDryRun()) {
+    if ($options->isDryRun()) {
         (new WithDryRunSync($sync, $output))
             ->apply(new DryRunTargetStorage($targetStorage));
     } else {
