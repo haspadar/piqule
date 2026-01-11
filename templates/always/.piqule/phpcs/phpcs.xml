@@ -10,6 +10,6 @@
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
 
-    <!-- Base standard -->
-    <rule ref="PSR12"/>
+    <!-- Minimal non-formatting sniff -->
+    <rule ref="Generic.PHP.Syntax"/>
 </ruleset>
