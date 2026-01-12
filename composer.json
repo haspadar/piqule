@@ -38,7 +38,7 @@
         "hadolint": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
         "markdownlint": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
         "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
-        "json": "find .github .piqule -type f -name '*.json' -print0 | xargs -0 jq empty",
+        "json": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
         "typos" : "typos --config .piqule/typos/_typos.toml",
 
         "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
