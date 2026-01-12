@@ -11,6 +11,7 @@ ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.37.1
 ARG TYPOS_VERSION=1.42.0
+ARG PRETTIER_VERSION=3.7.4
 
 # ============================================================
 # Node.js stage
@@ -40,6 +41,7 @@ ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
+ARG PRETTIER_VERSION
 
 # ------------------------------------------------------------
 # Node.js runtime
@@ -129,6 +131,10 @@ RUN set -eux; \
     # markdownlint-cli2 \
     # -------------------------------------------------------- \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
+    # -------------------------------------------------------- \
+    # prettier \
+    # -------------------------------------------------------- \
+    npm install -g "prettier@${PRETTIER_VERSION}"; \
     npm cache clean --force; \
     \
     # -------------------------------------------------------- \
