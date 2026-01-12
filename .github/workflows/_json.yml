@@ -37,4 +37,4 @@ jobs:
       # JSON validation (jq via composer)
       # ------------------------------------------------------------
       - name: JSON validation
-        run: composer json
+        run: composer json:check
