@@ -11,7 +11,7 @@ $rules->setFinder(
     Finder::create()
         ->in(__DIR__ . '/../..')
         ->exclude('vendor'),
-);
+)->setCacheFile(__DIR__ . '/.php-cs-fixer.cache');
 
 return $rules;
 
