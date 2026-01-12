@@ -73,6 +73,7 @@ RUN set -eux; \
         python3-venv \
         pipx \
         jq \
+        libyaml-dev \
         libxml2-utils \
         libicu-dev \
         libzip-dev \
@@ -85,8 +86,8 @@ RUN set -eux; \
     # PHP extensions \
     # -------------------------------------------------------- \
     docker-php-ext-install intl zip mbstring; \
-    pecl install xdebug; \
-    docker-php-ext-enable xdebug; \
+    pecl install xdebug yaml; \
+    docker-php-ext-enable xdebug yaml; \
     \
     # -------------------------------------------------------- \
     # Architecture detection \
