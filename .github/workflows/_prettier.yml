@@ -1,0 +1,87 @@
+name: Prettier
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        required: false
+        default: "24"
+      config:
+        type: string
+        required: false
+        default: .piqule/prettier/.prettierrc.yml
+      ignore-path:
+        type: string
+        required: false
+        default: .piqule/prettier/.prettierignore
+      prettier-version:
+        type: string
+        required: false
+        default: "3.7.4"
+
+jobs:
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Check Prettier config existence
+      # ------------------------------------------------------------
+      - name: Check config exists
+        id: check
+        env:
+          PRETTIER_CONFIG: ${{ inputs.config }}
+        run: |
+          if [[ -f "$PRETTIER_CONFIG" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ------------------------------------------------------------
+      # Skip Prettier when config is missing
+      # ------------------------------------------------------------
+      - name: Skip — no config found
+        if: steps.check.outputs.run == 'false'
+        env:
+          PRETTIER_CONFIG: ${{ inputs.config }}
+        run: echo "Skipping Prettier — no config found at $PRETTIER_CONFIG"
+
+      # ------------------------------------------------------------
+      # Setup Node.js
+      # ------------------------------------------------------------
+      - name: Setup Node.js
+        if: steps.check.outputs.run == 'true'
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      # ------------------------------------------------------------
+      # Install Prettier
+      # ------------------------------------------------------------
+      - name: Install Prettier
+        if: steps.check.outputs.run == 'true'
+        run: npm install -g prettier@${{ inputs.prettier-version }}
+
+      # ------------------------------------------------------------
+      # Run Prettier (formatting gate)
+      # ------------------------------------------------------------
+      - name: Run Prettier
+        if: steps.check.outputs.run == 'true'
+        env:
+          PRETTIER_CONFIG: ${{ inputs.config }}
+          PRETTIER_IGNORE: ${{ inputs.ignore-path }}
+        run: |
+          echo "Using config: $PRETTIER_CONFIG"
+          echo "Using ignore file: $PRETTIER_IGNORE"
+          prettier --check . \
+            --config "$PRETTIER_CONFIG" \
+            --ignore-path "$PRETTIER_IGNORE"

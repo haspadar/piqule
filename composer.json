@@ -42,6 +42,9 @@
         "xml:check": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
         "xml:fix": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
 
+        "prettier:check": "prettier --check . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
+        "prettier:fix":   "prettier --write . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
+
         "phpunit:check": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
         "infection:check": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
 

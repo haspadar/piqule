@@ -1,0 +1,9 @@
+# Prettier config for piqule
+# Used primarily as a syntax validator for JSON/YAML
+
+# Neutral, widely compatible defaults
+tabWidth: 2
+useTabs: false
+
+# Keep line wrapping conservative
+printWidth: 120
