@@ -38,7 +38,8 @@
         "hadolint": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
         "markdownlint": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
         "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
-        "typos": "typos --config .piqule/typos/_typos.toml",
+        "json": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
+        "typos" : "typos --config .piqule/typos/_typos.toml",
 
         "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
         "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
@@ -52,6 +53,7 @@
             "@hadolint",
             "@markdownlint",
             "@yamllint",
+            "@json",
             "@typos",
 
             "@format-check",
