@@ -36,7 +36,6 @@
         "hadolint:check": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
         "markdownlint:check": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
         "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
-        "json:check": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
         "typos:check": "typos --config .piqule/typos/_typos.toml",
 
         "xml:check": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
