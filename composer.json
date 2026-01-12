@@ -38,6 +38,8 @@
         "hadolint": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
         "markdownlint": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
         "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
+        "json": "find .github .piqule -type f -name '*.json' -print0 | xargs -0 -n1 sh -c 'jq -S . \"$1\" | diff - \"$1\"' sh",
+        "json-fix": "find .github .piqule -type f -name '*.json' -print0 | xargs -0 -n1 sh -c 'jq -S . \"$1\" > \"$1.tmp\" && mv \"$1.tmp\" \"$1\"' sh",
         "typos": "typos --config .piqule/typos/_typos.toml",
 
         "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
@@ -52,6 +54,7 @@
             "@hadolint",
             "@markdownlint",
             "@yamllint",
+            "@json",
             "@typos",
 
             "@format-check",

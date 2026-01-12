@@ -1,0 +1,40 @@
+name: JSON (jq)
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  json:
+    name: JSON (jq)
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Setup PHP (for composer)
+      # ------------------------------------------------------------
+      - name: Setup PHP
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1  # v2.36.0
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      # ------------------------------------------------------------
+      # Install dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # JSON validation (jq via composer)
+      # ------------------------------------------------------------
+      - name: JSON validation
+        run: composer json
