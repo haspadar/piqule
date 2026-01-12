@@ -1,0 +1,20 @@
+composer: false
+
+includes:
+  - ../../src
+
+excludes:
+  - vendor
+  - tests
+  - build
+  - bin
+  - var
+  - node_modules
+
+extensions:
+  - php
+  - php8
+
+report:
+  html: "html"
+  json: "phpmetrics.json"
