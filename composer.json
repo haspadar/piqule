@@ -17,53 +17,57 @@
         }
     },
     "scripts": {
-        "format": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml",
-        "format-check": "vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml",
+        "phpcs:fix": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml",
+        "phpcs:check": "vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml",
 
-        "fixer": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache",
-        "fixer-check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --cache-file=.piqule/php-cs-fixer/.php-cs-fixer.cache --dry-run --diff",
+        "php-cs-fixer:fix": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php",
+        "php-cs-fixer:check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --dry-run --diff",
 
-        "phpstan": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
-        "psalm": "psalm --config=.piqule/psalm/psalm.xml",
-        "phpmd": "phpmd src text .piqule/phpmd/phpmd.xml",
+        "phpstan:check": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
+        "psalm:check": "psalm --config=.piqule/psalm/psalm.xml",
+        "phpmd:check": "phpmd src text .piqule/phpmd/phpmd.xml",
 
-        "phpmetrics:generate": "php -d error_reporting='E_ALL & ~E_DEPRECATED' vendor/bin/phpmetrics src --exclude=vendor,tests,build,bin,var,node_modules --report-json=.piqule/phpmetrics/phpmetrics.json --report-html=.piqule/phpmetrics/html",
-        "phpmetrics:verify": "php .piqule/phpmetrics/verify.php",
         "phpmetrics:check": [
-            "@phpmetrics:generate",
-            "@phpmetrics:verify"
+            "php -d error_reporting='E_ALL & ~E_DEPRECATED' vendor/bin/phpmetrics --config=.piqule/phpmetrics/phpmetrics.yml",
+            "php .piqule/phpmetrics/verify.php"
         ],
 
-        "actionlint": "actionlint",
-        "hadolint": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
-        "markdownlint": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
-        "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
-        "json": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
-        "typos" : "typos --config .piqule/typos/_typos.toml",
-        "xml:lint": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
-        "xml:format": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
+        "actionlint:check": "actionlint",
+        "hadolint:check": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
+        "markdownlint:check": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
+        "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
+        "json:check": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
+        "typos:check": "typos --config .piqule/typos/_typos.toml",
 
-        "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
-        "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
-        "infection": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
+        "xml:check": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
+        "xml:fix": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
+
+        "phpunit:check": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
+        "infection:check": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
 
         "fix": [
-            "@format"
+            "@phpcs:fix",
+            "@php-cs-fixer:fix",
+            "@xml:fix"
         ],
-        "check": [
-            "@actionlint",
-            "@hadolint",
-            "@markdownlint",
-            "@yamllint",
-            "@xml:lint",
-            "@json",
-            "@typos",
 
-            "@format-check",
-            "@phpstan",
-            "@psalm",
-            "@phpmd",
-            "@test"
+        "check": [
+            "@actionlint:check",
+            "@hadolint:check",
+            "@markdownlint:check",
+            "@yamllint:check",
+            "@json:check",
+            "@typos:check",
+            "@xml:check",
+
+            "@phpcs:check",
+            "@php-cs-fixer:check",
+            "@phpstan:check",
+            "@psalm:check",
+            "@phpmd:check",
+
+            "@phpmetrics:check",
+            "@phpunit:check"
         ]
     },
     "authors": [

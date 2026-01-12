@@ -44,4 +44,4 @@ jobs:
       # Run XML lint
       # ------------------------------------------------------------
       - name: XML lint
-        run: composer xml:lint
+        run: composer xml:check

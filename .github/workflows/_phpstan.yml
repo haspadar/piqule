@@ -61,7 +61,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Run PHPStan
         if: steps.phpstan.outputs.run == 'true'
-        run: composer phpstan
+        run: composer phpstan:check
 
       # ------------------------------------------------------------
       # Skip PHPStan when config is missing
