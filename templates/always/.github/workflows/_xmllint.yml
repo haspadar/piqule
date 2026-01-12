@@ -1,0 +1,47 @@
+name: XML lint
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  xmllint:
+    name: XML lint
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
+      # ------------------------------------------------------------
+      # Set up PHP (minimal, без matrix)
+      # ------------------------------------------------------------
+      - name: Setup PHP
+        uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231  # 2.31.1
+        with:
+          php-version: '8.3'
+          tools: composer
+
+      # ------------------------------------------------------------
+      # Install system dependencies
+      # ------------------------------------------------------------
+      - name: Install xmllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libxml2-utils
+
+      # ------------------------------------------------------------
+      # Install Composer dependencies
+      # ------------------------------------------------------------
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      # ------------------------------------------------------------
+      # Run XML lint
+      # ------------------------------------------------------------
+      - name: XML lint
+        run: composer xml:lint

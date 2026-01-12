@@ -40,6 +40,8 @@
         "yamllint": "yamllint -c .piqule/yamllint/.yamllint.yml .",
         "json": "find .github .piqule -type f -name '*.json' -exec jq empty {} +",
         "typos" : "typos --config .piqule/typos/_typos.toml",
+        "xml:lint": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
+        "xml:format": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
 
         "test": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
         "test-coverage": "XDEBUG_MODE=coverage php -d memory_limit=512M vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --path-coverage --coverage-clover=.piqule/codecov/coverage.xml",
@@ -53,6 +55,7 @@
             "@hadolint",
             "@markdownlint",
             "@yamllint",
+            "@xml:lint",
             "@json",
             "@typos",
 
