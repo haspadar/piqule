@@ -72,6 +72,7 @@ RUN set -eux; \
         python3 \
         python3-venv \
         pipx \
+        libxml2-utils \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
