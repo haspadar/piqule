@@ -4,9 +4,6 @@
 # Neutral, widely compatible defaults
 tabWidth: 2
 useTabs: false
-semi: false
-singleQuote: true
-trailingComma: es5
 
 # Keep line wrapping conservative
 printWidth: 120
