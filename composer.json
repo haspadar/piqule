@@ -17,8 +17,8 @@
         }
     },
     "scripts": {
-        "phpcs:fix": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml",
-        "phpcs:check": "vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml",
+        "phpcs:fix": "phpcbf --standard=.piqule/phpcs/phpcs.xml",
+        "phpcs:check": "phpcs --standard=.piqule/phpcs/phpcs.xml",
 
         "php-cs-fixer:fix": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php",
         "php-cs-fixer:check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --dry-run --diff",
@@ -38,19 +38,15 @@
         "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
         "typos:check": "typos --config .piqule/typos/_typos.toml",
 
-        "xml:check": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
-        "xml:fix": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
-
         "prettier:check": "prettier --check . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
         "prettier:fix":   "prettier --write . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
 
-        "phpunit:check": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
-        "infection:check": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
+        "phpunit:check": "phpunit -c .piqule/phpunit/phpunit.xml",
+        "infection:check": "infection --configuration=.piqule/infection/infection.json5",
 
         "fix": [
             "@phpcs:fix",
-            "@php-cs-fixer:fix",
-            "@xml:fix"
+            "@php-cs-fixer:fix"
         ],
 
         "check": [
@@ -60,7 +56,6 @@
             "@yamllint:check",
             "@json:check",
             "@typos:check",
-            "@xml:check",
 
             "@phpcs:check",
             "@php-cs-fixer:check",
