@@ -11,11 +11,7 @@ ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.37.1
 ARG TYPOS_VERSION=1.42.0
-
-# ============================================================
-# PMD (CPD)
-# ============================================================
-ARG PMD_VERSION=7.20.0
+ARG PRETTIER_VERSION=3.7.4
 
 # ============================================================
 # Node.js stage
@@ -45,13 +41,25 @@ ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
-ARG PMD_VERSION
+ARG PRETTIER_VERSION
 
 # ------------------------------------------------------------
 # Node.js runtime
 # ------------------------------------------------------------
 COPY --from=node /usr/local /usr/local
 ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:${PATH}"
+
+# ------------------------------------------------------------
+# pipx global contract (CI-safe)
+# ------------------------------------------------------------
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/usr/local/bin
+
+# ------------------------------------------------------------
+# PHP runtime defaults (coverage & memory)
+# ------------------------------------------------------------
+ENV XDEBUG_MODE=coverage
+ENV PHP_MEMORY_LIMIT=1G
 
 # ------------------------------------------------------------
 # Unified build step
@@ -72,6 +80,7 @@ RUN set -eux; \
         python3 \
         python3-venv \
         pipx \
+        libyaml-dev \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
@@ -83,6 +92,14 @@ RUN set -eux; \
     # PHP extensions \
     # -------------------------------------------------------- \
     docker-php-ext-install intl zip mbstring; \
+    pecl install xdebug yaml; \
+    docker-php-ext-enable xdebug yaml; \
+    \
+    # -------------------------------------------------------- \
+    # PHP configuration \
+    # -------------------------------------------------------- \
+    echo "memory_limit=${PHP_MEMORY_LIMIT}" > /usr/local/etc/php/conf.d/zz-memory-limit.ini; \
+    echo "xdebug.mode=coverage" > /usr/local/etc/php/conf.d/zz-xdebug.ini; \
     \
     # -------------------------------------------------------- \
     # Architecture detection \
@@ -104,11 +121,11 @@ RUN set -eux; \
     # Composer \
     # -------------------------------------------------------- \
     EXPECTED_CHECKSUM="$(curl -sS https://composer.github.io/installer.sig)"; \
-        curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php; \
-        ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', '/tmp/composer-setup.php');")"; \
-        [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ] || { echo "Installer corrupt"; exit 1; }; \
-        php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-        rm /tmp/composer-setup.php; \
+    curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php; \
+    ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', '/tmp/composer-setup.php');")"; \
+    [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ] || { echo "Installer corrupt"; exit 1; }; \
+    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+    rm /tmp/composer-setup.php; \
     export COMPOSER_ALLOW_SUPERUSER=1; \
     export COMPOSER_HOME=/usr/local/composer; \
     \
@@ -124,10 +141,15 @@ RUN set -eux; \
     # markdownlint-cli2 \
     # -------------------------------------------------------- \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
+    \
+    # -------------------------------------------------------- \
+    # prettier \
+    # -------------------------------------------------------- \
+    npm install -g "prettier@${PRETTIER_VERSION}"; \
     npm cache clean --force; \
     \
     # -------------------------------------------------------- \
-    # yamllint \
+    # yamllint (pipx, user-agnostic) \
     # -------------------------------------------------------- \
     pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \

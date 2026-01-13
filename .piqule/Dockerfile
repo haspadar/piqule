@@ -56,6 +56,12 @@ ENV PIPX_HOME=/opt/pipx
 ENV PIPX_BIN_DIR=/usr/local/bin
 
 # ------------------------------------------------------------
+# PHP runtime defaults (coverage & memory)
+# ------------------------------------------------------------
+ENV XDEBUG_MODE=coverage
+ENV PHP_MEMORY_LIMIT=1G
+
+# ------------------------------------------------------------
 # Unified build step
 # ------------------------------------------------------------
 RUN set -eux; \
@@ -74,9 +80,7 @@ RUN set -eux; \
         python3 \
         python3-venv \
         pipx \
-        jq \
         libyaml-dev \
-        libxml2-utils \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
@@ -90,6 +94,12 @@ RUN set -eux; \
     docker-php-ext-install intl zip mbstring; \
     pecl install xdebug yaml; \
     docker-php-ext-enable xdebug yaml; \
+    \
+    # -------------------------------------------------------- \
+    # PHP configuration \
+    # -------------------------------------------------------- \
+    echo "memory_limit=${PHP_MEMORY_LIMIT}" > /usr/local/etc/php/conf.d/zz-memory-limit.ini; \
+    echo "xdebug.mode=coverage" > /usr/local/etc/php/conf.d/zz-xdebug.ini; \
     \
     # -------------------------------------------------------- \
     # Architecture detection \
@@ -131,6 +141,7 @@ RUN set -eux; \
     # markdownlint-cli2 \
     # -------------------------------------------------------- \
     npm install -g "markdownlint-cli2@${MARKDOWNLINT_VERSION}"; \
+    \
     # -------------------------------------------------------- \
     # prettier \
     # -------------------------------------------------------- \
