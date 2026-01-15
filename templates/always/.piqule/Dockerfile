@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG PHP_IMAGE=php:8.3-cli-bookworm
-ARG NODE_IMAGE=node:24.12.0-bookworm
+ARG NODE_IMAGE=node:24.13.0-bookworm
 
 # ============================================================
 # Linters
