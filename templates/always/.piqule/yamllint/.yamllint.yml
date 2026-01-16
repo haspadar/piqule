@@ -1,5 +1,13 @@
 extends: default
 
+ignore: |
+  vendor/**
+  node_modules/**
+  build/**
+  var/**
+  .piqule/**/html/**
+  .piqule/**/coverage-report/**
+
 rules:
   document-start: disable
 
