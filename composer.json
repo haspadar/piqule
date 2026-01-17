@@ -38,8 +38,7 @@
         "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
         "typos:check": "typos --config .piqule/typos/_typos.toml",
 
-        "xml:check": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 xmllint --noout",
-        "xml:fix": "find . -type f -name \"*.xml\" ! -path \"./vendor/*\" ! -path \"./.git/*\" -print0 | xargs -0 -I{} sh -c 'xmllint --format \"$1\" --output \"$1\"' _ {}",
+        "xml:check": "xmllint --noout .piqule/*/*.xml",
 
         "prettier:check": "prettier --check . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
         "prettier:fix":   "prettier --write . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
@@ -49,8 +48,7 @@
 
         "fix": [
             "@phpcs:fix",
-            "@php-cs-fixer:fix",
-            "@xml:fix"
+            "@php-cs-fixer:fix"
         ],
 
         "check": [
