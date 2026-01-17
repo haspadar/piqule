@@ -39,7 +39,6 @@
         "typos:check": "typos --config .piqule/typos/_typos.toml",
 
         "xml:check": "xmllint --noout .piqule/*/*.xml",
-        "xml:fix":   "xmllint --format --output .piqule/*/*.xml",
 
         "prettier:check": "prettier --check . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
         "prettier:fix":   "prettier --write . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
