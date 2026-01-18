@@ -10,7 +10,13 @@ final readonly class FakeFile implements File
 {
     public function __construct(
         private string $contents,
+        private string $id = 'fake:file',
     ) {}
+
+    public function id(): string
+    {
+        return $this->id;
+    }
 
     public function contents(): string
     {

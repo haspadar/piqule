@@ -23,4 +23,30 @@ final class DiskFileTest extends TestCase
 
         $file->contents();
     }
+
+    #[Test]
+    public function returnsCanonicalAbsolutePathAsId(): void
+    {
+        $directory = new DirectoryFixture('disk-file');
+        $path = $directory->path() . '/file.txt';
+
+        file_put_contents($path, 'test');
+
+        $file = new DiskFile($path);
+
+        $this->assertSame(
+            realpath($path),
+            $file->id(),
+        );
+    }
+
+    #[Test]
+    public function throwsExceptionWhenIdCannotBeResolved(): void
+    {
+        $file = new DiskFile('/missing/file.txt');
+
+        $this->expectException(PiquleException::class);
+
+        $file->id();
+    }
 }
