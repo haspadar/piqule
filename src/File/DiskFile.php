@@ -9,18 +9,24 @@ use Override;
 
 final readonly class DiskFile implements File
 {
-    /**
-     * Absolute or relative filesystem path
-     */
     public function __construct(
         private string $path,
     ) {}
 
-    /**
-     * Reads and returns the file contents
-     *
-     * @throws PiquleException If the file cannot be read
-     */
+    #[Override]
+    public function id(): string
+    {
+        $realPath = realpath($this->path);
+
+        if ($realPath === false) {
+            throw new PiquleException(
+                sprintf('Failed to resolve file path: "%s"', $this->path),
+            );
+        }
+
+        return $realPath;
+    }
+
     #[Override]
     public function contents(): string
     {
