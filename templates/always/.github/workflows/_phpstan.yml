@@ -61,7 +61,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Run PHPStan
         if: steps.phpstan.outputs.run == 'true'
-        run: composer phpstan:check
+        run: vendor/bin/phpstan analyse -c .piqule/phpstan/phpstan.neon
 
       # ------------------------------------------------------------
       # Skip PHPStan when config is missing
