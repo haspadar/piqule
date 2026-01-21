@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Integration\File;
+namespace Haspadar\Piqule\Tests\Integration\Artifact;
 
-use Haspadar\Piqule\File\DiskFile;
+use Haspadar\Piqule\Artifact\DiskFile;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
