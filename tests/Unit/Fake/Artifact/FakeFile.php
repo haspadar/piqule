@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Fake\File;
+namespace Haspadar\Piqule\Tests\Unit\Fake\Artifact;
 
-use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Artifact\File;
 
 final readonly class FakeFile implements File
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\Fixtures;
 
-use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Artifact\File;
 
 final readonly class FileFixture implements File
 {

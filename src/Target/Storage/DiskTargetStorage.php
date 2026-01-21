@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Target\Storage;
 
-use Haspadar\Piqule\File\DiskFile;
-use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Artifact\DiskFile;
+use Haspadar\Piqule\Artifact\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 

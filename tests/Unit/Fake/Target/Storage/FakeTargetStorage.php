@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Fake\Target\Storage;
 
-use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Artifact\File;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Target\Storage\TargetStorage;
 

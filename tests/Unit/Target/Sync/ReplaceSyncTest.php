@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\Target\Sync;
 
 use Haspadar\Piqule\Source\Source;
 use Haspadar\Piqule\Target\Sync\ReplaceSync;
-use Haspadar\Piqule\Tests\Unit\Fake\File\FakeFile;
+use Haspadar\Piqule\Tests\Unit\Fake\Artifact\FakeFile;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use Haspadar\Piqule\Tests\Unit\Fake\Source\FakeSources;
 use Haspadar\Piqule\Tests\Unit\Fake\Target\Storage\FakeTargetStorage;

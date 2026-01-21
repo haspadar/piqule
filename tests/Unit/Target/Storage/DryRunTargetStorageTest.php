@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Target\Storage;
 
 use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\FakeFile;
+use Haspadar\Piqule\Tests\Unit\Fake\Artifact\FakeFile;
 use Haspadar\Piqule\Tests\Unit\Fake\Target\Storage\FakeTargetStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

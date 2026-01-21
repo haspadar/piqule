@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Artifact;
 
 use Haspadar\Piqule\PiquleException;
 use Override;
