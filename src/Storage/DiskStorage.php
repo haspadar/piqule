@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\PiquleException;
+use Override;
 
 final readonly class DiskStorage implements Storage
 {
@@ -12,11 +13,13 @@ final readonly class DiskStorage implements Storage
         private string $root,
     ) {}
 
+    #[Override]
     public function exists(string $name): bool
     {
         return is_file($this->path($name));
     }
 
+    #[Override]
     public function read(string $name): string
     {
         $path = $this->path($name);
@@ -31,6 +34,7 @@ final readonly class DiskStorage implements Storage
         return $contents;
     }
 
+    #[Override]
     public function write(string $name, string $contents): void
     {
         $path = $this->path($name);
