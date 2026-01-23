@@ -24,6 +24,12 @@ final readonly class DiskStorage implements Storage
     {
         $path = $this->path($name);
 
+        if (!is_file($path) || !is_readable($path)) {
+            throw new PiquleException(
+                sprintf('Failed to read file "%s"', $name),
+            );
+        }
+
         $contents = file_get_contents($path);
         if ($contents === false) {
             throw new PiquleException(
@@ -46,7 +52,7 @@ final readonly class DiskStorage implements Storage
             );
         }
 
-        if (!is_dir($dir) && !mkdir($dir, 0o755, true)) {
+        if (!is_dir($dir) && !@mkdir($dir, 0o755, true)) {
             throw new PiquleException(
                 sprintf('Failed to create directory "%s"', $dir),
             );
@@ -61,6 +67,20 @@ final readonly class DiskStorage implements Storage
 
     private function path(string $name): string
     {
-        return $this->root . '/' . $name;
+        if ($this->isPathTraversal($name)) {
+            throw new PiquleException(
+                sprintf('Invalid storage path "%s"', $name),
+            );
+        }
+
+        return rtrim($this->root, '/') . '/' . $name;
+    }
+
+    private function isPathTraversal(string $name): bool
+    {
+        return str_contains($name, "\0")
+            || str_starts_with($name, '/')
+            || str_contains($name, '../')
+            || str_contains($name, '..\\');
     }
 }

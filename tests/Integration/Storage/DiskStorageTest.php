@@ -128,4 +128,12 @@ final class DiskStorageTest extends TestCase
         (new DiskStorage($readonly))
             ->write('nested/example.txt', 'fail');
     }
+
+    #[Test]
+    public function rejectsPathTraversal(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new DiskStorage('/tmp'))->read('../secrets.txt');
+    }
 }
