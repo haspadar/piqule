@@ -52,7 +52,7 @@ final readonly class DiskStorage implements Storage
             );
         }
 
-        if (file_put_contents($path, $contents) === false) {
+        if (file_put_contents($path, $contents, LOCK_EX) === false) {
             throw new PiquleException(
                 sprintf('Failed to write file "%s"', $name),
             );
