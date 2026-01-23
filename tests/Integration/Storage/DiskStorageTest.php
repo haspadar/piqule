@@ -89,10 +89,14 @@ final class DiskStorageTest extends TestCase
         file_put_contents($file, 'secret');
         chmod($file, 0o000);
 
-        $this->expectException(PiquleException::class);
-        $this->expectExceptionMessage('Failed to read file "unreadable.txt"');
+        try {
+            $this->expectException(PiquleException::class);
+            $this->expectExceptionMessage('Failed to read file "unreadable.txt"');
 
-        (new DiskStorage($root->path()))->read('unreadable.txt');
+            (new DiskStorage($root->path()))->read('unreadable.txt');
+        } finally {
+            chmod($file, 0o644);
+        }
     }
 
     #[Test]
@@ -119,14 +123,18 @@ final class DiskStorageTest extends TestCase
         $readonly = $root->path() . '/readonly';
         mkdir($readonly, 0o555, true);
 
-        $this->expectException(PiquleException::class);
-        $this->expectExceptionMessage(sprintf(
-            'Failed to create directory "%s"',
-            $readonly . '/nested',
-        ));
+        try {
+            $this->expectException(PiquleException::class);
+            $this->expectExceptionMessage(sprintf(
+                'Failed to create directory "%s"',
+                $readonly . '/nested',
+            ));
 
-        (new DiskStorage($readonly))
-            ->write('nested/example.txt', 'fail');
+            (new DiskStorage($readonly))
+                ->write('nested/example.txt', 'fail');
+        } finally {
+            chmod($readonly, 0o755);
+        }
     }
 
     #[Test]
