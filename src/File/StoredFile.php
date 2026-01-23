@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Haspadar\Piqule\File;
+
+use Haspadar\Piqule\Storage\Storage;
+use Override;
+
+final readonly class StoredFile implements File
+{
+    public function __construct(
+        private string $name,
+        private Storage $storage,
+    ) {}
+
+    #[Override]
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    #[Override]
+    public function contents(): string
+    {
+        return $this->storage->read($this->name);
+    }
+
+    #[Override]
+    public function writeTo(Storage $storage): void
+    {
+        $storage->write(
+            $this->name,
+            $this->contents(),
+        );
+    }
+}
