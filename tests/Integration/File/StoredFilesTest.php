@@ -44,7 +44,7 @@ final class StoredFilesTest extends TestCase
         );
 
         $paths = array_map(
-            static fn (StoredFile $file): string => $file->name(),
+            static fn(StoredFile $file): string => $file->name(),
             iterator_to_array($files->all()),
         );
 
