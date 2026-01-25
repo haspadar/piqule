@@ -72,4 +72,18 @@ final class FakeStorageTest extends TestCase
             'Expected write() to overwrite existing contents',
         );
     }
+
+    #[Test]
+    public function writeExecutableWritesFile(): void
+    {
+        $storage = new FakeStorage();
+
+        $storage->writeExecutable('hook.sh', '#!/bin/sh');
+
+        self::assertSame(
+            '#!/bin/sh',
+            $storage->read('hook.sh'),
+            'Expected writeExecutable() to behave like write()',
+        );
+    }
 }

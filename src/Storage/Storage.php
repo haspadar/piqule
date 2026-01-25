@@ -24,4 +24,9 @@ interface Storage
      * Creates or replaces the file in this storage
      */
     public function write(string $name, string $contents): void;
+
+    /**
+     * Writes contents to a file and makes it executable
+     */
+    public function writeExecutable(string $name, string $contents): void;
 }
