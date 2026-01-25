@@ -43,4 +43,10 @@ final class FakeStorage implements Storage
     {
         $this->files[$name] = $contents;
     }
+
+    #[Override]
+    public function writeExecutable(string $name, string $contents): void
+    {
+        $this->write($name, $contents);
+    }
 }

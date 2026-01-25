@@ -144,4 +144,55 @@ final class DiskStorageTest extends TestCase
 
         (new DiskStorage('/tmp'))->read('../secrets.txt');
     }
+
+    #[Test]
+    public function writesExecutableFile(): void
+    {
+        $root = new DirectoryFixture('disk-storage');
+
+        $path = $root->path() . '/hook.sh';
+
+        (new DiskStorage($root->path()))
+            ->writeExecutable('hook.sh', '#!/bin/sh');
+
+        self::assertFileExists(
+            $path,
+            'Expected executable file to be written',
+        );
+    }
+
+    #[Test]
+    public function setsExecutePermissionsOnExecutableFile(): void
+    {
+        $root = new DirectoryFixture('disk-storage');
+
+        $path = $root->path() . '/hook.sh';
+
+        (new DiskStorage($root->path()))
+            ->writeExecutable('hook.sh', '#!/bin/sh');
+
+        self::assertSame(
+            0o755,
+            fileperms($path) & 0o777,
+            'Expected executable file to have 755 permissions',
+        );
+    }
+
+    #[Test]
+    public function throwsExceptionWhenExecutablePermissionsCannotBeSet(): void
+    {
+        $root = new DirectoryFixture('disk-storage');
+
+        $readonly = $root->path() . '/readonly';
+        mkdir($readonly, 0o555, true);
+
+        $this->expectException(PiquleException::class);
+
+        try {
+            (new DiskStorage($readonly))
+                ->writeExecutable('hook.sh', '#!/bin/sh');
+        } finally {
+            chmod($readonly, 0o755);
+        }
+    }
 }

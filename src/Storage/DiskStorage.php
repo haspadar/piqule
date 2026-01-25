@@ -46,15 +46,17 @@ final readonly class DiskStorage implements Storage
         $path = $this->path($name);
         $dir = dirname($path);
 
-        if (file_exists($dir) && !is_dir($dir)) {
+        if (!is_dir($dir)
+            && (file_exists($dir) || !@mkdir($dir, 0o755, true))
+        ) {
             throw new PiquleException(
                 sprintf('Failed to create directory "%s"', $dir),
             );
         }
 
-        if (!is_dir($dir) && !@mkdir($dir, 0o755, true)) {
+        if (!is_writable($dir)) {
             throw new PiquleException(
-                sprintf('Failed to create directory "%s"', $dir),
+                sprintf('Directory "%s" is not writable', $dir),
             );
         }
 
@@ -74,6 +76,20 @@ final readonly class DiskStorage implements Storage
         }
 
         return rtrim($this->root, '/') . '/' . $name;
+    }
+
+    #[Override]
+    public function writeExecutable(string $name, string $contents): void
+    {
+        $this->write($name, $contents);
+
+        $path = $this->path($name);
+
+        if (!chmod($path, 0o755)) {
+            throw new PiquleException(
+                sprintf('Failed to chmod file "%s"', $name),
+            );
+        }
     }
 
     private function isPathTraversal(string $name): bool
