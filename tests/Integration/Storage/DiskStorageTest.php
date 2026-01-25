@@ -80,14 +80,10 @@ final class DiskStorageTest extends TestCase
         file_put_contents($file, 'secret');
         chmod($file, 0o000);
 
-        try {
-            $this->expectException(PiquleException::class);
+        $this->expectException(PiquleException::class);
 
-            (new DiskStorage($root->path()))
-                ->read('unreadable.txt');
-        } finally {
-            chmod($file, 0o644);
-        }
+        (new DiskStorage($root->path()))
+            ->read('unreadable.txt');
     }
 
     #[Test]
@@ -136,11 +132,7 @@ final class DiskStorageTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        try {
-            (new DiskStorage($readonly))
-                ->writeExecutable('hook.sh', 'x');
-        } finally {
-            chmod($readonly, 0o755);
-        }
+        (new DiskStorage($readonly))
+            ->writeExecutable('hook.sh', 'x');
     }
 }
