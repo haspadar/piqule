@@ -179,7 +179,7 @@ final class DiskStorageTest extends TestCase
     }
 
     #[Test]
-    public function throwsExceptionWhenExecutablePermissionsCannotBeSet(): void
+    public function throwsExceptionWhenExecutableCannotBeWritten(): void
     {
         $root = new DirectoryFixture('disk-storage');
 
