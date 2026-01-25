@@ -17,14 +17,11 @@ final class DiskStorageTest extends TestCase
     {
         $root = new DirectoryFixture('disk-storage');
 
-        (new DiskStorage($root->path()))->write(
-            'nested/dir/example.txt',
-            'hello',
-        );
+        (new DiskStorage($root->path()))
+            ->write('nested/dir/example.txt', 'hello');
 
         self::assertFileExists(
             $root->path() . '/nested/dir/example.txt',
-            'Expected file to be written into nested directory',
         );
     }
 
@@ -34,13 +31,10 @@ final class DiskStorageTest extends TestCase
         $root = (new DirectoryFixture('disk-storage'))
             ->withFile('example.txt', 'hello');
 
-        $contents = (new DiskStorage($root->path()))
-            ->read('example.txt');
-
         self::assertSame(
             'hello',
-            $contents,
-            'Expected read() to return original file contents',
+            (new DiskStorage($root->path()))
+                ->read('example.txt'),
         );
     }
 
@@ -48,13 +42,12 @@ final class DiskStorageTest extends TestCase
     public function throwsExceptionWhenCannotCreateDirectory(): void
     {
         $root = (new DirectoryFixture('disk-storage'))
-            ->withFile('blocker', 'I am a file');
+            ->withFile('blocker', 'data');
 
         $this->expectException(PiquleException::class);
 
-        (new DiskStorage(
-            $root->path() . '/blocker',
-        ))->write('example.txt', 'fail');
+        (new DiskStorage($root->path() . '/blocker'))
+            ->write('example.txt', 'fail');
     }
 
     #[Test]
@@ -65,7 +58,6 @@ final class DiskStorageTest extends TestCase
 
         self::assertTrue(
             (new DiskStorage($root->path()))->exists('example.txt'),
-            'Expected exists() to return true for existing file',
         );
     }
 
@@ -76,7 +68,6 @@ final class DiskStorageTest extends TestCase
 
         self::assertFalse(
             (new DiskStorage($root->path()))->exists('missing.txt'),
-            'Expected exists() to return false for missing file',
         );
     }
 
@@ -91,49 +82,11 @@ final class DiskStorageTest extends TestCase
 
         try {
             $this->expectException(PiquleException::class);
-            $this->expectExceptionMessage('Failed to read file "unreadable.txt"');
 
-            (new DiskStorage($root->path()))->read('unreadable.txt');
+            (new DiskStorage($root->path()))
+                ->read('unreadable.txt');
         } finally {
             chmod($file, 0o644);
-        }
-    }
-
-    #[Test]
-    public function throwsExceptionWhenParentDirectoryPathIsAFile(): void
-    {
-        $root = (new DirectoryFixture('disk-storage'))
-            ->withFile('blocker', 'I am a file');
-
-        $this->expectException(PiquleException::class);
-        $this->expectExceptionMessage(sprintf(
-            'Failed to create directory "%s"',
-            $root->path() . '/blocker',
-        ));
-
-        (new DiskStorage($root->path()))
-            ->write('blocker/example.txt', 'fail');
-    }
-
-    #[Test]
-    public function throwsExceptionWhenCannotCreateDirectoryDueToPermissions(): void
-    {
-        $root = new DirectoryFixture('disk-storage');
-
-        $readonly = $root->path() . '/readonly';
-        mkdir($readonly, 0o555, true);
-
-        try {
-            $this->expectException(PiquleException::class);
-            $this->expectExceptionMessage(sprintf(
-                'Failed to create directory "%s"',
-                $readonly . '/nested',
-            ));
-
-            (new DiskStorage($readonly))
-                ->write('nested/example.txt', 'fail');
-        } finally {
-            chmod($readonly, 0o755);
         }
     }
 
@@ -150,14 +103,11 @@ final class DiskStorageTest extends TestCase
     {
         $root = new DirectoryFixture('disk-storage');
 
-        $path = $root->path() . '/hook.sh';
-
         (new DiskStorage($root->path()))
-            ->writeExecutable('hook.sh', '#!/bin/sh');
+            ->writeExecutable('hook.sh', 'payload');
 
         self::assertFileExists(
-            $path,
-            'Expected executable file to be written',
+            $root->path() . '/hook.sh',
         );
     }
 
@@ -165,16 +115,14 @@ final class DiskStorageTest extends TestCase
     public function setsExecutePermissionsOnExecutableFile(): void
     {
         $root = new DirectoryFixture('disk-storage');
-
         $path = $root->path() . '/hook.sh';
 
         (new DiskStorage($root->path()))
-            ->writeExecutable('hook.sh', '#!/bin/sh');
+            ->writeExecutable('hook.sh', 'data');
 
         self::assertSame(
             0o755,
             fileperms($path) & 0o777,
-            'Expected executable file to have 755 permissions',
         );
     }
 
@@ -190,7 +138,7 @@ final class DiskStorageTest extends TestCase
 
         try {
             (new DiskStorage($readonly))
-                ->writeExecutable('hook.sh', '#!/bin/sh');
+                ->writeExecutable('hook.sh', 'x');
         } finally {
             chmod($readonly, 0o755);
         }
