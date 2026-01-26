@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Haspadar\Piqule\File\Event;
@@ -8,9 +9,7 @@ use Override;
 
 final readonly class FileCreated implements FileEvent
 {
-    public function __construct(private string $name)
-    {
-    }
+    public function __construct(private string $name) {}
 
     #[Override]
     public function name(): string
@@ -20,7 +19,6 @@ final readonly class FileCreated implements FileEvent
 
     /**
      * @param FileTarget $target
-     * @return void
      */
     #[Override]
     public function passTo(FileTarget $target): void

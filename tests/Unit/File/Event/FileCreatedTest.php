@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
@@ -14,7 +15,7 @@ final class FileCreatedTest extends TestCase
     public function passesCreatedEventToTarget(): void
     {
         $target = new FakeTarget();
-        $event  = new FileCreated('config/app.php');
+        $event = new FileCreated('config/app.php');
 
         $event->passTo($target);
 
