@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
+
+use Override;
 
 final readonly class ListedFiles implements Files
 {
@@ -12,6 +15,7 @@ final readonly class ListedFiles implements Files
         private array $files,
     ) {}
 
+    #[Override]
     public function all(): iterable
     {
         return $this->files;

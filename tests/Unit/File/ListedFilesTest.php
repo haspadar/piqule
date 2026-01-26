@@ -17,7 +17,7 @@ final class ListedFilesTest extends TestCase
         self::assertSame(
             ['a.txt', 'b.txt'],
             array_map(
-                static fn ($file) => $file->name(),
+                static fn($file) => $file->name(),
                 iterator_to_array(
                     (new ListedFiles([
                         new InlineFile('a.txt', 'A'),
