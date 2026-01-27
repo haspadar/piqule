@@ -26,6 +26,7 @@ final readonly class Targets implements FileTarget
         }
     }
 
+    #[Override]
     public function updated(FileUpdated $event): void
     {
         foreach ($this->targets as $target) {
@@ -33,6 +34,7 @@ final readonly class Targets implements FileTarget
         }
     }
 
+    #[Override]
     public function skipped(FileSkipped $event): void
     {
         foreach ($this->targets as $target) {
