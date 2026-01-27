@@ -15,9 +15,8 @@ final class FileCreatedTest extends TestCase
     public function passesCreatedEventToTarget(): void
     {
         $target = new FakeTarget();
-        $event = new FileCreated('config/app.php');
 
-        $event->passTo($target);
+        (new FileCreated('config/app.php'))->passTo($target);
 
         self::assertCount(
             1,
@@ -30,8 +29,8 @@ final class FileCreatedTest extends TestCase
     public function exposesFileName(): void
     {
         self::assertSame(
-            'config/app.php',
-            (new FileCreated('config/app.php'))->name(),
+            'config/services.php',
+            (new FileCreated('config/services.php'))->name(),
             'FileCreated must expose the file name it was created with',
         );
     }

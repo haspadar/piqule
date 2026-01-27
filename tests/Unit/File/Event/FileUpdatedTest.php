@@ -15,9 +15,8 @@ final class FileUpdatedTest extends TestCase
     public function passesUpdatedEventToTarget(): void
     {
         $target = new FakeTarget();
-        $event = new FileUpdated('config/app.php');
 
-        $event->passTo($target);
+        (new FileUpdated('config/cache.php'))->passTo($target);
 
         self::assertCount(
             1,
@@ -29,11 +28,9 @@ final class FileUpdatedTest extends TestCase
     #[Test]
     public function exposesFileName(): void
     {
-        $event = new FileUpdated('config/app.php');
-
         self::assertSame(
-            'config/app.php',
-            $event->name(),
+            'config/database.php',
+            (new FileUpdated('config/database.php'))->name(),
             'FileUpdated must expose the file name it was created with',
         );
     }
