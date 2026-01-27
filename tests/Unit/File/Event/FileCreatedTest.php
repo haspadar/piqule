@@ -25,4 +25,14 @@ final class FileCreatedTest extends TestCase
             'Created event must be passed to target',
         );
     }
+
+    #[Test]
+    public function exposesFileName(): void
+    {
+        self::assertSame(
+            'config/app.php',
+            (new FileCreated('config/app.php'))->name(),
+            'FileCreated must expose the file name it was created with',
+        );
+    }
 }
