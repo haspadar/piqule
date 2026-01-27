@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
-use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\File\Target\FileTarget;
 use Haspadar\Piqule\Storage\Storage;
 
 interface File
@@ -20,9 +20,7 @@ interface File
     public function contents(): string;
 
     /**
-     * Writes contents to the file
-     *
-     * @throws PiquleException If writing is not supported
+     * Writes file to target storage and emits an outcome event
      */
-    public function writeTo(Storage $storage): void;
+    public function writeTo(Storage $storage, FileTarget $target): void;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
+use Haspadar\Piqule\File\Target\FileTarget;
 use Haspadar\Piqule\Storage\Storage;
 use Override;
 
@@ -27,7 +28,7 @@ final readonly class InlineFile implements File
     }
 
     #[Override]
-    public function writeTo(Storage $storage): void
+    public function writeTo(Storage $storage, FileTarget $target): void
     {
         $storage->write(
             $this->name,

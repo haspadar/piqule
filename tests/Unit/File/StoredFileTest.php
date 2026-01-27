@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\StoredFile;
 use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +45,7 @@ final class StoredFileTest extends TestCase
         $target = new FakeStorage();
 
         (new StoredFile('example.txt', $source))
-            ->writeTo($target);
+            ->writeTo($target, new FakeTarget());
 
         self::assertSame(
             'hello',
