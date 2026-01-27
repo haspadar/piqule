@@ -9,5 +9,4 @@ use Haspadar\Piqule\File\Event\FileCreated;
 interface FileTarget
 {
     public function created(FileCreated $event): void;
-
 }
