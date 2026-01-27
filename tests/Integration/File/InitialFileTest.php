@@ -8,6 +8,7 @@ use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +22,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('example.txt', 'hello'),
-        ))->writeTo($storage);
+        ))->writeTo($storage, new FakeTarget());
 
         self::assertFileExists($root->path() . '/example.txt');
     }
@@ -36,7 +37,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('example.txt', 'new'),
-        ))->writeTo($storage);
+        ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'original',

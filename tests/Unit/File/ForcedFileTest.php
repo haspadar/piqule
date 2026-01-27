@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\ForcedFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +20,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('example.txt', 'hello'),
-        ))->writeTo($storage);
+        ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'hello',
@@ -36,7 +37,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('example.txt', 'new'),
-        ))->writeTo($storage);
+        ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'new',
@@ -53,7 +54,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('example.txt', 'same'),
-        ))->writeTo($storage);
+        ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'same',
