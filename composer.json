@@ -25,6 +25,7 @@
 
         "phpstan:check": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
         "psalm:check": "psalm --config=.piqule/psalm/psalm.xml",
+        "psalm:fix": "psalm --config=.piqule/psalm/psalm.xml --alter --issues=MissingOverrideAttribute",
         "phpmd:check": "phpmd src text .piqule/phpmd/phpmd.xml",
 
         "phpmetrics:check": [
@@ -47,6 +48,7 @@
         "infection:check": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
 
         "fix": [
+            "@psalm:fix",
             "@phpcs:fix",
             "@php-cs-fixer:fix"
         ],
