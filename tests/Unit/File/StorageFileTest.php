@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File;
 
-use Haspadar\Piqule\File\StoredFile;
+use Haspadar\Piqule\File\StorageFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class StoredFileTest extends TestCase
+final class StorageFileTest extends TestCase
 {
     #[Test]
     public function returnsFileName(): void
     {
         self::assertSame(
             'example.txt',
-            (new StoredFile(
+            (new StorageFile(
                 'example.txt',
                 new InMemoryStorage(),
             ))->name(),
@@ -30,7 +30,7 @@ final class StoredFileTest extends TestCase
     {
         self::assertSame(
             'hello',
-            (new StoredFile(
+            (new StorageFile(
                 'example.txt',
                 new InMemoryStorage(['example.txt' => 'hello']),
             ))->contents(),
@@ -44,7 +44,7 @@ final class StoredFileTest extends TestCase
         $source = new InMemoryStorage(['example.txt' => 'hello']);
         $storage = new InMemoryStorage();
 
-        (new StoredFile('example.txt', $source))
+        (new StorageFile('example.txt', $source))
             ->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(

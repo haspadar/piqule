@@ -8,7 +8,7 @@ use Haspadar\Piqule\File\Reaction\FileReaction;
 use Haspadar\Piqule\Storage\Storage;
 use Override;
 
-final readonly class StoredFile implements File
+final readonly class StorageFile implements File
 {
     public function __construct(
         private string $name,
