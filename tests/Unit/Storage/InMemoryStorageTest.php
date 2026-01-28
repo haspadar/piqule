@@ -9,7 +9,7 @@ use Haspadar\Piqule\Storage\InMemoryStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class FakeStorageTest extends TestCase
+final class InMemoryStorageTest extends TestCase
 {
     #[Test]
     public function existsReturnsFalseForMissingFile(): void
