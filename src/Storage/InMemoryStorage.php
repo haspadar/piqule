@@ -49,4 +49,13 @@ final class InMemoryStorage implements Storage
     {
         $this->write($name, $contents);
     }
+
+    /**
+     * @return iterable<string> logical file names
+     */
+    #[Override]
+    public function names(): iterable
+    {
+        return array_keys($this->files);
+    }
 }

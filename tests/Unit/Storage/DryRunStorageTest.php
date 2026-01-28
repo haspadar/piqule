@@ -63,4 +63,21 @@ final class DryRunStorageTest extends TestCase
             'Executable file was written in dry-run mode',
         );
     }
+
+    #[Test]
+    public function delegatesNamesToOriginalStorage(): void
+    {
+        self::assertEquals(
+            ['a.txt', 'nested/b.txt'],
+            iterator_to_array(
+                (new DryRunStorage(
+                    new InMemoryStorage([
+                        'a.txt' => 'a',
+                        'nested/b.txt' => 'b',
+                    ]),
+                ))->names(),
+            ),
+            'names() was not delegated to original storage',
+        );
+    }
 }

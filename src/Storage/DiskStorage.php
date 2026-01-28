@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use FilesystemIterator;
 use Haspadar\Piqule\PiquleException;
 use Override;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 final readonly class DiskStorage implements Storage
 {
@@ -78,6 +82,28 @@ final readonly class DiskStorage implements Storage
             throw new PiquleException(
                 sprintf('Failed to chmod file "%s"', $name),
             );
+        }
+    }
+
+    #[Override]
+    public function names(): iterable
+    {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $this->path->root(),
+                FilesystemIterator::SKIP_DOTS,
+            ),
+        );
+
+        $rootLength = strlen(rtrim($this->path->root(), '/')) + 1;
+
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            yield substr($file->getPathname(), $rootLength);
         }
     }
 }

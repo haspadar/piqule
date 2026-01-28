@@ -136,4 +136,22 @@ final class DiskStorageTest extends TestCase
         (new DiskStorage(new DiskPath($readonly)))
             ->writeExecutable('hook.sh', 'x');
     }
+
+    #[Test]
+    public function listsAllFilesRecursively(): void
+    {
+        $directory = (new DirectoryFixture('disk-storage'))
+            ->withFile('a.txt', 'a')
+            ->withFile('nested/b.txt', 'b');
+
+        $names = iterator_to_array(
+            (new DiskStorage(new DiskPath($directory->path())))->names(),
+        );
+
+        self::assertEqualsCanonicalizing(
+            ['a.txt', 'nested/b.txt'],
+            $names,
+            'Expected names() to return all file names relative to root',
+        );
+    }
 }
