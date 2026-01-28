@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\File;
 
-use Haspadar\Piqule\File\StoredFile;
-use Haspadar\Piqule\File\StoredFiles;
+use Haspadar\Piqule\File\StorageFile;
+use Haspadar\Piqule\File\StorageFiles;
 use Haspadar\Piqule\Storage\DiskPath;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class StoredFilesTest extends TestCase
+final class StorageFilesTest extends TestCase
 {
     #[Test]
     public function returnsEmptyIterableWhenDirectoryIsEmpty(): void
     {
         $directory = new DirectoryFixture('stored-files');
 
-        $files = new StoredFiles(
+        $files = new StorageFiles(
             new DiskStorage(new DiskPath($directory->path())),
             $directory->path(),
         );
@@ -39,13 +39,13 @@ final class StoredFilesTest extends TestCase
             ->withFile('nested/b.txt', 'B')
             ->withFile('nested/deep/c.txt', 'C');
 
-        $files = new StoredFiles(
+        $files = new StorageFiles(
             new DiskStorage(new DiskPath($directory->path())),
             $directory->path(),
         );
 
         $paths = array_map(
-            static fn(StoredFile $file): string => $file->name(),
+            static fn(StorageFile $file): string => $file->name(),
             iterator_to_array($files->all()),
         );
 
@@ -68,7 +68,7 @@ final class StoredFilesTest extends TestCase
         $directory = new DirectoryFixture('stored-files');
         mkdir($directory->path() . '/dir-only');
 
-        $files = new StoredFiles(
+        $files = new StorageFiles(
             new DiskStorage(new DiskPath($directory->path())),
             $directory->path(),
         );
