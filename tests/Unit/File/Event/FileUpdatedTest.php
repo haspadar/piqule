@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
 
 use Haspadar\Piqule\File\Event\FileUpdated;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FileUpdatedTest extends TestCase
 {
     #[Test]
-    public function passesUpdatedEventToTarget(): void
+    public function passesUpdatedEventToReaction(): void
     {
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
-        (new FileUpdated('config/cache.php'))->passTo($target);
+        (new FileUpdated('config/cache.php'))->passTo($reaction);
 
         self::assertCount(
             1,
-            $target->events(),
-            'Updated event must be passed to target',
+            $reaction->events(),
+            'Updated event must be passed to reaction',
         );
     }
 

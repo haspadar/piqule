@@ -8,7 +8,7 @@ use Haspadar\Piqule\Application\FileApplication;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\File\ListedFiles;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ final class FileApplicationTest extends TestCase
                 new InlineFile('a.txt', 'A'),
             ]),
             $storage,
-            new FakeTarget(),
+            new FakeEventFileReaction(),
         ))->run();
 
         self::assertSame(

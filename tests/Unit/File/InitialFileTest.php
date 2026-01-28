@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +44,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('initial/new.txt', 'hello'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'hello',
@@ -57,15 +57,15 @@ final class InitialFileTest extends TestCase
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
         $storage = new InMemoryStorage();
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/created.txt', 'data'),
-        ))->writeTo($storage, $target);
+        ))->writeTo($storage, $reaction);
 
         self::assertSame(
             'initial/created.txt',
-            $target->events()[0]->name(),
+            $reaction->events()[0]->name(),
             'Created file name must be reported',
         );
     }
@@ -79,7 +79,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('initial/existing.txt', 'new'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'original',
@@ -94,15 +94,15 @@ final class InitialFileTest extends TestCase
         $storage = new InMemoryStorage([
             'initial/skipped.txt' => 'keep',
         ]);
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/skipped.txt', 'ignored'),
-        ))->writeTo($storage, $target);
+        ))->writeTo($storage, $reaction);
 
         self::assertSame(
             'initial/skipped.txt',
-            $target->events()[0]->name(),
+            $reaction->events()[0]->name(),
             'Skipped file name must be reported',
         );
     }

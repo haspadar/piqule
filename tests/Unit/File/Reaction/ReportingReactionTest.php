@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\File\Target;
+namespace Haspadar\Piqule\Tests\Unit\File\Reaction;
 
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
-use Haspadar\Piqule\File\Target\ReportingTarget;
+use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class ReportingTargetTest extends TestCase
+final class ReportingReactionTest extends TestCase
 {
     #[Test]
     public function reportsCreatedFile(): void
     {
         $output = new FakeOutput();
 
-        (new ReportingTarget($output))
+        (new ReportingFileReaction($output))
             ->created(new FileCreated('reporting/pre-push'));
 
         self::assertCount(
@@ -34,7 +34,7 @@ final class ReportingTargetTest extends TestCase
     {
         $output = new FakeOutput();
 
-        (new ReportingTarget($output))
+        (new ReportingFileReaction($output))
             ->updated(new FileUpdated('reporting/pre-commit'));
 
         self::assertCount(
@@ -49,7 +49,7 @@ final class ReportingTargetTest extends TestCase
     {
         $output = new FakeOutput();
 
-        (new ReportingTarget($output))
+        (new ReportingFileReaction($output))
             ->skipped(new FileSkipped('reporting/commit-msg'));
 
         self::assertCount(

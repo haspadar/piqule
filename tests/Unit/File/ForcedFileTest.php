@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\ForcedFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/write.txt', 'hello'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'hello',
@@ -33,15 +33,15 @@ final class ForcedFileTest extends TestCase
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
         $storage = new InMemoryStorage();
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/created.txt', 'data'),
-        ))->writeTo($storage, $target);
+        ))->writeTo($storage, $reaction);
 
         self::assertSame(
             'forced/created.txt',
-            $target->events()[0]->name(),
+            $reaction->events()[0]->name(),
             'Created file name must be reported',
         );
     }
@@ -55,7 +55,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/update.txt', 'new'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'new',
@@ -70,15 +70,15 @@ final class ForcedFileTest extends TestCase
         $storage = new InMemoryStorage([
             'forced/updated.txt' => 'before',
         ]);
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/updated.txt', 'after'),
-        ))->writeTo($storage, $target);
+        ))->writeTo($storage, $reaction);
 
         self::assertSame(
             'forced/updated.txt',
-            $target->events()[0]->name(),
+            $reaction->events()[0]->name(),
             'Updated file name must be reported',
         );
     }
@@ -92,7 +92,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/same.txt', 'same'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'same',
@@ -107,15 +107,15 @@ final class ForcedFileTest extends TestCase
         $storage = new InMemoryStorage([
             'forced/skipped.txt' => 'noop',
         ]);
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/skipped.txt', 'noop'),
-        ))->writeTo($storage, $target);
+        ))->writeTo($storage, $reaction);
 
         self::assertSame(
             'forced/skipped.txt',
-            $target->events()[0]->name(),
+            $reaction->events()[0]->name(),
             'Skipped file name must be reported',
         );
     }

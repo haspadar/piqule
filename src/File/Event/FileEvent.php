@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File\Event;
 
-use Haspadar\Piqule\File\Target\FileTarget;
+use Haspadar\Piqule\File\Reaction\FileReaction;
 
 interface FileEvent
 {
@@ -14,7 +14,7 @@ interface FileEvent
     public function name(): string;
 
     /**
-     * Pass this event to a target
+     * Pass this event to a reaction
      */
-    public function passTo(FileTarget $target): void;
+    public function passTo(FileReaction $reaction): void;
 }

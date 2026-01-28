@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
-use Haspadar\Piqule\File\Target\FileTarget;
+use Haspadar\Piqule\File\Reaction\FileReaction;
 use Haspadar\Piqule\Storage\Storage;
 
 interface File
@@ -22,5 +22,5 @@ interface File
     /**
      * Writes file to target storage and emits an outcome event
      */
-    public function writeTo(Storage $storage, FileTarget $target): void;
+    public function writeTo(Storage $storage, FileReaction $reaction): void;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File\Event;
 
-use Haspadar\Piqule\File\Target\FileTarget;
+use Haspadar\Piqule\File\Reaction\FileReaction;
 use Override;
 
 final readonly class FileSkipped implements FileEvent
@@ -18,11 +18,11 @@ final readonly class FileSkipped implements FileEvent
     }
 
     /**
-     * @param FileTarget $target
+     * @param FileReaction $reaction
      */
     #[Override]
-    public function passTo(FileTarget $target): void
+    public function passTo(FileReaction $reaction): void
     {
-        $target->skipped($this);
+        $reaction->skipped($this);
     }
 }

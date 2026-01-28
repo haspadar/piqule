@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File\Target;
+namespace Haspadar\Piqule\File\Reaction;
 
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
 
-interface FileTarget
+interface FileReaction
 {
     public function created(FileCreated $event): void;
 

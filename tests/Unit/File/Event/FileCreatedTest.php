@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
 
 use Haspadar\Piqule\File\Event\FileCreated;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FileCreatedTest extends TestCase
 {
     #[Test]
-    public function passesCreatedEventToTarget(): void
+    public function passesCreatedEventToReaction(): void
     {
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
-        (new FileCreated('config/app.php'))->passTo($target);
+        (new FileCreated('config/app.php'))->passTo($reaction);
 
         self::assertCount(
             1,
-            $target->events(),
-            'Created event must be passed to target',
+            $reaction->events(),
+            'Created event must be passed to reaction',
         );
     }
 

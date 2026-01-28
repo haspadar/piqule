@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File\Target;
+namespace Haspadar\Piqule\File\Reaction;
 
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
@@ -14,7 +14,7 @@ use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Output\Output;
 use Override;
 
-final readonly class ReportingTarget implements FileTarget
+final readonly class ReportingFileReaction implements FileReaction
 {
     public function __construct(
         private Output $output,
