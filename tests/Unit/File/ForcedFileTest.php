@@ -19,12 +19,30 @@ final class ForcedFileTest extends TestCase
         $storage = new FakeStorage();
 
         (new ForcedFile(
-            new InlineFile('example.txt', 'hello'),
+            new InlineFile('forced/write.txt', 'hello'),
         ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'hello',
-            $storage->read('example.txt'),
+            $storage->read('forced/write.txt'),
+            'File must be written when it does not exist',
+        );
+    }
+
+    #[Test]
+    public function reportsCreatedEventWhenFileDoesNotExist(): void
+    {
+        $storage = new FakeStorage();
+        $target = new FakeTarget();
+
+        (new ForcedFile(
+            new InlineFile('forced/created.txt', 'data'),
+        ))->writeTo($storage, $target);
+
+        self::assertSame(
+            'forced/created.txt',
+            $target->events()[0]->name(),
+            'Created file name must be reported',
         );
     }
 
@@ -32,33 +50,73 @@ final class ForcedFileTest extends TestCase
     public function overwritesFileWhenContentsDiffer(): void
     {
         $storage = new FakeStorage([
-            'example.txt' => 'old',
+            'forced/update.txt' => 'old',
         ]);
 
         (new ForcedFile(
-            new InlineFile('example.txt', 'new'),
+            new InlineFile('forced/update.txt', 'new'),
         ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'new',
-            $storage->read('example.txt'),
+            $storage->read('forced/update.txt'),
+            'File must be overwritten when contents differ',
         );
     }
 
     #[Test]
-    public function doesNothingWhenContentsAreIdentical(): void
+    public function reportsUpdatedEventWhenContentsDiffer(): void
     {
         $storage = new FakeStorage([
-            'example.txt' => 'same',
+            'forced/updated.txt' => 'before',
+        ]);
+        $target = new FakeTarget();
+
+        (new ForcedFile(
+            new InlineFile('forced/updated.txt', 'after'),
+        ))->writeTo($storage, $target);
+
+        self::assertSame(
+            'forced/updated.txt',
+            $target->events()[0]->name(),
+            'Updated file name must be reported',
+        );
+    }
+
+    #[Test]
+    public function doesNotOverwriteFileWhenContentsAreIdentical(): void
+    {
+        $storage = new FakeStorage([
+            'forced/same.txt' => 'same',
         ]);
 
         (new ForcedFile(
-            new InlineFile('example.txt', 'same'),
+            new InlineFile('forced/same.txt', 'same'),
         ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'same',
-            $storage->read('example.txt'),
+            $storage->read('forced/same.txt'),
+            'File must not be rewritten when contents are identical',
+        );
+    }
+
+    #[Test]
+    public function reportsSkippedEventWhenContentsAreIdentical(): void
+    {
+        $storage = new FakeStorage([
+            'forced/skipped.txt' => 'noop',
+        ]);
+        $target = new FakeTarget();
+
+        (new ForcedFile(
+            new InlineFile('forced/skipped.txt', 'noop'),
+        ))->writeTo($storage, $target);
+
+        self::assertSame(
+            'forced/skipped.txt',
+            $target->events()[0]->name(),
+            'Skipped file name must be reported',
         );
     }
 }
