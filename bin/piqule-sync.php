@@ -3,22 +3,29 @@
 
 declare(strict_types=1);
 
+use Haspadar\Piqule\Application\AnnouncedApplication;
+use Haspadar\Piqule\Application\FileApplication;
+use Haspadar\Piqule\File\CompositeFiles;
+use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\File\ForcedFile;
+use Haspadar\Piqule\File\InitialFile;
+use Haspadar\Piqule\File\MappedFiles;
+use Haspadar\Piqule\File\Reaction\FileReactions;
+use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
+use Haspadar\Piqule\File\StorageFiles;
 use Haspadar\Piqule\Options;
+use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Console;
-use Haspadar\Piqule\Output\Line\Error;
+use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Source\DiskSources;
-use Haspadar\Piqule\Target\Storage\DiskTargetStorage;
-use Haspadar\Piqule\Target\Storage\DryRunTargetStorage;
-use Haspadar\Piqule\Target\Sync\Chain;
-use Haspadar\Piqule\Target\Sync\ReplaceSync;
-use Haspadar\Piqule\Target\Sync\SkippingIfExistsSync;
-use Haspadar\Piqule\Target\Sync\WithDryRunSync;
+use Haspadar\Piqule\Storage\DiskPath;
+use Haspadar\Piqule\Storage\DiskStorage;
+use Haspadar\Piqule\Storage\DryRunStorage;
 
 $autoloaded = false;
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $file) {
     if (file_exists($file)) {
-        require $file;
+        require_once $file;
         $autoloaded = true;
         break;
     }
@@ -29,8 +36,6 @@ if (!$autoloaded) {
     exit(1);
 }
 
-$output = new Console();
-
 try {
     $projectRoot = getcwd();
     if ($projectRoot === false) {
@@ -40,26 +45,53 @@ try {
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
         ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $targetStorage = new DiskTargetStorage($projectRoot);
-    $options = new Options($argv);
-    $sync = new Chain([
-        new SkippingIfExistsSync(
-            new DiskSources($libraryRoot . '/templates/once'),
-            $output,
-        ),
-        new ReplaceSync(
-            new DiskSources($libraryRoot . '/templates/always'),
+    $output = new Console();
+    $reactions = new FileReactions([
+        new ReportingFileReaction(
             $output,
         ),
     ]);
 
-    if ($options->isDryRun()) {
-        (new WithDryRunSync($sync, $output))
-            ->apply(new DryRunTargetStorage($targetStorage));
-    } else {
-        $sync->apply($targetStorage);
-    }
+    $files = new CompositeFiles([
+        new MappedFiles(
+            new StorageFiles(
+                new DiskStorage(
+                    new DiskPath($libraryRoot . '/templates/once')
+                ),
+            ),
+            fn(File $file): File => new InitialFile($file),
+        ),
+        new MappedFiles(
+            new StorageFiles(
+                new DiskStorage(
+                    new DiskPath($libraryRoot . '/templates/always')
+                ),
+            ),
+            fn(File $file): File => new ForcedFile($file),
+        ),
+    ]);
+
+    $targetStorage = new DiskStorage(new DiskPath($projectRoot));
+    $application = (new Options($argv))->isDryRun()
+        ? new AnnouncedApplication(
+            new FileApplication(
+                $files,
+                new DryRunStorage($targetStorage),
+                $reactions,
+            ),
+            $output,
+            new Text("DRY RUN mode — no files will be written\n", new Yellow()),
+            new Text("\nDRY RUN completed", new Yellow()),
+        )
+        : new FileApplication(
+            $files,
+            $targetStorage,
+            $reactions,
+        );
+
+    $application->run();
 } catch (PiquleException $e) {
-    $output->write(new Error($e->getMessage()));
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    fwrite(STDERR, $e->getTraceAsString() . PHP_EOL);
     exit(1);
 }
