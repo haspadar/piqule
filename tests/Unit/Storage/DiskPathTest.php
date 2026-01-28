@@ -52,4 +52,14 @@ final class DiskPathTest extends TestCase
 
         (new DiskPath('C:/root'))->full('..\\file.txt');
     }
+
+    #[Test]
+    public function returnsRootWithoutTrailingSlash(): void
+    {
+        self::assertSame(
+            '/app/root',
+            (new DiskPath('/app/root/'))->root(),
+            'Expected trailing slash to be trimmed from root',
+        );
+    }
 }
