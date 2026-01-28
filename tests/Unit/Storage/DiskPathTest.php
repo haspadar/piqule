@@ -15,8 +15,8 @@ final class DiskPathTest extends TestCase
     public function resolvesRelativePath(): void
     {
         self::assertSame(
-            '/root/dir/file.txt',
-            (new DiskPath('/root'))->full('dir/file.txt'),
+            '/app/root/dir/file.txt',
+            (new DiskPath('/app/root'))->full('dir/file.txt'),
             'Expected relative path to be resolved under root',
         );
     }
@@ -26,7 +26,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/root'))->full('../file.txt');
+        (new DiskPath('/safe/root'))->full('../file.txt');
     }
 
     #[Test]
@@ -34,7 +34,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/root'))->full('/etc/passwd');
+        (new DiskPath('/sandbox'))->full('/etc/passwd');
     }
 
     #[Test]
@@ -42,7 +42,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/root'))->full("file\0.txt");
+        (new DiskPath('/tmp/root'))->full("file\0.txt");
     }
 
     #[Test]
@@ -50,6 +50,6 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/root'))->full('..\\file.txt');
+        (new DiskPath('C:/root'))->full('..\\file.txt');
     }
 }
