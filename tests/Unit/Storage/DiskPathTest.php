@@ -46,11 +46,11 @@ final class DiskPathTest extends TestCase
     }
 
     #[Test]
-    public function rejectsWindowsTraversal(): void
+    public function rejectsWindowsAbsolutePathWithForwardSlashes(): void
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('C:/root'))->full('..\\file.txt');
+        (new DiskPath('D:/sandbox'))->full('C:/Windows/System32');
     }
 
     #[Test]
@@ -78,7 +78,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('C:/root'))->full('C:\\Windows\\System32');
+        (new DiskPath('C:/app/root'))->full('C:\\Windows\\System32');
     }
 
     #[Test]
@@ -86,6 +86,6 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('C:/root'))->full('\\\\server\\share');
+        (new DiskPath('Z:/storage'))->full('\\\\server\\share');
     }
 }
