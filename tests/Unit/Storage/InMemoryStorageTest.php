@@ -86,4 +86,17 @@ final class InMemoryStorageTest extends TestCase
             'Expected writeExecutable() to behave like write()',
         );
     }
+
+    #[Test]
+    public function returnsAllStoredNames(): void
+    {
+        self::assertEquals(
+            ['a.txt', 'nested/b.txt'],
+            (new InMemoryStorage([
+                'a.txt' => 'a',
+                'nested/b.txt' => 'b',
+            ]))->names(),
+            'Expected names() to return all stored file names',
+        );
+    }
 }
