@@ -17,10 +17,11 @@ final class InitialFileTest extends TestCase
     public function delegatesName(): void
     {
         self::assertSame(
-            'example.txt',
+            'initial/config.php',
             (new InitialFile(
-                new InlineFile('example.txt', 'hello'),
+                new InlineFile('initial/config.php', 'data'),
             ))->name(),
+            'InitialFile must delegate name to origin file',
         );
     }
 
@@ -28,10 +29,11 @@ final class InitialFileTest extends TestCase
     public function delegatesContents(): void
     {
         self::assertSame(
-            'hello',
+            'payload',
             (new InitialFile(
-                new InlineFile('example.txt', 'hello'),
+                new InlineFile('initial/data.txt', 'payload'),
             ))->contents(),
+            'InitialFile must delegate contents to origin file',
         );
     }
 
@@ -41,12 +43,30 @@ final class InitialFileTest extends TestCase
         $storage = new FakeStorage();
 
         (new InitialFile(
-            new InlineFile('example.txt', 'hello'),
+            new InlineFile('initial/new.txt', 'hello'),
         ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'hello',
-            $storage->read('example.txt'),
+            $storage->read('initial/new.txt'),
+            'File must be written when it does not exist',
+        );
+    }
+
+    #[Test]
+    public function reportsCreatedEventWhenFileDoesNotExist(): void
+    {
+        $storage = new FakeStorage();
+        $target = new FakeTarget();
+
+        (new InitialFile(
+            new InlineFile('initial/created.txt', 'data'),
+        ))->writeTo($storage, $target);
+
+        self::assertSame(
+            'initial/created.txt',
+            $target->events()[0]->name(),
+            'Created file name must be reported',
         );
     }
 
@@ -54,16 +74,36 @@ final class InitialFileTest extends TestCase
     public function doesNotOverwriteExistingFile(): void
     {
         $storage = new FakeStorage([
-            'example.txt' => 'original',
+            'initial/existing.txt' => 'original',
         ]);
 
         (new InitialFile(
-            new InlineFile('example.txt', 'new'),
+            new InlineFile('initial/existing.txt', 'new'),
         ))->writeTo($storage, new FakeTarget());
 
         self::assertSame(
             'original',
-            $storage->read('example.txt'),
+            $storage->read('initial/existing.txt'),
+            'Existing file must not be overwritten',
+        );
+    }
+
+    #[Test]
+    public function reportsSkippedEventWhenFileAlreadyExists(): void
+    {
+        $storage = new FakeStorage([
+            'initial/skipped.txt' => 'keep',
+        ]);
+        $target = new FakeTarget();
+
+        (new InitialFile(
+            new InlineFile('initial/skipped.txt', 'ignored'),
+        ))->writeTo($storage, $target);
+
+        self::assertSame(
+            'initial/skipped.txt',
+            $target->events()[0]->name(),
+            'Skipped file name must be reported',
         );
     }
 }
