@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
 
 use Haspadar\Piqule\File\Event\FileSkipped;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class FileSkippedTest extends TestCase
 {
     #[Test]
-    public function passesSkippedEventToTarget(): void
+    public function passesSkippedEventToReaction(): void
     {
-        $target = new FakeTarget();
+        $reaction = new FakeEventFileReaction();
 
-        (new FileSkipped('config/logging.php'))->passTo($target);
+        (new FileSkipped('config/logging.php'))->passTo($reaction);
 
         self::assertCount(
             1,
-            $target->events(),
-            'Skipped event must be passed to target',
+            $reaction->events(),
+            'Skipped event must be passed to reaction',
         );
     }
 

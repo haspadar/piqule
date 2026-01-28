@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\StoredFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -42,15 +42,15 @@ final class StoredFileTest extends TestCase
     public function writesFileToAnotherStorage(): void
     {
         $source = new InMemoryStorage(['example.txt' => 'hello']);
-        $target = new InMemoryStorage();
+        $storage = new InMemoryStorage();
 
         (new StoredFile('example.txt', $source))
-            ->writeTo($target, new FakeTarget());
+            ->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'hello',
-            $target->read('example.txt'),
-            'Expected writeTo() to copy file contents to target storage',
+            $storage->read('example.txt'),
+            'Expected writeTo() to copy file contents to storage',
         );
     }
 }

@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -42,7 +42,7 @@ final class ExecutableFileTest extends TestCase
 
         (new ExecutableFile(
             new InlineFile('hook.sh', 'payload'),
-        ))->writeTo($storage, new FakeTarget());
+        ))->writeTo($storage, new FakeEventFileReaction());
 
         self::assertSame(
             'payload',

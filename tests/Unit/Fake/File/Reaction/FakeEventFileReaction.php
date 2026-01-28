@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Fake\File\Target;
+namespace Haspadar\Piqule\Tests\Unit\Fake\File\Reaction;
 
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
-use Haspadar\Piqule\File\Target\FileTarget;
+use Haspadar\Piqule\File\Reaction\FileReaction;
 
-final class FakeTarget implements FileTarget
+final class FakeEventFileReaction implements FileReaction
 {
     /** @var list<object> */
     private array $events = [];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File\Event;
 
-use Haspadar\Piqule\File\Target\FileTarget;
+use Haspadar\Piqule\File\Reaction\FileReaction;
 use Override;
 
 final readonly class FileUpdated implements FileEvent
@@ -20,8 +20,8 @@ final readonly class FileUpdated implements FileEvent
     }
 
     #[Override]
-    public function passTo(FileTarget $target): void
+    public function passTo(FileReaction $reaction): void
     {
-        $target->updated($this);
+        $reaction->updated($this);
     }
 }
