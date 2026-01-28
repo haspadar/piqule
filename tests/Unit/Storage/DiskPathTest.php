@@ -72,4 +72,20 @@ final class DiskPathTest extends TestCase
             'Expected trailing slash in root to be normalized in full path',
         );
     }
+
+    #[Test]
+    public function rejectsWindowsAbsolutePath(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new DiskPath('C:/root'))->full('C:\\Windows\\System32');
+    }
+
+    #[Test]
+    public function rejectsUncPath(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new DiskPath('C:/root'))->full('\\\\server\\share');
+    }
 }
