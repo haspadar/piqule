@@ -29,4 +29,9 @@ interface Storage
      * Writes contents to a file and makes it executable
      */
     public function writeExecutable(string $name, string $contents): void;
+
+    /**
+     * @return iterable<string> logical file names
+     */
+    public function names(): iterable;
 }
