@@ -62,4 +62,14 @@ final class DiskPathTest extends TestCase
             'Expected trailing slash to be trimmed from root',
         );
     }
+
+    #[Test]
+    public function normalizesRootWithTrailingSlashWhenBuildingFullPath(): void
+    {
+        self::assertSame(
+            '/app/root/file.txt',
+            (new DiskPath('/app/root/'))->full('file.txt'),
+            'Expected trailing slash in root to be normalized in full path',
+        );
+    }
 }
