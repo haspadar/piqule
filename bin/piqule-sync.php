@@ -80,7 +80,7 @@ try {
                 $reactions,
             ),
             $output,
-            new Text("DRY RUN — no files were written\n", new Yellow()),
+            new Text("DRY RUN mode — no files will be written\n", new Yellow()),
             new Text("\nDRY RUN completed", new Yellow()),
         )
         : new FileApplication(
