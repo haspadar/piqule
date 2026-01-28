@@ -8,6 +8,7 @@ use Haspadar\Piqule\Application\AnnouncedApplication;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\Tests\Unit\Fake\Application\FakeApplication;
+use Haspadar\Piqule\Tests\Unit\Fake\Application\OutputtingApplication;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -49,6 +50,32 @@ final class AnnouncedApplicationTest extends TestCase
             new Text('execution finished', new Yellow()),
             $output->lines()[1],
             'Execution end was not announced',
+        );
+    }
+
+    #[Test]
+    public function executesOriginApplicationBetweenAnnouncements(): void
+    {
+        $output = new FakeOutput();
+
+        (new AnnouncedApplication(
+            new OutputtingApplication(
+                $output,
+                new Text('origin executed', new Yellow()),
+            ),
+            $output,
+            new Text('start', new Yellow()),
+            new Text('end', new Yellow()),
+        ))->run();
+
+        self::assertEquals(
+            [
+                new Text('start', new Yellow()),
+                new Text('origin executed', new Yellow()),
+                new Text('end', new Yellow()),
+            ],
+            $output->lines(),
+            'Origin application output was not executed between announcements',
         );
     }
 }
