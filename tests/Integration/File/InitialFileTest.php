@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Integration\File;
 
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
+use Haspadar\Piqule\Storage\DiskPath;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
@@ -17,23 +18,23 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function writesFileWhenItDoesNotExist(): void
     {
-        $root = new DirectoryFixture('initial-file');
-        $storage = new DiskStorage($root->path());
+        $directory = new DirectoryFixture('initial-file');
+        $storage = new DiskStorage(new DiskPath($directory->path()));
 
         (new InitialFile(
             new InlineFile('example.txt', 'hello'),
         ))->writeTo($storage, new FakeEventFileReaction());
 
-        self::assertFileExists($root->path() . '/example.txt');
+        self::assertFileExists($directory->path() . '/example.txt');
     }
 
     #[Test]
     public function doesNotOverwriteExistingFile(): void
     {
-        $root = (new DirectoryFixture('initial-file'))
+        $directory = (new DirectoryFixture('initial-file'))
             ->withFile('example.txt', 'original');
 
-        $storage = new DiskStorage($root->path());
+        $storage = new DiskStorage(new DiskPath($directory->path()));
 
         (new InitialFile(
             new InlineFile('example.txt', 'new'),
@@ -41,7 +42,7 @@ final class InitialFileTest extends TestCase
 
         self::assertSame(
             'original',
-            file_get_contents($root->path() . '/example.txt'),
+            file_get_contents($directory->path() . '/example.txt'),
         );
     }
 }

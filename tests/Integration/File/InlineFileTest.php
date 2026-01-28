@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Integration\File;
 
 use Haspadar\Piqule\File\InlineFile;
+use Haspadar\Piqule\Storage\DiskPath;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
@@ -16,8 +17,8 @@ final class InlineFileTest extends TestCase
     #[Test]
     public function writesContentsToStorage(): void
     {
-        $root = new DirectoryFixture('inline-file');
-        $storage = new DiskStorage($root->path());
+        $directory = new DirectoryFixture('inline-file');
+        $storage = new DiskStorage(new DiskPath($directory->path()));
 
         (new InlineFile(
             'example.txt',
@@ -26,7 +27,7 @@ final class InlineFileTest extends TestCase
 
         self::assertSame(
             'hello',
-            file_get_contents($root->path() . '/example.txt'),
+            file_get_contents($directory->path() . '/example.txt'),
         );
     }
 }
