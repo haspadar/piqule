@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Storage;
 
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Storage\InMemoryStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ final class FakeStorageTest extends TestCase
     public function existsReturnsFalseForMissingFile(): void
     {
         self::assertFalse(
-            (new FakeStorage())->exists('missing.txt'),
+            (new InMemoryStorage())->exists('missing.txt'),
             'Expected missing file to not exist',
         );
     }
@@ -24,7 +24,7 @@ final class FakeStorageTest extends TestCase
     public function existsReturnsTrueForExistingFile(): void
     {
         self::assertTrue(
-            (new FakeStorage(['file.txt' => 'data']))->exists('file.txt'),
+            (new InMemoryStorage(['file.txt' => 'data']))->exists('file.txt'),
             'Expected existing file to exist',
         );
     }
@@ -32,7 +32,7 @@ final class FakeStorageTest extends TestCase
     #[Test]
     public function readsPreviouslyWrittenFile(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
         $storage->write('file.txt', 'hello');
 
         self::assertSame(
@@ -47,7 +47,7 @@ final class FakeStorageTest extends TestCase
     {
         self::assertSame(
             'hello',
-            (new FakeStorage(['file.txt' => 'hello']))->read('file.txt'),
+            (new InMemoryStorage(['file.txt' => 'hello']))->read('file.txt'),
             'Expected read() to return initial contents',
         );
     }
@@ -57,13 +57,13 @@ final class FakeStorageTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new FakeStorage())->read('missing.txt');
+        (new InMemoryStorage())->read('missing.txt');
     }
 
     #[Test]
     public function writeOverwritesExistingFile(): void
     {
-        $storage = new FakeStorage(['file.txt' => 'old']);
+        $storage = new InMemoryStorage(['file.txt' => 'old']);
         $storage->write('file.txt', 'new');
 
         self::assertSame(
@@ -76,7 +76,7 @@ final class FakeStorageTest extends TestCase
     #[Test]
     public function writeExecutableWritesFile(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
 
         $storage->writeExecutable('hook.sh', '#!/bin/sh');
 

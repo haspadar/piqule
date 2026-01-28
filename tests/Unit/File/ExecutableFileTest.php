@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +38,7 @@ final class ExecutableFileTest extends TestCase
     #[Test]
     public function writesFileToStorage(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
 
         (new ExecutableFile(
             new InlineFile('hook.sh', 'payload'),

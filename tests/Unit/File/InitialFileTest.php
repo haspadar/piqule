@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -40,7 +40,7 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function writesFileWhenItDoesNotExist(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
 
         (new InitialFile(
             new InlineFile('initial/new.txt', 'hello'),
@@ -56,7 +56,7 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
         $target = new FakeTarget();
 
         (new InitialFile(
@@ -73,7 +73,7 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function doesNotOverwriteExistingFile(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'initial/existing.txt' => 'original',
         ]);
 
@@ -91,7 +91,7 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function reportsSkippedEventWhenFileAlreadyExists(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'initial/skipped.txt' => 'keep',
         ]);
         $target = new FakeTarget();
