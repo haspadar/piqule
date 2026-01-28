@@ -10,19 +10,19 @@ use Override;
 final readonly class DiskStorage implements Storage
 {
     public function __construct(
-        private string $root,
+        private DiskPath $path,
     ) {}
 
     #[Override]
     public function exists(string $name): bool
     {
-        return is_file($this->path($name));
+        return is_file($this->path->full($name));
     }
 
     #[Override]
     public function read(string $name): string
     {
-        $path = $this->path($name);
+        $path = $this->path->full($name);
 
         if (!is_file($path) || !is_readable($path)) {
             throw new PiquleException(
@@ -43,7 +43,7 @@ final readonly class DiskStorage implements Storage
     #[Override]
     public function write(string $name, string $contents): void
     {
-        $path = $this->path($name);
+        $path = $this->path->full($name);
         $dir = dirname($path);
 
         if (!is_dir($dir)
@@ -67,36 +67,17 @@ final readonly class DiskStorage implements Storage
         }
     }
 
-    private function path(string $name): string
-    {
-        if ($this->isPathTraversal($name)) {
-            throw new PiquleException(
-                sprintf('Invalid storage path "%s"', $name),
-            );
-        }
-
-        return rtrim($this->root, '/') . '/' . $name;
-    }
-
     #[Override]
     public function writeExecutable(string $name, string $contents): void
     {
         $this->write($name, $contents);
 
-        $path = $this->path($name);
+        $path = $this->path->full($name);
 
         if (!chmod($path, 0o755)) {
             throw new PiquleException(
                 sprintf('Failed to chmod file "%s"', $name),
             );
         }
-    }
-
-    private function isPathTraversal(string $name): bool
-    {
-        return str_contains($name, "\0")
-            || str_starts_with($name, '/')
-            || str_contains($name, '../')
-            || str_contains($name, '..\\');
     }
 }

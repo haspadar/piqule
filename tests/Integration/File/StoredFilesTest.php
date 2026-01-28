@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Integration\File;
 
 use Haspadar\Piqule\File\StoredFile;
 use Haspadar\Piqule\File\StoredFiles;
+use Haspadar\Piqule\Storage\DiskPath;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,11 +17,11 @@ final class StoredFilesTest extends TestCase
     #[Test]
     public function returnsEmptyIterableWhenDirectoryIsEmpty(): void
     {
-        $root = new DirectoryFixture('stored-files');
+        $directory = new DirectoryFixture('stored-files');
 
         $files = new StoredFiles(
-            new DiskStorage($root->path()),
-            $root->path(),
+            new DiskStorage(new DiskPath($directory->path())),
+            $directory->path(),
         );
 
         self::assertSame(
@@ -33,14 +34,14 @@ final class StoredFilesTest extends TestCase
     #[Test]
     public function listsFilesRecursivelyWithRelativePaths(): void
     {
-        $root = (new DirectoryFixture('stored-files'))
+        $directory = (new DirectoryFixture('stored-files'))
             ->withFile('a.txt', 'A')
             ->withFile('nested/b.txt', 'B')
             ->withFile('nested/deep/c.txt', 'C');
 
         $files = new StoredFiles(
-            new DiskStorage($root->path()),
-            $root->path(),
+            new DiskStorage(new DiskPath($directory->path())),
+            $directory->path(),
         );
 
         $paths = array_map(
@@ -64,12 +65,12 @@ final class StoredFilesTest extends TestCase
     #[Test]
     public function ignoresDirectoriesAndYieldsOnlyFiles(): void
     {
-        $root = new DirectoryFixture('stored-files');
-        mkdir($root->path() . '/dir-only');
+        $directory = new DirectoryFixture('stored-files');
+        mkdir($directory->path() . '/dir-only');
 
         $files = new StoredFiles(
-            new DiskStorage($root->path()),
-            $root->path(),
+            new DiskStorage(new DiskPath($directory->path())),
+            $directory->path(),
         );
 
         self::assertSame(
