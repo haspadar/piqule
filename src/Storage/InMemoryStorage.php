@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Storage;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
-final class FakeStorage implements Storage
+final class InMemoryStorage implements Storage
 {
     /** @var array<string, string> */
     private array $files;

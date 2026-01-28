@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\StoredFile;
-use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ final class StoredFileTest extends TestCase
             'example.txt',
             (new StoredFile(
                 'example.txt',
-                new FakeStorage(),
+                new InMemoryStorage(),
             ))->name(),
             'Expected name() to return original file name',
         );
@@ -32,7 +32,7 @@ final class StoredFileTest extends TestCase
             'hello',
             (new StoredFile(
                 'example.txt',
-                new FakeStorage(['example.txt' => 'hello']),
+                new InMemoryStorage(['example.txt' => 'hello']),
             ))->contents(),
             'Expected contents() to be read from storage',
         );
@@ -41,8 +41,8 @@ final class StoredFileTest extends TestCase
     #[Test]
     public function writesFileToAnotherStorage(): void
     {
-        $source = new FakeStorage(['example.txt' => 'hello']);
-        $target = new FakeStorage();
+        $source = new InMemoryStorage(['example.txt' => 'hello']);
+        $target = new InMemoryStorage();
 
         (new StoredFile('example.txt', $source))
             ->writeTo($target, new FakeTarget());

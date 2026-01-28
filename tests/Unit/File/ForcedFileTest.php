@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\ForcedFile;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\Storage\FakeStorage;
+use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Target\FakeTarget;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function writesFileWhenItDoesNotExist(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
 
         (new ForcedFile(
             new InlineFile('forced/write.txt', 'hello'),
@@ -32,7 +32,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
-        $storage = new FakeStorage();
+        $storage = new InMemoryStorage();
         $target = new FakeTarget();
 
         (new ForcedFile(
@@ -49,7 +49,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function overwritesFileWhenContentsDiffer(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'forced/update.txt' => 'old',
         ]);
 
@@ -67,7 +67,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function reportsUpdatedEventWhenContentsDiffer(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'forced/updated.txt' => 'before',
         ]);
         $target = new FakeTarget();
@@ -86,7 +86,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function doesNotOverwriteFileWhenContentsAreIdentical(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'forced/same.txt' => 'same',
         ]);
 
@@ -104,7 +104,7 @@ final class ForcedFileTest extends TestCase
     #[Test]
     public function reportsSkippedEventWhenContentsAreIdentical(): void
     {
-        $storage = new FakeStorage([
+        $storage = new InMemoryStorage([
             'forced/skipped.txt' => 'noop',
         ]);
         $target = new FakeTarget();
