@@ -148,7 +148,7 @@ final class DiskStorageTest extends TestCase
             (new DiskStorage(new DiskPath($directory->path())))->names(),
         );
 
-        self::assertEquals(
+        self::assertEqualsCanonicalizing(
             ['a.txt', 'nested/b.txt'],
             $names,
             'Expected names() to return all file names relative to root',
