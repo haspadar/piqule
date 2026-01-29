@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use Haspadar\Piqule\PiquleException;
+
 interface Storage
 {
     /**
@@ -14,7 +16,7 @@ interface Storage
     /**
      * Reads contents of a file identified by the given logical name
      *
-     * Throws an exception if the file cannot be read
+     * @throws PiquleException if the file cannot be read
      */
     public function read(string $name): string;
 
@@ -26,9 +28,25 @@ interface Storage
     public function write(string $name, string $contents): void;
 
     /**
-     * Writes contents to a file and makes it executable
+     * Writes contents to a file and attempts to make it executable.
+     *
+     * Implementations MAY:
+     * - make the file executable
+     * - leave permissions unchanged
+     * - throw an exception if unsupported
+     *
+     * Callers MUST NOT rely on executability being guaranteed.
      */
     public function writeExecutable(string $name, string $contents): void;
+
+    /**
+     * Checks whether a file is executable in this storage.
+     *
+     * Implementations MAY:
+     * - return true/false
+     * - throw an exception if unsupported
+     */
+    public function isExecutable(string $name): bool;
 
     /**
      * @return iterable<string> logical file names
