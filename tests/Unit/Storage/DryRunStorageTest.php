@@ -80,4 +80,17 @@ final class DryRunStorageTest extends TestCase
             'names() was not delegated to original storage',
         );
     }
+
+    #[Test]
+    public function delegatesIsExecutableToOriginalStorage(): void
+    {
+        self::assertFalse(
+            (new DryRunStorage(
+                new InMemoryStorage([
+                    'file.sh' => '#!/bin/sh',
+                ]),
+            ))->isExecutable('file.sh'),
+            'isExecutable() was not delegated to original storage',
+        );
+    }
 }
