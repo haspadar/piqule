@@ -99,4 +99,21 @@ final class InMemoryStorageTest extends TestCase
             'Expected names() to return all stored file names',
         );
     }
+
+    #[Test]
+    public function isExecutableReturnsFalseForExistingFile(): void
+    {
+        self::assertFalse(
+            (new InMemoryStorage(['file.txt' => 'data']))->isExecutable('file.txt'),
+            'Expected in-memory file to not be executable',
+        );
+    }
+
+    #[Test]
+    public function throwsExceptionWhenCheckingExecutableForMissingFile(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new InMemoryStorage())->isExecutable('missing.txt');
+    }
 }

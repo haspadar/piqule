@@ -50,6 +50,18 @@ final class InMemoryStorage implements Storage
         $this->write($name, $contents);
     }
 
+    #[Override]
+    public function isExecutable(string $name): bool
+    {
+        if (!$this->exists($name)) {
+            throw new PiquleException(
+                sprintf('File "%s" does not exist', $name),
+            );
+        }
+
+        return false;
+    }
+
     /**
      * @return iterable<string> logical file names
      */
