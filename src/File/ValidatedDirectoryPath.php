@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
+use Haspadar\Piqule\Path\Path;
 use Haspadar\Piqule\PiquleException;
 
-final readonly class ValidatedDirectoryPath
+final readonly class ValidatedDirectoryPath implements Path
 {
     public function __construct(
         private DirectoryPath $origin,

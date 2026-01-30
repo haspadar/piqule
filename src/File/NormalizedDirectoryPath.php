@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
-final readonly class NormalizedDirectoryPath
+use Haspadar\Piqule\Path\Path;
+
+final readonly class NormalizedDirectoryPath implements Path
 {
     public function __construct(
         private DirectoryPath $origin,
