@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Application;
 
-use Haspadar\Piqule\File\Files;
 use Haspadar\Piqule\File\Reaction\FileReaction;
+use Haspadar\Piqule\Files\Files;
 use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 

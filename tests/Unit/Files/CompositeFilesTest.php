@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\File;
+namespace Haspadar\Piqule\Tests\Unit\Files;
 
-use Haspadar\Piqule\File\CompositeFiles;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\File\ListedFiles;
+use Haspadar\Piqule\Files\CompositeFiles;
+use Haspadar\Piqule\Files\ListedFiles;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
