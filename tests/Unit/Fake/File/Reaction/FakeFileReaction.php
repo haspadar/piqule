@@ -11,7 +11,7 @@ use Haspadar\Piqule\File\Reaction\FileReaction;
 
 final class FakeFileReaction implements FileReaction
 {
-    /** @var list<object> */
+    /** @var list<object|string> */
     private array $events = [];
 
     public function created(FileCreated $event): void
@@ -40,7 +40,7 @@ final class FakeFileReaction implements FileReaction
     }
 
     /**
-     * @return list<object>
+     * @return list<object|string>
      */
     public function events(): array
     {
