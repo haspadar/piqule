@@ -52,4 +52,26 @@ final readonly class ReportingFileReaction implements FileReaction
             ),
         );
     }
+
+    #[Override]
+    public function executableAlreadySet(string $name): void
+    {
+        $this->output->write(
+            new Text(
+                sprintf('Already executable: %s', $name),
+                new Grey(),
+            ),
+        );
+    }
+
+    #[Override]
+    public function executableWasSet(string $name): void
+    {
+        $this->output->write(
+            new Text(
+                sprintf('Set executable: %s', $name),
+                new Green(),
+            ),
+        );
+    }
 }
