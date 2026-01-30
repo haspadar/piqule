@@ -8,6 +8,7 @@ use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\Storage\AlwaysExecutableStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -47,6 +48,28 @@ final class ExecutableFileTest extends TestCase
         self::assertSame(
             'payload',
             $storage->read('hook.sh'),
+        );
+    }
+
+    #[Test]
+    public function emitsExecutableAlreadySetWhenStorageReportsExecutable(): void
+    {
+        $storage = new AlwaysExecutableStorage(
+            new InMemoryStorage([
+                'hook.sh' => 'payload',
+            ]),
+        );
+
+        $reaction = new FakeFileReaction();
+
+        (new ExecutableFile(
+            new InlineFile('hook.sh', 'payload'),
+        ))->writeTo($storage, $reaction);
+
+        self::assertSame(
+            ['hook.sh'],
+            $reaction->events(),
+            'Expected executableAlreadySet to be emitted',
         );
     }
 }
