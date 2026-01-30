@@ -72,4 +72,21 @@ final class ExecutableFileTest extends TestCase
             'Expected executableAlreadySet to be emitted',
         );
     }
+
+    #[Test]
+    public function emitsExecutableWasSetWhenExecutableIsSet(): void
+    {
+        $storage = new InMemoryStorage();
+        $reaction = new FakeFileReaction();
+
+        (new ExecutableFile(
+            new InlineFile('hook.sh', 'payload'),
+        ))->writeTo($storage, $reaction);
+
+        self::assertSame(
+            ['hook.sh'],
+            $reaction->events(),
+            'Expected executableWasSet to be emitted',
+        );
+    }
 }
