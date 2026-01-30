@@ -14,7 +14,7 @@ use SplFileInfo;
 final readonly class DiskFileSystem implements FileSystem
 {
     public function __construct(
-        private DiskPath $path,
+        private Path $path,
     ) {}
 
     #[Override]

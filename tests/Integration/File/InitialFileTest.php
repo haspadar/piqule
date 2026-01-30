@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Integration\File;
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\FileSystem\DiskPath;
+use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,7 +19,7 @@ final class InitialFileTest extends TestCase
     public function writesFileWhenItDoesNotExist(): void
     {
         $directory = new DirectoryFixture('initial-file');
-        $fs = new DiskFileSystem(new DiskPath($directory->path()));
+        $fs = new DiskFileSystem(new Path($directory->path()));
 
         (new InitialFile(
             new InlineFile('example.txt', 'hello'),
@@ -34,7 +34,7 @@ final class InitialFileTest extends TestCase
         $directory = (new DirectoryFixture('initial-file'))
             ->withFile('example.txt', 'original');
 
-        $fs = new DiskFileSystem(new DiskPath($directory->path()));
+        $fs = new DiskFileSystem(new Path($directory->path()));
 
         (new InitialFile(
             new InlineFile('example.txt', 'new'),

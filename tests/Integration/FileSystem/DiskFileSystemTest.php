@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Integration\FileSystem;
 
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\FileSystem\DiskPath;
+use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,7 +18,7 @@ final class DiskFileSystemTest extends TestCase
     {
         $directory = new DirectoryFixture('disk-storage');
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->write('nested/dir/example.txt', 'hello');
 
         self::assertFileExists(
@@ -34,7 +34,7 @@ final class DiskFileSystemTest extends TestCase
 
         self::assertSame(
             'hello',
-            (new DiskFileSystem(new DiskPath($directory->path())))
+            (new DiskFileSystem(new Path($directory->path())))
                 ->read('example.txt'),
         );
     }
@@ -47,7 +47,7 @@ final class DiskFileSystemTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        (new DiskFileSystem(new DiskPath($directory->path() . '/blocker')))
+        (new DiskFileSystem(new Path($directory->path() . '/blocker')))
             ->write('example.txt', 'fail');
     }
 
@@ -58,7 +58,7 @@ final class DiskFileSystemTest extends TestCase
             ->withFile('example.txt', 'hello');
 
         self::assertTrue(
-            (new DiskFileSystem(new DiskPath($directory->path())))->exists('example.txt'),
+            (new DiskFileSystem(new Path($directory->path())))->exists('example.txt'),
         );
     }
 
@@ -68,7 +68,7 @@ final class DiskFileSystemTest extends TestCase
         $directory = new DirectoryFixture('disk-storage');
 
         self::assertFalse(
-            (new DiskFileSystem(new DiskPath($directory->path())))->exists('missing.txt'),
+            (new DiskFileSystem(new Path($directory->path())))->exists('missing.txt'),
         );
     }
 
@@ -83,7 +83,7 @@ final class DiskFileSystemTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->read('unreadable.txt');
     }
 
@@ -92,7 +92,7 @@ final class DiskFileSystemTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskFileSystem(new DiskPath('/tmp')))->read('../secrets.txt');
+        (new DiskFileSystem(new Path('/tmp')))->read('../secrets.txt');
     }
 
     #[Test]
@@ -100,7 +100,7 @@ final class DiskFileSystemTest extends TestCase
     {
         $directory = new DirectoryFixture('disk-storage');
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->writeExecutable('hook.sh', 'payload');
 
         self::assertFileExists(
@@ -114,7 +114,7 @@ final class DiskFileSystemTest extends TestCase
         $directory = new DirectoryFixture('disk-storage');
         $path = $directory->path() . '/hook.sh';
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->writeExecutable('hook.sh', 'data');
 
         self::assertSame(
@@ -133,7 +133,7 @@ final class DiskFileSystemTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        (new DiskFileSystem(new DiskPath($readonly)))
+        (new DiskFileSystem(new Path($readonly)))
             ->writeExecutable('hook.sh', 'x');
     }
 
@@ -145,7 +145,7 @@ final class DiskFileSystemTest extends TestCase
             ->withFile('nested/b.txt', 'b');
 
         $names = iterator_to_array(
-            (new DiskFileSystem(new DiskPath($directory->path())))->names(),
+            (new DiskFileSystem(new Path($directory->path())))->names(),
         );
 
         self::assertEqualsCanonicalizing(
@@ -160,11 +160,11 @@ final class DiskFileSystemTest extends TestCase
     {
         $directory = new DirectoryFixture('disk-storage');
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->writeExecutable('hook.sh', 'payload');
 
         self::assertTrue(
-            (new DiskFileSystem(new DiskPath($directory->path())))
+            (new DiskFileSystem(new Path($directory->path())))
                 ->isExecutable('hook.sh'),
             'Expected executable file to be reported as executable',
         );
@@ -175,11 +175,11 @@ final class DiskFileSystemTest extends TestCase
     {
         $directory = new DirectoryFixture('disk-storage');
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->write('plain.txt', 'data');
 
         self::assertFalse(
-            (new DiskFileSystem(new DiskPath($directory->path())))
+            (new DiskFileSystem(new Path($directory->path())))
                 ->isExecutable('plain.txt'),
             'Expected non-executable file to not be executable',
         );
@@ -192,7 +192,7 @@ final class DiskFileSystemTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        (new DiskFileSystem(new DiskPath($directory->path())))
+        (new DiskFileSystem(new Path($directory->path())))
             ->isExecutable('missing.sh');
     }
 }
