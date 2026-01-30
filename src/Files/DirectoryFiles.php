@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Files;
 
+use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 

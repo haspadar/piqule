@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Files;
 
 use Closure;
+use Haspadar\Piqule\File\File;
 use Override;
 
 final readonly class MappedFiles implements Files

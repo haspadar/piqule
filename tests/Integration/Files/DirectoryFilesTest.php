@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Integration\File;
+namespace Haspadar\Piqule\Tests\Integration\Files;
 
-use Haspadar\Piqule\File\DirectoryFiles;
 use Haspadar\Piqule\File\DiskFile;
+use Haspadar\Piqule\Files\DirectoryFiles;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
 use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
