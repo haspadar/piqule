@@ -29,6 +29,16 @@ final class FakeEventFileReaction implements FileReaction
         $this->events[] = $event;
     }
 
+    public function executableAlreadySet(string $name): void
+    {
+        $this->events[] = $name;
+    }
+
+    public function executableWasSet(string $name): void
+    {
+        $this->events[] = $name;
+    }
+
     /**
      * @return list<object>
      */
