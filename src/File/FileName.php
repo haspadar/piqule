@@ -25,6 +25,10 @@ final readonly class FileName
             throw new PiquleException('File name must be relative');
         }
 
+        if (preg_match('/^[A-Za-z]:[\\\\\\/]/', $this->value) === 1) {
+            throw new PiquleException('File name must be relative');
+        }
+
         if (str_contains($this->value, '..')) {
             throw new PiquleException('File name cannot contain ".."');
         }

@@ -44,4 +44,12 @@ final class FileNameTest extends TestCase
             'Returns relative file name as-is',
         );
     }
+
+    #[Test]
+    public function throwsWhenWindowsAbsolute(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new FileName('C:\\Windows\\System32'))->value();
+    }
 }
