@@ -17,8 +17,8 @@ use Haspadar\Piqule\File\MappedFiles;
 use Haspadar\Piqule\File\Reaction\FileReactions;
 use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\FileSystem\DiskPath;
 use Haspadar\Piqule\FileSystem\DryRunFileSystem;
+use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\Options;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Console;
@@ -59,7 +59,7 @@ try {
         new MappedFiles(
             new DirectoryFiles(
                 new DiskFileSystem(
-                    new DiskPath($libraryRoot . '/templates/once'),
+                    new Path($libraryRoot . '/templates/once'),
                 ),
             ),
             fn(File $file): File => new InitialFile($file),
@@ -67,7 +67,7 @@ try {
         new MappedFiles(
             new DirectoryFiles(
                 new DiskFileSystem(
-                    new DiskPath($libraryRoot . '/templates/always'),
+                    new Path($libraryRoot . '/templates/always'),
                 ),
             ),
             fn(File $file): File => new ForcedFile($file),
@@ -84,7 +84,7 @@ try {
         ]),
     ]);
 
-    $targetStorage = new DiskFileSystem(new DiskPath($projectRoot));
+    $targetStorage = new DiskFileSystem(new Path($projectRoot));
     $application = (new Options($argv))->isDryRun()
         ? new AnnouncedApplication(
             new FileApplication(

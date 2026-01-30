@@ -6,10 +6,10 @@ namespace Haspadar\Piqule\FileSystem;
 
 use Haspadar\Piqule\PiquleException;
 
-final readonly class DiskPath
+final readonly class Path
 {
     public function __construct(
-        private string $root,
+        private string $path,
     ) {}
 
     public function full(string $name): string
@@ -20,12 +20,12 @@ final readonly class DiskPath
             );
         }
 
-        return rtrim($this->root, '/') . '/' . $name;
+        return rtrim($this->path, '/') . '/' . $name;
     }
 
     public function root(): string
     {
-        return rtrim($this->root, '/');
+        return rtrim($this->path, '/');
     }
 
     private function isTraversal(string $name): bool

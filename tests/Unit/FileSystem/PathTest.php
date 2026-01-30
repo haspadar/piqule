@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\FileSystem;
 
-use Haspadar\Piqule\FileSystem\DiskPath;
+use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\PiquleException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class DiskPathTest extends TestCase
+final class PathTest extends TestCase
 {
     #[Test]
     public function resolvesRelativePath(): void
     {
         self::assertSame(
             '/app/root/dir/file.txt',
-            (new DiskPath('/app/root'))->full('dir/file.txt'),
+            (new Path('/app/root'))->full('dir/file.txt'),
             'Expected relative path to be resolved under root',
         );
     }
@@ -26,7 +26,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/safe/root'))->full('../file.txt');
+        (new Path('/safe/root'))->full('../file.txt');
     }
 
     #[Test]
@@ -34,7 +34,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/sandbox'))->full('/etc/passwd');
+        (new Path('/sandbox'))->full('/etc/passwd');
     }
 
     #[Test]
@@ -42,7 +42,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('/tmp/root'))->full("file\0.txt");
+        (new Path('/tmp/root'))->full("file\0.txt");
     }
 
     #[Test]
@@ -50,7 +50,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('D:/sandbox'))->full('C:/Windows/System32');
+        (new Path('D:/sandbox'))->full('C:/Windows/System32');
     }
 
     #[Test]
@@ -58,7 +58,7 @@ final class DiskPathTest extends TestCase
     {
         self::assertSame(
             '/app/root',
-            (new DiskPath('/app/root/'))->root(),
+            (new Path('/app/root/'))->root(),
             'Expected trailing slash to be trimmed from root',
         );
     }
@@ -68,7 +68,7 @@ final class DiskPathTest extends TestCase
     {
         self::assertSame(
             '/app/root/file.txt',
-            (new DiskPath('/app/root/'))->full('file.txt'),
+            (new Path('/app/root/'))->full('file.txt'),
             'Expected trailing slash in root to be normalized in full path',
         );
     }
@@ -78,7 +78,7 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('C:/app/root'))->full('C:\\Windows\\System32');
+        (new Path('C:/app/root'))->full('C:\\Windows\\System32');
     }
 
     #[Test]
@@ -86,6 +86,6 @@ final class DiskPathTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new DiskPath('Z:/storage'))->full('\\\\server\\share');
+        (new Path('Z:/storage'))->full('\\\\server\\share');
     }
 }
