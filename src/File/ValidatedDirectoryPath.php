@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
-use Haspadar\Piqule\Path\Path;
 use Haspadar\Piqule\PiquleException;
-use Override;
 
-final readonly class ValidatedDirectoryPath implements Path
+final readonly class ValidatedDirectoryPath
 {
     public function __construct(
         private DirectoryPath $origin,
     ) {}
 
-    #[Override]
     public function value(): string
     {
         $value = $this->origin->value();

@@ -46,7 +46,7 @@ final class ValidatedDirectoryPathTest extends TestCase
     public function allowsPosixAbsolute(): void
     {
         self::assertSame(
-            '/var/www',
+            '/var/www/',
             (new ValidatedDirectoryPath(
                 new DirectoryPath('/var/www/'),
             ))->value(),
@@ -58,7 +58,7 @@ final class ValidatedDirectoryPathTest extends TestCase
     public function allowsWindowsDriveAbsolute(): void
     {
         self::assertSame(
-            'C:\Windows',
+            'C:\Windows\\',
             (new ValidatedDirectoryPath(
                 new DirectoryPath('C:\Windows\\'),
             ))->value(),
@@ -70,7 +70,7 @@ final class ValidatedDirectoryPathTest extends TestCase
     public function allowsWindowsUncAbsolute(): void
     {
         self::assertSame(
-            '\Windows\System32',
+            '\Windows\System32\\',
             (new ValidatedDirectoryPath(
                 new DirectoryPath('\Windows\System32\\'),
             ))->value(),
