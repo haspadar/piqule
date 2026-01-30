@@ -38,5 +38,6 @@ final readonly class ExecutableFile implements File
         }
 
         $storage->writeExecutable($this->name(), $this->contents());
+        $reaction->executableWasSet($this->name());
     }
 }
