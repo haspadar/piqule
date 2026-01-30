@@ -60,7 +60,7 @@ final class NormalizedDirectoryPathTest extends TestCase
     }
 
     #[Test]
-    public function trimsTrailingSlashFromWindowsUncPath(): void
+    public function trimsTrailingSlashFromWindowsRootedPath(): void
     {
         self::assertSame(
             '\Windows\System32',
