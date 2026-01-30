@@ -45,6 +45,8 @@ interface Storage
      * Implementations MAY:
      * - return true/false
      * - throw an exception if unsupported
+     *
+     * @throws PiquleException if the file does not exist
      */
     public function isExecutable(string $name): bool;
 
