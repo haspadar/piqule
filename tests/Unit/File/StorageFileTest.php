@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\StorageFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -45,7 +45,7 @@ final class StorageFileTest extends TestCase
         $storage = new InMemoryStorage();
 
         (new StorageFile('example.txt', $source))
-            ->writeTo($storage, new FakeEventFileReaction());
+            ->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'hello',

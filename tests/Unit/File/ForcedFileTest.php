@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\ForcedFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/write.txt', 'hello'),
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'hello',
@@ -33,7 +33,7 @@ final class ForcedFileTest extends TestCase
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
         $storage = new InMemoryStorage();
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/created.txt', 'data'),
@@ -55,7 +55,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/update.txt', 'new'),
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'new',
@@ -70,7 +70,7 @@ final class ForcedFileTest extends TestCase
         $storage = new InMemoryStorage([
             'forced/updated.txt' => 'before',
         ]);
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/updated.txt', 'after'),
@@ -92,7 +92,7 @@ final class ForcedFileTest extends TestCase
 
         (new ForcedFile(
             new InlineFile('forced/same.txt', 'same'),
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'same',
@@ -107,7 +107,7 @@ final class ForcedFileTest extends TestCase
         $storage = new InMemoryStorage([
             'forced/skipped.txt' => 'noop',
         ]);
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new ForcedFile(
             new InlineFile('forced/skipped.txt', 'noop'),

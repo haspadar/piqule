@@ -8,7 +8,7 @@ use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\DiskPath;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ final class InlineFileTest extends TestCase
         (new InlineFile(
             'example.txt',
             'hello',
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'hello',

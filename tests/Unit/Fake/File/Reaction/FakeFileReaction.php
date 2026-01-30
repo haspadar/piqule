@@ -9,7 +9,7 @@ use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
 use Haspadar\Piqule\File\Reaction\FileReaction;
 
-final class FakeEventFileReaction implements FileReaction
+final class FakeFileReaction implements FileReaction
 {
     /** @var list<object> */
     private array $events = [];
