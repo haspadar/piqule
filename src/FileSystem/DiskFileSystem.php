@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\FileSystem;
 
 use FilesystemIterator;
+use Haspadar\Piqule\Path\DirectoryPath;
 use Haspadar\Piqule\PiquleException;
 use Override;
 use RecursiveDirectoryIterator;
@@ -14,19 +15,19 @@ use SplFileInfo;
 final readonly class DiskFileSystem implements FileSystem
 {
     public function __construct(
-        private Path $path,
+        private DirectoryPath $root,
     ) {}
 
     #[Override]
     public function exists(string $name): bool
     {
-        return is_file($this->path->full($name));
+        return is_file($this->fullPath($name));
     }
 
     #[Override]
     public function read(string $name): string
     {
-        $path = $this->path->full($name);
+        $path = $this->fullPath($name);
 
         if (!is_file($path) || !is_readable($path)) {
             throw new PiquleException(
@@ -47,7 +48,7 @@ final readonly class DiskFileSystem implements FileSystem
     #[Override]
     public function write(string $name, string $contents): void
     {
-        $path = $this->path->full($name);
+        $path = $this->fullPath($name);
         $dir = dirname($path);
 
         if (!is_dir($dir)
@@ -76,7 +77,7 @@ final readonly class DiskFileSystem implements FileSystem
     {
         $this->write($name, $contents);
 
-        $path = $this->path->full($name);
+        $path = $this->fullPath($name);
 
         if (!chmod($path, 0o755)) {
             throw new PiquleException(
@@ -88,7 +89,7 @@ final readonly class DiskFileSystem implements FileSystem
     #[Override]
     public function isExecutable(string $name): bool
     {
-        $path = $this->path->full($name);
+        $path = $this->fullPath($name);
 
         if (!is_file($path)) {
             throw new PiquleException(
@@ -102,14 +103,15 @@ final readonly class DiskFileSystem implements FileSystem
     #[Override]
     public function names(): iterable
     {
+        $root = $this->root->value();
+        $rootLength = strlen(rtrim($root, DIRECTORY_SEPARATOR)) + 1;
+
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(
-                $this->path->root(),
+                $root,
                 FilesystemIterator::SKIP_DOTS,
             ),
         );
-
-        $rootLength = strlen(rtrim($this->path->root(), '/')) + 1;
 
         /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
@@ -119,5 +121,12 @@ final readonly class DiskFileSystem implements FileSystem
 
             yield substr($file->getPathname(), $rootLength);
         }
+    }
+
+    private function fullPath(string $name): string
+    {
+        return rtrim($this->root->value(), DIRECTORY_SEPARATOR)
+            . DIRECTORY_SEPARATOR
+            . $name;
     }
 }

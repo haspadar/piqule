@@ -18,11 +18,11 @@ use Haspadar\Piqule\Files\ListedFiles;
 use Haspadar\Piqule\Files\MappedFiles;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
 use Haspadar\Piqule\FileSystem\DryRunFileSystem;
-use Haspadar\Piqule\FileSystem\Path;
 use Haspadar\Piqule\Options;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Text;
+use Haspadar\Piqule\Path\DirectoryPath;
 use Haspadar\Piqule\PiquleException;
 
 $autoloaded = false;
@@ -46,7 +46,7 @@ try {
     }
 
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
-        ?: throw new PiquleException('Cannot determine piqule install path');
+            ?: throw new PiquleException('Cannot determine piqule install path');
 
     $output = new Console();
     $reactions = new FileReactions([
@@ -59,7 +59,7 @@ try {
         new MappedFiles(
             new DirectoryFiles(
                 new DiskFileSystem(
-                    new Path($libraryRoot . '/templates/once'),
+                    new DirectoryPath($libraryRoot . '/templates/once'),
                 ),
             ),
             fn(File $file): File => new InitialFile($file),
@@ -67,7 +67,7 @@ try {
         new MappedFiles(
             new DirectoryFiles(
                 new DiskFileSystem(
-                    new Path($libraryRoot . '/templates/always'),
+                    new DirectoryPath($libraryRoot . '/templates/always'),
                 ),
             ),
             fn(File $file): File => new ForcedFile($file),
@@ -84,7 +84,10 @@ try {
         ]),
     ]);
 
-    $targetStorage = new DiskFileSystem(new Path($projectRoot));
+    $targetStorage = new DiskFileSystem(
+        new DirectoryPath($projectRoot),
+    );
+
     $application = (new Options($argv))->isDryRun()
         ? new AnnouncedApplication(
             new FileApplication(
