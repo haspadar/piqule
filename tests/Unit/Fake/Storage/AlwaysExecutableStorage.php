@@ -29,7 +29,7 @@ final class AlwaysExecutableStorage implements Storage
 
     public function writeExecutable(string $name, string $contents): void
     {
-        $this->origin->write($name, $contents);
+        $this->origin->writeExecutable($name, $contents);
     }
 
     public function isExecutable(string $name): bool
