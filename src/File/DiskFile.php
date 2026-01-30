@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 
-final readonly class StorageFile implements File
+final readonly class DiskFile implements File
 {
     public function __construct(
-        private string $name,
-        private Storage $storage,
+        private string     $name,
+        private FileSystem $fs,
     ) {}
 
     #[Override]
@@ -24,13 +24,13 @@ final readonly class StorageFile implements File
     #[Override]
     public function contents(): string
     {
-        return $this->storage->read($this->name);
+        return $this->fs->read($this->name);
     }
 
     #[Override]
-    public function writeTo(Storage $storage, FileReaction $reaction): void
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void
     {
-        $storage->write(
+        $fs->write(
             $this->name,
             $this->contents(),
         );

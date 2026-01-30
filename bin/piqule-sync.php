@@ -6,6 +6,7 @@ declare(strict_types=1);
 use Haspadar\Piqule\Application\AnnouncedApplication;
 use Haspadar\Piqule\Application\FileApplication;
 use Haspadar\Piqule\File\CompositeFiles;
+use Haspadar\Piqule\File\DirectoryFiles;
 use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\ForcedFile;
@@ -15,15 +16,14 @@ use Haspadar\Piqule\File\ListedFiles;
 use Haspadar\Piqule\File\MappedFiles;
 use Haspadar\Piqule\File\Reaction\FileReactions;
 use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
-use Haspadar\Piqule\File\StorageFiles;
+use Haspadar\Piqule\FileSystem\DiskFileSystem;
+use Haspadar\Piqule\FileSystem\DiskPath;
+use Haspadar\Piqule\FileSystem\DryRunFileSystem;
 use Haspadar\Piqule\Options;
 use Haspadar\Piqule\Output\Color\Yellow;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Output\Line\Text;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Storage\DiskPath;
-use Haspadar\Piqule\Storage\DiskStorage;
-use Haspadar\Piqule\Storage\DryRunStorage;
 
 $autoloaded = false;
 foreach ([__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php'] as $file) {
@@ -57,16 +57,16 @@ try {
 
     $files = new CompositeFiles([
         new MappedFiles(
-            new StorageFiles(
-                new DiskStorage(
+            new DirectoryFiles(
+                new DiskFileSystem(
                     new DiskPath($libraryRoot . '/templates/once'),
                 ),
             ),
             fn(File $file): File => new InitialFile($file),
         ),
         new MappedFiles(
-            new StorageFiles(
-                new DiskStorage(
+            new DirectoryFiles(
+                new DiskFileSystem(
                     new DiskPath($libraryRoot . '/templates/always'),
                 ),
             ),
@@ -84,12 +84,12 @@ try {
         ]),
     ]);
 
-    $targetStorage = new DiskStorage(new DiskPath($projectRoot));
+    $targetStorage = new DiskFileSystem(new DiskPath($projectRoot));
     $application = (new Options($argv))->isDryRun()
         ? new AnnouncedApplication(
             new FileApplication(
                 $files,
-                new DryRunStorage($targetStorage),
+                new DryRunFileSystem($targetStorage),
                 $reactions,
             ),
             $output,

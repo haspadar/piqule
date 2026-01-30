@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\FileSystem\InMemoryFileSystem;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -40,15 +40,15 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function writesFileWhenItDoesNotExist(): void
     {
-        $storage = new InMemoryStorage();
+        $fs = new InMemoryFileSystem();
 
         (new InitialFile(
             new InlineFile('initial/new.txt', 'hello'),
-        ))->writeTo($storage, new FakeFileReaction());
+        ))->writeTo($fs, new FakeFileReaction());
 
         self::assertSame(
             'hello',
-            $storage->read('initial/new.txt'),
+            $fs->read('initial/new.txt'),
             'File must be written when it does not exist',
         );
     }
@@ -56,12 +56,12 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
-        $storage = new InMemoryStorage();
+        $fs = new InMemoryFileSystem();
         $reaction = new FakeFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/created.txt', 'data'),
-        ))->writeTo($storage, $reaction);
+        ))->writeTo($fs, $reaction);
 
         self::assertSame(
             'initial/created.txt',
@@ -73,17 +73,17 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function doesNotOverwriteExistingFile(): void
     {
-        $storage = new InMemoryStorage([
+        $fs = new InMemoryFileSystem([
             'initial/existing.txt' => 'original',
         ]);
 
         (new InitialFile(
             new InlineFile('initial/existing.txt', 'new'),
-        ))->writeTo($storage, new FakeFileReaction());
+        ))->writeTo($fs, new FakeFileReaction());
 
         self::assertSame(
             'original',
-            $storage->read('initial/existing.txt'),
+            $fs->read('initial/existing.txt'),
             'Existing file must not be overwritten',
         );
     }
@@ -91,14 +91,14 @@ final class InitialFileTest extends TestCase
     #[Test]
     public function reportsSkippedEventWhenFileAlreadyExists(): void
     {
-        $storage = new InMemoryStorage([
+        $fs = new InMemoryFileSystem([
             'initial/skipped.txt' => 'keep',
         ]);
         $reaction = new FakeFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/skipped.txt', 'ignored'),
-        ))->writeTo($storage, $reaction);
+        ))->writeTo($fs, $reaction);
 
         self::assertSame(
             'initial/skipped.txt',

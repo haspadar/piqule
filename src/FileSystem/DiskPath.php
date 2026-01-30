@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Storage;
+namespace Haspadar\Piqule\FileSystem;
 
 use Haspadar\Piqule\PiquleException;
 
@@ -16,7 +16,7 @@ final readonly class DiskPath
     {
         if ($this->isTraversal($name)) {
             throw new PiquleException(
-                sprintf('Invalid storage path "%s"', $name),
+                sprintf('Invalid path "%s"', $name),
             );
         }
 

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Storage;
+namespace Haspadar\Piqule\Tests\Unit\FileSystem;
 
+use Haspadar\Piqule\FileSystem\InMemoryFileSystem;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Storage\InMemoryStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class InMemoryStorageTest extends TestCase
+final class InMemoryFileSystemTest extends TestCase
 {
     #[Test]
     public function existsReturnsFalseForMissingFile(): void
     {
         self::assertFalse(
-            (new InMemoryStorage())->exists('missing.txt'),
+            (new InMemoryFileSystem())->exists('missing.txt'),
             'Expected missing file to not exist',
         );
     }
@@ -24,7 +24,7 @@ final class InMemoryStorageTest extends TestCase
     public function existsReturnsTrueForExistingFile(): void
     {
         self::assertTrue(
-            (new InMemoryStorage(['file.txt' => 'data']))->exists('file.txt'),
+            (new InMemoryFileSystem(['file.txt' => 'data']))->exists('file.txt'),
             'Expected existing file to exist',
         );
     }
@@ -32,12 +32,12 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function readsPreviouslyWrittenFile(): void
     {
-        $storage = new InMemoryStorage();
-        $storage->write('file.txt', 'hello');
+        $fs = new InMemoryFileSystem();
+        $fs->write('file.txt', 'hello');
 
         self::assertSame(
             'hello',
-            $storage->read('file.txt'),
+            $fs->read('file.txt'),
             'Expected read() to return written contents',
         );
     }
@@ -47,7 +47,7 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertSame(
             'hello',
-            (new InMemoryStorage(['file.txt' => 'hello']))->read('file.txt'),
+            (new InMemoryFileSystem(['file.txt' => 'hello']))->read('file.txt'),
             'Expected read() to return initial contents',
         );
     }
@@ -57,18 +57,18 @@ final class InMemoryStorageTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new InMemoryStorage())->read('missing.txt');
+        (new InMemoryFileSystem())->read('missing.txt');
     }
 
     #[Test]
     public function writeOverwritesExistingFile(): void
     {
-        $storage = new InMemoryStorage(['file.txt' => 'old']);
-        $storage->write('file.txt', 'new');
+        $fs = new InMemoryFileSystem(['file.txt' => 'old']);
+        $fs->write('file.txt', 'new');
 
         self::assertSame(
             'new',
-            $storage->read('file.txt'),
+            $fs->read('file.txt'),
             'Expected write() to overwrite existing contents',
         );
     }
@@ -76,13 +76,13 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function writeExecutableWritesFile(): void
     {
-        $storage = new InMemoryStorage();
+        $fs = new InMemoryFileSystem();
 
-        $storage->writeExecutable('hook.sh', '#!/bin/sh');
+        $fs->writeExecutable('hook.sh', '#!/bin/sh');
 
         self::assertSame(
             '#!/bin/sh',
-            $storage->read('hook.sh'),
+            $fs->read('hook.sh'),
             'Expected writeExecutable() to behave like write()',
         );
     }
@@ -92,7 +92,7 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertEquals(
             ['a.txt', 'nested/b.txt'],
-            (new InMemoryStorage([
+            (new InMemoryFileSystem([
                 'a.txt' => 'a',
                 'nested/b.txt' => 'b',
             ]))->names(),
@@ -104,7 +104,7 @@ final class InMemoryStorageTest extends TestCase
     public function isExecutableReturnsFalseForExistingFile(): void
     {
         self::assertFalse(
-            (new InMemoryStorage(['file.txt' => 'data']))->isExecutable('file.txt'),
+            (new InMemoryFileSystem(['file.txt' => 'data']))->isExecutable('file.txt'),
             'Expected in-memory file to not be executable',
         );
     }
@@ -114,6 +114,6 @@ final class InMemoryStorageTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new InMemoryStorage())->isExecutable('missing.txt');
+        (new InMemoryFileSystem())->isExecutable('missing.txt');
     }
 }
