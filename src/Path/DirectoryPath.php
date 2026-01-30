@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Path;
 
-use Haspadar\Piqule\Path\Path;
+use Override;
 
 final readonly class DirectoryPath implements Path
 {
@@ -12,6 +12,7 @@ final readonly class DirectoryPath implements Path
         private string $value,
     ) {}
 
+    #[Override]
     public function value(): string
     {
         return $this->value;

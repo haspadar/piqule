@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Path;
 
-use Haspadar\Piqule\File\DirectoryPath;
 use Haspadar\Piqule\File\FileName;
 use Haspadar\Piqule\PiquleException;
 use Override;
