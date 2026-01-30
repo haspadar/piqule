@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\File;
+namespace Haspadar\Piqule\Tests\Unit\Path;
 
-use Haspadar\Piqule\File\DirectoryPath;
-use Haspadar\Piqule\File\NormalizedDirectoryPath;
+use Haspadar\Piqule\Path\DirectoryPath;
+use Haspadar\Piqule\Path\NormalizedDirectoryPath;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

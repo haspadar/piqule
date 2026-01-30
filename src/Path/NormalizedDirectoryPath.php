@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Path;
 
-final readonly class NormalizedDirectoryPath
+use Override;
+
+final readonly class NormalizedDirectoryPath implements Path
 {
     public function __construct(
         private DirectoryPath $origin,
     ) {}
 
+    #[Override]
     public function value(): string
     {
         $value = $this->origin->value();
