@@ -154,4 +154,45 @@ final class DiskStorageTest extends TestCase
             'Expected names() to return all file names relative to root',
         );
     }
+
+    #[Test]
+    public function returnsTrueForExecutableFile(): void
+    {
+        $directory = new DirectoryFixture('disk-storage');
+
+        (new DiskStorage(new DiskPath($directory->path())))
+            ->writeExecutable('hook.sh', 'payload');
+
+        self::assertTrue(
+            (new DiskStorage(new DiskPath($directory->path())))
+                ->isExecutable('hook.sh'),
+            'Expected executable file to be reported as executable',
+        );
+    }
+
+    #[Test]
+    public function returnsFalseForNonExecutableFile(): void
+    {
+        $directory = new DirectoryFixture('disk-storage');
+
+        (new DiskStorage(new DiskPath($directory->path())))
+            ->write('plain.txt', 'data');
+
+        self::assertFalse(
+            (new DiskStorage(new DiskPath($directory->path())))
+                ->isExecutable('plain.txt'),
+            'Expected non-executable file to not be executable',
+        );
+    }
+
+    #[Test]
+    public function throwsExceptionWhenCheckingExecutableForMissingFile(): void
+    {
+        $directory = new DirectoryFixture('disk-storage');
+
+        $this->expectException(PiquleException::class);
+
+        (new DiskStorage(new DiskPath($directory->path())))
+            ->isExecutable('missing.sh');
+    }
 }

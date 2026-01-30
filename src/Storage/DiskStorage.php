@@ -86,6 +86,20 @@ final readonly class DiskStorage implements Storage
     }
 
     #[Override]
+    public function isExecutable(string $name): bool
+    {
+        $path = $this->path->full($name);
+
+        if (!is_file($path)) {
+            throw new PiquleException(
+                sprintf('File "%s" does not exist', $name),
+            );
+        }
+
+        return is_executable($path);
+    }
+
+    #[Override]
     public function names(): iterable
     {
         $iterator = new RecursiveIteratorIterator(

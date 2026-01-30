@@ -37,6 +37,12 @@ final readonly class DryRunStorage implements Storage
     public function writeExecutable(string $name, string $contents): void {}
 
     #[Override]
+    public function isExecutable(string $name): bool
+    {
+        return $this->origin->isExecutable($name);
+    }
+
+    #[Override]
     public function names(): iterable
     {
         return $this->origin->names();
