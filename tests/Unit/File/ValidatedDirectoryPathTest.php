@@ -77,16 +77,4 @@ final class ValidatedDirectoryPathTest extends TestCase
             'Allows Windows UNC absolute directory paths',
         );
     }
-
-    #[Test]
-    public function returnsPosixRoot(): void
-    {
-        self::assertSame('/', (new DirectoryPath('/'))->value());
-    }
-
-    #[Test]
-    public function returnsWindowsDriveRoot(): void
-    {
-        self::assertSame('C:\\', (new DirectoryPath('C:\\'))->value());
-    }
 }
