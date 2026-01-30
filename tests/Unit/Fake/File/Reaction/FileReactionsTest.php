@@ -27,6 +27,12 @@ final class FileReactionsTest extends TestCase
             $first->events(),
             'Expected created event to be propagated to first reaction',
         );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'Expected created event to be propagated to second reaction',
+        );
     }
 
     #[Test]
@@ -40,6 +46,12 @@ final class FileReactionsTest extends TestCase
 
         self::assertCount(
             1,
+            $first->events(),
+            'Expected updated event to be propagated to first reaction',
+        );
+
+        self::assertCount(
+            1,
             $second->events(),
             'Expected updated event to be propagated to second reaction',
         );
@@ -48,45 +60,66 @@ final class FileReactionsTest extends TestCase
     #[Test]
     public function propagatesSkippedEventToAllReactions(): void
     {
-        $reaction = new FakeFileReaction();
+        $first = new FakeFileReaction();
+        $second = new FakeFileReaction();
 
-        (new FileReactions([$reaction]))
+        (new FileReactions([$first, $second]))
             ->skipped(new FileSkipped('skipped.txt'));
 
         self::assertCount(
             1,
-            $reaction->events(),
-            'Expected skipped event to be propagated',
+            $first->events(),
+            'Expected skipped event to be propagated to first reaction',
+        );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'Expected skipped event to be propagated to second reaction',
         );
     }
 
     #[Test]
-    public function propagatesExecutableAlreadySet(): void
+    public function propagatesExecutableAlreadySetToAllReactions(): void
     {
-        $reaction = new FakeFileReaction();
+        $first = new FakeFileReaction();
+        $second = new FakeFileReaction();
 
-        (new FileReactions([$reaction]))
+        (new FileReactions([$first, $second]))
             ->executableAlreadySet('bin/hook-present');
 
         self::assertCount(
             1,
-            $reaction->events(),
-            'Expected executableAlreadySet to be propagated',
+            $first->events(),
+            'Expected executableAlreadySet to be propagated to first reaction',
+        );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'Expected executableAlreadySet to be propagated to second reaction',
         );
     }
 
     #[Test]
-    public function propagatesExecutableWasSet(): void
+    public function propagatesExecutableWasSetToAllReactions(): void
     {
-        $reaction = new FakeFileReaction();
+        $first = new FakeFileReaction();
+        $second = new FakeFileReaction();
 
-        (new FileReactions([$reaction]))
+        (new FileReactions([$first, $second]))
             ->executableWasSet('bin/hook-missing');
 
         self::assertCount(
             1,
-            $reaction->events(),
-            'Expected executableWasSet to be propagated',
+            $first->events(),
+            'Expected executableWasSet to be propagated to first reaction',
+        );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'Expected executableWasSet to be propagated to second reaction',
         );
     }
 }
