@@ -6,9 +6,12 @@ declare(strict_types=1);
 use Haspadar\Piqule\Application\AnnouncedApplication;
 use Haspadar\Piqule\Application\FileApplication;
 use Haspadar\Piqule\File\CompositeFiles;
+use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\ForcedFile;
 use Haspadar\Piqule\File\InitialFile;
+use Haspadar\Piqule\File\InlineFile;
+use Haspadar\Piqule\File\ListedFiles;
 use Haspadar\Piqule\File\MappedFiles;
 use Haspadar\Piqule\File\Reaction\FileReactions;
 use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
@@ -56,7 +59,7 @@ try {
         new MappedFiles(
             new StorageFiles(
                 new DiskStorage(
-                    new DiskPath($libraryRoot . '/templates/once')
+                    new DiskPath($libraryRoot . '/templates/once'),
                 ),
             ),
             fn(File $file): File => new InitialFile($file),
@@ -64,11 +67,21 @@ try {
         new MappedFiles(
             new StorageFiles(
                 new DiskStorage(
-                    new DiskPath($libraryRoot . '/templates/always')
+                    new DiskPath($libraryRoot . '/templates/always'),
                 ),
             ),
             fn(File $file): File => new ForcedFile($file),
         ),
+        new ListedFiles([
+            new ExecutableFile(
+                new InitialFile(
+                    new InlineFile(
+                        '.git/hooks/pre-push',
+                        "#!/usr/bin/env sh\nset -e\ncomposer check\n",
+                    ),
+                ),
+            ),
+        ]),
     ]);
 
     $targetStorage = new DiskStorage(new DiskPath($projectRoot));
