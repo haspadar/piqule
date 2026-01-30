@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Storage;
+namespace Haspadar\Piqule\FileSystem;
 
 use FilesystemIterator;
 use Haspadar\Piqule\PiquleException;
@@ -11,7 +11,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
-final readonly class DiskStorage implements Storage
+final readonly class DiskFileSystem implements FileSystem
 {
     public function __construct(
         private DiskPath $path,

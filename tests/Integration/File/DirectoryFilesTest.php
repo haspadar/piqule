@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\File;
 
-use Haspadar\Piqule\File\StorageFile;
-use Haspadar\Piqule\File\StorageFiles;
-use Haspadar\Piqule\Storage\DiskPath;
-use Haspadar\Piqule\Storage\DiskStorage;
+use Haspadar\Piqule\File\DirectoryFiles;
+use Haspadar\Piqule\File\DiskFile;
+use Haspadar\Piqule\FileSystem\DiskFileSystem;
+use Haspadar\Piqule\FileSystem\DiskPath;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class StorageFilesTest extends TestCase
+final class DirectoryFilesTest extends TestCase
 {
     #[Test]
     public function returnsEmptyIterableWhenDirectoryIsEmpty(): void
     {
         $directory = new DirectoryFixture('stored-files');
+        $root = new DiskPath($directory->path());
 
-        $files = new StorageFiles(
-            new DiskStorage(new DiskPath($directory->path())),
-            $directory->path(),
+        $files = new DirectoryFiles(
+            new DiskFileSystem($root),
         );
 
         self::assertSame(
@@ -39,13 +39,14 @@ final class StorageFilesTest extends TestCase
             ->withFile('nested/b.txt', 'B')
             ->withFile('nested/deep/c.txt', 'C');
 
-        $files = new StorageFiles(
-            new DiskStorage(new DiskPath($directory->path())),
-            $directory->path(),
+        $root = new DiskPath($directory->path());
+
+        $files = new DirectoryFiles(
+            new DiskFileSystem($root),
         );
 
         $paths = array_map(
-            static fn(StorageFile $file): string => $file->name(),
+            static fn(DiskFile $file): string => $file->name(),
             iterator_to_array($files->all()),
         );
 
@@ -58,7 +59,7 @@ final class StorageFilesTest extends TestCase
                 'nested/deep/c.txt',
             ],
             $paths,
-            'Expected recursive listing with storage-relative paths',
+            'Expected recursive listing with relative paths',
         );
     }
 
@@ -68,9 +69,10 @@ final class StorageFilesTest extends TestCase
         $directory = new DirectoryFixture('stored-files');
         mkdir($directory->path() . '/dir-only');
 
-        $files = new StorageFiles(
-            new DiskStorage(new DiskPath($directory->path())),
-            $directory->path(),
+        $root = new DiskPath($directory->path());
+
+        $files = new DirectoryFiles(
+            new DiskFileSystem($root),
         );
 
         self::assertSame(

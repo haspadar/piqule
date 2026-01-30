@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 
 interface File
 {
     /**
-     * Returns the logical name of the file
+     * Returns the file name
      */
     public function name(): string;
 
@@ -20,7 +20,7 @@ interface File
     public function contents(): string;
 
     /**
-     * Writes file to target storage and emits an outcome event
+     * Writes file to the given filesystem and emits an outcome event
      */
-    public function writeTo(Storage $storage, FileReaction $reaction): void;
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void;
 }

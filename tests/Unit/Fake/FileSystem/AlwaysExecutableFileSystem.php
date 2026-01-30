@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Fake\Storage;
+namespace Haspadar\Piqule\Tests\Unit\Fake\FileSystem;
 
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 
-final class AlwaysExecutableStorage implements Storage
+final class AlwaysExecutableFileSystem implements FileSystem
 {
     public function __construct(
-        private Storage $origin,
+        private FileSystem $origin,
     ) {}
 
     public function exists(string $name): bool

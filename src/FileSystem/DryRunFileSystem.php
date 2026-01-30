@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Storage;
+namespace Haspadar\Piqule\FileSystem;
 
 use Override;
 
-final readonly class DryRunStorage implements Storage
+final readonly class DryRunFileSystem implements FileSystem
 {
     public function __construct(
-        private Storage $origin,
+        private FileSystem $origin,
     ) {}
 
     #[Override]

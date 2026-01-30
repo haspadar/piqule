@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 
 final readonly class ExecutableFile implements File
@@ -27,17 +27,17 @@ final readonly class ExecutableFile implements File
     }
 
     #[Override]
-    public function writeTo(Storage $storage, FileReaction $reaction): void
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void
     {
-        $this->origin->writeTo($storage, $reaction);
+        $this->origin->writeTo($fs, $reaction);
 
-        if ($storage->isExecutable($this->name())) {
+        if ($fs->isExecutable($this->name())) {
             $reaction->executableAlreadySet($this->name());
 
             return;
         }
 
-        $storage->writeExecutable($this->name(), $this->contents());
+        $fs->writeExecutable($this->name(), $this->contents());
         $reaction->executableWasSet($this->name());
     }
 }

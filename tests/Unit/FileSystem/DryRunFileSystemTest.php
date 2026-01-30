@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Storage;
+namespace Haspadar\Piqule\Tests\Unit\FileSystem;
 
-use Haspadar\Piqule\Storage\DryRunStorage;
-use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\FileSystem\DryRunFileSystem;
+use Haspadar\Piqule\FileSystem\InMemoryFileSystem;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class DryRunStorageTest extends TestCase
+final class DryRunFileSystemTest extends TestCase
 {
     #[Test]
-    public function delegatesExistsToOriginalStorage(): void
+    public function delegatesExistsToOriginalFileSystem(): void
     {
         self::assertTrue(
-            (new DryRunStorage(
-                new InMemoryStorage([
+            (new DryRunFileSystem(
+                new InMemoryFileSystem([
                     'file.txt' => 'content',
                 ]),
             ))->exists('file.txt'),
@@ -25,25 +25,25 @@ final class DryRunStorageTest extends TestCase
     }
 
     #[Test]
-    public function delegatesReadToOriginalStorage(): void
+    public function delegatesReadToOriginalFileSystem(): void
     {
         self::assertSame(
             'content',
-            (new DryRunStorage(
-                new InMemoryStorage([
+            (new DryRunFileSystem(
+                new InMemoryFileSystem([
                     'readable.txt' => 'content',
                 ]),
             ))->read('readable.txt'),
-            'File contents were not read from original storage',
+            'File contents were not read from original filesystem',
         );
     }
 
     #[Test]
     public function suppressesWrite(): void
     {
-        $origin = new InMemoryStorage();
+        $origin = new InMemoryFileSystem();
 
-        (new DryRunStorage($origin))->write('writable.txt', 'content');
+        (new DryRunFileSystem($origin))->write('writable.txt', 'content');
 
         self::assertFalse(
             $origin->exists('writable.txt'),
@@ -54,9 +54,9 @@ final class DryRunStorageTest extends TestCase
     #[Test]
     public function suppressesExecutableWrite(): void
     {
-        $origin = new InMemoryStorage();
+        $origin = new InMemoryFileSystem();
 
-        (new DryRunStorage($origin))->writeExecutable('executable.sh', 'content');
+        (new DryRunFileSystem($origin))->writeExecutable('executable.sh', 'content');
 
         self::assertFalse(
             $origin->exists('executable.sh'),
@@ -65,32 +65,32 @@ final class DryRunStorageTest extends TestCase
     }
 
     #[Test]
-    public function delegatesNamesToOriginalStorage(): void
+    public function delegatesNamesToOriginalFileSystem(): void
     {
         self::assertEquals(
             ['a.txt', 'nested/b.txt'],
             iterator_to_array(
-                (new DryRunStorage(
-                    new InMemoryStorage([
+                (new DryRunFileSystem(
+                    new InMemoryFileSystem([
                         'a.txt' => 'a',
                         'nested/b.txt' => 'b',
                     ]),
                 ))->names(),
             ),
-            'names() was not delegated to original storage',
+            'names() was not delegated to original filesystem',
         );
     }
 
     #[Test]
-    public function delegatesIsExecutableToOriginalStorage(): void
+    public function delegatesIsExecutableToOriginalFileSystem(): void
     {
         self::assertFalse(
-            (new DryRunStorage(
-                new InMemoryStorage([
+            (new DryRunFileSystem(
+                new InMemoryFileSystem([
                     'file.sh' => '#!/bin/sh',
                 ]),
             ))->isExecutable('file.sh'),
-            'isExecutable() was not delegated to original storage',
+            'isExecutable() was not delegated to original filesystem',
         );
     }
 }

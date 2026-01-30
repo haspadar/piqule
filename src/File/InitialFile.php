@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\File;
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 
 final readonly class InitialFile implements File
@@ -29,15 +29,15 @@ final readonly class InitialFile implements File
     }
 
     #[Override]
-    public function writeTo(Storage $storage, FileReaction $reaction): void
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void
     {
-        if ($storage->exists($this->name())) {
+        if ($fs->exists($this->name())) {
             $reaction->skipped(new FileSkipped($this->name()));
 
             return;
         }
 
-        $this->origin->writeTo($storage, $reaction);
+        $this->origin->writeTo($fs, $reaction);
         $reaction->created(new FileCreated($this->name()));
     }
 }

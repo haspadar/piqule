@@ -8,7 +8,7 @@ use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 
 final readonly class ForcedFile implements File
@@ -30,22 +30,22 @@ final readonly class ForcedFile implements File
     }
 
     #[Override]
-    public function writeTo(Storage $storage, FileReaction $reaction): void
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void
     {
-        if (!$storage->exists($this->name())) {
-            $this->origin->writeTo($storage, $reaction);
+        if (!$fs->exists($this->name())) {
+            $this->origin->writeTo($fs, $reaction);
             $reaction->created(new FileCreated($this->name()));
 
             return;
         }
 
-        if ($storage->read($this->name()) === $this->contents()) {
+        if ($fs->read($this->name()) === $this->contents()) {
             $reaction->skipped(new FileSkipped($this->name()));
 
             return;
         }
 
-        $this->origin->writeTo($storage, $reaction);
+        $this->origin->writeTo($fs, $reaction);
         $reaction->updated(new FileUpdated($this->name()));
     }
 }

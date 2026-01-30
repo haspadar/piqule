@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\File;
 
 use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Storage\Storage;
+use Haspadar\Piqule\FileSystem\FileSystem;
 use Override;
 
 final readonly class InlineFile implements File
@@ -28,9 +28,9 @@ final readonly class InlineFile implements File
     }
 
     #[Override]
-    public function writeTo(Storage $storage, FileReaction $reaction): void
+    public function writeTo(FileSystem $fs, FileReaction $reaction): void
     {
-        $storage->write(
+        $fs->write(
             $this->name,
             $this->contents,
         );

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Storage;
+namespace Haspadar\Piqule\FileSystem;
 
 use Haspadar\Piqule\PiquleException;
 use Override;
 
-final class InMemoryStorage implements Storage
+final class InMemoryFileSystem implements FileSystem
 {
     /** @var array<string, string> */
     private array $files;

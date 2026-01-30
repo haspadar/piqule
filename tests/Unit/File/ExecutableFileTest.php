@@ -6,9 +6,9 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 
 use Haspadar\Piqule\File\ExecutableFile;
 use Haspadar\Piqule\File\InlineFile;
-use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\FileSystem\InMemoryFileSystem;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
-use Haspadar\Piqule\Tests\Unit\Fake\Storage\AlwaysExecutableStorage;
+use Haspadar\Piqule\Tests\Unit\Fake\FileSystem\AlwaysExecutableFileSystem;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -37,25 +37,25 @@ final class ExecutableFileTest extends TestCase
     }
 
     #[Test]
-    public function writesFileToStorage(): void
+    public function writesFileToFileSystem(): void
     {
-        $storage = new InMemoryStorage();
+        $fs = new InMemoryFileSystem();
 
         (new ExecutableFile(
             new InlineFile('hook.sh', 'payload'),
-        ))->writeTo($storage, new FakeFileReaction());
+        ))->writeTo($fs, new FakeFileReaction());
 
         self::assertSame(
             'payload',
-            $storage->read('hook.sh'),
+            $fs->read('hook.sh'),
         );
     }
 
     #[Test]
-    public function emitsExecutableAlreadySetWhenStorageReportsExecutable(): void
+    public function emitsExecutableAlreadySetWhenFileSystemReportsExecutable(): void
     {
-        $storage = new AlwaysExecutableStorage(
-            new InMemoryStorage([
+        $fs = new AlwaysExecutableFileSystem(
+            new InMemoryFileSystem([
                 'hook.sh' => 'payload',
             ]),
         );
@@ -64,7 +64,7 @@ final class ExecutableFileTest extends TestCase
 
         (new ExecutableFile(
             new InlineFile('hook.sh', 'payload'),
-        ))->writeTo($storage, $reaction);
+        ))->writeTo($fs, $reaction);
 
         self::assertSame(
             ['hook.sh'],
@@ -76,12 +76,12 @@ final class ExecutableFileTest extends TestCase
     #[Test]
     public function emitsExecutableWasSetWhenExecutableIsSet(): void
     {
-        $storage = new InMemoryStorage();
+        $fs = new InMemoryFileSystem();
         $reaction = new FakeFileReaction();
 
         (new ExecutableFile(
             new InlineFile('hook.sh', 'payload'),
-        ))->writeTo($storage, $reaction);
+        ))->writeTo($fs, $reaction);
 
         self::assertSame(
             ['hook.sh'],

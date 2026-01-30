@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Storage;
+namespace Haspadar\Piqule\Tests\Unit\FileSystem;
 
+use Haspadar\Piqule\FileSystem\DiskPath;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Storage\DiskPath;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
