@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
 
 use Haspadar\Piqule\File\Event\FileSkipped;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ final class FileSkippedTest extends TestCase
     #[Test]
     public function passesSkippedEventToReaction(): void
     {
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new FileSkipped('config/logging.php'))->passTo($reaction);
 

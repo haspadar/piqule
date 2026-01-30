@@ -29,9 +29,15 @@ final readonly class ExecutableFile implements File
     #[Override]
     public function writeTo(Storage $storage, FileReaction $reaction): void
     {
-        $storage->writeExecutable(
-            $this->name(),
-            $this->contents(),
-        );
+        $this->origin->writeTo($storage, $reaction);
+
+        if ($storage->isExecutable($this->name())) {
+            $reaction->executableAlreadySet($this->name());
+
+            return;
+        }
+
+        $storage->writeExecutable($this->name(), $this->contents());
+        $reaction->executableWasSet($this->name());
     }
 }

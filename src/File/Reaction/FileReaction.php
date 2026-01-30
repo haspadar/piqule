@@ -15,4 +15,8 @@ interface FileReaction
     public function updated(FileUpdated $event): void;
 
     public function skipped(FileSkipped $event): void;
+
+    public function executableAlreadySet(string $name): void;
+
+    public function executableWasSet(string $name): void;
 }

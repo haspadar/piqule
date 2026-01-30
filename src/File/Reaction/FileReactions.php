@@ -41,4 +41,20 @@ final readonly class FileReactions implements FileReaction
             $reaction->skipped($event);
         }
     }
+
+    #[Override]
+    public function executableAlreadySet(string $name): void
+    {
+        foreach ($this->reactions as $reaction) {
+            $reaction->executableAlreadySet($name);
+        }
+    }
+
+    #[Override]
+    public function executableWasSet(string $name): void
+    {
+        foreach ($this->reactions as $reaction) {
+            $reaction->executableWasSet($name);
+        }
+    }
 }

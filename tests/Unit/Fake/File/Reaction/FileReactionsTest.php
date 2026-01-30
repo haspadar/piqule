@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\File\Reaction;
+namespace Haspadar\Piqule\Tests\Unit\Fake\File\Reaction;
 
 use Haspadar\Piqule\File\Event\FileCreated;
 use Haspadar\Piqule\File\Event\FileSkipped;
 use Haspadar\Piqule\File\Event\FileUpdated;
 use Haspadar\Piqule\File\Reaction\FileReactions;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class ReactionsTest extends TestCase
+final class FileReactionsTest extends TestCase
 {
     #[Test]
     public function propagatesCreatedEventToAllReactions(): void
@@ -21,18 +20,18 @@ final class ReactionsTest extends TestCase
         $second = new FakeFileReaction();
 
         (new FileReactions([$first, $second]))
-            ->created(new FileCreated('reactions/pre-push'));
+            ->created(new FileCreated('created.txt'));
 
         self::assertCount(
             1,
             $first->events(),
-            'Created event must be passed to first reaction',
+            'Expected created event to be propagated to first reaction',
         );
 
         self::assertCount(
             1,
             $second->events(),
-            'Created event must be passed to second reaction',
+            'Expected created event to be propagated to second reaction',
         );
     }
 
@@ -43,18 +42,18 @@ final class ReactionsTest extends TestCase
         $second = new FakeFileReaction();
 
         (new FileReactions([$first, $second]))
-            ->updated(new FileUpdated('reactions/pre-commit'));
+            ->updated(new FileUpdated('updated.txt'));
 
         self::assertCount(
             1,
             $first->events(),
-            'Updated event must be passed to first reaction',
+            'Expected updated event to be propagated to first reaction',
         );
 
         self::assertCount(
             1,
             $second->events(),
-            'Updated event must be passed to second reaction',
+            'Expected updated event to be propagated to second reaction',
         );
     }
 
@@ -65,62 +64,62 @@ final class ReactionsTest extends TestCase
         $second = new FakeFileReaction();
 
         (new FileReactions([$first, $second]))
-            ->skipped(new FileSkipped('reactions/commit-msg'));
+            ->skipped(new FileSkipped('skipped.txt'));
 
         self::assertCount(
             1,
             $first->events(),
-            'Skipped event must be passed to first reaction',
+            'Expected skipped event to be propagated to first reaction',
         );
 
         self::assertCount(
             1,
             $second->events(),
-            'Skipped event must be passed to second reaction',
+            'Expected skipped event to be propagated to second reaction',
         );
     }
 
     #[Test]
-    public function propagatesExecutableAlreadySetEventToAllReactions(): void
+    public function propagatesExecutableAlreadySetToAllReactions(): void
     {
         $first = new FakeFileReaction();
         $second = new FakeFileReaction();
 
         (new FileReactions([$first, $second]))
-            ->executableAlreadySet('reactions/pre-push');
+            ->executableAlreadySet('bin/hook-present');
 
         self::assertCount(
             1,
             $first->events(),
-            'ExecutableAlreadySet event must be passed to first reaction',
+            'Expected executableAlreadySet to be propagated to first reaction',
         );
 
         self::assertCount(
             1,
             $second->events(),
-            'ExecutableAlreadySet event must be passed to second reaction',
+            'Expected executableAlreadySet to be propagated to second reaction',
         );
     }
 
     #[Test]
-    public function propagatesExecutableWasSetEventToAllReactions(): void
+    public function propagatesExecutableWasSetToAllReactions(): void
     {
         $first = new FakeFileReaction();
         $second = new FakeFileReaction();
 
         (new FileReactions([$first, $second]))
-            ->executableWasSet('reactions/pre-commit');
+            ->executableWasSet('bin/hook-missing');
 
         self::assertCount(
             1,
             $first->events(),
-            'ExecutableWasSet event must be passed to first reaction',
+            'Expected executableWasSet to be propagated to first reaction',
         );
 
         self::assertCount(
             1,
             $second->events(),
-            'ExecutableWasSet event must be passed to second reaction',
+            'Expected executableWasSet to be propagated to second reaction',
         );
     }
 }

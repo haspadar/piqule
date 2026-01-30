@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\File;
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +44,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('initial/new.txt', 'hello'),
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'hello',
@@ -57,7 +57,7 @@ final class InitialFileTest extends TestCase
     public function reportsCreatedEventWhenFileDoesNotExist(): void
     {
         $storage = new InMemoryStorage();
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/created.txt', 'data'),
@@ -79,7 +79,7 @@ final class InitialFileTest extends TestCase
 
         (new InitialFile(
             new InlineFile('initial/existing.txt', 'new'),
-        ))->writeTo($storage, new FakeEventFileReaction());
+        ))->writeTo($storage, new FakeFileReaction());
 
         self::assertSame(
             'original',
@@ -94,7 +94,7 @@ final class InitialFileTest extends TestCase
         $storage = new InMemoryStorage([
             'initial/skipped.txt' => 'keep',
         ]);
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new InitialFile(
             new InlineFile('initial/skipped.txt', 'ignored'),

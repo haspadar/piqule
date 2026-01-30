@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\File\Event;
 
 use Haspadar\Piqule\File\Event\FileUpdated;
-use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeEventFileReaction;
+use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ final class FileUpdatedTest extends TestCase
     #[Test]
     public function passesUpdatedEventToReaction(): void
     {
-        $reaction = new FakeEventFileReaction();
+        $reaction = new FakeFileReaction();
 
         (new FileUpdated('config/cache.php'))->passTo($reaction);
 
