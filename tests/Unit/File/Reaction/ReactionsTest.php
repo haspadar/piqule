@@ -79,4 +79,48 @@ final class ReactionsTest extends TestCase
             'Skipped event must be passed to second reaction',
         );
     }
+
+    #[Test]
+    public function propagatesExecutableAlreadySetEventToAllReactions(): void
+    {
+        $first = new FakeFileReaction();
+        $second = new FakeFileReaction();
+
+        (new FileReactions([$first, $second]))
+            ->executableAlreadySet('reactions/pre-push');
+
+        self::assertCount(
+            1,
+            $first->events(),
+            'ExecutableAlreadySet event must be passed to first reaction',
+        );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'ExecutableAlreadySet event must be passed to second reaction',
+        );
+    }
+
+    #[Test]
+    public function propagatesExecutableWasSetEventToAllReactions(): void
+    {
+        $first = new FakeFileReaction();
+        $second = new FakeFileReaction();
+
+        (new FileReactions([$first, $second]))
+            ->executableWasSet('reactions/pre-commit');
+
+        self::assertCount(
+            1,
+            $first->events(),
+            'ExecutableWasSet event must be passed to first reaction',
+        );
+
+        self::assertCount(
+            1,
+            $second->events(),
+            'ExecutableWasSet event must be passed to second reaction',
+        );
+    }
 }
