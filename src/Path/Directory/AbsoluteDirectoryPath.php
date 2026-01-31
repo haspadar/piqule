@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Path\Directory;
 use Haspadar\Piqule\Path\Path;
 use Override;
 
-final readonly class AbsoluteDirectoryPath implements Path
+final readonly class AbsoluteDirectoryPath implements DirectoryPath
 {
     public function __construct(
         private string $value,

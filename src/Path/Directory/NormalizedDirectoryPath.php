@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Path\Directory;
 use Haspadar\Piqule\Path\Path;
 use Override;
 
-final readonly class NormalizedDirectoryPath implements Path
+final readonly class NormalizedDirectoryPath implements DirectoryPath
 {
     public function __construct(
         private AbsoluteDirectoryPath $origin,

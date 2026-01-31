@@ -8,7 +8,7 @@ use Haspadar\Piqule\Path\Path;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
-final readonly class ValidatedDirectoryPath implements Path
+final readonly class ValidatedDirectoryPath implements DirectoryPath
 {
     public function __construct(
         private AbsoluteDirectoryPath $origin,
