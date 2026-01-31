@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\FileSystem;
 
 use FilesystemIterator;
-use Haspadar\Piqule\Path\DirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Haspadar\Piqule\PiquleException;
 use Override;
 use RecursiveDirectoryIterator;
@@ -15,7 +15,7 @@ use SplFileInfo;
 final readonly class DiskFileSystem implements FileSystem
 {
     public function __construct(
-        private DirectoryPath $root,
+        private AbsoluteDirectoryPath $root,
     ) {}
 
     #[Override]
