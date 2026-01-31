@@ -67,14 +67,14 @@ final class ValidatedDirectoryPathTest extends TestCase
     }
 
     #[Test]
-    public function allowsWindowsUncAbsolute(): void
+    public function allowsWindowsRootedAbsolute(): void
     {
         self::assertSame(
             '\Windows\System32\\',
             (new ValidatedDirectoryPath(
                 new AbsoluteDirectoryPath('\Windows\System32\\'),
             ))->value(),
-            'Allows Windows UNC absolute directory paths',
+            'Allows Windows rooted absolute directory paths',
         );
     }
 }

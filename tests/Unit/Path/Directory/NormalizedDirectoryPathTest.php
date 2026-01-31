@@ -67,7 +67,7 @@ final class NormalizedDirectoryPathTest extends TestCase
             (new NormalizedDirectoryPath(
                 new AbsoluteDirectoryPath('\Windows\System32\\'),
             ))->value(),
-            'Removes trailing slash from Windows UNC directory path',
+            'Removes trailing slash from Windows rooted directory path',
         );
     }
 }
