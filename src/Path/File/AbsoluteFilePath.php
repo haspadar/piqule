@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Path;
+namespace Haspadar\Piqule\Path\File;
 
 use Haspadar\Piqule\File\FileName;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Override;
 
-final readonly class FilePath implements Path
+final readonly class AbsoluteFilePath implements FilePath
 {
     public function __construct(
-        private DirectoryPath $directory,
-        private FileName $name,
+        private AbsoluteDirectoryPath $directory,
+        private FileName              $name,
     ) {}
 
     #[Override]
