@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Path;
+namespace Haspadar\Piqule\Path\Directory;
 
+use Haspadar\Piqule\Path\Path;
 use Override;
 
-final readonly class DirectoryPath implements Path
+final readonly class AbsoluteDirectoryPath implements Path
 {
     public function __construct(
         private string $value,

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Path;
+namespace Haspadar\Piqule\Tests\Unit\Path\Directory;
 
-use Haspadar\Piqule\Path\DirectoryPath;
-use Haspadar\Piqule\Path\ValidatedDirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
+use Haspadar\Piqule\Path\Directory\ValidatedDirectoryPath;
 use Haspadar\Piqule\PiquleException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +18,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new ValidatedDirectoryPath(
-            new DirectoryPath(''),
+            new AbsoluteDirectoryPath(''),
         ))->value();
     }
 
@@ -28,7 +28,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new ValidatedDirectoryPath(
-            new DirectoryPath('relative/path'),
+            new AbsoluteDirectoryPath('relative/path'),
         ))->value();
     }
 
@@ -38,7 +38,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new ValidatedDirectoryPath(
-            new DirectoryPath('fooC:\Windows'),
+            new AbsoluteDirectoryPath('fooC:\Windows'),
         ))->value();
     }
 
@@ -48,7 +48,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         self::assertSame(
             '/var/www/',
             (new ValidatedDirectoryPath(
-                new DirectoryPath('/var/www/'),
+                new AbsoluteDirectoryPath('/var/www/'),
             ))->value(),
             'Allows POSIX absolute directory paths',
         );
@@ -60,7 +60,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         self::assertSame(
             'C:\Windows\\',
             (new ValidatedDirectoryPath(
-                new DirectoryPath('C:\Windows\\'),
+                new AbsoluteDirectoryPath('C:\Windows\\'),
             ))->value(),
             'Allows Windows drive absolute directory paths',
         );
@@ -72,7 +72,7 @@ final class ValidatedDirectoryPathTest extends TestCase
         self::assertSame(
             '\Windows\System32\\',
             (new ValidatedDirectoryPath(
-                new DirectoryPath('\Windows\System32\\'),
+                new AbsoluteDirectoryPath('\Windows\System32\\'),
             ))->value(),
             'Allows Windows UNC absolute directory paths',
         );
