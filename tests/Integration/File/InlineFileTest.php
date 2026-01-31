@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Integration\File;
 
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\Path\DirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,7 +19,7 @@ final class InlineFileTest extends TestCase
     {
         $directory = new DirectoryFixture('inline-file');
         $fs = new DiskFileSystem(
-            new DirectoryPath($directory->path()),
+            new AbsoluteDirectoryPath($directory->path()),
         );
 
         (new InlineFile(

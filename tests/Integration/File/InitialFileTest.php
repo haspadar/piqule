@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Integration\File;
 use Haspadar\Piqule\File\InitialFile;
 use Haspadar\Piqule\File\InlineFile;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\Path\DirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use Haspadar\Piqule\Tests\Unit\Fake\File\Reaction\FakeFileReaction;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,7 +20,7 @@ final class InitialFileTest extends TestCase
     {
         $directory = new DirectoryFixture('initial-file');
         $fs = new DiskFileSystem(
-            new DirectoryPath($directory->path()),
+            new AbsoluteDirectoryPath($directory->path()),
         );
 
         (new InitialFile(
@@ -40,7 +40,7 @@ final class InitialFileTest extends TestCase
             ->withFile('example.txt', 'original');
 
         $fs = new DiskFileSystem(
-            new DirectoryPath($directory->path()),
+            new AbsoluteDirectoryPath($directory->path()),
         );
 
         (new InitialFile(

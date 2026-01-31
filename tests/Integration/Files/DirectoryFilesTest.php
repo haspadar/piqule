@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Integration\Files;
 use Haspadar\Piqule\File\DiskFile;
 use Haspadar\Piqule\Files\DirectoryFiles;
 use Haspadar\Piqule\FileSystem\DiskFileSystem;
-use Haspadar\Piqule\Path\DirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Haspadar\Piqule\Tests\Integration\Fixtures\DirectoryFixture;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +18,7 @@ final class DirectoryFilesTest extends TestCase
     public function returnsEmptyIterableWhenDirectoryIsEmpty(): void
     {
         $directory = new DirectoryFixture('stored-files');
-        $root = new DirectoryPath($directory->path());
+        $root = new AbsoluteDirectoryPath($directory->path());
 
         $files = new DirectoryFiles(
             new DiskFileSystem($root),
@@ -39,7 +39,7 @@ final class DirectoryFilesTest extends TestCase
             ->withFile('nested/b.txt', 'B')
             ->withFile('nested/deep/c.txt', 'C');
 
-        $root = new DirectoryPath($directory->path());
+        $root = new AbsoluteDirectoryPath($directory->path());
 
         $files = new DirectoryFiles(
             new DiskFileSystem($root),
@@ -67,7 +67,7 @@ final class DirectoryFilesTest extends TestCase
         $directory = new DirectoryFixture('stored-files');
         mkdir($directory->path() . '/dir-only');
 
-        $root = new DirectoryPath($directory->path());
+        $root = new AbsoluteDirectoryPath($directory->path());
 
         $files = new DirectoryFiles(
             new DiskFileSystem($root),

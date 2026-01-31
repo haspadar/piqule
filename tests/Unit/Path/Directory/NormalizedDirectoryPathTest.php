@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Path;
+namespace Haspadar\Piqule\Tests\Unit\Path\Directory;
 
-use Haspadar\Piqule\Path\DirectoryPath;
-use Haspadar\Piqule\Path\NormalizedDirectoryPath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
+use Haspadar\Piqule\Path\Directory\NormalizedDirectoryPath;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ final class NormalizedDirectoryPathTest extends TestCase
         self::assertSame(
             '/',
             (new NormalizedDirectoryPath(
-                new DirectoryPath('/'),
+                new AbsoluteDirectoryPath('/'),
             ))->value(),
             'Keeps POSIX root directory path',
         );
@@ -29,7 +29,7 @@ final class NormalizedDirectoryPathTest extends TestCase
         self::assertSame(
             'C:\\',
             (new NormalizedDirectoryPath(
-                new DirectoryPath('C:\\'),
+                new AbsoluteDirectoryPath('C:\\'),
             ))->value(),
             'Keeps Windows drive root directory path',
         );
@@ -41,7 +41,7 @@ final class NormalizedDirectoryPathTest extends TestCase
         self::assertSame(
             '/var/www',
             (new NormalizedDirectoryPath(
-                new DirectoryPath('/var/www/'),
+                new AbsoluteDirectoryPath('/var/www/'),
             ))->value(),
             'Removes trailing slash from POSIX directory path',
         );
@@ -53,7 +53,7 @@ final class NormalizedDirectoryPathTest extends TestCase
         self::assertSame(
             'C:\Windows',
             (new NormalizedDirectoryPath(
-                new DirectoryPath('C:\Windows\\'),
+                new AbsoluteDirectoryPath('C:\Windows\\'),
             ))->value(),
             'Removes trailing slash from Windows directory path',
         );
@@ -65,9 +65,9 @@ final class NormalizedDirectoryPathTest extends TestCase
         self::assertSame(
             '\Windows\System32',
             (new NormalizedDirectoryPath(
-                new DirectoryPath('\Windows\System32\\'),
+                new AbsoluteDirectoryPath('\Windows\System32\\'),
             ))->value(),
-            'Removes trailing slash from Windows UNC directory path',
+            'Removes trailing slash from Windows rooted directory path',
         );
     }
 }

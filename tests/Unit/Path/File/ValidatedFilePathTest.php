@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Path;
+namespace Haspadar\Piqule\Tests\Unit\Path\File;
 
 use Haspadar\Piqule\File\FileName;
-use Haspadar\Piqule\Path\DirectoryPath;
-use Haspadar\Piqule\Path\FilePath;
-use Haspadar\Piqule\Path\ValidatedFilePath;
+use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
+use Haspadar\Piqule\Path\File\AbsoluteFilePath;
+use Haspadar\Piqule\Path\File\ValidatedFilePath;
 use Haspadar\Piqule\PiquleException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -20,8 +20,8 @@ final class ValidatedFilePathTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new ValidatedFilePath(
-            new FilePath(
-                new DirectoryPath('/var/www'),
+            new AbsoluteFilePath(
+                new AbsoluteDirectoryPath('/var/www'),
                 new FileName('dir/'),
             ),
         ))->value();
