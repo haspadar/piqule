@@ -43,4 +43,10 @@ final readonly class InMemoryStorage implements Storage
             [...$this->entries, $location => $contents],
         );
     }
+
+    #[Override]
+    public function entries(string $location): iterable
+    {
+        return array_keys($this->entries);
+    }
 }

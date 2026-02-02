@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\Storage;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\Tests\Constraint\Storage\HasEntries;
 use Haspadar\Piqule\Tests\Constraint\Storage\HasEntry;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -84,5 +85,19 @@ final class InMemoryStorageTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new InMemoryStorage())->read('./absent.txt');
+    }
+
+    #[Test]
+    public function listsAllEntries(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('a/one.txt', '1')
+                ->write('b/two.txt', '2'),
+            new HasEntries('', [
+                'a/one.txt',
+                'b/two.txt',
+            ]),
+        );
     }
 }

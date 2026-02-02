@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Integration\Storage;
 use Haspadar\Piqule\File\TempFolder;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\DiskStorage;
+use Haspadar\Piqule\Tests\Constraint\Storage\HasEntries;
 use Haspadar\Piqule\Tests\Constraint\Storage\HasEntry;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -69,5 +70,19 @@ final class DiskStorageTest extends TestCase
         (new DiskStorage(
             (new TempFolder())->path(),
         ))->read('no/such/file.txt');
+    }
+
+    #[Test]
+    public function listsEntriesInFolder(): void
+    {
+        self::assertThat(
+            new DiskStorage(
+                (new TempFolder())
+                    ->withFile('a/one.txt', '1')
+                    ->withFile('a/two.txt', '2')
+                    ->path(),
+            ),
+            new HasEntries('a', ['a/one.txt', 'a/two.txt']),
+        );
     }
 }

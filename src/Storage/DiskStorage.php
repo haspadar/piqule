@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use FilesystemIterator;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
@@ -29,6 +30,28 @@ final readonly class DiskStorage implements Storage
         }
 
         return $contents;
+    }
+
+    #[Override]
+    public function entries(string $location): iterable
+    {
+        $path = $this->pathOf($location);
+
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        $iterator = new FilesystemIterator(
+            $path,
+            FilesystemIterator::SKIP_DOTS,
+        );
+
+        foreach ($iterator as $item) {
+            yield ltrim(
+                $location . '/' . $item->getFilename(),
+                '/',
+            );
+        }
     }
 
     #[Override]

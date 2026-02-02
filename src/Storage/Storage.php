@@ -26,4 +26,11 @@ interface Storage
      * Checks whether a projection exists at the given location
      */
     public function exists(string $location): bool;
+
+    /**
+     * Lists entries under the given location
+     *
+     * @return iterable<string> relative entry paths
+     */
+    public function entries(string $location): iterable;
 }
