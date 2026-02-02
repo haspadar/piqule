@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Storage;
 
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 final class InMemoryStorageTest extends TestCase
 {
@@ -72,7 +72,7 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function throwsWhenReadingMissingLocation(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(PiquleException::class);
 
         (new InMemoryStorage())->read('missing.txt');
     }
