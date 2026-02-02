@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Storage;
+namespace Haspadar\Piqule\Tests\Integration\Storage;
 
 use Haspadar\Piqule\File\TempFolder;
 use Haspadar\Piqule\PiquleException;
