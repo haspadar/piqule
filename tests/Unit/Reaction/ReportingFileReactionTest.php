@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Reaction;
 
-use Haspadar\Piqule\File\Event\FileCreated;
-use Haspadar\Piqule\File\Event\FileSkipped;
-use Haspadar\Piqule\File\Event\FileUpdated;
-use Haspadar\Piqule\File\Reaction\ReportingFileReaction;
+use Haspadar\Piqule\Source\Event\FileCreated;
+use Haspadar\Piqule\Source\Event\FileSkipped;
+use Haspadar\Piqule\Source\Event\FileUpdated;
+use Haspadar\Piqule\Source\Reaction\ReportingFileReaction;
 use Haspadar\Piqule\Tests\Unit\Fake\Output\FakeOutput;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
