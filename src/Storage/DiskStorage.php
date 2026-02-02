@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Storage;
 use FilesystemIterator;
 use Haspadar\Piqule\PiquleException;
 use Override;
+use SplFileInfo;
 
 final readonly class DiskStorage implements Storage
 {
@@ -46,6 +47,7 @@ final readonly class DiskStorage implements Storage
             FilesystemIterator::SKIP_DOTS,
         );
 
+        /** @var SplFileInfo $item */
         foreach ($iterator as $item) {
             yield ltrim(
                 $location . '/' . $item->getFilename(),
