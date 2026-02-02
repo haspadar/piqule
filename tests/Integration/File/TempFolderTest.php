@@ -44,4 +44,36 @@ final class TempFolderTest extends TestCase
             'TempFolder must remove directory on close',
         );
     }
+
+    #[Test]
+    public function removesDirectoryWithNestedFiles(): void
+    {
+        $folder = new TempFolder();
+        $folder->withFile('a/b/c.txt', 'data');
+        $folder->withFile('x/y/z.txt', 'more');
+
+        $path = $folder->path();
+
+        $folder->close();
+
+        self::assertDirectoryDoesNotExist(
+            $path,
+            'TempFolder must remove directory recursively',
+        );
+    }
+
+    #[Test]
+    public function closeIsIdempotent(): void
+    {
+        $folder = new TempFolder();
+        $path = $folder->path();
+
+        $folder->close();
+        $folder->close();
+
+        self::assertDirectoryDoesNotExist(
+            $path,
+            'TempFolder::close must be safe to call multiple times',
+        );
+    }
 }
