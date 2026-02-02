@@ -24,11 +24,13 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function overwritesExistingContents(): void
     {
+        $path = './overwrite.txt';
+
         self::assertThat(
             (new InMemoryStorage())
-                ->write('./overwrite.txt', 'first')
-                ->write('./overwrite.txt', 'second'),
-            new HasEntry('./overwrite.txt', 'second'),
+                ->write($path, 'first')
+                ->write($path, 'second'),
+            new HasEntry($path, 'second'),
         );
     }
 

@@ -15,12 +15,14 @@ final class LocatedFileTest extends TestCase
     #[Test]
     public function returnsItsName(): void
     {
+        $name = 'file.txt';
+
         self::assertSame(
-            'file.txt',
+            $name,
             (new LocatedFile(
                 new InMemoryStorage(),
-                'dir/file.txt',
-                'file.txt',
+                './alpha/file.txt',
+                $name,
             ))->name(),
             'File must expose its name',
         );
@@ -32,8 +34,8 @@ final class LocatedFileTest extends TestCase
         self::assertThat(
             (new LocatedFile(
                 new InMemoryStorage(),
-                'dir/file.txt',
-                'file.txt',
+                '../beta/write.log',
+                'write.log',
             ))->write('data'),
             new HasContents('data'),
         );
@@ -45,8 +47,8 @@ final class LocatedFileTest extends TestCase
         self::assertThat(
             (new LocatedFile(
                 new InMemoryStorage(),
-                'dir/file.txt',
-                'file.txt',
+                'gamma/sub/read.bin',
+                'read.bin',
             ))->write('hello'),
             new HasContents('hello'),
         );
