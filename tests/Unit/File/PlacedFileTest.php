@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File;
 
-use Haspadar\Piqule\File\LocatedFile;
+use Haspadar\Piqule\File\PlacedFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Constraint\File\HasContents;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class LocatedFileTest extends TestCase
+final class PlacedFileTest extends TestCase
 {
     #[Test]
     public function returnsItsName(): void
@@ -19,7 +19,7 @@ final class LocatedFileTest extends TestCase
 
         self::assertSame(
             $name,
-            (new LocatedFile(
+            (new PlacedFile(
                 new InMemoryStorage(),
                 './alpha/file.txt',
                 $name,
@@ -32,7 +32,7 @@ final class LocatedFileTest extends TestCase
     public function writesContentsToStorage(): void
     {
         self::assertThat(
-            (new LocatedFile(
+            (new PlacedFile(
                 new InMemoryStorage(),
                 '../beta/write.log',
                 'write.log',
@@ -45,7 +45,7 @@ final class LocatedFileTest extends TestCase
     public function readsPreviouslyWrittenContents(): void
     {
         self::assertThat(
-            (new LocatedFile(
+            (new PlacedFile(
                 new InMemoryStorage(),
                 'gamma/sub/read.bin',
                 'read.bin',
