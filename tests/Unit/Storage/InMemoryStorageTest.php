@@ -16,8 +16,8 @@ final class InMemoryStorageTest extends TestCase
     public function readsWrittenContents(): void
     {
         self::assertThat(
-            (new InMemoryStorage())->write('file.txt', 'hello'),
-            new HasEntry('file.txt', 'hello'),
+            (new InMemoryStorage())->write('read/file.txt', 'hello'),
+            new HasEntry('read/file.txt', 'hello'),
         );
     }
 
@@ -26,9 +26,9 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('file.txt', 'first')
-                ->write('file.txt', 'second'),
-            new HasEntry('file.txt', 'second'),
+                ->write('./overwrite.txt', 'first')
+                ->write('./overwrite.txt', 'second'),
+            new HasEntry('./overwrite.txt', 'second'),
         );
     }
 
@@ -36,7 +36,7 @@ final class InMemoryStorageTest extends TestCase
     public function reportsNonExistingLocation(): void
     {
         self::assertFalse(
-            (new InMemoryStorage())->exists('file.txt'),
+            (new InMemoryStorage())->exists('missing/location.txt'),
             'Storage must report non-existing location',
         );
     }
@@ -46,8 +46,8 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertTrue(
             (new InMemoryStorage())
-                ->write('file.txt', 'data')
-                ->exists('file.txt'),
+                ->write('exists/data.bin', 'data')
+                ->exists('exists/data.bin'),
             'Storage must report existing location',
         );
     }
@@ -55,12 +55,12 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function doesNotMutateOriginalStorage(): void
     {
-        $initial = new InMemoryStorage();
+        $storage = new InMemoryStorage();
 
-        $initial->write('file.txt', 'data');
+        $storage->write('../immutable.txt', 'data');
 
         self::assertFalse(
-            $initial->exists('file.txt'),
+            $storage->exists('../immutable.txt'),
             'Initial storage must not be modified after write',
         );
     }
@@ -70,8 +70,8 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertTrue(
             (new InMemoryStorage())
-                ->write('file.txt', 'data')
-                ->exists('file.txt'),
+                ->write('new/file.log', 'data')
+                ->exists('new/file.log'),
             'Write must return a new storage instance with updated state',
         );
     }
@@ -81,6 +81,6 @@ final class InMemoryStorageTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new InMemoryStorage())->read('missing.txt');
+        (new InMemoryStorage())->read('./absent.txt');
     }
 }
