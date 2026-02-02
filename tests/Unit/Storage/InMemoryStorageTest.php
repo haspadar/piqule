@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\Storage;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\Tests\Constraint\Storage\HasEntry;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -14,25 +15,20 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function readsWrittenContents(): void
     {
-        self::assertSame(
-            'hello',
-            (new InMemoryStorage())
-                ->write('file.txt', 'hello')
-                ->read('file.txt'),
-            'Storage must return contents written to the same location',
+        self::assertThat(
+            (new InMemoryStorage())->write('file.txt', 'hello'),
+            new HasEntry('file.txt', 'hello'),
         );
     }
 
     #[Test]
     public function overwritesExistingContents(): void
     {
-        self::assertSame(
-            'second',
+        self::assertThat(
             (new InMemoryStorage())
                 ->write('file.txt', 'first')
-                ->write('file.txt', 'second')
-                ->read('file.txt'),
-            'Storage must overwrite contents for the same location',
+                ->write('file.txt', 'second'),
+            new HasEntry('file.txt', 'second'),
         );
     }
 
