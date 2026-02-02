@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Path\File;
 
-use Haspadar\Piqule\File\FileName;
 use Haspadar\Piqule\Path\Directory\AbsoluteDirectoryPath;
 use Haspadar\Piqule\Path\File\AbsoluteFilePath;
+use Haspadar\Piqule\Source\FileName;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Application;
 
-use Haspadar\Piqule\File\Reaction\FileReaction;
-use Haspadar\Piqule\Files\Files;
 use Haspadar\Piqule\FileSystem\FileSystem;
+use Haspadar\Piqule\Source\Reaction\FileReaction;
+use Haspadar\Piqule\Sources\Sources;
 use Override;
 
 final readonly class FileApplication implements Application
 {
     public function __construct(
-        private Files        $files,
+        private Sources      $files,
         private FileSystem   $fs,
         private FileReaction $reaction,
     ) {}
