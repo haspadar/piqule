@@ -37,7 +37,7 @@ final readonly class InMemoryStorage implements Storage
     }
 
     #[Override]
-    public function write(string $location, string $contents): Storage
+    public function write(string $location, string $contents): self
     {
         return new self(
             [...$this->entries, $location => $contents],
