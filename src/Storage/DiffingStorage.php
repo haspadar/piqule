@@ -21,15 +21,21 @@ final readonly class DiffingStorage implements Storage
         $path = $file->name();
 
         if (!$this->origin->exists($path)) {
-            $this->origin->write($file);
             $this->reaction->created($path);
 
-            return $this;
+            return new self(
+                $this->origin->write($file),
+                $this->reaction,
+            );
         }
 
         if ($this->origin->read($path) !== $file->contents()) {
-            $this->origin->write($file);
             $this->reaction->updated($path);
+
+            return new self(
+                $this->origin->write($file),
+                $this->reaction,
+            );
         }
 
         return $this;
