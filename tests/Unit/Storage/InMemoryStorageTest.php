@@ -88,16 +88,41 @@ final class InMemoryStorageTest extends TestCase
     }
 
     #[Test]
-    public function listsAllEntries(): void
+    public function listsEntriesUnderGivenLocation(): void
     {
         self::assertThat(
             (new InMemoryStorage())
                 ->write('a/one.txt', '1')
-                ->write('b/two.txt', '2'),
-            new HasEntries('', [
+                ->write('a/two.txt', '2')
+                ->write('b/skip.txt', 'x'),
+            new HasEntries('a', [
                 'a/one.txt',
-                'b/two.txt',
+                'a/two.txt',
             ]),
+        );
+    }
+
+    #[Test]
+    public function doesNotListNestedEntries(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('a/b/deep.txt', 'x')
+                ->write('a/one.txt', '1'),
+            new HasEntries('a', [
+                'a/one.txt',
+            ]),
+        );
+    }
+
+    #[Test]
+    public function listsNoEntriesWhenLocationHasOnlyNestedFiles(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('a/b/one.txt', '1')
+                ->write('a/b/two.txt', '2'),
+            new HasEntries('a', []),
         );
     }
 }
