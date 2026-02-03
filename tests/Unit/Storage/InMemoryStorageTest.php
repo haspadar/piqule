@@ -92,12 +92,12 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('a/one.txt', '1')
-                ->write('a/two.txt', '2')
-                ->write('b/skip.txt', 'x'),
-            new HasEntries('a', [
-                'a/one.txt',
-                'a/two.txt',
+                ->write('alpha/file-1.log', '1')
+                ->write('alpha/file-2.log', '2')
+                ->write('beta/ignored.log', 'x'),
+            new HasEntries('alpha', [
+                'alpha/file-1.log',
+                'alpha/file-2.log',
             ]),
         );
     }
@@ -107,10 +107,10 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('a/b/deep.txt', 'x')
-                ->write('a/one.txt', '1'),
-            new HasEntries('a', [
-                'a/one.txt',
+                ->write('root/level1/deep.txt', 'x')
+                ->write('root/shallow.txt', '1'),
+            new HasEntries('root', [
+                'root/shallow.txt',
             ]),
         );
     }
@@ -120,9 +120,9 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('a/b/one.txt', '1')
-                ->write('a/b/two.txt', '2'),
-            new HasEntries('a', []),
+                ->write('container/nested/one.dat', '1')
+                ->write('container/nested/two.dat', '2'),
+            new HasEntries('container', []),
         );
     }
 }
