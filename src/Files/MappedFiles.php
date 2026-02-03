@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Files;
 
 use Closure;
+use Haspadar\Piqule\File\File;
 use Override;
 
 final readonly class MappedFiles implements Files
 {
+    /**
+     * @param Closure(File): File $map
+     */
     public function __construct(
         private Files $origin,
         private Closure $map,
