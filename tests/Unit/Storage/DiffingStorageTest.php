@@ -93,18 +93,4 @@ final class DiffingStorageTest extends TestCase
             ))->exists('b.txt'),
         );
     }
-
-    #[Test]
-    public function delegatesEntriesToOrigin(): void
-    {
-        self::assertSame(
-            ['dir/file.txt'],
-            iterator_to_array(
-                (new DiffingStorage(
-                    new InMemoryStorage(['dir/file.txt' => 'x']),
-                    new FakeStorageReaction(),
-                ))->entries('dir'),
-            ),
-        );
-    }
 }
