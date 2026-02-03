@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use FilesystemIterator;
 use Haspadar\Piqule\PiquleException;
 use Override;
+use SplFileInfo;
 
 final readonly class DiskStorage implements Storage
 {
@@ -32,6 +34,29 @@ final readonly class DiskStorage implements Storage
     }
 
     #[Override]
+    public function entries(string $location): iterable
+    {
+        $path = $this->pathOf($location);
+
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        $iterator = new FilesystemIterator(
+            $path,
+            FilesystemIterator::SKIP_DOTS,
+        );
+
+        /** @var SplFileInfo $item */
+        foreach ($iterator as $item) {
+            yield ltrim(
+                $location . '/' . $item->getFilename(),
+                '/',
+            );
+        }
+    }
+
+    #[Override]
     public function exists(string $location): bool
     {
         return is_file($this->pathOf($location));
@@ -43,10 +68,11 @@ final readonly class DiskStorage implements Storage
         $path = $this->pathOf($location);
         $directory = dirname($path);
 
-        if (!is_dir($directory)) {
-            if (!mkdir($directory, 0o777, true) && !is_dir($directory)) {
-                throw new PiquleException("Unable to create directory: $directory");
-            }
+        if (!is_dir($directory)
+            && !mkdir($directory, 0o777, true)
+            && !is_dir($directory)
+        ) {
+            throw new PiquleException("Unable to create directory: $directory");
         }
 
         if (file_put_contents($path, $contents) === false) {

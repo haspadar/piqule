@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\Storage;
 
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\InMemoryStorage;
+use Haspadar\Piqule\Tests\Constraint\Storage\HasEntries;
 use Haspadar\Piqule\Tests\Constraint\Storage\HasEntry;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -84,5 +85,44 @@ final class InMemoryStorageTest extends TestCase
         $this->expectException(PiquleException::class);
 
         (new InMemoryStorage())->read('./absent.txt');
+    }
+
+    #[Test]
+    public function listsEntriesUnderGivenLocation(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('alpha/file-1.log', '1')
+                ->write('alpha/file-2.log', '2')
+                ->write('beta/ignored.log', 'x'),
+            new HasEntries('alpha', [
+                'alpha/file-1.log',
+                'alpha/file-2.log',
+            ]),
+        );
+    }
+
+    #[Test]
+    public function doesNotListNestedEntries(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('root/level1/deep.txt', 'x')
+                ->write('root/shallow.txt', '1'),
+            new HasEntries('root', [
+                'root/shallow.txt',
+            ]),
+        );
+    }
+
+    #[Test]
+    public function listsNoEntriesWhenLocationHasOnlyNestedFiles(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write('container/nested/one.dat', '1')
+                ->write('container/nested/two.dat', '2'),
+            new HasEntries('container', []),
+        );
     }
 }
