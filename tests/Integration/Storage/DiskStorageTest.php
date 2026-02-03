@@ -85,4 +85,17 @@ final class DiskStorageTest extends TestCase
             new HasEntries('a', ['a/one.txt', 'a/two.txt']),
         );
     }
+
+    #[Test]
+    public function listsNoEntriesForNonDirectoryLocation(): void
+    {
+        self::assertThat(
+            new DiskStorage(
+                (new TempFolder())
+                    ->withFile('file.txt', 'data')
+                    ->path(),
+            ),
+            new HasEntries('file.txt', []),
+        );
+    }
 }
