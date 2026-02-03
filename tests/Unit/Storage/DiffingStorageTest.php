@@ -70,4 +70,41 @@ final class DiffingStorageTest extends TestCase
             $reaction->createdPaths(),
         );
     }
+
+    #[Test]
+    public function delegatesReadToOrigin(): void
+    {
+        self::assertSame(
+            'data',
+            (new DiffingStorage(
+                new InMemoryStorage(['a.txt' => 'data']),
+                new FakeStorageReaction(),
+            ))->read('a.txt'),
+        );
+    }
+
+    #[Test]
+    public function delegatesExistsToOrigin(): void
+    {
+        self::assertTrue(
+            (new DiffingStorage(
+                new InMemoryStorage(['b.txt' => 'x']),
+                new FakeStorageReaction(),
+            ))->exists('b.txt'),
+        );
+    }
+
+    #[Test]
+    public function delegatesEntriesToOrigin(): void
+    {
+        self::assertSame(
+            ['dir/file.txt'],
+            iterator_to_array(
+                (new DiffingStorage(
+                    new InMemoryStorage(['dir/file.txt' => 'x']),
+                    new FakeStorageReaction(),
+                ))->entries('dir'),
+            ),
+        );
+    }
 }
