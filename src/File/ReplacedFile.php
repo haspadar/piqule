@@ -6,6 +6,8 @@ namespace Haspadar\Piqule\File;
 
 namespace Haspadar\Piqule\File;
 
+use Override;
+
 final readonly class ReplacedFile implements File
 {
     public function __construct(
@@ -14,13 +16,13 @@ final readonly class ReplacedFile implements File
         private string $replace,
     ) {}
 
-    #[\Override]
+    #[Override]
     public function name(): string
     {
         return $this->origin->name();
     }
 
-    #[\Override]
+    #[Override]
     public function contents(): string
     {
         return str_replace(

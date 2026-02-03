@@ -26,4 +26,20 @@ final class ReplacedFileTest extends TestCase
             ))->contents(),
         );
     }
+
+    #[Test]
+    public function delegatesName(): void
+    {
+        self::assertSame(
+            'config/app.ini',
+            (new ReplacedFile(
+                new TextFile(
+                    'config/app.ini',
+                    'x',
+                ),
+                'x',
+                'y',
+            ))->name(),
+        );
+    }
 }
