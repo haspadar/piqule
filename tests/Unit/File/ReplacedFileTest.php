@@ -31,10 +31,10 @@ final class ReplacedFileTest extends TestCase
     public function delegatesName(): void
     {
         self::assertSame(
-            'config/app.ini',
+            'README.md',
             (new ReplacedFile(
                 new TextFile(
-                    'config/app.ini',
+                    'README.md',
                     'x',
                 ),
                 'x',
