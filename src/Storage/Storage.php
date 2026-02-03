@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 
 interface Storage
@@ -16,11 +17,9 @@ interface Storage
     public function read(string $location): string;
 
     /**
-     * Writes contents to the given location
-     *
-     * Creates or overwrites the projection
+     * Persists the given file into this storage
      */
-    public function write(string $location, string $contents): self;
+    public function write(File $file): self;
 
     /**
      * Checks whether a projection exists at the given location

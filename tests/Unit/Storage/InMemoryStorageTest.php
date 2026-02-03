@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Storage;
 
+use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Constraint\Storage\HasEntries;
@@ -17,7 +18,9 @@ final class InMemoryStorageTest extends TestCase
     public function readsWrittenContents(): void
     {
         self::assertThat(
-            (new InMemoryStorage())->write('read/file.txt', 'hello'),
+            (new InMemoryStorage())->write(
+                new TextFile('read/file.txt', 'hello'),
+            ),
             new HasEntry('read/file.txt', 'hello'),
         );
     }
@@ -29,8 +32,8 @@ final class InMemoryStorageTest extends TestCase
 
         self::assertThat(
             (new InMemoryStorage())
-                ->write($path, 'first')
-                ->write($path, 'second'),
+                ->write(new TextFile($path, 'first'))
+                ->write(new TextFile($path, 'second')),
             new HasEntry($path, 'second'),
         );
     }
@@ -49,7 +52,7 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertTrue(
             (new InMemoryStorage())
-                ->write('exists/data.bin', 'data')
+                ->write(new TextFile('exists/data.bin', 'data'))
                 ->exists('exists/data.bin'),
             'Storage must report existing location',
         );
@@ -60,7 +63,7 @@ final class InMemoryStorageTest extends TestCase
     {
         $storage = new InMemoryStorage();
 
-        $storage->write('../immutable.txt', 'data');
+        $storage->write(new TextFile('../immutable.txt', 'data'));
 
         self::assertFalse(
             $storage->exists('../immutable.txt'),
@@ -73,7 +76,7 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertTrue(
             (new InMemoryStorage())
-                ->write('new/file.log', 'data')
+                ->write(new TextFile('new/file.log', 'data'))
                 ->exists('new/file.log'),
             'Write must return a new storage instance with updated state',
         );
@@ -92,9 +95,9 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('alpha/file-1.log', '1')
-                ->write('alpha/file-2.log', '2')
-                ->write('beta/ignored.log', 'x'),
+                ->write(new TextFile('alpha/file-1.log', '1'))
+                ->write(new TextFile('alpha/file-2.log', '2'))
+                ->write(new TextFile('beta/ignored.log', 'x')),
             new HasEntries('alpha', [
                 'alpha/file-1.log',
                 'alpha/file-2.log',
@@ -107,8 +110,8 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('root/level1/deep.txt', 'x')
-                ->write('root/shallow.txt', '1'),
+                ->write(new TextFile('root/level1/deep.txt', 'x'))
+                ->write(new TextFile('root/shallow.txt', '1')),
             new HasEntries('root', [
                 'root/shallow.txt',
             ]),
@@ -120,8 +123,8 @@ final class InMemoryStorageTest extends TestCase
     {
         self::assertThat(
             (new InMemoryStorage())
-                ->write('container/nested/one.dat', '1')
-                ->write('container/nested/two.dat', '2'),
+                ->write(new TextFile('container/nested/one.dat', '1'))
+                ->write(new TextFile('container/nested/two.dat', '2')),
             new HasEntries('container', []),
         );
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Storage;
 
 use FilesystemIterator;
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 use SplFileInfo;
@@ -63,8 +64,9 @@ final readonly class DiskStorage implements Storage
     }
 
     #[Override]
-    public function write(string $location, string $contents): self
+    public function write(File $file): self
     {
+        $location = $file->name();
         $path = $this->pathOf($location);
         $directory = dirname($path);
 
@@ -72,11 +74,11 @@ final readonly class DiskStorage implements Storage
             && !mkdir($directory, 0o777, true)
             && !is_dir($directory)
         ) {
-            throw new PiquleException("Unable to create directory: $directory");
+            throw new PiquleException("Unable to create directory: {$directory}");
         }
 
-        if (file_put_contents($path, $contents) === false) {
-            throw new PiquleException("Unable to write location: $location");
+        if (file_put_contents($path, $file->contents()) === false) {
+            throw new PiquleException("Unable to write location: {$location}");
         }
 
         return $this;

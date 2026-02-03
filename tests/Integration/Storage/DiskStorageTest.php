@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Integration\Storage;
 
 use Haspadar\Piqule\File\TempFolder;
+use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Constraint\Storage\HasEntries;
@@ -20,7 +21,9 @@ final class DiskStorageTest extends TestCase
         self::assertThat(
             (new DiskStorage(
                 (new TempFolder())->path(),
-            ))->write('a/b/read.txt', 'hello'),
+            ))->write(
+                new TextFile('a/b/read.txt', 'hello'),
+            ),
             new HasEntry('a/b/read.txt', 'hello'),
         );
     }
@@ -33,7 +36,9 @@ final class DiskStorageTest extends TestCase
                 (new TempFolder())
                     ->withFile('overwrite.txt', 'first')
                     ->path(),
-            ))->write('overwrite.txt', 'second'),
+            ))->write(
+                new TextFile('overwrite.txt', 'second'),
+            ),
             new HasEntry('overwrite.txt', 'second'),
         );
     }
