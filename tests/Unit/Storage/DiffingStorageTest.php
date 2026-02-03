@@ -69,6 +69,10 @@ final class DiffingStorageTest extends TestCase
             [],
             $reaction->createdPaths(),
         );
+        self::assertSame(
+            [],
+            $reaction->updatedPaths(),
+        );
     }
 
     #[Test]
