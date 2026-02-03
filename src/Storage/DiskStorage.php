@@ -68,10 +68,11 @@ final readonly class DiskStorage implements Storage
         $path = $this->pathOf($location);
         $directory = dirname($path);
 
-        if (!is_dir($directory)) {
-            if (!mkdir($directory, 0o777, true) && !is_dir($directory)) {
-                throw new PiquleException("Unable to create directory: $directory");
-            }
+        if (!is_dir($directory)
+            && !mkdir($directory, 0o777, true)
+            && !is_dir($directory)
+        ) {
+            throw new PiquleException("Unable to create directory: $directory");
         }
 
         if (file_put_contents($path, $contents) === false) {
