@@ -12,7 +12,23 @@ use PHPUnit\Framework\TestCase;
 final class PrefixedFileTest extends TestCase
 {
     #[Test]
-    public function prefixesFileName(): void
+    public function keepsFileContentsUnchanged(): void
+    {
+        self::assertSame(
+            '{"enabled":true}',
+            (new PrefixedFile(
+                '.env',
+                new TextFile(
+                    'vars/app.settings.json',
+                    '{"enabled":true}',
+                ),
+            ))->contents(),
+            'File contents must not be modified',
+        );
+    }
+
+    #[Test]
+    public function prefixesFileNameWithoutExtraSlashes(): void
     {
         self::assertSame(
             '.config/tools/setup.sh',
@@ -28,18 +44,34 @@ final class PrefixedFileTest extends TestCase
     }
 
     #[Test]
-    public function keepsFileContentsUnchanged(): void
+    public function trimsTrailingSlashFromPrefix(): void
     {
         self::assertSame(
-            '{"enabled":true}',
+            '.config/bin/install.sh',
+            (new PrefixedFile(
+                '.config/',
+                new TextFile(
+                    'bin/install.sh',
+                    '#!/bin/sh',
+                ),
+            ))->name(),
+            'Trailing slash in prefix must be ignored',
+        );
+    }
+
+    #[Test]
+    public function trimsLeadingSlashFromFileName(): void
+    {
+        self::assertSame(
+            '.env/runtime/app.env',
             (new PrefixedFile(
                 '.env',
                 new TextFile(
-                    'vars/app.settings.json',
-                    '{"enabled":true}',
+                    '/runtime/app.env',
+                    'KEY=value',
                 ),
-            ))->contents(),
-            'File contents must not be modified',
+            ))->name(),
+            'Leading slash in file name must be ignored',
         );
     }
 }
