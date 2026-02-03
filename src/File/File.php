@@ -6,9 +6,10 @@ namespace Haspadar\Piqule\File;
 
 interface File
 {
+    /**
+     * Relative path inside storage
+     */
     public function name(): string;
 
-    public function read(): string;
-
-    public function write(string $contents): self;
+    public function contents(): string;
 }
