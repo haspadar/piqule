@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Storage;
 
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
@@ -37,10 +38,13 @@ final readonly class InMemoryStorage implements Storage
     }
 
     #[Override]
-    public function write(string $location, string $contents): self
+    public function write(File $file): self
     {
         return new self(
-            [...$this->entries, $location => $contents],
+            [
+                ...$this->entries,
+                $file->name() => $file->contents(),
+            ],
         );
     }
 
