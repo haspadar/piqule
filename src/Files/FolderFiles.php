@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Files;
 
-use Haspadar\Piqule\File\PlacedFile;
+use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\Storage;
 use Override;
 
@@ -19,10 +19,9 @@ final readonly class FolderFiles implements Files
     public function all(): iterable
     {
         foreach ($this->storage->entries($this->folder) as $path) {
-            yield new PlacedFile(
-                $this->storage,
-                dirname($path),
-                basename($path),
+            yield new TextFile(
+                $path,
+                $this->storage->read($path),
             );
         }
     }

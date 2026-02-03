@@ -35,7 +35,7 @@ final class HasFiles extends Constraint
                 return false;
             }
 
-            $actual[$file->path()] = $file->read();
+            $actual[$file->name()] = $file->contents();
         }
 
         ksort($actual);
@@ -60,7 +60,7 @@ final class HasFiles extends Constraint
 
         $actual = [];
         foreach ($other->all() as $file) {
-            $actual[$file->path()] = $file->read();
+            $actual[$file->name()] = $file->contents();
         }
         ksort($actual);
 
