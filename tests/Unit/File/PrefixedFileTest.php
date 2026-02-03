@@ -74,4 +74,20 @@ final class PrefixedFileTest extends TestCase
             'Leading slash in file name must be ignored',
         );
     }
+
+    #[Test]
+    public function ignoresEmptyPrefix(): void
+    {
+        self::assertSame(
+            'root/config.yaml',
+            (new PrefixedFile(
+                '',
+                new TextFile(
+                    'root/config.yaml',
+                    'value: true',
+                ),
+            ))->name(),
+            'Empty prefix must not introduce leading slash',
+        );
+    }
 }

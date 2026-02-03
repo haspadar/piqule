@@ -14,11 +14,23 @@ final readonly class PrefixedFile implements File
     ) {}
 
     #[Override]
+    /**
+     * Builds the target file path by prefixing the original name
+     *
+     * Examples:
+     * - prefix ".git" + name "hooks/pre-push" → ".git/hooks/pre-push"
+     * - prefix ""     + name "config/app.yaml" → "config/app.yaml"
+     *
+     * Leading and trailing slashes are normalized
+     */
     public function name(): string
     {
-        return rtrim($this->prefix, '/')
-            . '/'
-            . ltrim($this->origin->name(), '/');
+        $prefix = rtrim($this->prefix, '/');
+        $name = ltrim($this->origin->name(), '/');
+
+        return $prefix === ''
+            ? $name
+            : $prefix . '/' . $name;
     }
 
     #[Override]
