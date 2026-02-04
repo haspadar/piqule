@@ -19,4 +19,14 @@ final class DefaultPlaceholderTest extends TestCase
             'DefaultPlaceholder did not return default value',
         );
     }
+
+    #[Test]
+    public function returnsExpression(): void
+    {
+        self::assertSame(
+            '{{ EXPRESSION }}',
+            (new DefaultPlaceholder('{{ EXPRESSION }}', '75...95'))->expression(),
+            'DefaultPlaceholder did not return expression',
+        );
+    }
 }
