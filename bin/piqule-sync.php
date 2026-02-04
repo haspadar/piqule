@@ -27,7 +27,7 @@ try {
     $output = new Console();
     $files = new CombinedFiles([
         new FolderFiles(
-            new DiskStorage($libraryRoot . '/templates/always'),
+            new DiskStorage($libraryRoot . '/templates/root'),
             '',
         ),
         new MappedFiles(
