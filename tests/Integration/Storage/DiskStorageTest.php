@@ -103,4 +103,19 @@ final class DiskStorageTest extends TestCase
             new HasEntries('file.txt', []),
         );
     }
+
+    #[Test]
+    public function listsFilesFromNestedDirectories(): void
+    {
+        self::assertThat(
+            new DiskStorage(
+                (new TempFolder())
+                    ->withFile('a/b/c/deep.txt', 'x')
+                    ->path(),
+            ),
+            new HasEntries('a', [
+                'a/b/c/deep.txt',
+            ]),
+        );
+    }
 }
