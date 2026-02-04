@@ -27,13 +27,8 @@ final readonly class FilePlaceholders implements Placeholders
         foreach ($matches as $match) {
             yield new DefaultPlaceholder(
                 $match[0],
-                $this->unquoted($match['value']),
+                trim($match['value'], "'\" "),
             );
         }
-    }
-
-    private function unquoted(string $value): string
-    {
-        return preg_replace('/^(["\'])(.*)\1$/', '$2', $value) ?? $value;
     }
 }

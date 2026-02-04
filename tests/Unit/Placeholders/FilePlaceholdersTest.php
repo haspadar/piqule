@@ -93,4 +93,20 @@ final class FilePlaceholdersTest extends TestCase
             ]),
         );
     }
+
+    #[Test]
+    public function removesQuotesWithSurroundingWhitespace(): void
+    {
+        self::assertThat(
+            new FilePlaceholders(
+                new TextFile(
+                    'settings.yml',
+                    "mode: {{ MODE | default( 'strict' ) }}",
+                ),
+            ),
+            new HasPlaceholders([
+                "{{ MODE | default( 'strict' ) }}" => 'strict',
+            ]),
+        );
+    }
 }
