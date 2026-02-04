@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Storage\Reaction;
+namespace Haspadar\Piqule\Tests\Fake\Storage\Reaction;
 
+use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
 final class FakeStorageReaction implements StorageReaction

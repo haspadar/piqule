@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\File;
+namespace Haspadar\Piqule\Tests\Fixture;
 
 use Haspadar\Piqule\PiquleException;
 

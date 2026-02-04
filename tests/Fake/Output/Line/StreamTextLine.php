@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Integration\Fixtures;
+namespace Haspadar\Piqule\Tests\Fake\Output\Line;
 
 use Haspadar\Piqule\Output\Color\Color;
 use Haspadar\Piqule\Output\Line\Line;
