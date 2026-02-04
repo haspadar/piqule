@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Integration\Files;
 
-use Haspadar\Piqule\File\TempFolder;
 use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFiles;
+use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Tests\Integration\Output;
 
 use Haspadar\Piqule\Output\Color\Grey;
 use Haspadar\Piqule\Output\Console;
-use Haspadar\Piqule\Tests\Integration\Fixtures\StreamTextLine;
+use Haspadar\Piqule\Tests\Fake\Output\Line\StreamTextLine;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

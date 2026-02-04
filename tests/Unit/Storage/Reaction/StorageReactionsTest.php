@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Storage\Reaction;
 
-use Haspadar\Piqule\Storage\Reaction\FakeStorageReaction;
 use Haspadar\Piqule\Storage\Reaction\StorageReactions;
+use Haspadar\Piqule\Tests\Fake\Storage\Reaction\FakeStorageReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

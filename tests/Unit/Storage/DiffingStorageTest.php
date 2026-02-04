@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Storage;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\InMemoryStorage;
-use Haspadar\Piqule\Storage\Reaction\FakeStorageReaction;
+use Haspadar\Piqule\Tests\Fake\Storage\Reaction\FakeStorageReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
