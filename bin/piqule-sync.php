@@ -20,10 +20,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
     $projectRoot = getcwd()
-            ?: throw new PiquleException('Cannot determine current working directory');
+        ?: throw new PiquleException('Cannot determine current working directory');
 
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
-            ?: throw new PiquleException('Cannot determine piqule install path');
+        ?: throw new PiquleException('Cannot determine piqule install path');
     $output = new Console();
     $files = new CombinedFiles([
         new FolderFiles(
