@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Haspadar\Piqule\Placeholders;
+
+use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Placeholder\DefaultPlaceholder;
+use Override;
+
+final readonly class FilePlaceholders implements Placeholders
+{
+    public function __construct(
+        private File $file,
+    ) {}
+
+    #[Override]
+    public function all(): iterable
+    {
+        preg_match_all(
+            '/\{\{\s*
+                (?<expression>
+                    [A-Z0-9_]+
+                    \s*\|\s*
+                    default\("(?<default>[^"]*)"\)
+                ) \s*}}/x',
+            $this->file->contents(),
+            $matches,
+            PREG_SET_ORDER,
+        );
+
+        foreach ($matches as $match) {
+            yield new DefaultPlaceholder(
+                $match[0],
+                $match['default'],
+            );
+        }
+    }
+}
