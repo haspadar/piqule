@@ -48,12 +48,20 @@ final readonly class DiskStorage implements Storage
             FilesystemIterator::SKIP_DOTS,
         );
 
-        /** @var SplFileInfo $item */
         foreach ($iterator as $item) {
-            yield ltrim(
-                $location . '/' . $item->getFilename(),
-                '/',
-            );
+            /** @var SplFileInfo $item */
+            if ($item->isFile()) {
+                yield ltrim(
+                    $location . '/' . $item->getFilename(),
+                    '/',
+                );
+            }
+
+            if ($item->isDir()) {
+                yield from $this->entries(
+                    ltrim($location . '/' . $item->getFilename(), '/'),
+                );
+            }
         }
     }
 

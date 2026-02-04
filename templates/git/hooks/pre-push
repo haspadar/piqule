@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+set -e
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker is required to run composer check"
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker daemon is not running"
+  exit 1
+fi
+
+docker run --rm \
+  -v "$PWD:/app" \
+  -w /app \
+  piqule \
+  composer check
