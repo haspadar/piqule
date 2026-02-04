@@ -4,6 +4,7 @@
 
 /.piqule/php-cs-fixer/.php-cs-fixer.cache
 /.piqule/codecov/coverage-report/
+/.piqule/codecov/coverage.xml
 /.piqule/infection/*.log
 /.piqule/ast-metrics/reports/
 /.piqule/phpmetrics/phpmetrics.json

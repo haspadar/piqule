@@ -22,7 +22,6 @@
   "composer": {
     "enabled": true
   },
-
   "github-actions": {
     "enabled": true
   },
@@ -67,52 +66,58 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update Node.js image version (Dockerfile)",
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "description": "Update PHP base image",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHP_IMAGE=php:(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "php",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Node.js base image",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
       "matchStrings": [
         "ARG NODE_IMAGE=node:(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "node",
       "datasourceTemplate": "docker"
     },
-
     {
       "customType": "regex",
-      "description": "Update actionlint version (Dockerfile)",
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "description": "Update actionlint version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
       "matchStrings": [
         "ARG ACTIONLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "rhysd/actionlint",
       "datasourceTemplate": "github-releases"
     },
-
     {
       "customType": "regex",
-      "description": "Update hadolint version (Dockerfile)",
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "description": "Update hadolint version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
       "matchStrings": [
         "ARG HADOLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "hadolint/hadolint",
       "datasourceTemplate": "github-releases"
     },
-
     {
       "customType": "regex",
-      "description": "Update typos version (Dockerfile)",
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "description": "Update yamllint version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
       "matchStrings": [
-        "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
+        "ARG YAMLLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
-      "depNameTemplate": "crate-ci/typos",
-      "datasourceTemplate": "github-releases"
+      "depNameTemplate": "yamllint",
+      "datasourceTemplate": "pypi"
     },
-
     {
       "customType": "regex",
-      "description": "Update markdownlint-cli2 version (Dockerfile)",
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "description": "Update markdownlint-cli2 version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
       "matchStrings": [
         "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -121,25 +126,35 @@
     },
     {
       "customType": "regex",
-      "description": "Update markdownlint-cli2 version in CI",
+      "description": "Update prettier version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "matchStrings": [
+        "ARG PRETTIER_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "prettier",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "Update typos version",
+      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "matchStrings": [
+        "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "crate-ci/typos",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "description": "Update markdownlint-cli2 in CI templates",
       "fileMatch": [
-        "\\.github/workflows/.*\\.ya?ml$"
+        "templates/root/\\.github/workflows/.*\\.ya?ml$"
       ],
       "matchStrings": [
         "markdownlint-cli2@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "depNameTemplate": "markdownlint-cli2",
       "datasourceTemplate": "npm"
-    },
-    {
-      "customType": "regex",
-      "description": "Update AST Metrics version",
-      "fileMatch": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "ARG AST_METRICS_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "Halleck45/ast-metrics",
-      "datasourceTemplate": "github-releases"
     }
   ]
 }
