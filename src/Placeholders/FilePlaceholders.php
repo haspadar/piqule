@@ -18,12 +18,7 @@ final readonly class FilePlaceholders implements Placeholders
     public function all(): iterable
     {
         preg_match_all(
-            '/\{\{\s*
-                (?<expression>
-                    [A-Z0-9_]+
-                    \s*\|\s*
-                    default\("(?<default>[^"]*)"\)
-                ) \s*}}/x',
+            '/\{\{\s*(?<expression>[A-Z0-9_]+\s*\|\s*default\((?<value>[^)]*)\))\s*}}/',
             $this->file->contents(),
             $matches,
             PREG_SET_ORDER,
@@ -32,7 +27,7 @@ final readonly class FilePlaceholders implements Placeholders
         foreach ($matches as $match) {
             yield new DefaultPlaceholder(
                 $match[0],
-                $match['default'],
+                trim($match['value'], "'\" "),
             );
         }
     }
