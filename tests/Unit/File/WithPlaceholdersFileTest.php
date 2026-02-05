@@ -17,11 +17,11 @@ final class WithPlaceholdersFileTest extends TestCase
     public function replacesPlaceholderUsingProvidedPlaceholders(): void
     {
         self::assertSame(
-            'port: 8080',
+            'listen: 8080',
             (new WithPlaceholdersFile(
                 new TextFile(
-                    'config.yml',
-                    'port: {{ PORT }}',
+                    'nginx.conf',
+                    'listen: {{ PORT }}',
                 ),
                 new FakePlaceholders([
                     new DefaultPlaceholder(
@@ -31,6 +31,22 @@ final class WithPlaceholdersFileTest extends TestCase
                 ]),
             ))->contents(),
             'WithPlaceholdersFile must apply provided placeholders',
+        );
+    }
+
+    #[Test]
+    public function keepsOriginalFileName(): void
+    {
+        self::assertSame(
+            'docker-compose.override.yml',
+            (new WithPlaceholdersFile(
+                new TextFile(
+                    'docker-compose.override.yml',
+                    'services: {}',
+                ),
+                new FakePlaceholders([]),
+            ))->name(),
+            'WithPlaceholdersFile must keep original file name',
         );
     }
 }
