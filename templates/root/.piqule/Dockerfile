@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG PHP_IMAGE=php:8.5-cli-bookworm
+ARG PHP_IMAGE=php:8.3-cli-bookworm
 ARG NODE_IMAGE=node:24.13.0-bookworm
 
 # ============================================================
