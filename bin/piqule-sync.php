@@ -5,12 +5,14 @@ declare(strict_types=1);
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
+use Haspadar\Piqule\File\WithPlaceholdersFile;
 use Haspadar\Piqule\Files\CombinedFiles;
 use Haspadar\Piqule\Files\EachFile;
 use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Files\MappedFiles;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Placeholders\FilePlaceholders;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Storage\Reaction\ReportingStorageReaction;
@@ -26,9 +28,15 @@ try {
         ?: throw new PiquleException('Cannot determine piqule install path');
     $output = new Console();
     $files = new CombinedFiles([
-        new FolderFiles(
-            new DiskStorage($libraryRoot . '/templates/root'),
-            '',
+        new MappedFiles(
+            new FolderFiles(
+                new DiskStorage($libraryRoot . '/templates/root'),
+                '',
+            ),
+            fn(File $file): File => new WithPlaceholdersFile(
+                $file,
+                new FilePlaceholders($file),
+            ),
         ),
         new MappedFiles(
             new FolderFiles(
