@@ -19,7 +19,9 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PER-CS2.0' => true,
-        '@PHP82Migration' => true,
+        '@PHP8x3Migration' => true,
+        '@PHP8x4Migration' => true,
+        '@PHP8x5Migration' => true,
 
         // Arrays
         'array_syntax' => ['syntax' => 'short'],
@@ -96,4 +98,4 @@ return (new PhpCsFixer\Config())
         'single_quote' => true,
         'ternary_operator_spaces' => true,
     ])
-    ->setUnsupportedPhpVersionAllowed(true);
+    ->setUnsupportedPhpVersionAllowed(/* @placeholder PHP_CS_FIXER_ALLOW_UNSUPPORTED default(true) */);
