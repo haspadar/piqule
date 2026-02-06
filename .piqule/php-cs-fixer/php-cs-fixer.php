@@ -19,7 +19,9 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PER-CS2.0' => true,
-        '@PHP82Migration' => true,
+        '@PHP83Migration' => true,
+        '@PHP84Migration' => true,
+        '@PHP85Migration' => true,
 
         // Arrays
         'array_syntax' => ['syntax' => 'short'],
