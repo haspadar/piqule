@@ -1,22 +1,18 @@
 coverage:
-  precision: 2
-  round: down
-  range: "{{COVERAGE_RANGE | default('80...100')}}"
-
   status:
     project:
       default:
-        target: {{COVERAGE_PROJECT_TARGET | default('80%')}}
-        threshold: {{COVERAGE_PROJECT_THRESHOLD | default('2%')}}
+        target: {{CODECOV_PROJECT_TARGET | default('80%')}}
+        threshold: {{CODECOV_PROJECT_THRESHOLD | default('2%')}}
 
     patch:
       default:
-        target: {{COVERAGE_PATCH_TARGET | default('80%')}}
-        threshold: {{COVERAGE_PATCH_THRESHOLD | default('5%')}}
+        target: {{CODECOV_PATCH_TARGET | default('80%')}}
+        threshold: {{CODECOV_PATCH_THRESHOLD | default('5%')}}
 
 comment:
-  layout: "{{CODECOV_COMMENT_LAYOUT | default('reach, diff, flags, files')}}"
-  behavior: {{CODECOV_COMMENT_BEHAVIOR | default('default')}}
-  require_changes: {{CODECOV_REQUIRE_CHANGES | default(false)}}
-  require_base: {{CODECOV_REQUIRE_BASE | default(false)}}
-  require_head: {{CODECOV_REQUIRE_HEAD | default(false)}}
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: false
