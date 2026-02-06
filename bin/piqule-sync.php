@@ -15,6 +15,7 @@ use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Placeholders\CombinedPlaceholders;
 use Haspadar\Piqule\Placeholders\JsonPlaceholders;
 use Haspadar\Piqule\Placeholders\PhpPlaceholders;
+use Haspadar\Piqule\Placeholders\XmlPlaceholders;
 use Haspadar\Piqule\Placeholders\YamlPlaceholders;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\DiskStorage;
@@ -42,6 +43,7 @@ try {
                     new YamlPlaceholders($file),
                     new JsonPlaceholders($file),
                     new PhpPlaceholders($file),
+                    new XmlPlaceholders($file),
                 ]),
             ),
         ),
