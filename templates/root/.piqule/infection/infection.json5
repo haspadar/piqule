@@ -2,7 +2,10 @@
   "$schema": "../../vendor/infection/infection/resources/schema.json",
 
   "source": {
-    "directories": ["../../src"]
+    "directories": {
+      "$placeholder": "INFECTION_SOURCE_DIRECTORIES",
+      "default": ["../../src"]
+    }
   },
 
   "testFramework": "phpunit",
@@ -11,9 +14,15 @@
     "configDir": "../phpunit"
   },
 
-  "initialTestsPhpOptions": "-d memory_limit=1G",
+  "initialTestsPhpOptions": {
+    "$placeholder": "INFECTION_PHP_OPTIONS",
+    "default": "-d memory_limit=1G"
+  },
 
-  "timeout": 30,
+  "timeout": {
+    "$placeholder": "INFECTION_TIMEOUT",
+    "default": 30
+  },
 
   "logs": {
     "text": "infection.log",
