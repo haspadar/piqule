@@ -10,6 +10,5 @@
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
 
-    <!-- Minimal non-formatting sniff -->
     <rule ref="Generic.PHP.Syntax"/>
 </ruleset>
