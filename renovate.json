@@ -30,6 +30,12 @@
   },
   "packageRules": [
     {
+      "description": "Do not update PHP base image",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["php"],
+      "enabled": false
+    },
+    {
       "description": "Pin GitHub Actions to commit SHA",
       "matchManagers": ["github-actions"],
       "pinDigests": true
