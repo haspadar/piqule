@@ -103,4 +103,26 @@ final class PhpPlaceholdersTest extends TestCase
             ]),
         );
     }
+
+    #[Test]
+    public function extractsBooleanDefaultFromMultilineArrayWithoutTrailingComma(): void
+    {
+        self::assertThat(
+            new PhpPlaceholders(
+                new TextFile(
+                    'php-cs-fixer.php',
+                    "setFlag([
+                    '\$placeholder' => 'ALLOW_UNSUPPORTED',
+                    'default' => true
+                ]);",
+                ),
+            ),
+            new HasPlaceholders([
+                "[
+                    '\$placeholder' => 'ALLOW_UNSUPPORTED',
+                    'default' => true
+                ]" => 'true',
+            ]),
+        );
+    }
 }
