@@ -10,10 +10,5 @@
   },
 
   // Ignore dependency/vendor directories to avoid linting third-party content.
-  "ignores": [
-    "**/vendor/**",
-    "**/node_modules/**",
-    "**/coverage/**",
-    "**/.git/**"
-  ]
+  "ignores": ["**/vendor/**","**/node_modules/**","**/coverage/**","**/.git/**"]
 }
