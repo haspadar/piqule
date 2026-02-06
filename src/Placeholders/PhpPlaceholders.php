@@ -61,7 +61,7 @@ final readonly class PhpPlaceholders implements Placeholders
     public function all(): iterable
     {
         preg_match_all(
-            '/\[\s*(?:\'|")\$placeholder(?:\'|")\s*=>\s*(?:\'|")[A-Z0-9_]+(?:\'|")\s*,\s*(?:\'|")default(?:\'|")\s*=>\s*(\[[^\]]*\]|[^,\]]+)\s*,?\s*\]/s',
+            '/\[\s*["\']\$placeholder["\']\s*=>\s*["\'][A-Z0-9_]+["\']\s*,\s*["\']default["\']\s*=>\s*(\[[^\]]*\]|[^,\]]+)\s*,?\s*\]/s',
             $this->file->contents(),
             $matches,
             PREG_SET_ORDER,
