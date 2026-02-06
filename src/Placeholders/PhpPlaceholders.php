@@ -9,41 +9,37 @@ use Haspadar\Piqule\Placeholder\DefaultPlaceholder;
 use Override;
 
 /**
- * Extracts PHP-style placeholders from a file using a text-based pattern.
+ * Extracts PHP-style placeholders from a file.
  *
- * This implementation treats the file contents as plain text and searches for
- * placeholder definitions expressed as PHP array literals in the following form:
+ * The parser scans the file contents and detects placeholder definitions
+ * expressed as PHP array literals in the following form:
  *
  * [
  *     '$placeholder' => 'PLACEHOLDER_NAME',
  *     'default' => DEFAULT_VALUE,
  * ]
  *
- * Where:
- * - PLACEHOLDER_NAME consists of uppercase letters, digits, and underscores
- * - DEFAULT_VALUE is a PHP literal embedded directly in the template
+ * Each detected placeholder is replaced with its default value via
+ * string substitution.
  *
- * The entire placeholder array expression is replaced with the resolved default
- * value via string substitution.
- *
- * Design notes:
- * - This parser does not parse PHP code structurally.
- * - No AST, tokenization, or PHP evaluation is performed.
- * - Placeholders are detected purely by regular expression matching.
- * - The default value is extracted as text and normalized by trimming
+ * Reasoning and design constraints:
+ * - The file contents are treated as plain text.
+ * - No PHP parsing, tokenization, AST, or evaluation is performed.
+ * - Placeholder detection relies solely on regular expression matching.
+ * - DEFAULT_VALUE is extracted verbatim and normalized by trimming
  *   surrounding whitespace.
- * - If no placeholders are found, this parser is effectively a no-op.
+ * - If no placeholders are found, this implementation produces no output.
  *
- * Intended usage:
+ * Intended scope:
  * - PHP configuration templates
- * - Syntactically valid, but not necessarily executable PHP files
- * - Safe to combine with other Placeholders implementations (e.g. YAML, JSON),
- *   as unmatched formats simply yield no placeholders.
+ * - Files that are syntactically valid PHP but not necessarily executable
+ * - Safe to combine with other Placeholders implementations, as unmatched
+ *   formats yield no placeholders
  *
- * Limitations (by design):
- * - DEFAULT_VALUE must be a literal whose textual boundaries can be determined
- *   without parsing PHP.
- * - Nested or complex PHP expressions are not supported.
+ * Explicit limitations:
+ * - DEFAULT_VALUE must be a literal whose textual boundaries can be
+ *   determined without parsing PHP.
+ * - Nested or complex PHP expressions are intentionally not supported.
  * - Placeholder definitions must remain syntactically stable.
  */
 final readonly class PhpPlaceholders implements Placeholders
@@ -55,9 +51,9 @@ final readonly class PhpPlaceholders implements Placeholders
     /**
      * Returns all PHP placeholders found in the file.
      *
-     * Each placeholder is represented as a DefaultPlaceholder where:
+     * Each placeholder is returned as a DefaultPlaceholder where:
      * - expression() is the full PHP array literal representing the placeholder
-     * - replacement() is the normalized default value as text
+     * - replacement() is the extracted default value as normalized text
      *
      * @return iterable<DefaultPlaceholder>
      */
@@ -65,15 +61,7 @@ final readonly class PhpPlaceholders implements Placeholders
     public function all(): iterable
     {
         preg_match_all(
-            '/\[
-                \s*(?:\'|")\$placeholder(?:\'|")\s*=>\s*(?:\'|")(?<name>[A-Z0-9_]+)(?:\'|")\s*,\s*
-                (?:\'|")default(?:\'|")\s*=>\s*(?<default>
-                    \[[^\]]*\]
-                    |
-                    [^,\]]+
-                )
-            \s*,?\s*
-            \]/sx',
+            '/\[\s*(?:\'|")\$placeholder(?:\'|")\s*=>\s*(?:\'|")[A-Z0-9_]+(?:\'|")\s*,\s*(?:\'|")default(?:\'|")\s*=>\s*(\[[^\]]*\]|[^,\]]+)\s*,?\s*\]/s',
             $this->file->contents(),
             $matches,
             PREG_SET_ORDER,
@@ -82,7 +70,7 @@ final readonly class PhpPlaceholders implements Placeholders
         foreach ($matches as $match) {
             yield new DefaultPlaceholder(
                 $match[0],
-                trim($match['default']),
+                trim($match[1]),
             );
         }
     }
