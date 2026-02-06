@@ -12,7 +12,9 @@ use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Files\MappedFiles;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Placeholders\FilePlaceholders;
+use Haspadar\Piqule\Placeholders\CombinedPlaceholders;
+use Haspadar\Piqule\Placeholders\JsonPlaceholders;
+use Haspadar\Piqule\Placeholders\YamlPlaceholders;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Storage\Reaction\ReportingStorageReaction;
@@ -35,7 +37,10 @@ try {
             ),
             fn(File $file): File => new WithPlaceholdersFile(
                 $file,
-                new FilePlaceholders($file),
+                new CombinedPlaceholders([
+                    new YamlPlaceholders($file),
+                    new JsonPlaceholders($file),
+                ]),
             ),
         ),
         new MappedFiles(
