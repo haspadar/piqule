@@ -19,11 +19,27 @@ final class PhpPlaceholdersTest extends TestCase
             new PhpPlaceholders(
                 new TextFile(
                     'timeout.php',
-                    "setTimeout(['\$placeholder' => 'TIMEOUT', 'default' => 30]);",
+                    '/* @placeholder TIMEOUT default(30) */',
                 ),
             ),
             new HasPlaceholders([
-                "['\$placeholder' => 'TIMEOUT', 'default' => 30]" => '30',
+                '/* @placeholder TIMEOUT default(30) */' => '30',
+            ]),
+        );
+    }
+
+    #[Test]
+    public function extractsBooleanDefault(): void
+    {
+        self::assertThat(
+            new PhpPlaceholders(
+                new TextFile(
+                    'flags.php',
+                    '/* @placeholder ALLOW_UNSUPPORTED default(true) */',
+                ),
+            ),
+            new HasPlaceholders([
+                '/* @placeholder ALLOW_UNSUPPORTED default(true) */' => 'true',
             ]),
         );
     }
@@ -35,28 +51,11 @@ final class PhpPlaceholdersTest extends TestCase
             new PhpPlaceholders(
                 new TextFile(
                     'path.php',
-                    "setPath(['\$placeholder' => 'BASE_PATH', 'default' => '../app']);",
+                    "/* @placeholder BASE_PATH default('../app') */",
                 ),
             ),
             new HasPlaceholders([
-                "['\$placeholder' => 'BASE_PATH', 'default' => '../app']" => "'../app'",
-            ]),
-        );
-    }
-
-    #[Test]
-    public function extractsArrayDefault(): void
-    {
-        self::assertThat(
-            new PhpPlaceholders(
-                new TextFile(
-                    'rules.php',
-                    "setRules(['\$placeholder' => 'RULES', 'default' => ['a' => 1, 'b' => 2]]);",
-                ),
-            ),
-            new HasPlaceholders([
-                "['\$placeholder' => 'RULES', 'default' => ['a' => 1, 'b' => 2]]"
-                => "['a' => 1, 'b' => 2]",
+                "/* @placeholder BASE_PATH default('../app') */" => "'../app'",
             ]),
         );
     }
@@ -68,61 +67,30 @@ final class PhpPlaceholdersTest extends TestCase
             new PhpPlaceholders(
                 new TextFile(
                     'multiple.php',
-                    "configure(
-                        ['\$placeholder' => 'FIRST', 'default' => true],
-                        ['\$placeholder' => 'SECOND', 'default' => ['x', 'y']]
-                    );",
+                    '
+                    /* @placeholder FIRST default(true) */
+                    /* @placeholder SECOND default(42) */
+                    ',
                 ),
             ),
             new HasPlaceholders([
-                "['\$placeholder' => 'FIRST', 'default' => true]" => 'true',
-                "['\$placeholder' => 'SECOND', 'default' => ['x', 'y']]"
-                => "['x', 'y']",
+                '/* @placeholder FIRST default(true) */' => 'true',
+                '/* @placeholder SECOND default(42) */' => '42',
             ]),
         );
     }
 
     #[Test]
-    public function extractsBooleanDefaultFromMultilineArray(): void
+    public function ignoresNonPlaceholderComments(): void
     {
         self::assertThat(
             new PhpPlaceholders(
                 new TextFile(
-                    'php-cs-fixer.php',
-                    "setFlag([
-                        '\$placeholder' => 'ALLOW_UNSUPPORTED',
-                        'default' => true,
-                    ]);",
+                    'noop.php',
+                    '/* just a regular comment */',
                 ),
             ),
-            new HasPlaceholders([
-                "[
-                        '\$placeholder' => 'ALLOW_UNSUPPORTED',
-                        'default' => true,
-                    ]" => 'true',
-            ]),
-        );
-    }
-
-    #[Test]
-    public function extractsBooleanDefaultFromMultilineArrayWithoutTrailingComma(): void
-    {
-        self::assertThat(
-            new PhpPlaceholders(
-                new TextFile(
-                    'php-cs-fixer.php',
-                    "setFlag([
-                    '\$placeholder' => 'ALLOW_UNSUPPORTED',
-                    'default' => true
-                ]);",
-                ),
-            ),
-            new HasPlaceholders([
-                "[
-                    '\$placeholder' => 'ALLOW_UNSUPPORTED',
-                    'default' => true
-                ]" => 'true',
-            ]),
+            new HasPlaceholders([]),
         );
     }
 }
