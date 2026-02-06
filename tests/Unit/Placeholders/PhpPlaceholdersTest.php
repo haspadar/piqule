@@ -13,69 +13,67 @@ use PHPUnit\Framework\TestCase;
 final class PhpPlaceholdersTest extends TestCase
 {
     #[Test]
-    public function extractsNumericDefault(): void
+    public function extractsNumericDefaultFromBlock(): void
     {
         self::assertThat(
             new PhpPlaceholders(
                 new TextFile(
                     'timeout.php',
-                    '/* @placeholder TIMEOUT default(30) */',
+                    '/* @placeholder TIMEOUT */30/* @endplaceholder */',
                 ),
             ),
             new HasPlaceholders([
-                '/* @placeholder TIMEOUT default(30) */' => '30',
+                '/* @placeholder TIMEOUT */30/* @endplaceholder */' => '30',
             ]),
         );
     }
 
     #[Test]
-    public function extractsBooleanDefault(): void
+    public function extractsBooleanDefaultFromBlock(): void
     {
         self::assertThat(
             new PhpPlaceholders(
                 new TextFile(
                     'flags.php',
-                    '/* @placeholder ALLOW_UNSUPPORTED default(true) */',
+                    '/* @placeholder ALLOW_UNSUPPORTED */true/* @endplaceholder */',
                 ),
             ),
             new HasPlaceholders([
-                '/* @placeholder ALLOW_UNSUPPORTED default(true) */' => 'true',
+                '/* @placeholder ALLOW_UNSUPPORTED */true/* @endplaceholder */' => 'true',
             ]),
         );
     }
 
     #[Test]
-    public function extractsStringDefault(): void
+    public function extractsStringDefaultFromBlock(): void
     {
         self::assertThat(
             new PhpPlaceholders(
                 new TextFile(
                     'path.php',
-                    "/* @placeholder BASE_PATH default('../app') */",
+                    "/* @placeholder BASE_PATH */'../app'/* @endplaceholder */",
                 ),
             ),
             new HasPlaceholders([
-                "/* @placeholder BASE_PATH default('../app') */" => "'../app'",
+                "/* @placeholder BASE_PATH */'../app'/* @endplaceholder */" => "'../app'",
             ]),
         );
     }
 
     #[Test]
-    public function extractsMultiplePlaceholdersFromSameFile(): void
+    public function extractsMultiplePlaceholderBlocksFromSameFile(): void
     {
         self::assertThat(
             new PhpPlaceholders(
                 new TextFile(
                     'multiple.php',
-                    '
-                    /* @placeholder FIRST default(true) */
-                    /* @placeholder SECOND default(42) */
-                    ',
+                    '/* @placeholder FIRST */true/* @endplaceholder */'
+                    . '/* @placeholder SECOND */42/* @endplaceholder */',
                 ),
             ),
             new HasPlaceholders([
-                '/* @placeholder FIRST default(true) */' => 'true',
-                '/* @placeholder SECOND default(42) */' => '42',
+                '/* @placeholder FIRST */true/* @endplaceholder */' => 'true',
+                '/* @placeholder SECOND */42/* @endplaceholder */' => '42',
             ]),
         );
     }
@@ -91,6 +89,38 @@ final class PhpPlaceholdersTest extends TestCase
                 ),
             ),
             new HasPlaceholders([]),
+        );
+    }
+
+    #[Test]
+    public function extractsMultilinePlaceholderBlock(): void
+    {
+        self::assertThat(
+            new PhpPlaceholders(
+                new TextFile(
+                    'complex.php',
+                    '
+                    /* @placeholder CONFIG */
+                    [
+                        "a" => true,
+                        "b" => false,
+                    ]
+                    /* @endplaceholder */
+                    ',
+                ),
+            ),
+            new HasPlaceholders([
+                '/* @placeholder CONFIG */
+                    [
+                        "a" => true,
+                        "b" => false,
+                    ]
+                    /* @endplaceholder */'
+                => '[
+                        "a" => true,
+                        "b" => false,
+                    ]',
+            ]),
         );
     }
 }

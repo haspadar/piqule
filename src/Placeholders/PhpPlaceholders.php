@@ -9,23 +9,23 @@ use Haspadar\Piqule\Placeholder\DefaultPlaceholder;
 use Override;
 
 /**
- * Extracts PHP placeholders defined as comment directives.
+ * Extracts PHP placeholders defined as comment-delimited blocks.
  *
- * The parser scans the file contents and detects placeholder declarations
+ * The parser scans the file contents and detects placeholder blocks
  * written in the following form:
  *
- * /* @placeholder PLACEHOLDER_NAME default(DEFAULT_VALUE) *\/
+ * /* @placeholder PLACEHOLDER_NAME *\/
+ * <DEFAULT_VALUE>
  *
- * Each detected placeholder is replaced with its default value via
- * string substitution.
+ * /* @endplaceholder *\/
+ *
+ * The entire placeholder block is replaced with its inner contents
+ * via string substitution.
  *
  * Design constraints:
  * - The file contents are treated as plain text.
  * - No PHP parsing, tokenization, AST, or evaluation is performed.
  * - Placeholder detection relies solely on regular expression matching.
- * - DEFAULT_VALUE is extracted verbatim and normalized by trimming
- *   surrounding whitespace.
- * - If no placeholders are found, this implementation produces no output.
  *
  * Intended scope:
  * - PHP configuration templates
@@ -34,9 +34,9 @@ use Override;
  *   formats yield no placeholders.
  *
  * Explicit limitations:
- * - DEFAULT_VALUE must be a scalar literal.
- * - Structured values (arrays, expressions) are intentionally not supported.
- * - Placeholder directives must remain syntactically stable.
+ * - Placeholder blocks must be explicitly closed.
+ * - Nested placeholder blocks are intentionally not supported.
+ * - Placeholder block structure must remain syntactically stable.
  */
 final readonly class PhpPlaceholders implements Placeholders
 {
@@ -45,11 +45,11 @@ final readonly class PhpPlaceholders implements Placeholders
     ) {}
 
     /**
-     * Returns all PHP placeholders found in the file.
+     * Returns all PHP placeholder blocks found in the file.
      *
      * Each placeholder is returned as a DefaultPlaceholder where:
-     * - expression() is the full placeholder comment
-     * - replacement() is the extracted default value as normalized text
+     * - expression() is the full placeholder block, including comments
+     * - replacement() is the extracted inner contents as normalized text
      *
      * @return iterable<DefaultPlaceholder>
      */
@@ -57,7 +57,7 @@ final readonly class PhpPlaceholders implements Placeholders
     public function all(): iterable
     {
         preg_match_all(
-            '/\/\*\s*@placeholder\s+([A-Z0-9_]+)\s+default\(([^)]+)\)\s*\*\//',
+            '/\/\*\s*@placeholder\s+([A-Z0-9_]+)\s*\*\/([\s\S]*?)\/\*\s*@endplaceholder\s*\*\//',
             $this->file->contents(),
             $matches,
             PREG_SET_ORDER,
