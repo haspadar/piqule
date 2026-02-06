@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Placeholders;
 
 use Haspadar\Piqule\File\TextFile;
-use Haspadar\Piqule\Placeholders\FilePlaceholders;
+use Haspadar\Piqule\Placeholders\YamlPlaceholders;
 use Haspadar\Piqule\Tests\Constraint\Placeholders\HasPlaceholders;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class FilePlaceholdersTest extends TestCase
+final class YamlPlaceholdersTest extends TestCase
 {
     #[Test]
     public function extractsUnquotedDefault(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'server.yml',
                     'port: {{ PORT | default(8080) }}',
@@ -32,7 +32,7 @@ final class FilePlaceholdersTest extends TestCase
     public function removesSingleQuotesFromDefault(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'app.yml',
                     "mode: {{ MODE | default('strict') }}",
@@ -48,7 +48,7 @@ final class FilePlaceholdersTest extends TestCase
     public function removesDoubleQuotesFromDefault(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'log.yml',
                     'level: {{ LEVEL | default("warn") }}',
@@ -64,7 +64,7 @@ final class FilePlaceholdersTest extends TestCase
     public function keepsBooleanDefaultAsString(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'features.yml',
                     'debug: {{ DEBUG | default(false) }}',
@@ -80,7 +80,7 @@ final class FilePlaceholdersTest extends TestCase
     public function extractsMultiplePlaceholdersFromSameFile(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'application.yml',
                     'port: {{ PORT | default(8080) }}, mode: {{ MODE | default("prod") }}, debug: {{ DEBUG | default(false) }}',
@@ -98,7 +98,7 @@ final class FilePlaceholdersTest extends TestCase
     public function removesQuotesWithSurroundingWhitespace(): void
     {
         self::assertThat(
-            new FilePlaceholders(
+            new YamlPlaceholders(
                 new TextFile(
                     'settings.yml',
                     "mode: {{ MODE | default( 'strict' ) }}",
