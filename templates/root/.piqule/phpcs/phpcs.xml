@@ -2,11 +2,11 @@
 <ruleset name="Piqule PHPCS Rules">
     <description>Structural and semantic PHP rules</description>
 
-    <placeholder>
+    <placeholder name="FILES">
     <file>../../src</file>
     </placeholder>
 
-    <placeholder>
+    <placeholder name="EXCLUDES">
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>tests/*</exclude-pattern>
     </placeholder>

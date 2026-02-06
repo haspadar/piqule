@@ -9,12 +9,12 @@ use Haspadar\Piqule\Placeholder\DefaultPlaceholder;
 use Override;
 
 /**
- * Extracts XML placeholders defined as plain placeholder container tags.
+ * Extracts XML placeholders defined as named placeholder container tags.
  *
  * The parser scans the XML contents and detects placeholder blocks
  * written in the following form:
  *
- * <placeholder>
+ * <placeholder name="PLACEHOLDER_NAME">
  * <file>../../src</file>
  * <file>../../app</file>
  * </placeholder>
@@ -30,12 +30,12 @@ use Override;
  *
  * Intended scope:
  * - XML configuration templates (e.g. phpcs.xml)
- * - Templates that require grouping of repeated XML elements
+ * - Templates that require grouping and future override of XML fragments
  * - Safe to combine with other Placeholders implementations, as unmatched
  *   formats yield no placeholders.
  *
  * Explicit limitations:
- * - Placeholder blocks are anonymous and do not carry names.
+ * - Placeholder blocks must declare a name attribute.
  * - Nested <placeholder> blocks are intentionally not supported.
  * - Placeholder contents must not rely on indentation or formatting.
  * - Placeholder block structure must remain syntactically stable.
@@ -47,10 +47,10 @@ final readonly class XmlPlaceholders implements Placeholders
     ) {}
 
     /**
-     * Returns all XML placeholder blocks found in the file.
+     * Returns all named XML placeholder blocks found in the file.
      *
      * Each placeholder is returned as a DefaultPlaceholder where:
-     * - expression() is the full <placeholder>...</placeholder> block
+     * - expression() is the full <placeholder name="...">...</placeholder> block
      * - replacement() is the extracted inner XML fragment
      *
      * @return iterable<DefaultPlaceholder>
@@ -59,7 +59,7 @@ final readonly class XmlPlaceholders implements Placeholders
     public function all(): iterable
     {
         preg_match_all(
-            '/<placeholder>\s*([\s\S]*?)\s*<\/placeholder>/',
+            '/<placeholder\s+name="([A-Z0-9_]+)">\s*([\s\S]*?)\s*<\/placeholder>/',
             $this->file->contents(),
             $matches,
             PREG_SET_ORDER,
@@ -68,7 +68,7 @@ final readonly class XmlPlaceholders implements Placeholders
         foreach ($matches as $match) {
             yield new DefaultPlaceholder(
                 $match[0],
-                trim($match[1]),
+                trim($match[2]),
             );
         }
     }

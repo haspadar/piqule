@@ -19,11 +19,11 @@ final class XmlPlaceholdersTest extends TestCase
             new XmlPlaceholders(
                 new TextFile(
                     'config.xml',
-                    '<config><placeholder><item>A</item><item>B</item></placeholder></config>',
+                    '<config><placeholder name="ITEMS"><item>A</item><item>B</item></placeholder></config>',
                 ),
             ),
             new HasPlaceholders([
-                '<placeholder><item>A</item><item>B</item></placeholder>'
+                '<placeholder name="ITEMS"><item>A</item><item>B</item></placeholder>'
                 => '<item>A</item><item>B</item>',
             ]),
         );
@@ -36,11 +36,11 @@ final class XmlPlaceholdersTest extends TestCase
             new XmlPlaceholders(
                 new TextFile(
                     'layout.xml',
-                    '<layout><placeholder><section>Main</section></placeholder></layout>',
+                    '<layout><placeholder name="SECTION"><section>Main</section></placeholder></layout>',
                 ),
             ),
             new HasPlaceholders([
-                '<placeholder><section>Main</section></placeholder>'
+                '<placeholder name="SECTION"><section>Main</section></placeholder>'
                 => '<section>Main</section>',
             ]),
         );
@@ -54,16 +54,16 @@ final class XmlPlaceholdersTest extends TestCase
                 new TextFile(
                     'document.xml',
                     '<doc>'
-                    . '<placeholder><header>Top</header></placeholder>'
-                    . '<placeholder><footer>Bottom</footer></placeholder>'
+                    . '<placeholder name="HEADER"><header>Top</header></placeholder>'
+                    . '<placeholder name="FOOTER"><footer>Bottom</footer></placeholder>'
                     . '</doc>',
                 ),
             ),
             new HasPlaceholders([
-                '<placeholder><header>Top</header></placeholder>'
+                '<placeholder name="HEADER"><header>Top</header></placeholder>'
                 => '<header>Top</header>',
 
-                '<placeholder><footer>Bottom</footer></placeholder>'
+                '<placeholder name="FOOTER"><footer>Bottom</footer></placeholder>'
                 => '<footer>Bottom</footer>',
             ]),
         );
@@ -92,7 +92,7 @@ final class XmlPlaceholdersTest extends TestCase
                     'complex.xml',
                     '
                     <root>
-                        <placeholder>
+                        <placeholder name="NODES">
                         <node>one</node>
                         <node>two</node>
                         </placeholder>
@@ -101,7 +101,7 @@ final class XmlPlaceholdersTest extends TestCase
                 ),
             ),
             new HasPlaceholders([
-                '<placeholder>
+                '<placeholder name="NODES">
                         <node>one</node>
                         <node>two</node>
                         </placeholder>'
