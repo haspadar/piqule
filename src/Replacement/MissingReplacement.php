@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Replacement;
 
+use Haspadar\Piqule\PiquleException;
 use Override;
 
-final readonly class ScalarReplacement implements Replacement
+final readonly class MissingReplacement implements Replacement
 {
-    public function __construct(
-        private string $value,
-    ) {}
-
     #[Override]
     public function value(): string
     {
-        return $this->value;
+        throw new PiquleException(
+            'Replacement is missing and no default was provided',
+        );
     }
 
     #[Override]
     public function withDefault(Replacement $default): Replacement
     {
-        return $this;
+        return $default;
     }
 }

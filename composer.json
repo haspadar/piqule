@@ -58,7 +58,6 @@
             "@hadolint:check",
             "@markdownlint:check",
             "@yamllint:check",
-            "@json:check",
             "@typos:check",
             "@xml:check",
 

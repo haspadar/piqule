@@ -19,4 +19,16 @@ final class ScalarReplacementTest extends TestCase
             'ScalarReplacement did not return the given value',
         );
     }
+
+    #[Test]
+    public function ignoresDefaultReplacement(): void
+    {
+        self::assertSame(
+            'enabled',
+            (new ScalarReplacement('enabled'))
+                ->withDefault(new ScalarReplacement('disabled'))
+                ->value(),
+            'ScalarReplacement should ignore provided default',
+        );
+    }
 }
