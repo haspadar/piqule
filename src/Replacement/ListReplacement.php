@@ -29,6 +29,7 @@ final readonly class ListReplacement implements Replacement
         );
     }
 
+    #[Override]
     public function withDefault(Replacement $default): Replacement
     {
         return $this;
