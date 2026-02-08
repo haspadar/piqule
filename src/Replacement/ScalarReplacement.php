@@ -17,4 +17,9 @@ final readonly class ScalarReplacement implements Replacement
     {
         return $this->value;
     }
+
+    public function withDefault(Replacement $default): Replacement
+    {
+        return $this;
+    }
 }

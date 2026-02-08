@@ -7,4 +7,6 @@ namespace Haspadar\Piqule\Replacement;
 interface Replacement
 {
     public function value(): string;
+
+    public function withDefault(self $default): self;
 }

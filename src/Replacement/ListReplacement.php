@@ -28,4 +28,9 @@ final readonly class ListReplacement implements Replacement
             ),
         );
     }
+
+    public function withDefault(Replacement $default): Replacement
+    {
+        return $this;
+    }
 }
