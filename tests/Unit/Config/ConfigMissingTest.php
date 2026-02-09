@@ -16,6 +16,6 @@ final class ConfigMissingTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        (new ConfigMissingValue())->value();
+        (new ConfigMissingValue('some.key'))->value();
     }
 }

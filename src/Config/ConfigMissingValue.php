@@ -9,9 +9,13 @@ use Override;
 
 final readonly class ConfigMissingValue implements ConfigValue
 {
+    public function __construct(private string $name) {}
+
     #[Override]
     public function value(): never
     {
-        throw new PiquleException('Config value is missing');
+        throw new PiquleException(
+            sprintf('Config value "%s" is missing', $this->name),
+        );
     }
 }

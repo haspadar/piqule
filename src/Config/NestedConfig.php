@@ -21,7 +21,7 @@ final readonly class NestedConfig implements Config
 
         foreach (explode('.', $name) as $part) {
             if (!is_array($current) || !array_key_exists($part, $current)) {
-                return new ConfigMissingValue();
+                return new ConfigMissingValue($name);
             }
 
             /**
