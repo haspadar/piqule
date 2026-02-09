@@ -26,7 +26,7 @@ final readonly class NestedConfig implements Config
 
             /**
              * @psalm-suppress MixedAssignment
-             * Traversal intentionally changes value type (array > mixed)
+             * Traversal intentionally changes value type (array → mixed)
              */
             $current = $current[$part];
         }
@@ -35,7 +35,19 @@ final readonly class NestedConfig implements Config
             return new ConfigScalarValue($current);
         }
 
-        if (!is_array($current)) {
+        $this->validateListValue($current, $name);
+
+        /** @var list<bool|int|float|string> $current */
+        return new ConfigListValue($current);
+    }
+
+    /**
+     * @param mixed $value
+     * @param string $name
+     */
+    private function validateListValue(mixed $value, string $name): void
+    {
+        if (!is_array($value)) {
             throw new PiquleException(
                 sprintf(
                     'Config value "%s" must be a scalar or list',
@@ -44,7 +56,7 @@ final readonly class NestedConfig implements Config
             );
         }
 
-        if (!array_is_list($current)) {
+        if (!array_is_list($value)) {
             throw new PiquleException(
                 sprintf(
                     'Config value "%s" must be a list',
@@ -53,7 +65,15 @@ final readonly class NestedConfig implements Config
             );
         }
 
-        /** @var list<bool|int|float|string> $current */
-        return new ConfigListValue($current);
+        foreach ($value as $item) {
+            if (!is_scalar($item)) {
+                throw new PiquleException(
+                    sprintf(
+                        'Config list "%s" must contain only scalar values',
+                        $name,
+                    ),
+                );
+            }
+        }
     }
 }
