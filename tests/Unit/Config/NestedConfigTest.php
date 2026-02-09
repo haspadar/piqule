@@ -67,7 +67,7 @@ final class NestedConfigTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        $config->value('phpmetrics.invalid')->value();
+        $config->value('phpmetrics.invalid');
     }
 
     #[Test]
