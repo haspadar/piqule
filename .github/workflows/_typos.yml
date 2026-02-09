@@ -44,7 +44,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Run Typos
         if: steps.check.outputs.run == 'true'
-        uses: crate-ci/typos@ad3053d3adbcce7f2e3c60fd4ddfc239787d1eff  # v1.43.2
+        uses: crate-ci/typos@78bc6fb2c0d734235d57a2d6b9de923cc325ebdd  # v1.43.4
         with:
           files: .
           config: ${{ inputs.config }}
