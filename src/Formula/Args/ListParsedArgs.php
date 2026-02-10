@@ -9,9 +9,7 @@ use Override;
 
 final readonly class ListParsedArgs implements Args
 {
-    public function __construct(private Args $origin)
-    {
-    }
+    public function __construct(private Args $origin) {}
 
     #[Override]
     public function text(): string

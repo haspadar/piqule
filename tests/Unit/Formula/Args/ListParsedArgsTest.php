@@ -18,9 +18,9 @@ final class ListParsedArgsTest extends TestCase
     {
         self::assertThat(
             new ListParsedArgs(
-                new RawArgs('[a,b,c]'),
+                new RawArgs('[one,two,three]'),
             ),
-            new HasArgsList(['a', 'b', 'c']),
+            new HasArgsList(['one', 'two', 'three']),
             'ListParsedArgs must split php list',
         );
     }
@@ -31,7 +31,7 @@ final class ListParsedArgsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         (new ListParsedArgs(
-            new RawArgs('abc'),
+            new RawArgs('alpha,beta'),
         ))->list();
     }
 
@@ -39,9 +39,9 @@ final class ListParsedArgsTest extends TestCase
     public function returnsOriginalText(): void
     {
         self::assertSame(
-            '[a,b,c]',
+            '[x,y]',
             (new ListParsedArgs(
-                new RawArgs('[a,b,c]'),
+                new RawArgs('[x,y]'),
             ))->text(),
             'ListParsedArgs must delegate text() to origin',
         );
@@ -53,7 +53,7 @@ final class ListParsedArgsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         (new ListParsedArgs(
-            new RawArgs('abc]'),
+            new RawArgs('foo,bar]'),
         ))->list();
     }
 
@@ -63,7 +63,7 @@ final class ListParsedArgsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         (new ListParsedArgs(
-            new RawArgs('[abc'),
+            new RawArgs('[foo,bar'),
         ))->list();
     }
 
