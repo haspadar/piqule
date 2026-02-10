@@ -46,4 +46,24 @@ final class ListParsedArgsTest extends TestCase
             'ListParsedArgs must delegate text() to origin',
         );
     }
+
+    #[Test]
+    public function throwsWhenMissingOpeningBracket(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ListParsedArgs(
+            new RawArgs('abc]'),
+        ))->list();
+    }
+
+    #[Test]
+    public function throwsWhenMissingClosingBracket(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ListParsedArgs(
+            new RawArgs('[abc'),
+        ))->list();
+    }
 }
