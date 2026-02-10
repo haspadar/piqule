@@ -67,6 +67,16 @@
       "description": "Group CI toolchain updates",
       "groupName": "CI toolchain",
       "matchManagers": ["github-actions", "custom.regex"]
+    },
+    {
+      "description": "No major updates for PHP toolchain",
+      "matchManagers": ["composer"],
+      "matchPackageNames": [
+        "phpunit/phpunit",
+        "symfony/process"
+      ],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ],
   "customManagers": [
