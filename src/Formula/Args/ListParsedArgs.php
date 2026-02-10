@@ -9,7 +9,9 @@ use Override;
 
 final readonly class ListParsedArgs implements Args
 {
-    public function __construct(private Args $origin) {}
+    public function __construct(private Args $origin)
+    {
+    }
 
     #[Override]
     public function text(): string
@@ -29,6 +31,10 @@ final readonly class ListParsedArgs implements Args
         }
 
         $inner = trim(substr($raw, 1, -1));
+
+        if ($inner === '') {
+            return [];
+        }
 
         return explode(',', $inner);
     }

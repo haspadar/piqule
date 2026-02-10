@@ -66,4 +66,16 @@ final class ListParsedArgsTest extends TestCase
             new RawArgs('[abc'),
         ))->list();
     }
+
+    #[Test]
+    public function returnsEmptyArrayWhenEmptyListGiven(): void
+    {
+        self::assertThat(
+            new ListParsedArgs(
+                new RawArgs('[]'),
+            ),
+            new HasArgsList([]),
+            'ListParsedArgs must return empty list for empty php list literal',
+        );
+    }
 }
