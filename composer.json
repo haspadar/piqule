@@ -81,14 +81,14 @@
     "require": {
       "php": ">=8.3",
       "friendsofphp/php-cs-fixer": "^3.91",
-      "phpunit/phpunit": "^12.0",
+      "phpunit/phpunit": "^13.0",
       "infection/infection": "^0.32.0",
       "phpstan/phpstan": "^2.1",
       "vimeo/psalm": "^6.14",
       "phpmd/phpmd": "^2.15",
       "phpmetrics/phpmetrics": "^2.9",
       "phpcsstandards/php_codesniffer": "^4.0",
-      "symfony/process": "^7.0"
+      "symfony/process": "^8.0"
     },
     "config": {
         "allow-plugins": {
