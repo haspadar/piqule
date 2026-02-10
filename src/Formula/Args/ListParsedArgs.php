@@ -22,7 +22,7 @@ final readonly class ListParsedArgs implements Args
     {
         $raw = $this->origin->text();
 
-        if ($raw[0] !== '[' || $raw[strlen($raw) - 1] !== ']') {
+        if ($raw === '' || $raw[0] !== '[' || $raw[strlen($raw) - 1] !== ']') {
             throw new InvalidArgumentException(
                 sprintf('Expected php list literal, got "%s"', $raw),
             );
