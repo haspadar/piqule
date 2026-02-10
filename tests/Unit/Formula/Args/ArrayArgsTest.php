@@ -23,7 +23,7 @@ final class ArrayArgsTest extends TestCase
     public function returnsCommaSeparatedText(): void
     {
         self::assertSame(
-            'one,two',
+            '[one,two]',
             (new ArrayArgs(['one', 'two']))->text(),
         );
     }
