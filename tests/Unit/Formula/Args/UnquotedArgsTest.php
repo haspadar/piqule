@@ -63,4 +63,16 @@ final class UnquotedArgsTest extends TestCase
             'UnquotedArgs must return empty string for empty quoted input',
         );
     }
+
+    #[Test]
+    public function removesOnlySingleMatchingQuoteLayer(): void
+    {
+        self::assertSame(
+            '"value"',
+            (new UnquotedArgs(
+                new RawArgs('""value""'),
+            ))->text(),
+            'UnquotedArgs must remove only one matching quote layer',
+        );
+    }
 }

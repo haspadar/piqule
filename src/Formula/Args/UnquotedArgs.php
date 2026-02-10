@@ -29,6 +29,16 @@ final readonly class UnquotedArgs implements Args
 
     private function trim(string $text): string
     {
-        return trim($text, "\"'");
+        if (
+            strlen($text) >= 2
+            && (
+                ($text[0] === '"' && $text[-1] === '"')
+                || ($text[0] === "'" && $text[-1] === "'")
+            )
+        ) {
+            return substr($text, 1, -1);
+        }
+
+        return $text;
     }
 }
