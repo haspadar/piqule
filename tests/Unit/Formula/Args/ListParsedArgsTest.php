@@ -34,4 +34,16 @@ final class ListParsedArgsTest extends TestCase
             new RawArgs('abc'),
         ))->list();
     }
+
+    #[Test]
+    public function returnsOriginalText(): void
+    {
+        self::assertSame(
+            '[a,b,c]',
+            (new ListParsedArgs(
+                new RawArgs('[a,b,c]'),
+            ))->text(),
+            'ListParsedArgs must delegate text() to origin',
+        );
+    }
 }
