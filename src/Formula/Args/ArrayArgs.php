@@ -8,9 +8,10 @@ use Override;
 
 final readonly class ArrayArgs implements Args
 {
-    public function __construct(
-        private array $items,
-    ) {}
+    /**
+     * @param list<string> $items
+     */
+    public function __construct(private array $items) {}
 
     #[Override]
     public function text(): string
