@@ -39,4 +39,28 @@ final class UnquotedArgsTest extends TestCase
             'UnquotedArgs must remove wrapping quotes from list items',
         );
     }
+
+    #[Test]
+    public function returnsSameTextWhenInputIsNotQuoted(): void
+    {
+        self::assertSame(
+            'hello',
+            (new UnquotedArgs(
+                new RawArgs('hello'),
+            ))->text(),
+            'UnquotedArgs must return original text when no quotes are present',
+        );
+    }
+
+    #[Test]
+    public function returnsEmptyStringWhenEmptyQuotedStringGiven(): void
+    {
+        self::assertSame(
+            '',
+            (new UnquotedArgs(
+                new RawArgs('""'),
+            ))->text(),
+            'UnquotedArgs must return empty string for empty quoted input',
+        );
+    }
 }
