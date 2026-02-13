@@ -67,7 +67,7 @@ final readonly class ParsedArgs implements Args
     private function decodeJsonList(string $raw): array
     {
         try {
-            return json_decode(
+            $decoded = json_decode(
                 $raw,
                 true,
                 512,
@@ -78,11 +78,22 @@ final readonly class ParsedArgs implements Args
                 sprintf('Invalid JSON list literal "%s"', $raw),
             );
         }
+
+        if (!is_array($decoded)) {
+            throw new InvalidArgumentException(
+                sprintf('Expected JSON list literal, got "%s"', $raw),
+            );
+        }
+
+        return $decoded;
     }
 
-    private function assertScalarList(mixed $decoded, string $raw): void
+    /**
+     * @param array<array-key, mixed> $decoded
+     */
+    private function assertScalarList(array $decoded, string $raw): void
     {
-        if (!is_array($decoded) || !array_is_list($decoded)) {
+        if (!array_is_list($decoded)) {
             throw new InvalidArgumentException(
                 sprintf('Expected JSON list literal, got "%s"', $raw),
             );

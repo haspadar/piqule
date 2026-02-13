@@ -8,5 +8,5 @@ use Haspadar\Piqule\Formula\Args\Args;
 
 interface Action
 {
-    public function apply(Args $args): Args;
+    public function transformed(Args $args): Args;
 }

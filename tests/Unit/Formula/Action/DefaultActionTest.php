@@ -5,32 +5,52 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
 use Haspadar\Piqule\Formula\Action\DefaultAction;
-use Haspadar\Piqule\Formula\Args\RawArgs;
-use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsText;
+use Haspadar\Piqule\Formula\Args\ListArgs;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class DefaultActionTest extends TestCase
 {
     #[Test]
-    public function returnsOriginalArgsWhenScalarIsNotEmpty(): void
+    public function returnsOriginalArgsWhenValuesNotEmpty(): void
     {
-        self::assertThat(
-            (new DefaultAction(
-                new RawArgs('fallback'),
-            ))->apply(new RawArgs('value')),
-            new HasArgsText('value'),
+        $original = new ListArgs(['alpha']);
+
+        $result = (new DefaultAction(
+            new ListArgs(['fallback']),
+        ))->transformed($original);
+
+        self::assertSame(
+            ['alpha'],
+            $result->values(),
         );
     }
 
     #[Test]
-    public function returnsDefaultArgsWhenScalarIsEmpty(): void
+    public function returnsDefaultArgsWhenValuesEmpty(): void
     {
-        self::assertThat(
-            (new DefaultAction(
-                new RawArgs('fallback'),
-            ))->apply(new RawArgs('')),
-            new HasArgsText('fallback'),
+        $default = new ListArgs(['fallback']);
+
+        $result = (new DefaultAction($default))
+            ->transformed(new ListArgs([]));
+
+        self::assertSame(
+            ['fallback'],
+            $result->values(),
+        );
+    }
+
+    #[Test]
+    public function supportsMultipleDefaultValues(): void
+    {
+        $default = new ListArgs(['a', 'b']);
+
+        $result = (new DefaultAction($default))
+            ->transformed(new ListArgs([]));
+
+        self::assertSame(
+            ['a', 'b'],
+            $result->values(),
         );
     }
 }

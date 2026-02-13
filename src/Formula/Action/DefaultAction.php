@@ -12,9 +12,9 @@ final readonly class DefaultAction implements Action
     public function __construct(private Args $default) {}
 
     #[Override]
-    public function apply(Args $args): Args
+    public function transformed(Args $args): Args
     {
-        if ($args->text() === '') {
+        if ($args->values() === []) {
             return $this->default;
         }
 

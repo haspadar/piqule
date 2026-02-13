@@ -5,29 +5,42 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Formula\Action;
 
 use Haspadar\Piqule\Formula\Args\Args;
-use Haspadar\Piqule\Formula\Args\RawArgs;
+use Haspadar\Piqule\Formula\Args\ListArgs;
+use InvalidArgumentException;
 use Override;
 
 final readonly class JoinAction implements Action
 {
+    private string $delimiterValue;
+
     public function __construct(
-        private Args $delimiter,
-    ) {}
+        Args $delimiter,
+    ) {
+        $values = $delimiter->values();
 
-    #[Override]
-    public function apply(Args $args): Args
-    {
-        $items = $args->list();
-
-        if ($items === []) {
-            return new RawArgs('');
+        if (count($values) !== 1) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Join delimiter must contain exactly one value, got %d',
+                    count($values),
+                ),
+            );
         }
 
-        return new RawArgs(
-            implode(
-                $this->delimiter->text(),
-                $items,
-            ),
-        );
+        $this->delimiterValue = (string) $values[0];
+    }
+
+    #[Override]
+    public function transformed(Args $args): Args
+    {
+        $items = $args->values();
+
+        if ($items === []) {
+            return new ListArgs(['']);
+        }
+
+        return new ListArgs([
+            implode($this->delimiterValue, $items),
+        ]);
     }
 }
