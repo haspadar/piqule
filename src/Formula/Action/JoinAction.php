@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Formula\Action;
 
 use Haspadar\Piqule\Formula\Args\Args;
-use Haspadar\Piqule\Formula\Args\RawArgs;
+use Haspadar\Piqule\Formula\Args\ListArgs;
 use Override;
 
 final readonly class JoinAction implements Action
@@ -15,19 +15,19 @@ final readonly class JoinAction implements Action
     ) {}
 
     #[Override]
-    public function apply(Args $args): Args
+    public function transformed(Args $args): Args
     {
-        $items = $args->list();
+        $items = $args->values();
 
         if ($items === []) {
-            return new RawArgs('');
+            return new ListArgs(['']);
         }
 
-        return new RawArgs(
+        return new ListArgs([
             implode(
-                $this->delimiter->text(),
+                (string) $this->delimiter->values()[0],
                 $items,
             ),
-        );
+        ]);
     }
 }

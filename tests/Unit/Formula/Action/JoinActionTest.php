@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
 use Haspadar\Piqule\Formula\Action\JoinAction;
-use Haspadar\Piqule\Formula\Args\ArrayArgs;
-use Haspadar\Piqule\Formula\Args\RawArgs;
-use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsText;
+use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -18,11 +17,11 @@ final class JoinActionTest extends TestCase
     {
         self::assertThat(
             (new JoinAction(
-                new RawArgs(' | '),
-            ))->apply(
-                new ArrayArgs(['red', 'green', 'blue']),
+                new ListArgs([' | ']),
+            ))->transformed(
+                new ListArgs(['red', 'green', 'blue']),
             ),
-            new HasArgsText('red | green | blue'),
+            new HasArgsValues(['red | green | blue']),
         );
     }
 
@@ -31,11 +30,11 @@ final class JoinActionTest extends TestCase
     {
         self::assertThat(
             (new JoinAction(
-                new RawArgs(','),
-            ))->apply(
-                new ArrayArgs([]),
+                new ListArgs([',']),
+            ))->transformed(
+                new ListArgs([]),
             ),
-            new HasArgsText(''),
+            new HasArgsValues(['']),
         );
     }
 }

@@ -93,7 +93,7 @@ final readonly class ParsedArgs implements Args
      */
     private function assertScalarList(array $decoded, string $raw): void
     {
-        if (!is_array($decoded) || !array_is_list($decoded)) {
+        if (!array_is_list($decoded)) {
             throw new InvalidArgumentException(
                 sprintf('Expected JSON list literal, got "%s"', $raw),
             );
