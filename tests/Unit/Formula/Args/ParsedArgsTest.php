@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 final class ParsedArgsTest extends TestCase
 {
     #[Test]
-    public function parsesPhpListLiteralIntoValues(): void
+    public function parsesJsonListLiteralIntoValues(): void
     {
         self::assertSame(
             ['one', 'two', 'three'],
@@ -24,7 +24,7 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function parsesPhpListLiteralWithNumbers(): void
+    public function parsesJsonListWithNumbers(): void
     {
         self::assertSame(
             [1, 2, 3],
@@ -35,7 +35,7 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function parsesPhpListLiteralWithBooleans(): void
+    public function parsesJsonListWithBooleans(): void
     {
         self::assertSame(
             [true, false],
@@ -46,7 +46,7 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function parsesPhpListLiteralWithMixedScalars(): void
+    public function parsesJsonListWithMixedScalars(): void
     {
         self::assertSame(
             ['x', 42, false],
@@ -57,7 +57,7 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function parsesPhpListLiteralWithCommaInsideQuotedString(): void
+    public function parsesJsonListWithCommaInsideQuotedString(): void
     {
         self::assertSame(
             ['a,b', 'c'],
@@ -79,42 +79,22 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function throwsWhenInputIsNotPhpListLiteral(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ParsedArgs(
-            new ListArgs(['alpha,beta']),
-        ))->values();
-    }
-
-    #[Test]
-    public function throwsWhenOpeningBracketMissing(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ParsedArgs(
-            new ListArgs(['foo,bar]']),
-        ))->values();
-    }
-
-    #[Test]
-    public function throwsWhenClosingBracketMissing(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        (new ParsedArgs(
-            new ListArgs(['[foo,bar']),
-        ))->values();
-    }
-
-    #[Test]
     public function throwsWhenInputIsEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         (new ParsedArgs(
             new ListArgs([]),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenMoreThanOneLiteralProvided(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['[1,2]', '[3,4]']),
         ))->values();
     }
 
@@ -139,22 +119,52 @@ final class ParsedArgsTest extends TestCase
     }
 
     #[Test]
-    public function throwsWhenLiteralContainsNonScalar(): void
+    public function throwsWhenInvalidJson(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         (new ParsedArgs(
-            new ListArgs(['[new stdClass()]']),
+            new ListArgs(['alpha,beta']),
         ))->values();
     }
 
     #[Test]
-    public function throwsWhenMoreThanOneLiteralProvided(): void
+    public function throwsWhenUsingSingleQuotes(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         (new ParsedArgs(
-            new ListArgs(['[1,2]', '[3,4]']),
+            new ListArgs(["['a','b']"]),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenTrailingCommaPresent(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['["a","b",]']),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenLiteralIsNotList(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['{"a":1}']),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenListContainsNonScalar(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['[{"a":1}]']),
         ))->values();
     }
 }

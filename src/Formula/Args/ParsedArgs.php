@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Formula\Args;
 
 use InvalidArgumentException;
+use JsonException;
 use Override;
-use Throwable;
 
 final readonly class ParsedArgs implements Args
 {
@@ -20,18 +20,28 @@ final readonly class ParsedArgs implements Args
     #[Override]
     public function values(): array
     {
+        $raw = $this->singleRawValue();
+        $decoded = $this->decodeJsonList($raw);
+        $this->assertScalarList($decoded, $raw);
+
+        /** @var list<int|float|string|bool> $decoded */
+        return $decoded;
+    }
+
+    private function singleRawValue(): string
+    {
         $values = $this->origin->values();
 
         if ($values === []) {
             throw new InvalidArgumentException(
-                'Expected php list literal, got empty input',
+                'Expected JSON list literal, got empty input',
             );
         }
 
         if (count($values) !== 1) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'Expected single php list literal, got %d values',
+                    'Expected single JSON list literal, got %d values',
                     count($values),
                 ),
             );
@@ -41,37 +51,56 @@ final readonly class ParsedArgs implements Args
 
         if (!is_string($raw)) {
             throw new InvalidArgumentException(
-                sprintf('Expected php list literal string, got %s', get_debug_type($raw)),
+                sprintf(
+                    'Expected JSON list literal string, got %s',
+                    get_debug_type($raw),
+                ),
             );
         }
 
+        return $raw;
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    private function decodeJsonList(string $raw): array
+    {
         try {
-            /** @var mixed $result */
-            $result = eval('return ' . $raw . ';');
-        } catch (Throwable) {
+            return json_decode(
+                $raw,
+                true,
+                512,
+                JSON_THROW_ON_ERROR,
+            );
+        } catch (JsonException) {
             throw new InvalidArgumentException(
-                sprintf('Invalid PHP list literal "%s"', $raw),
+                sprintf('Invalid JSON list literal "%s"', $raw),
+            );
+        }
+    }
+
+    private function assertScalarList(mixed $decoded, string $raw): void
+    {
+        if (!is_array($decoded) || !array_is_list($decoded)) {
+            throw new InvalidArgumentException(
+                sprintf('Expected JSON list literal, got "%s"', $raw),
             );
         }
 
-        if (!is_array($result) || !array_is_list($result)) {
-            throw new InvalidArgumentException(
-                sprintf('Expected PHP list literal, got "%s"', $raw),
-            );
-        }
-
-        foreach ($result as $item) {
-            if (!is_int($item) && !is_float($item) && !is_string($item) && !is_bool($item)) {
+        foreach ($decoded as $item) {
+            if (!is_int($item)
+                && !is_float($item)
+                && !is_string($item)
+                && !is_bool($item)
+            ) {
                 throw new InvalidArgumentException(
                     sprintf(
-                        'PHP list literal must contain only scalars, got %s',
+                        'JSON list literal must contain only scalars, got %s',
                         get_debug_type($item),
                     ),
                 );
             }
         }
-
-        /** @var list<int|float|string|bool> $result */
-        return $result;
     }
 }
