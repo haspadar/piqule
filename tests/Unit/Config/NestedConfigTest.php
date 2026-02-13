@@ -13,7 +13,7 @@ use stdClass;
 final class NestedConfigTest extends TestCase
 {
     #[Test]
-    public function returnsScalarValueForExistingPath(): void
+    public function wrapsScalarIntoList(): void
     {
         $config = new NestedConfig([
             'phpmetrics' => [
@@ -22,14 +22,13 @@ final class NestedConfigTest extends TestCase
         ]);
 
         self::assertSame(
-            80,
-            $config->value('phpmetrics.threshold')->value(),
-            'NestedConfig did not return scalar value for existing path',
+            [80],
+            $config->values('phpmetrics.threshold'),
         );
     }
 
     #[Test]
-    public function returnsListValueForExistingPath(): void
+    public function returnsListForExistingPath(): void
     {
         $config = new NestedConfig([
             'phpmetrics' => [
@@ -39,25 +38,23 @@ final class NestedConfigTest extends TestCase
 
         self::assertSame(
             ['src', 'app'],
-            $config->value('phpmetrics.includes')->value(),
-            'NestedConfig did not return list value for existing path',
+            $config->values('phpmetrics.includes'),
         );
     }
 
     #[Test]
-    public function throwsExceptionWhenPathIsMissing(): void
+    public function returnsEmptyArrayForMissingPath(): void
     {
-        $config = new NestedConfig([
-            'phpmetrics' => [],
-        ]);
+        $config = new NestedConfig([]);
 
-        $this->expectException(PiquleException::class);
-
-        $config->value('phpmetrics.includes')->value();
+        self::assertSame(
+            [],
+            $config->values('phpmetrics.missing'),
+        );
     }
 
     #[Test]
-    public function throwsExceptionWhenValueIsNotScalarOrList(): void
+    public function throwsWhenValueIsObject(): void
     {
         $config = new NestedConfig([
             'phpmetrics' => [
@@ -67,11 +64,11 @@ final class NestedConfigTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        $config->value('phpmetrics.invalid');
+        $config->values('phpmetrics.invalid');
     }
 
     #[Test]
-    public function throwsExceptionWhenListIsAssociative(): void
+    public function throwsWhenListIsAssociative(): void
     {
         $config = new NestedConfig([
             'phpmetrics' => [
@@ -83,6 +80,50 @@ final class NestedConfigTest extends TestCase
 
         $this->expectException(PiquleException::class);
 
-        $config->value('phpmetrics.includes')->value();
+        $config->values('phpmetrics.includes');
+    }
+
+    #[Test]
+    public function throwsWhenListContainsNonScalar(): void
+    {
+        $config = new NestedConfig([
+            'phpmetrics' => [
+                'includes' => ['src', new stdClass()],
+            ],
+        ]);
+
+        $this->expectException(PiquleException::class);
+
+        $config->values('phpmetrics.includes');
+    }
+
+    #[Test]
+    public function wrapsBooleanScalarIntoList(): void
+    {
+        $config = new NestedConfig([
+            'feature' => [
+                'enabled' => true,
+            ],
+        ]);
+
+        self::assertSame(
+            [true],
+            $config->values('feature.enabled'),
+        );
+    }
+
+    #[Test]
+    public function wrapsStringScalarIntoList(): void
+    {
+        $config = new NestedConfig([
+            'app' => [
+                'name' => 'piqule',
+            ],
+        ]);
+
+        self::assertSame(
+            ['piqule'],
+            $config->values('app.name'),
+        );
     }
 }
