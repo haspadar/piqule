@@ -10,7 +10,9 @@ use Override;
 /**
  * Provides access to a nested configuration array
  *
- * Throws PiquleException if value is missing or invalid
+ * Returns an empty list if the path is missing
+ * Throws PiquleException if the resolved value is not a scalar
+ * or a sequential list of scalars
  */
 final readonly class NestedConfig implements Config
 {
