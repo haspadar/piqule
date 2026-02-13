@@ -167,4 +167,14 @@ final class ParsedArgsTest extends TestCase
             new ListArgs(['[{"a":1}]']),
         ))->values();
     }
+
+    #[Test]
+    public function throwsWhenLiteralIsNull(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['null']),
+        ))->values();
+    }
 }
