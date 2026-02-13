@@ -4,39 +4,39 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Args;
 
-use Haspadar\Piqule\Formula\Args\ListParsedArgs;
-use Haspadar\Piqule\Formula\Args\RawArgs;
+use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\Formula\Args\ParsedArgs;
 use Haspadar\Piqule\Formula\Args\TrimmedArgs;
-use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsList;
-use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsText;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class TrimmedArgsTest extends TestCase
 {
     #[Test]
-    public function trimsTextWhenWhitespacePresent(): void
+    public function trimsSingleStringValue(): void
     {
-        self::assertThat(
-            new TrimmedArgs(
-                new RawArgs('  abc  '),
-            ),
-            new HasArgsText('abc'),
-            'TrimmedArgs must trim text',
+        $args = new TrimmedArgs(
+            new ListArgs(['  abc  ']),
+        );
+
+        self::assertSame(
+            ['abc'],
+            $args->values(),
         );
     }
 
     #[Test]
-    public function trimsItemsWhenListContainsWhitespace(): void
+    public function trimsItemsInsideParsedList(): void
     {
-        self::assertThat(
-            new TrimmedArgs(
-                new ListParsedArgs(
-                    new RawArgs('[ a , b ]'),
-                ),
+        $args = new TrimmedArgs(
+            new ParsedArgs(
+                new ListArgs(['[ a , b ]']),
             ),
-            new HasArgsList(['a', 'b']),
-            'TrimmedArgs must trim list items',
+        );
+
+        self::assertSame(
+            ['a', 'b'],
+            $args->values(),
         );
     }
 }

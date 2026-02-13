@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Formula\Args;
 
 /**
- * Represents arguments of a single DSL action
+ * Represents a sequence of runtime values flowing through a DSL action pipeline
  *
- * Exposes arguments in explicit DSL forms
- * Does not perform semantic interpretation
+ * Args is a value container
+ * It does not perform formatting, parsing, or semantic interpretation
+ * Each action transforms one Args instance into another
  */
 interface Args
 {
     /**
-     * Returns argument in linear DSL form
-     */
-    public function text(): string;
-
-    /**
-     * Returns argument parsed as PHP-style list literal
+     * Returns ordered values produced by the previous action
      *
-     * @return list<string>
+     * @return list<int|float|string|bool>
      */
-    public function list(): array;
+    public function values(): array;
 }

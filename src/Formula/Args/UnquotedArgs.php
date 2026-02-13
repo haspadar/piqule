@@ -8,33 +8,39 @@ use Override;
 
 final readonly class UnquotedArgs implements Args
 {
-    public function __construct(private Args $origin) {}
+    public function __construct(
+        private Args $origin,
+    ) {}
 
+    /**
+     * @return list<int|float|string|bool>
+     */
     #[Override]
-    public function text(): string
-    {
-        return $this->trim(
-            $this->origin->text(),
-        );
-    }
-
-    #[Override]
-    public function list(): array
+    public function values(): array
     {
         return array_map(
-            fn(string $value) => $this->trim($value),
-            $this->origin->list(),
+            fn(int|float|string|bool $value) =>
+            is_string($value)
+                ? $this->unquote($value)
+                : $value,
+            $this->origin->values(),
         );
     }
 
-    private function trim(string $text): string
+    private function unquote(string $text): string
     {
+        $length = strlen($text);
+
+        if ($length < 2) {
+            return $text;
+        }
+
+        $first = $text[0];
+        $last = $text[$length - 1];
+
         if (
-            strlen($text) >= 2
-            && (
-                ($text[0] === '"' && $text[-1] === '"')
-                || ($text[0] === "'" && $text[-1] === "'")
-            )
+            ($first === '"' && $last === '"')
+            || ($first === "'" && $last === "'")
         ) {
             return substr($text, 1, -1);
         }

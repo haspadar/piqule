@@ -12,18 +12,21 @@ final readonly class TrimmedArgs implements Args
         private Args $origin,
     ) {}
 
+    /**
+     * @return list<int|float|string|bool>
+     */
     #[Override]
-    public function text(): string
-    {
-        return trim($this->origin->text());
-    }
-
-    #[Override]
-    public function list(): array
+    public function values(): array
     {
         return array_map(
-            static fn(string $value) => trim($value),
-            $this->origin->list(),
+            static function (int|float|string|bool $value): int|float|string|bool {
+                if (!is_string($value)) {
+                    return $value;
+                }
+
+                return trim($value);
+            },
+            $this->origin->values(),
         );
     }
 }
