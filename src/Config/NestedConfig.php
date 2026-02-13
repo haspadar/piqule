@@ -14,12 +14,12 @@ use Override;
  */
 final readonly class NestedConfig implements Config
 {
-    /**
-     * @param array<string, mixed> $origin
-     */
     public function __construct(private array $origin) {}
 
     #[Override]
+    /**
+     * @return list<int|float|string|bool>
+     */
     public function values(string $name): array
     {
         $value = $this->traverse($name);
@@ -59,19 +59,26 @@ final readonly class NestedConfig implements Config
             }
         }
 
+        /** @var list<int|float|string|bool> $value */
         return $value;
     }
 
     private function traverse(string $name): mixed
     {
+        /** @var array<string, mixed> $current */
         $current = $this->origin;
-
         foreach (explode('.', $name) as $part) {
-            if (!is_array($current) || !array_key_exists($part, $current)) {
+            if (!array_key_exists($part, $current)) {
                 return [];
             }
 
-            $current = $current[$part];
+            $next = $current[$part];
+            if (!is_array($next)) {
+                return $next;
+            }
+
+            /** @var array<string, mixed> $current */
+            $current = $next;
         }
 
         return $current;
