@@ -16,6 +16,9 @@ use Override;
  */
 final readonly class NestedConfig implements Config
 {
+    /**
+     * @param array<string, mixed> $origin
+     */
     public function __construct(private array $origin) {}
 
     #[Override]
