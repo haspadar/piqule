@@ -6,6 +6,11 @@ namespace Haspadar\Piqule\Formula\Args;
 
 use Override;
 
+/**
+ * Removes matching outer single or double quotes
+ *
+ * Escape sequences inside the string are not processed
+ */
 final readonly class UnquotedArgs implements Args
 {
     public function __construct(
