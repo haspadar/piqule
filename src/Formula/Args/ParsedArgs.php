@@ -28,6 +28,15 @@ final readonly class ParsedArgs implements Args
             );
         }
 
+        if (count($values) !== 1) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected single php list literal, got %d values',
+                    count($values),
+                ),
+            );
+        }
+
         $raw = $values[0];
 
         if (!is_string($raw)) {

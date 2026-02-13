@@ -147,4 +147,14 @@ final class ParsedArgsTest extends TestCase
             new ListArgs(['[new stdClass()]']),
         ))->values();
     }
+
+    #[Test]
+    public function throwsWhenMoreThanOneLiteralProvided(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['[1,2]', '[3,4]']),
+        ))->values();
+    }
 }
