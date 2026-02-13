@@ -44,8 +44,8 @@ final class JoinActionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (static function (): void {
-            new JoinAction(
+        (static function (): JoinAction {
+            return new JoinAction(
                 new ListArgs([]),
             );
         })();
@@ -56,8 +56,8 @@ final class JoinActionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (static function (): void {
-            new JoinAction(
+        (static function (): JoinAction {
+            return new JoinAction(
                 new ListArgs([',', ';']),
             );
         })();
