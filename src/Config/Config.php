@@ -6,5 +6,8 @@ namespace Haspadar\Piqule\Config;
 
 interface Config
 {
-    public function value(string $name): ConfigValue;
+    /**
+     * @return list<int|float|string|bool>
+     */
+    public function values(string $name): array;
 }
