@@ -18,7 +18,51 @@ final class ParsedArgsTest extends TestCase
         self::assertSame(
             ['one', 'two', 'three'],
             (new ParsedArgs(
-                new ListArgs(['[one,two,three]']),
+                new ListArgs(['["one","two","three"]']),
+            ))->values(),
+        );
+    }
+
+    #[Test]
+    public function parsesPhpListLiteralWithNumbers(): void
+    {
+        self::assertSame(
+            [1, 2, 3],
+            (new ParsedArgs(
+                new ListArgs(['[1,2,3]']),
+            ))->values(),
+        );
+    }
+
+    #[Test]
+    public function parsesPhpListLiteralWithBooleans(): void
+    {
+        self::assertSame(
+            [true, false],
+            (new ParsedArgs(
+                new ListArgs(['[true,false]']),
+            ))->values(),
+        );
+    }
+
+    #[Test]
+    public function parsesPhpListLiteralWithMixedScalars(): void
+    {
+        self::assertSame(
+            ['x', 42, false],
+            (new ParsedArgs(
+                new ListArgs(['["x",42,false]']),
+            ))->values(),
+        );
+    }
+
+    #[Test]
+    public function parsesPhpListLiteralWithCommaInsideQuotedString(): void
+    {
+        self::assertSame(
+            ['a,b', 'c'],
+            (new ParsedArgs(
+                new ListArgs(['["a,b","c"]']),
             ))->values(),
         );
     }
@@ -61,6 +105,46 @@ final class ParsedArgsTest extends TestCase
 
         (new ParsedArgs(
             new ListArgs(['[foo,bar']),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenInputIsEmpty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs([]),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenFirstElementIsNotString(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs([123]),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenLiteralIsEmptyString(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['']),
+        ))->values();
+    }
+
+    #[Test]
+    public function throwsWhenLiteralContainsNonScalar(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        (new ParsedArgs(
+            new ListArgs(['[new stdClass()]']),
         ))->values();
     }
 }

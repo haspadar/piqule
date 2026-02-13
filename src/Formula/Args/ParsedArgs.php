@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Formula\Args;
 
 use InvalidArgumentException;
 use Override;
+use Throwable;
 
 final readonly class ParsedArgs implements Args
 {
@@ -35,18 +36,33 @@ final readonly class ParsedArgs implements Args
             );
         }
 
-        if ($raw === '' || $raw[0] !== '[' || $raw[strlen($raw) - 1] !== ']') {
+        try {
+            /** @var mixed $result */
+            $result = eval('return ' . $raw . ';');
+        } catch (Throwable) {
             throw new InvalidArgumentException(
-                sprintf('Expected php list literal, got "%s"', $raw),
+                sprintf('Invalid PHP list literal "%s"', $raw),
             );
         }
 
-        $inner = trim(substr($raw, 1, -1));
-
-        if ($inner === '') {
-            return [];
+        if (!is_array($result) || !array_is_list($result)) {
+            throw new InvalidArgumentException(
+                sprintf('Expected PHP list literal, got "%s"', $raw),
+            );
         }
 
-        return explode(',', $inner);
+        foreach ($result as $item) {
+            if (!is_int($item) && !is_float($item) && !is_string($item) && !is_bool($item)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'PHP list literal must contain only scalars, got %s',
+                        get_debug_type($item),
+                    ),
+                );
+            }
+        }
+
+        /** @var list<int|float|string|bool> $result */
+        return $result;
     }
 }
