@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Formula\Action;
 
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Override;
 
 final readonly class FormatAction implements Action
@@ -25,10 +26,11 @@ final readonly class FormatAction implements Action
 
         $template = (string) $templateValues[0];
 
+        $stringified = new StringifiedArgs($args);
+
         $formatted = array_map(
-            static fn(int|float|string|bool $item): string =>
-            sprintf($template, $item),
-            $args->values(),
+            static fn(string $item): string => sprintf($template, $item),
+            $stringified->values(),
         );
 
         return new ListArgs($formatted);

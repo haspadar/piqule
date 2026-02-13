@@ -55,4 +55,34 @@ final class FormatActionTest extends TestCase
             $result->values(),
         );
     }
+
+    #[Test]
+    public function formatsBooleanValuesUsingCanonicalStringRepresentation(): void
+    {
+        $result = (new FormatAction(
+            new ListArgs(['%s']),
+        ))->transformed(
+            new ListArgs([true, false]),
+        );
+
+        self::assertSame(
+            ['true', 'false'],
+            $result->values(),
+        );
+    }
+
+    #[Test]
+    public function formatsNumericValues(): void
+    {
+        $result = (new FormatAction(
+            new ListArgs(['%s']),
+        ))->transformed(
+            new ListArgs([10, 3.5]),
+        );
+
+        self::assertSame(
+            ['10', '3.5'],
+            $result->values(),
+        );
+    }
 }

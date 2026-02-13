@@ -17,6 +17,11 @@ final readonly class ConfigAction implements Action
         private string $key,
     ) {}
 
+    /**
+     * Returns configuration values for the given key
+     *
+     * Input arguments are ignored because this action acts as a value source
+     */
     #[Override]
     public function transformed(Args $args): Args
     {
