@@ -22,18 +22,10 @@ final readonly class FormatAction implements Action
         $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
         $templateValues = $templateArgs->values();
 
-        if ($templateValues === []) {
-            return new ListArgs([]);
-        }
-
-        $template = (string) $templateValues[0];
-
-        $stringified = new StringifiedArgs($args);
-
         return new ListArgs(
             array_map(
-                static fn(string $item): string => sprintf($template, $item),
-                $stringified->values(),
+                static fn(string $item): string => sprintf($templateValues[0], $item),
+                (new StringifiedArgs($args))->values(),
             ),
         );
     }
