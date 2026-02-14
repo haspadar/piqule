@@ -2,13 +2,13 @@ coverage:
   status:
     project:
       default:
-        target: {{CODECOV_PROJECT_TARGET | default('80%')}}
-        threshold: {{CODECOV_PROJECT_THRESHOLD | default('2%')}}
+        target: << config(coverage.project.target)|default(["80%"])|scalar >>
+        threshold: << config(coverage.project.threshold)|default(["2%"])|scalar >>
 
     patch:
       default:
-        target: {{CODECOV_PATCH_TARGET | default('80%')}}
-        threshold: {{CODECOV_PATCH_THRESHOLD | default('5%')}}
+        target: << config(coverage.patch.target)|default(["80%"])|scalar >>
+        threshold: << config(coverage.patch.threshold)|default(["5%"])|scalar >>
 
 comment:
   layout: "reach, diff, flags, files"

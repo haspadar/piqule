@@ -2,14 +2,15 @@
 <ruleset name="Piqule PHPCS Rules">
     <description>Structural and semantic PHP rules</description>
 
-    <placeholder name="FILES">
-    <file>../../src</file>
-    </placeholder>
+    << config(phpcs.files)
+    |default(["../../src"])
+    |format("<file>%s</file>")
+    |join("\n    ") >>
 
-    <placeholder name="EXCLUDES">
-    <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>tests/*</exclude-pattern>
-    </placeholder>
+    << config(phpcs.excludes)
+    |default(["vendor/*","tests/*"])
+    |format("<exclude-pattern>%s</exclude-pattern>")
+    |join("\n    ") >>
 
     <arg name="extensions" value="php"/>
     <arg name="colors"/>

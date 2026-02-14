@@ -5,6 +5,7 @@ ignore: |
   node_modules/**
   build/**
   var/**
+  templates/**
   .piqule/**/html/**
   .piqule/**/coverage-report/**
 

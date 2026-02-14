@@ -21,7 +21,7 @@ ignored:
 # failure-threshold — minimum severity that will cause the workflow to fail
 # ------------------------------------------------------------------------------
 
-failure-threshold: {{HADOLINT_FAILURE_THRESHOLD | default('error')}}
+failure-threshold: << config(hadolint.failure_threshold)|default(["error"])|scalar >>
 # Meaning: error → fail; warning → allowed
 
 

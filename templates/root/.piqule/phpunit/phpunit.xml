@@ -11,17 +11,17 @@
 >
     <testsuites>
         <testsuite name="unit">
-            <directory suffix="Test.php">../../tests/Unit</directory>
+<< config(phpunit.testsuites.unit)|default(["../../tests/Unit"])|format("            <directory suffix="Test.php">%s</directory>")|join("\n") >>
         </testsuite>
 
         <testsuite name="integration">
-            <directory suffix="Test.php">../../tests/Integration</directory>
+<< config(phpunit.testsuites.integration)|default(["../../tests/Integration"])|format("            <directory suffix="Test.php">%s</directory>")|join("\n") >>
         </testsuite>
     </testsuites>
 
     <source>
         <include>
-            <directory suffix=".php">../../src</directory>
+<< config(phpunit.source.include)|default(["../../src"])|format("            <directory suffix=".php">%s</directory>")|join("\n") >>
         </include>
     </source>
 </phpunit>

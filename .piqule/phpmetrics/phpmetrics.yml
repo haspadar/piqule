@@ -13,7 +13,6 @@ excludes:
 
 extensions:
   - php
-  - php8
 
 report:
   html: "html"
