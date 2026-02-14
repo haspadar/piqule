@@ -12,13 +12,10 @@ use PHPUnit\Framework\TestCase;
 final class FormatActionTest extends TestCase
 {
     #[Test]
-    public function formatsSingleValue(): void
+    public function formatsSingleStringValue(): void
     {
-        $result = (new FormatAction(
-            new ListArgs(['ext=%s']),
-        ))->transformed(
-            new ListArgs(['mbstring']),
-        );
+        $result = (new FormatAction('ext=%s'))
+            ->transformed(new ListArgs(['mbstring']));
 
         self::assertSame(
             ['ext=mbstring'],
@@ -27,31 +24,13 @@ final class FormatActionTest extends TestCase
     }
 
     #[Test]
-    public function formatsAllValuesWhenMultipleGiven(): void
+    public function formatsMultipleValues(): void
     {
-        $result = (new FormatAction(
-            new ListArgs(['%s']),
-        ))->transformed(
-            new ListArgs(['alpha', 'beta']),
-        );
+        $result = (new FormatAction('v=%s'))
+            ->transformed(new ListArgs(['a', 'b']));
 
         self::assertSame(
-            ['alpha', 'beta'],
-            $result->values(),
-        );
-    }
-
-    #[Test]
-    public function returnsEmptyListWhenInputIsEmpty(): void
-    {
-        $result = (new FormatAction(
-            new ListArgs(['%s']),
-        ))->transformed(
-            new ListArgs([]),
-        );
-
-        self::assertSame(
-            [],
+            ['v=a', 'v=b'],
             $result->values(),
         );
     }
@@ -59,14 +38,11 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsBooleanValuesUsingCanonicalStringRepresentation(): void
     {
-        $result = (new FormatAction(
-            new ListArgs(['%s']),
-        ))->transformed(
-            new ListArgs([true, false]),
-        );
+        $result = (new FormatAction('flag=%s'))
+            ->transformed(new ListArgs([true, false]));
 
         self::assertSame(
-            ['true', 'false'],
+            ['flag=true', 'flag=false'],
             $result->values(),
         );
     }
@@ -74,14 +50,35 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsNumericValues(): void
     {
-        $result = (new FormatAction(
-            new ListArgs(['%s']),
-        ))->transformed(
-            new ListArgs([10, 3.5]),
-        );
+        $result = (new FormatAction('n=%s'))
+            ->transformed(new ListArgs([10, 3.5]));
 
         self::assertSame(
-            ['10', '3.5'],
+            ['n=10', 'n=3.5'],
+            $result->values(),
+        );
+    }
+
+    #[Test]
+    public function formatsUsingEmptyTemplate(): void
+    {
+        $result = (new FormatAction(''))
+            ->transformed(new ListArgs(['a', 'b']));
+
+        self::assertSame(
+            ['', ''],
+            $result->values(),
+        );
+    }
+
+    #[Test]
+    public function returnsEmptyListWhenInputIsEmpty(): void
+    {
+        $result = (new FormatAction('%s'))
+            ->transformed(new ListArgs([]));
+
+        self::assertSame(
+            [],
             $result->values(),
         );
     }

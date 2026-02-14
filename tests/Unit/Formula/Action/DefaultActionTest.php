@@ -6,51 +6,53 @@ namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
 use Haspadar\Piqule\Formula\Action\DefaultAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class DefaultActionTest extends TestCase
 {
     #[Test]
-    public function returnsOriginalArgsWhenValuesNotEmpty(): void
+    public function keepsOriginalValuesWhenNotEmpty(): void
     {
-        $original = new ListArgs(['alpha']);
-
-        $result = (new DefaultAction(
-            new ListArgs(['fallback']),
-        ))->transformed($original);
-
-        self::assertSame(
-            ['alpha'],
-            $result->values(),
+        self::assertThat(
+            (new DefaultAction('["fallback"]'))->transformed(
+                new ListArgs(['alpha']),
+            ),
+            new HasArgsValues(['alpha']),
         );
     }
 
     #[Test]
-    public function returnsDefaultArgsWhenValuesEmpty(): void
+    public function returnsDefaultWhenInputIsEmpty(): void
     {
-        $default = new ListArgs(['fallback']);
-
-        $result = (new DefaultAction($default))
-            ->transformed(new ListArgs([]));
-
-        self::assertSame(
-            ['fallback'],
-            $result->values(),
+        self::assertThat(
+            (new DefaultAction('["fallback"]'))->transformed(
+                new ListArgs([]),
+            ),
+            new HasArgsValues(['fallback']),
         );
     }
 
     #[Test]
-    public function supportsMultipleDefaultValues(): void
+    public function returnsMultipleDefaultValues(): void
     {
-        $default = new ListArgs(['a', 'b']);
+        self::assertThat(
+            (new DefaultAction('["a","b"]'))->transformed(
+                new ListArgs([]),
+            ),
+            new HasArgsValues(['a', 'b']),
+        );
+    }
 
-        $result = (new DefaultAction($default))
-            ->transformed(new ListArgs([]));
-
-        self::assertSame(
-            ['a', 'b'],
-            $result->values(),
+    #[Test]
+    public function supportsNumbersAndBooleans(): void
+    {
+        self::assertThat(
+            (new DefaultAction('[1,true,false]'))->transformed(
+                new ListArgs([]),
+            ),
+            new HasArgsValues([1, true, false]),
         );
     }
 }

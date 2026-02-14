@@ -7,32 +7,27 @@ namespace Haspadar\Piqule\Formula\Action;
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
+use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
 final readonly class FormatAction implements Action
 {
     public function __construct(
-        private Args $template,
+        private string $raw,
     ) {}
 
     #[Override]
     public function transformed(Args $args): Args
     {
-        $templateValues = $this->template->values();
-
-        if ($templateValues === []) {
-            return new ListArgs([]);
-        }
-
+        $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
+        $templateValues = $templateArgs->values();
         $template = (string) $templateValues[0];
 
-        $stringified = new StringifiedArgs($args);
-
-        $formatted = array_map(
-            static fn(string $item): string => sprintf($template, $item),
-            $stringified->values(),
+        return new ListArgs(
+            array_map(
+                static fn(string $item): string => sprintf($template, $item),
+                (new StringifiedArgs($args))->values(),
+            ),
         );
-
-        return new ListArgs($formatted);
     }
 }
