@@ -3,7 +3,7 @@
 
   "source": {
     "directories": [
-      \"../../src\"
+        "../../src"
     ]
   },
 
@@ -14,7 +14,7 @@
   },
 
   "initialTestsPhpOptions": "-d memory_limit=1G",
-  "timeout": 30,
+  "timeout": 30ф,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",
