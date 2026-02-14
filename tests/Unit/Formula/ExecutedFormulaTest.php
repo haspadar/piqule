@@ -12,6 +12,7 @@ use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Formula\ExecutedFormula;
 use Haspadar\Piqule\Formula\NormalizedFormula;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Constraint\Formula\HasFormulaResult;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -78,6 +79,37 @@ final class ExecutedFormulaTest extends TestCase
                 ),
             ),
             new HasFormulaResult('flag=true'),
+        );
+    }
+
+    #[Test]
+    public function throwsWhenFormulaDoesNotReduceToSingleValue(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        $config = new NestedConfig([
+            'a' => ['x', 'y'],
+        ]);
+
+        (new ExecutedFormula(
+            $this->actions(
+                'config(a)|default(["x"])',
+                $config,
+            ),
+        ))->result();
+    }
+
+    #[Test]
+    public function returnsEmptyStringWhenNoActionsProduceValues(): void
+    {
+        self::assertThat(
+            new ExecutedFormula(
+                $this->actions(
+                    'format("%s")',
+                    new NestedConfig([]),
+                ),
+            ),
+            new HasFormulaResult(''),
         );
     }
 }
