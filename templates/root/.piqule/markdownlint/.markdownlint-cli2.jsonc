@@ -11,6 +11,6 @@
 
   // Ignore dependency/vendor directories to avoid linting third-party content.
   "ignores": [
-    << config(markdownlint.ignores)|default(["**/vendor/**","**/node_modules/**","**/coverage/**","**/.git/**"])|format('"%s"')|join(",") >>
+<< config(markdownlint.ignores)|default(["**/vendor/**","**/node_modules/**","**/coverage/**","**/.git/**"])|format('    "%s"')|join(",\n") >>
   ]
 }
