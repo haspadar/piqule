@@ -38,6 +38,12 @@ try {
     $projectConfigData = file_exists($projectRoot . '/.piqule/config.php')
         ? require $projectRoot . '/.piqule/config.php'
         : [];
+    if (!is_array($projectConfigData)) {
+        throw new PiquleException(
+            '.piqule/config.php must return array',
+        );
+    }
+
     $config = new NestedConfig($projectConfigData);
 
     $files = new CombinedFiles([
