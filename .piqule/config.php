@@ -25,4 +25,10 @@ return [
             'max' => 120,
         ],
     ],
+
+    'ci' => [
+        'pr' => [
+            'max_lines_changed' => 400,
+        ],
+    ],
 ];
