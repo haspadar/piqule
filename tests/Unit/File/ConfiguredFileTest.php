@@ -13,7 +13,10 @@ use Haspadar\Piqule\Formula\Action\DefaultAction;
 use Haspadar\Piqule\Formula\Action\FormatAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Action\ScalarAction;
+use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFileContents;
+use Haspadar\Piqule\Tests\Constraint\HasFormulaError;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -100,5 +103,62 @@ final class ConfiguredFileTest extends TestCase
             ),
             new HasFileContents('value: '),
         );
+    }
+
+    #[Test]
+    public function wrapsUnknownActionWithFileContext(): void
+    {
+        $config = new NestedConfig([]);
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'broken.yaml',
+                    '<< unknown(a) >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFormulaError(
+                'broken.yaml',
+                'unknown(a)',
+                'Unknown formula action',
+            ),
+        );
+    }
+
+    #[Test]
+    public function throwsWhenFormulaProducesMultipleValues(): void
+    {
+        $config = new NestedConfig([
+            'a' => ['x', 'y'],
+        ]);
+
+        $this->expectException(PiquleException::class);
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(a)|default(["x"]) >>',
+            ),
+            $this->actions($config),
+        ))->contents();
+    }
+
+    #[Test]
+    public function formatsUsingEmptyTemplate(): void
+    {
+        $result = (new FormatAction('""'))
+            ->transformed(new ListArgs(['a']));
+
+        self::assertSame([''], $result->values());
+    }
+
+    #[Test]
+    public function joinsWithEmptyDelimiter(): void
+    {
+        $result = (new JoinAction(''))
+            ->transformed(new ListArgs(['a', 'b']));
+
+        self::assertSame(['ab'], $result->values());
     }
 }
