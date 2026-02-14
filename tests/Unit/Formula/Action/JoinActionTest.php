@@ -51,4 +51,34 @@ final class JoinActionTest extends TestCase
             new HasArgsValues(['']),
         );
     }
+
+    #[Test]
+    public function interpretsNewlineEscape(): void
+    {
+        self::assertThat(
+            (new JoinAction('\n'))
+                ->transformed(new ListArgs(['a', 'b', 'c'])),
+            new HasArgsValues(["a\nb\nc"]),
+        );
+    }
+
+    #[Test]
+    public function interpretsTabEscape(): void
+    {
+        self::assertThat(
+            (new JoinAction('\t'))
+                ->transformed(new ListArgs(['a', 'b'])),
+            new HasArgsValues(["a\tb"]),
+        );
+    }
+
+    #[Test]
+    public function interpretsBackslashEscape(): void
+    {
+        self::assertThat(
+            (new JoinAction('\\\\'))
+                ->transformed(new ListArgs(['a', 'b'])),
+            new HasArgsValues(['a\\b']),
+        );
+    }
 }
