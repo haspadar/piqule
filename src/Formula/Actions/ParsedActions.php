@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Formula\Actions;
 
 use Haspadar\Piqule\Formula\Action\Action;
+use Haspadar\Piqule\PiquleException;
 use Override;
 
 final readonly class ParsedActions implements Actions
@@ -27,13 +28,16 @@ final readonly class ParsedActions implements Actions
             PREG_SET_ORDER,
         );
 
-        if ($matches === []) {
-            return [];
-        }
+        return array_map(function (array $m): Action {
+            $name = $m[1];
 
-        return array_map(
-            fn(array $m): Action => $this->actions[$m[1]]($m[2]),
-            $matches,
-        );
+            if (!isset($this->actions[$name])) {
+                throw new PiquleException(
+                    sprintf('Unknown formula action "%s"', $name),
+                );
+            }
+
+            return ($this->actions[$name])($m[2]);
+        }, $matches);
     }
 }
