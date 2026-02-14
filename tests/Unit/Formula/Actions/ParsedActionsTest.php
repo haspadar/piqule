@@ -47,7 +47,7 @@ final class ParsedActionsTest extends TestCase
                 'default(["x"])|join(",")',
                 [
                     'default' => fn(string $raw) => new DefaultAction($raw),
-                    'join'    => fn(string $raw) => new JoinAction($raw),
+                    'join' => fn(string $raw) => new JoinAction($raw),
                 ],
             ),
             new HasActionNames([

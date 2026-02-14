@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Constraint\Formula\Actions;
 
-use Haspadar\Piqule\Formula\Actions\Actions;
 use Haspadar\Piqule\Formula\Action\Action;
+use Haspadar\Piqule\Formula\Actions\Actions;
 use PHPUnit\Framework\Constraint\Constraint;
 
 final class HasActionNames extends Constraint

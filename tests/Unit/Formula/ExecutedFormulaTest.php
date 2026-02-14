@@ -9,8 +9,8 @@ use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Action\DefaultAction;
 use Haspadar\Piqule\Formula\Action\FormatAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
-use Haspadar\Piqule\Formula\ExecutedFormula;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
+use Haspadar\Piqule\Formula\ExecutedFormula;
 use Haspadar\Piqule\Formula\NormalizedFormula;
 use Haspadar\Piqule\Tests\Constraint\Formula\HasFormulaResult;
 use PHPUnit\Framework\Attributes\Test;
@@ -23,10 +23,10 @@ final class ExecutedFormulaTest extends TestCase
         return new ParsedActions(
             (new NormalizedFormula($expression))->result(),
             [
-                'config'  => fn(string $raw) => new ConfigAction($config, $raw),
+                'config' => fn(string $raw) => new ConfigAction($config, $raw),
                 'default' => fn(string $raw) => new DefaultAction($raw),
-                'format'  => fn(string $raw) => new FormatAction($raw),
-                'join'    => fn(string $raw) => new JoinAction($raw),
+                'format' => fn(string $raw) => new FormatAction($raw),
+                'join' => fn(string $raw) => new JoinAction($raw),
             ],
         );
     }
