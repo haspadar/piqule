@@ -37,10 +37,14 @@ final readonly class JoinAction implements Action
 
     private function normalize(string $value): string
     {
-        return str_replace(
-            ['\\n', '\\r', '\\t', '\\\\'],
-            ["\n", "\r", "\t", '\\'],
+        return strtr(
             $value,
+            [
+                '\\\\' => '\\',
+                '\\n'  => "\n",
+                '\\r'  => "\r",
+                '\\t'  => "\t",
+            ],
         );
     }
 }
