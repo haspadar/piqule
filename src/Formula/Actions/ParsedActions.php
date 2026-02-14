@@ -18,6 +18,14 @@ final readonly class ParsedActions implements Actions
         private array  $actions,
     ) {}
 
+    /**
+     * Parses DSL expression into a sequence of actions.
+     *
+     * DSL intentionally does not support nested parentheses
+     * in action arguments. Arguments are treated as flat strings.
+     *
+     * @return list<Action>
+     */
     #[Override]
     public function all(): array
     {
