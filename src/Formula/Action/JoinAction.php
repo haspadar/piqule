@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Formula\Action;
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
+use Override;
 
 final readonly class JoinAction implements Action
 {
@@ -18,6 +19,7 @@ final readonly class JoinAction implements Action
         $this->delimiter = (string) $values[0];
     }
 
+    #[Override]
     public function transformed(Args $args): Args
     {
         $items = $args->values();

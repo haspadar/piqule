@@ -19,7 +19,9 @@ final readonly class FormatAction implements Action
         $args = new UnquotedArgs(new ListArgs([$raw]));
         $values = $args->values();
 
-        $this->template = $values[0] ?? '';
+        $this->template = isset($values[0])
+            ? (string) $values[0]
+            : '';
     }
 
     #[Override]

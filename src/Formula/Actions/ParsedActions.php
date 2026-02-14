@@ -9,6 +9,9 @@ use Override;
 
 final readonly class ParsedActions implements Actions
 {
+    /**
+     * @param array<string, callable(string): Action> $actions
+     */
     public function __construct(
         private string $expression,
         private array  $actions,
