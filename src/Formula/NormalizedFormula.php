@@ -15,19 +15,8 @@ final readonly class NormalizedFormula implements Formula
     #[Override]
     public function result(): string
     {
-        $filtered = $this->collapseWhitespace($this->expression);
-        $filtered = $this->normalizePipes($filtered);
+        $filtered = preg_replace('/\s*\|\s*/', '|', $this->expression) ?? $this->expression;
 
         return trim($filtered);
-    }
-
-    private function collapseWhitespace(string $input): string
-    {
-        return preg_replace('/\s+/', ' ', $input) ?? $input;
-    }
-
-    private function normalizePipes(string $input): string
-    {
-        return preg_replace('/\s*\|\s*/', '|', $input) ?? $input;
     }
 }

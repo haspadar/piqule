@@ -22,7 +22,7 @@ final readonly class JoinAction implements Action
             new ListArgs([$this->raw]),
         ))->values();
 
-        $delimiter = (string) ($values[0] ?? '');
+        $delimiter = $this->normalize((string) ($values[0] ?? ''));
 
         $items = $args->values();
 
@@ -33,5 +33,18 @@ final readonly class JoinAction implements Action
         return new ListArgs([
             implode($delimiter, $items),
         ]);
+    }
+
+    private function normalize(string $value): string
+    {
+        return strtr(
+            $value,
+            [
+                '\\\\' => '\\',
+                '\\n' => "\n",
+                '\\r' => "\r",
+                '\\t' => "\t",
+            ],
+        );
     }
 }

@@ -2,8 +2,8 @@
 # Used primarily as a syntax validator for JSON/YAML
 
 # Neutral, widely compatible defaults
-tabWidth: 2
+tabWidth: << config(prettier.tab_width)|default(["2"])|join("") >>
 useTabs: false
 
 # Keep line wrapping conservative
-printWidth: 120
+printWidth: << config(prettier.print_width)|default(["120"])|join("") >>

@@ -1,20 +1,14 @@
 composer: false
 
 includes:
-  - ../../src
+<< config(phpmetrics.includes)|default(["../../src"])|format("  - %s")|join("\n") >>
 
 excludes:
-  - vendor
-  - tests
-  - build
-  - bin
-  - var
-  - node_modules
+<< config(phpmetrics.excludes)|default(["vendor","tests","build","bin","var","node_modules"])|format("  - %s")|join("\n") >>
 
 extensions:
-  - php
-  - php8
+<< config(phpmetrics.extensions)|default(["php"])|format("  - %s")|join("\n") >>
 
 report:
-  html: "html"
-  json: "phpmetrics.json"
+  html: "<< config(phpmetrics.report.html)|default(["html"])|join("") >>"
+  json: "<< config(phpmetrics.report.json)|default(["phpmetrics.json"])|join("") >>"

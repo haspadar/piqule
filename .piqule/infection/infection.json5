@@ -2,7 +2,9 @@
   "$schema": "../../vendor/infection/infection/resources/schema.json",
 
   "source": {
-    "directories": ["../../src"]
+    "directories": [
+        "../../src"
+    ]
   },
 
   "testFramework": "phpunit",
@@ -12,9 +14,7 @@
   },
 
   "initialTestsPhpOptions": "-d memory_limit=1G",
-
   "timeout": 30,
-
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",

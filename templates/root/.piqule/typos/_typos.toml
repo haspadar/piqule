@@ -4,12 +4,10 @@
 [default]
 binary = false
 extend-ignore-re = [
-    "vendor/.*",
+<< config(typos.ignore_re)|default(["vendor/.*"])|format('    "%s",')|join("\n") >>
 ]
 
 [files]
 extend-exclude = [
-    ".git/",
-    "vendor/",
-    "node_modules/",
+<< config(typos.exclude)|default([".git/","vendor/","node_modules/"])|format('    "%s",')|join("\n") >>
 ]

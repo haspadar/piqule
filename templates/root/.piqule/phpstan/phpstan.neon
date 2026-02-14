@@ -1,7 +1,8 @@
 parameters:
-    level: 9
+    level: << config(phpstan.level)|default(["9"])|join("") >>
+
     paths:
-        - ../../src
+<< config(phpstan.paths)|default(["../../src"])|format("        - %s")|join("\n") >>
 
     errorFormat: table
     reportUnmatchedIgnoredErrors: true

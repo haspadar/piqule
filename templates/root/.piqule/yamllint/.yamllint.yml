@@ -1,12 +1,7 @@
 extends: default
 
 ignore: |
-  vendor/**
-  node_modules/**
-  build/**
-  var/**
-  .piqule/**/html/**
-  .piqule/**/coverage-report/**
+<< config(yamllint.ignore)|default(["vendor/**","node_modules/**","build/**","var/**",".piqule/**/html/**",".piqule/**/coverage-report/**"])|format("  %s")|join("\n") >>
 
 rules:
   document-start: disable
@@ -18,5 +13,5 @@ rules:
   # line-length is limited to 120 characters; longer limits are common
   # in CI workflows where commands cannot be easily split across lines
   line-length:
-    max: 120
+    max: << config(yamllint.line_length.max)|default(["120"])|join("") >>
     level: warning
