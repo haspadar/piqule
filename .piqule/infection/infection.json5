@@ -14,7 +14,7 @@
   },
 
   "initialTestsPhpOptions": "-d memory_limit=1G",
-  "timeout": 30ф,
+  "timeout": 30,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",
