@@ -12,30 +12,27 @@ use Override;
 
 final readonly class FormatAction implements Action
 {
-    private string $template;
-
-    public function __construct(string $raw)
-    {
-        $args = new UnquotedArgs(new ListArgs([$raw]));
-        $values = $args->values();
-
-        $this->template = isset($values[0])
-            ? (string) $values[0]
-            : '';
-    }
+    public function __construct(
+        private string $raw,
+    ) {}
 
     #[Override]
     public function transformed(Args $args): Args
     {
-        if ($this->template === '') {
+        $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
+        $templateValues = $templateArgs->values();
+
+        if ($templateValues === []) {
             return new ListArgs([]);
         }
+
+        $template = (string) $templateValues[0];
 
         $stringified = new StringifiedArgs($args);
 
         return new ListArgs(
             array_map(
-                fn(string $item): string => sprintf($this->template, $item),
+                static fn(string $item): string => sprintf($template, $item),
                 $stringified->values(),
             ),
         );

@@ -12,24 +12,21 @@ use Override;
 
 final readonly class DefaultAction implements Action
 {
-    private Args $default;
-
-    public function __construct(string $raw)
-    {
-        $this->default = new UnquotedArgs(
-            new ParsedArgs(
-                new ListArgs([$raw]),
-            ),
-        );
-    }
+    public function __construct(
+        private string $raw,
+    ) {}
 
     #[Override]
     public function transformed(Args $args): Args
     {
-        if ($args->values() === []) {
-            return $this->default;
+        if ($args->values() !== []) {
+            return $args;
         }
 
-        return $args;
+        return new UnquotedArgs(
+            new ParsedArgs(
+                new ListArgs([$this->raw]),
+            ),
+        );
     }
 }

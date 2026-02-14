@@ -60,13 +60,13 @@ final class FormatActionTest extends TestCase
     }
 
     #[Test]
-    public function returnsEmptyListWhenTemplateIsEmpty(): void
+    public function formatsUsingEmptyTemplate(): void
     {
         $result = (new FormatAction(''))
             ->transformed(new ListArgs(['a', 'b']));
 
         self::assertSame(
-            [],
+            ['', ''],
             $result->values(),
         );
     }

@@ -11,23 +11,27 @@ use Override;
 
 final readonly class JoinAction implements Action
 {
-    private string $delimiter;
-
-    public function __construct(string $raw)
-    {
-        $values = (new UnquotedArgs(new ListArgs([$raw])))->values();
-        $this->delimiter = (string) $values[0];
-    }
+    public function __construct(
+        private string $raw,
+    ) {}
 
     #[Override]
     public function transformed(Args $args): Args
     {
+        $values = (new UnquotedArgs(
+            new ListArgs([$this->raw]),
+        ))->values();
+
+        $delimiter = (string) ($values[0] ?? '');
+
         $items = $args->values();
 
         if ($items === []) {
             return new ListArgs(['']);
         }
 
-        return new ListArgs([implode($this->delimiter, $items)]);
+        return new ListArgs([
+            implode($delimiter, $items),
+        ]);
     }
 }
