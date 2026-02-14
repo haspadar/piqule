@@ -41,9 +41,9 @@ final readonly class JoinAction implements Action
             $value,
             [
                 '\\\\' => '\\',
-                '\\n'  => "\n",
-                '\\r'  => "\r",
-                '\\t'  => "\t",
+                '\\n' => "\n",
+                '\\r' => "\r",
+                '\\t' => "\t",
             ],
         );
     }
