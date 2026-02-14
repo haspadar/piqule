@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 use Haspadar\Piqule\Config\NestedConfig;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
+use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -15,53 +16,44 @@ final class ConfigActionTest extends TestCase
     #[Test]
     public function returnsListValuesFromConfig(): void
     {
-        $action = new ConfigAction(
-            new NestedConfig([
-                'phpmetrics' => [
-                    'include' => ['mbstring', 'intl'],
-                ],
-            ]),
-            'phpmetrics.include',
-        );
-
-        $result = $action->transformed(new ListArgs([]));
-
-        self::assertSame(
-            ['mbstring', 'intl'],
-            $result->values(),
+        self::assertThat(
+            (new ConfigAction(
+                new NestedConfig([
+                    'phpmetrics' => [
+                        'include' => ['mbstring', 'intl'],
+                    ],
+                ]),
+                'phpmetrics.include',
+            ))->transformed(new ListArgs([])),
+            new HasArgsValues(['mbstring', 'intl']),
         );
     }
 
     #[Test]
     public function stringifiesBooleanValuesFromConfig(): void
     {
-        $action = new ConfigAction(
-            new NestedConfig([
-                'feature' => [
-                    'flags' => [true, false],
-                ],
-            ]),
-            'feature.flags',
-        );
-
-        $result = $action->transformed(new ListArgs([]));
-
-        self::assertSame(
-            ['true', 'false'],
-            $result->values(),
+        self::assertThat(
+            (new ConfigAction(
+                new NestedConfig([
+                    'feature' => [
+                        'flags' => [true, false],
+                    ],
+                ]),
+                'feature.flags',
+            ))->transformed(new ListArgs([])),
+            new HasArgsValues(['true', 'false']),
         );
     }
 
     #[Test]
     public function returnsEmptyListWhenConfigValueMissing(): void
     {
-        $action = new ConfigAction(new NestedConfig([]), 'missing.key');
-
-        $result = $action->transformed(new ListArgs([]));
-
-        self::assertSame(
-            [],
-            $result->values(),
+        self::assertThat(
+            (new ConfigAction(
+                new NestedConfig([]),
+                'missing.key',
+            ))->transformed(new ListArgs([])),
+            new HasArgsValues([]),
         );
     }
 }

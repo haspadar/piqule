@@ -7,59 +7,48 @@ namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class JoinActionTest extends TestCase
 {
     #[Test]
-    public function joinsListItemsWithDelimiter(): void
+    public function joinsValuesWithDelimiter(): void
     {
         self::assertThat(
-            (new JoinAction(
-                new ListArgs([' | ']),
-            ))->transformed(
-                new ListArgs(['red', 'green', 'blue']),
-            ),
+            (new JoinAction(' | '))
+                ->transformed(new ListArgs(['red', 'green', 'blue'])),
             new HasArgsValues(['red | green | blue']),
         );
     }
 
     #[Test]
-    public function joinsEmptyListIntoEmptyText(): void
+    public function joinsUsingEmptyDelimiter(): void
     {
         self::assertThat(
-            (new JoinAction(
-                new ListArgs([',']),
-            ))->transformed(
-                new ListArgs([]),
-            ),
-            new HasArgsValues(['']),
+            (new JoinAction(''))
+                ->transformed(new ListArgs(['a', 'b'])),
+            new HasArgsValues(['ab']),
         );
     }
 
     #[Test]
-    public function throwsWhenDelimiterIsEmpty(): void
+    public function joinsSingleValue(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        (static function (): JoinAction {
-            return new JoinAction(
-                new ListArgs([]),
-            );
-        })();
+        self::assertThat(
+            (new JoinAction(','))
+                ->transformed(new ListArgs(['one'])),
+            new HasArgsValues(['one']),
+        );
     }
 
     #[Test]
-    public function throwsWhenDelimiterHasMultipleValues(): void
+    public function returnsEmptyStringWhenInputIsEmpty(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        (static function (): JoinAction {
-            return new JoinAction(
-                new ListArgs([',', ';']),
-            );
-        })();
+        self::assertThat(
+            (new JoinAction(','))
+                ->transformed(new ListArgs([])),
+            new HasArgsValues(['']),
+        );
     }
 }
