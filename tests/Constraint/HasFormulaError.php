@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Constraint;
 
+use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use PHPUnit\Framework\Constraint\Constraint;
 
@@ -17,6 +18,10 @@ final class HasFormulaError extends Constraint
 
     protected function matches($other): bool
     {
+        if (!$other instanceof File) {
+            return false;
+        }
+
         try {
             $other->contents();
 
