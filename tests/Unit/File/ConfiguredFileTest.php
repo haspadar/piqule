@@ -80,7 +80,7 @@ final class ConfiguredFileTest extends TestCase
             new ConfiguredFile(
                 new TextFile(
                     'config.yaml',
-                    'coverage: << config(coverage.range)|default([""] )|join("") >>',
+                    'coverage: << config(coverage.range)|default([""])|join("") >>',
                 ),
                 $this->actions($config),
             ),
