@@ -6,7 +6,7 @@ ARG NODE_IMAGE=node:24.13.1-bookworm
 # ============================================================
 # Linters
 # ============================================================
-ARG ACTIONLINT_VERSION=1.7.10
+ARG ACTIONLINT_VERSION=1.7.11
 ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.38.0
