@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 final class ReportingStorageReactionTest extends TestCase
 {
     #[Test]
-    public function writesLineOnCreated(): void
+    public function writesSuccessOnCreated(): void
     {
         $output = new FakeOutput();
 
@@ -21,12 +21,12 @@ final class ReportingStorageReactionTest extends TestCase
 
         self::assertCount(
             1,
-            $output->lines(),
+            $output->successes(),
         );
     }
 
     #[Test]
-    public function writesLineOnUpdated(): void
+    public function writesInfoOnUpdated(): void
     {
         $output = new FakeOutput();
 
@@ -35,7 +35,7 @@ final class ReportingStorageReactionTest extends TestCase
 
         self::assertCount(
             1,
-            $output->lines(),
+            $output->infos(),
         );
     }
 }

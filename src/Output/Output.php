@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Output;
 
-use Haspadar\Piqule\Output\Line\Line;
-
 interface Output
 {
-    public function write(Line $line): void;
+    public function info(string $text): void;
+
+    public function success(string $text): void;
+
+    public function error(string $text): void;
 }
