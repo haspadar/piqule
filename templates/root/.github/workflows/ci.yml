@@ -63,7 +63,7 @@ jobs:
     name: PHPCS
     uses: ./.github/workflows/_phpcs.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: << config(ci.php.matrix)|default(["8.3","8.5"])|format('"%s"')|join(",") >>
 
   # ------------------------------------------------------------
   # PHPStan (min + max)
@@ -72,7 +72,7 @@ jobs:
     name: PHPStan
     uses: ./.github/workflows/_phpstan.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: << config(ci.php.matrix)|default(["8.3","8.5"])|format('"%s"')|join(",") >>
 
   # ------------------------------------------------------------
   # Psalm (min + max)
@@ -81,7 +81,7 @@ jobs:
     name: Psalm
     uses: ./.github/workflows/_psalm.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: << config(ci.php.matrix)|default(["8.3","8.5"])|format('"%s"')|join(",") >>
 
   # ------------------------------------------------------------
   # PHPMetrics (hard gate)
@@ -97,7 +97,7 @@ jobs:
     name: PHPMD
     uses: ./.github/workflows/_phpmd.yml
     with:
-      php-version: '8.3'
+      php-version: << config(ci.phpmd.php_version)|default(["8.3"])|scalar >>
       ruleset: .piqule/phpmd/phpmd.xml
 
   # ------------------------------------------------------------
@@ -114,7 +114,7 @@ jobs:
     name: Tests with coverage
     uses: ./.github/workflows/_tests.yml
     with:
-      php-version: '8.3'
+      php-version: << config(ci.tests.php_version)|default(["8.3"])|scalar >>
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
