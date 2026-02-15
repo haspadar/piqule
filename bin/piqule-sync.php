@@ -78,8 +78,6 @@ try {
 
     (new EachFile($files, fn(File $file) => $storage->write($file)))->run();
 } catch (PiquleException $e) {
-    $output->write(
-        new Haspadar\Piqule\Output\Line\Error($e->getMessage()),
-    );
+    $output->error($e->getMessage());
     exit(1);
 }

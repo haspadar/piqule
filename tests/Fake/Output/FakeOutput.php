@@ -4,24 +4,49 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Fake\Output;
 
-use Haspadar\Piqule\Output\Line\Line;
 use Haspadar\Piqule\Output\Output;
 
 final class FakeOutput implements Output
 {
-    /** @var list<Line> */
-    private array $lines = [];
+    /** @var list<string> */
+    private array $infos = [];
 
-    public function write(Line $line): void
+    /** @var list<string> */
+    private array $successes = [];
+
+    /** @var list<string> */
+    private array $errors = [];
+
+    public function info(string $text): void
     {
-        $this->lines[] = $line;
+        $this->infos[] = $text;
     }
 
-    /**
-     * @return list<Line>
-     */
-    public function lines(): array
+    public function success(string $text): void
     {
-        return $this->lines;
+        $this->successes[] = $text;
+    }
+
+    public function error(string $text): void
+    {
+        $this->errors[] = $text;
+    }
+
+    /** @return list<string> */
+    public function infos(): array
+    {
+        return $this->infos;
+    }
+
+    /** @return list<string> */
+    public function successes(): array
+    {
+        return $this->successes;
+    }
+
+    /** @return list<string> */
+    public function errors(): array
+    {
+        return $this->errors;
     }
 }
