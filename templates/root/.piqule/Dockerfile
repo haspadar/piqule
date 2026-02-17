@@ -8,9 +8,9 @@ ARG NODE_IMAGE=node:24.13.1-bookworm
 # ============================================================
 ARG ACTIONLINT_VERSION=1.7.11
 ARG HADOLINT_VERSION=2.14.0
-ARG MARKDOWNLINT_VERSION=0.20.0
+ARG MARKDOWNLINT_VERSION=0.21.0
 ARG YAMLLINT_VERSION=1.38.0
-ARG TYPOS_VERSION=1.43.4
+ARG TYPOS_VERSION=1.43.5
 ARG PRETTIER_VERSION=3.8.1
 
 # ============================================================
