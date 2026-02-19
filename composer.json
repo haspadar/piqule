@@ -4,7 +4,8 @@
     "type": "library",
     "license": "MIT",
     "bin": [
-        "bin/piqule-sync.php"
+        "bin/piqule-sync",
+        "bin/piqule"
     ],
     "autoload": {
         "psr-4": {
@@ -34,7 +35,7 @@
         ],
 
         "actionlint:check": "actionlint",
-        "hadolint:check": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
+        "hadolint:check": "hadolint --config .piqule/hadolint/.hadolint.yml docker/Dockerfile",
         "markdownlint:check": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
         "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
         "typos:check": "typos --config .piqule/typos/_typos.toml",
