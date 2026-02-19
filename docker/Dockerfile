@@ -76,8 +76,7 @@ RUN set -eux; \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
-        libonig-dev \
-        openjdk-21-jre-headless; \
+        libonig-dev; \
     rm -rf /var/lib/apt/lists/*; \
     \
     docker-php-ext-install intl zip mbstring; \
