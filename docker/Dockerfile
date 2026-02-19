@@ -12,21 +12,17 @@ ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.38.0
 ARG TYPOS_VERSION=1.43.4
 ARG SHELLCHECK_VERSION=0.10.0
-
-# PHP ecosystem versions
-ARG PHPSTAN_VERSION=^2.1
-ARG PSALM_VERSION=^6.14
-ARG PHPUNIT_VERSION=^12
-ARG INFECTION_VERSION=^0.32
-ARG PHPMD_VERSION=^2.15
-ARG PHPMETRICS_VERSION=^2.9
-ARG PHPCS_VERSION=^4.0
-ARG PHPCSFIXER_VERSION=^3.91
+ARG JSONLINT_VERSION=17.0.1
 
 # ============================================================
 # Node stage
 # ============================================================
 FROM ${NODE_IMAGE} AS node
+
+# ============================================================
+# Composer stage
+# ============================================================
+FROM composer:2 AS composer
 
 # ============================================================
 # PHP stage
@@ -46,20 +42,13 @@ ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
 ARG SHELLCHECK_VERSION
-
-ARG PHPSTAN_VERSION
-ARG PSALM_VERSION
-ARG PHPUNIT_VERSION
-ARG INFECTION_VERSION
-ARG PHPMD_VERSION
-ARG PHPMETRICS_VERSION
-ARG PHPCS_VERSION
-ARG PHPCSFIXER_VERSION
+ARG JSONLINT_VERSION
 
 # ------------------------------------------------------------
-# Copy Node runtime
+# Copy runtimes
 # ------------------------------------------------------------
 COPY --from=node /usr/local /usr/local
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 ENV PIPX_HOME=/opt/pipx
 ENV PIPX_BIN_DIR=/usr/local/bin
@@ -95,16 +84,6 @@ RUN set -eux; \
     docker-php-ext-install intl zip mbstring; \
     pecl install xdebug yaml; \
     docker-php-ext-enable xdebug yaml; \
-    \
-    # ------------------------------------------------------------\
-    # Install Composer\
-    # ------------------------------------------------------------\
-    EXPECTED_CHECKSUM="$(curl -sS https://composer.github.io/installer.sig)"; \
-    curl -sS https://getcomposer.org/installer -o composer-setup.php; \
-    ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"; \
-    [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-    rm composer-setup.php; \
     \
     # ------------------------------------------------------------\
     # Infrastructure linters (binary releases)\
@@ -153,35 +132,28 @@ RUN set -eux; \
     # ------------------------------------------------------------\
     npm install -g \
         "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
-        "@prantlf/jsonlint@latest"; \
+        "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
     npm cache clean --force; \
     \
     # ------------------------------------------------------------\
     # Python linters\
     # ------------------------------------------------------------\
-    pipx install "yamllint==${YAMLLINT_VERSION}"; \
-    \
-    # ------------------------------------------------------------\
-    # PHP global analysis tools\
-    # ------------------------------------------------------------\
-    composer global config allow-plugins.infection/extension-installer true; \
-    composer global require \
-        "phpstan/phpstan:${PHPSTAN_VERSION}" \
-        "vimeo/psalm:${PSALM_VERSION}" \
-        "phpunit/phpunit:${PHPUNIT_VERSION}" \
-        "infection/infection:${INFECTION_VERSION}" \
-        "phpmd/phpmd:${PHPMD_VERSION}" \
-        "phpmetrics/phpmetrics:${PHPMETRICS_VERSION}" \
-        "phpcsstandards/php_codesniffer:${PHPCS_VERSION}" \
-        "friendsofphp/php-cs-fixer:${PHPCSFIXER_VERSION}"; \
-    composer global clear-cache
+    pipx install "yamllint==${YAMLLINT_VERSION}"
 
-ENV PATH="/root/.composer/vendor/bin:/usr/local/bin:/usr/local/lib/node_modules/.bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV PATH="/usr/local/bin:/usr/local/lib/node_modules/.bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # ------------------------------------------------------------
 # Non-root user
 # ------------------------------------------------------------
 RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
+
+# ------------------------------------------------------------
+# Runtime scripts
+# ------------------------------------------------------------
+COPY docker/bin /usr/local/lib/piqule
+RUN chmod +x /usr/local/lib/piqule/*
+
+ENTRYPOINT ["/usr/local/lib/piqule/piqule"]
 
 USER appuser
 WORKDIR /project
