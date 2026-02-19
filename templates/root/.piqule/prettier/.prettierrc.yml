@@ -1,9 +1,0 @@
-# Prettier config for piqule
-# Used primarily as a syntax validator for JSON/YAML
-
-# Neutral, widely compatible defaults
-tabWidth: << config(prettier.tab_width)|default(["2"])|join("") >>
-useTabs: false
-
-# Keep line wrapping conservative
-printWidth: << config(prettier.print_width)|default(["120"])|join("") >>
