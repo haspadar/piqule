@@ -68,7 +68,6 @@ RUN set -eux; \
         git \
         curl \
         unzip \
-        fish \
         python3 \
         python3-venv \
         pipx \
