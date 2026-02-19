@@ -2,7 +2,10 @@
 set -euo pipefail
 
 cmd="${1:-check}"
-shift || true
+
+if [ $# -gt 0 ]; then
+  shift
+fi
 
 case "$cmd" in
   check)
@@ -12,7 +15,7 @@ case "$cmd" in
     exec /usr/local/lib/piqule/fix "$@"
     ;;
   *)
-    echo "Unknown command: $cmd"
+    echo "Unknown command: $cmd" >&2
     exit 1
     ;;
 esac

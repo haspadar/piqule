@@ -4,7 +4,8 @@
     "type": "library",
     "license": "MIT",
     "bin": [
-        "bin/piqule-sync.php"
+        "bin/piqule-sync",
+        "bin/piqule"
     ],
     "autoload": {
         "psr-4": {
@@ -16,61 +17,6 @@
             "Haspadar\\Piqule\\Tests\\": "tests/"
         }
     },
-    "scripts": {
-        "phpcs:fix": "vendor/bin/phpcbf --standard=.piqule/phpcs/phpcs.xml",
-        "phpcs:check": "vendor/bin/phpcs --standard=.piqule/phpcs/phpcs.xml",
-
-        "php-cs-fixer:fix": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php",
-        "php-cs-fixer:check": "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --dry-run --diff",
-
-        "phpstan:check": "phpstan analyse -c .piqule/phpstan/phpstan.neon",
-        "psalm:check": "psalm --config=.piqule/psalm/psalm.xml",
-        "psalm:fix": "psalm --config=.piqule/psalm/psalm.xml --alter --issues=MissingOverrideAttribute",
-        "phpmd:check": "phpmd src text .piqule/phpmd/phpmd.xml",
-
-        "phpmetrics:check": [
-            "php -d error_reporting='E_ALL & ~E_DEPRECATED' vendor/bin/phpmetrics --config=.piqule/phpmetrics/phpmetrics.yml",
-            "php .piqule/phpmetrics/verify.php"
-        ],
-
-        "actionlint:check": "actionlint",
-        "hadolint:check": "hadolint --config .piqule/hadolint/.hadolint.yml .piqule/Dockerfile",
-        "markdownlint:check": "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc",
-        "yamllint:check": "yamllint -c .piqule/yamllint/.yamllint.yml .",
-        "typos:check": "typos --config .piqule/typos/_typos.toml",
-
-        "xml:check": "xmllint --noout .piqule/*/*.xml",
-
-        "prettier:check": "prettier --check . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
-        "prettier:fix":   "prettier --write . --config .piqule/prettier/.prettierrc.yml --ignore-path .piqule/prettier/.prettierignore",
-
-        "phpunit:check": "vendor/bin/phpunit -c .piqule/phpunit/phpunit.xml --order-by=random",
-        "infection:check": "XDEBUG_MODE=coverage php -d memory_limit=1G infection --configuration=.piqule/infection/infection.json5 --threads=max",
-
-        "fix": [
-            "@psalm:fix",
-            "@phpcs:fix",
-            "@php-cs-fixer:fix"
-        ],
-
-        "check": [
-            "@actionlint:check",
-            "@hadolint:check",
-            "@markdownlint:check",
-            "@yamllint:check",
-            "@typos:check",
-            "@xml:check",
-
-            "@phpcs:check",
-            "@php-cs-fixer:check",
-            "@phpstan:check",
-            "@psalm:check",
-            "@phpmd:check",
-
-            "@phpmetrics:check",
-            "@phpunit:check"
-        ]
-    },
     "authors": [
         {
             "name": "Kanstantsinas Mesnikas",
@@ -79,20 +25,6 @@
     ],
     "minimum-stability": "stable",
     "require": {
-      "php": ">=8.3",
-      "friendsofphp/php-cs-fixer": "^3.91",
-      "phpunit/phpunit": "^12.0",
-      "infection/infection": "^0.32.0",
-      "phpstan/phpstan": "^2.1",
-      "vimeo/psalm": "^6.14",
-      "phpmd/phpmd": "^2.15",
-      "phpmetrics/phpmetrics": "^2.9",
-      "phpcsstandards/php_codesniffer": "^4.0",
-      "symfony/process": "^7.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "infection/extension-installer": true
-        }
+      "php": ">=8.3"
     }
 }
