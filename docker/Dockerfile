@@ -104,20 +104,26 @@ RUN set -eux; \
       *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
     esac; \
     \
+    mkdir -p /tmp/actionlint; \
     curl -sSfL \
       "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_${ACTIONLINT_ARCH}.tar.gz" \
-      | tar -xz -C /usr/local/bin; \
+      | tar -xz -C /tmp/actionlint; \
+    mv /tmp/actionlint/actionlint /usr/local/bin/actionlint; \
     chmod +x /usr/local/bin/actionlint; \
+    rm -rf /tmp/actionlint; \
     \
     curl -sSfL \
       "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-linux-${HADOLINT_ARCH}" \
       -o /usr/local/bin/hadolint; \
     chmod +x /usr/local/bin/hadolint; \
     \
+    mkdir -p /tmp/typos; \
     curl -sSfL \
       "https://github.com/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-${TYPOS_ARCH}-unknown-linux-musl.tar.gz" \
-      | tar -xz -C /usr/local/bin; \
+      | tar -xz -C /tmp/typos; \
+    mv /tmp/typos/typos /usr/local/bin/typos; \
     chmod +x /usr/local/bin/typos; \
+    rm -rf /tmp/typos; \
     \
     curl -sSfL \
       "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.${SHELLCHECK_ARCH}.tar.xz" \
