@@ -157,7 +157,7 @@ RUN useradd --uid 1000 --create-home --shell /bin/bash appuser
 COPY docker/bin /usr/local/lib/piqule
 RUN chmod +x /usr/local/lib/piqule/*
 
-ENTRYPOINT ["/usr/local/lib/piqule/piqule"]
+ENTRYPOINT ["/usr/local/lib/piqule/entrypoint"]
 
 USER appuser
 WORKDIR /project

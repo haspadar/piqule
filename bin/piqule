@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$command = $argv[1] ?? 'check';
+$args = array_slice($argv, 2);
+
+if ($command === 'sync') {
+    require __DIR__ . '/piqule-sync';
+    exit(0);
+}
+
+$docker = trim(shell_exec('command -v docker 2>/dev/null') ?? '');
+
+if ($docker === '') {
+    fwrite(STDERR, "Docker is required\n");
+    exit(1);
+}
+
+exec('docker info >/dev/null 2>&1', $out, $code);
+if ($code !== 0) {
+    fwrite(STDERR, "Docker daemon is not running\n");
+    exit(1);
+}
+
+$cwd = getcwd();
+
+$cmd = sprintf(
+    'docker run --rm -v %s:/project -w /project piqule %s %s',
+    escapeshellarg($cwd),
+    escapeshellarg($command),
+    implode(' ', array_map('escapeshellarg', $args))
+);
+
+passthru($cmd, $exitCode);
+
+exit($exitCode);
