@@ -12,7 +12,6 @@ ARG MARKDOWNLINT_VERSION=0.20.0
 ARG YAMLLINT_VERSION=1.38.0
 ARG TYPOS_VERSION=1.43.4
 ARG SHELLCHECK_VERSION=0.10.0
-ARG JSONLINT_VERSION=17.0.1
 
 # PHP ecosystem versions
 ARG PHPSTAN_VERSION=^2.1
@@ -47,7 +46,6 @@ ARG MARKDOWNLINT_VERSION
 ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
 ARG SHELLCHECK_VERSION
-ARG JSONLINT_VERSION
 
 ARG PHPSTAN_VERSION
 ARG PSALM_VERSION
@@ -67,10 +65,13 @@ ENV PIPX_HOME=/opt/pipx
 ENV PIPX_BIN_DIR=/usr/local/bin
 
 # ------------------------------------------------------------
-# System dependencies
+# Install everything in a single layer
 # ------------------------------------------------------------
 # hadolint ignore=DL3008
 RUN set -eux; \
+    # ------------------------------------------------------------\
+    # System dependencies\
+    # ------------------------------------------------------------\
     apt-get update; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -93,23 +94,21 @@ RUN set -eux; \
     \
     docker-php-ext-install intl zip mbstring; \
     pecl install xdebug yaml; \
-    docker-php-ext-enable xdebug yaml
-
-# ------------------------------------------------------------
-# Install Composer
-# ------------------------------------------------------------
-RUN set -eux; \
+    docker-php-ext-enable xdebug yaml; \
+    \
+    # ------------------------------------------------------------\
+    # Install Composer\
+    # ------------------------------------------------------------\
     EXPECTED_CHECKSUM="$(curl -sS https://composer.github.io/installer.sig)"; \
     curl -sS https://getcomposer.org/installer -o composer-setup.php; \
     ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"; \
     [ "$EXPECTED_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-    rm composer-setup.php
-
-# ------------------------------------------------------------
-# Install infrastructure linters
-# ------------------------------------------------------------
-RUN set -eux; \
+    rm composer-setup.php; \
+    \
+    # ------------------------------------------------------------\
+    # Infrastructure linters (binary releases)\
+    # ------------------------------------------------------------\
     ARCH="$(uname -m)"; \
     case "$ARCH" in \
       x86_64) \
@@ -149,17 +148,22 @@ RUN set -eux; \
     chmod +x /usr/local/bin/shellcheck; \
     rm -rf "shellcheck-v${SHELLCHECK_VERSION}"; \
     \
+    # ------------------------------------------------------------\
+    # Node-based linters\
+    # ------------------------------------------------------------\
     npm install -g \
         "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
-        "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
+        "@prantlf/jsonlint@latest"; \
     npm cache clean --force; \
     \
-    pipx install "yamllint==${YAMLLINT_VERSION}"
-
-# ------------------------------------------------------------
-# Install PHP analysis packages globally
-# ------------------------------------------------------------
-RUN set -eux; \
+    # ------------------------------------------------------------\
+    # Python linters\
+    # ------------------------------------------------------------\
+    pipx install "yamllint==${YAMLLINT_VERSION}"; \
+    \
+    # ------------------------------------------------------------\
+    # PHP global analysis tools\
+    # ------------------------------------------------------------\
     composer global config allow-plugins.infection/extension-installer true; \
     composer global require \
         "phpstan/phpstan:${PHPSTAN_VERSION}" \
