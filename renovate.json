@@ -1,16 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
 
   "schedule": ["* 1-4 * * *"],
   "timezone": "UTC",
 
   "labels": ["dependencies"],
-  "assignees": [],
-  "reviewers": [],
 
   "prConcurrentLimit": 3,
   "prHourlyLimit": 0,
@@ -19,91 +15,49 @@
     "enabled": true,
     "labels": ["security"]
   },
-  "composer": {
-    "enabled": true
-  },
-  "github-actions": {
-    "enabled": true
-  },
-  "dockerfile": {
-    "enabled": false
-  },
+
+  "composer": { "enabled": false },
+  "github-actions": { "enabled": true },
+  "dockerfile": { "enabled": false },
+
   "packageRules": [
-    {
-      "description": "Do not update PHP base image",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["php"],
-      "enabled": false
-    },
     {
       "description": "Pin GitHub Actions to commit SHA",
       "matchManagers": ["github-actions"],
       "pinDigests": true
     },
     {
-      "description": "Auto-merge patch and minor dev dependencies",
-      "matchDepTypes": ["require-dev"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true,
-      "automergeType": "pr",
-      "platformAutomerge": true
-    },
-    {
-      "description": "Group dev dependencies",
-      "matchDepTypes": ["require-dev"],
-      "groupName": "dev dependencies"
-    },
-    {
-      "description": "Group production dependencies",
-      "matchDepTypes": ["require"],
-      "groupName": "production dependencies"
-    },
-    {
-      "description": "Prioritize patch updates",
-      "matchUpdateTypes": ["patch"],
-      "prPriority": 10
-    },
-    {
-      "description": "Group CI toolchain updates",
-      "groupName": "CI toolchain",
-      "matchManagers": ["github-actions", "custom.regex"]
-    },
-    {
-      "description": "No major updates for PHP toolchain",
-      "matchManagers": ["composer"],
-      "matchPackageNames": [
-        "phpunit/phpunit",
-        "symfony/process"
-      ],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
+      "description": "Group CI and toolchain updates",
+      "groupName": "CI and toolchain",
+      "matchManagers": ["github-actions", "regex"]
     }
   ],
+
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update PHP base image",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
         "ARG PHP_IMAGE=php:(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "php",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     },
     {
       "customType": "regex",
-      "description": "Update Node.js base image",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
         "ARG NODE_IMAGE=node:(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "node",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     },
+
     {
       "customType": "regex",
-      "description": "Update actionlint version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
         "ARG ACTIONLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -112,8 +66,7 @@
     },
     {
       "customType": "regex",
-      "description": "Update hadolint version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
         "ARG HADOLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -122,38 +75,7 @@
     },
     {
       "customType": "regex",
-      "description": "Update yamllint version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
-      "matchStrings": [
-        "ARG YAMLLINT_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "yamllint",
-      "datasourceTemplate": "pypi"
-    },
-    {
-      "customType": "regex",
-      "description": "Update markdownlint-cli2 version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
-      "matchStrings": [
-        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "markdownlint-cli2",
-      "datasourceTemplate": "npm"
-    },
-    {
-      "customType": "regex",
-      "description": "Update prettier version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
-      "matchStrings": [
-        "ARG PRETTIER_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "prettier",
-      "datasourceTemplate": "npm"
-    },
-    {
-      "customType": "regex",
-      "description": "Update typos version",
-      "fileMatch": ["templates/root/\\.piqule/Dockerfile$"],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
         "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -162,14 +84,112 @@
     },
     {
       "customType": "regex",
-      "description": "Update markdownlint-cli2 in CI templates",
-      "fileMatch": [
-        "templates/root/\\.github/workflows/.*\\.ya?ml$"
-      ],
+      "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
-        "markdownlint-cli2@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+        "ARG SHELLCHECK_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "koalaman/shellcheck",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "markdownlint-cli2",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG YAMLLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "yamllint",
+      "datasourceTemplate": "pypi"
+    },
+
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPSTAN_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "phpstan/phpstan",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PSALM_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "vimeo/psalm",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPUNIT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "phpunit/phpunit",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG INFECTION_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "infection/infection",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPMD_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "phpmd/phpmd",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPMETRICS_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "phpmetrics/phpmetrics",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPCS_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "phpcsstandards/php_codesniffer",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG PHPCSFIXER_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "friendsofphp/php-cs-fixer",
+      "datasourceTemplate": "packagist"
+    },
+
+    {
+      "customType": "regex",
+      "fileMatch": ["docker/Dockerfile$"],
+      "matchStrings": [
+        "ARG JSONLINT_VERSION=(?<currentValue>[^\\s]+)"
+      ],
+      "depNameTemplate": "@prantlf/jsonlint",
       "datasourceTemplate": "npm"
     }
   ]
