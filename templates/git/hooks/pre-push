@@ -1,18 +1,15 @@
 #!/usr/bin/env sh
 set -e
 
-if ! command -v docker >/dev/null 2>&1; then
-  echo "Docker is required to run composer check"
-  exit 1
+if [ -x "vendor/bin/piqule" ]; then
+  vendor/bin/piqule check
+  exit $?
 fi
 
-if ! docker info >/dev/null 2>&1; then
-  echo "Docker daemon is not running"
-  exit 1
+if command -v composer >/dev/null 2>&1; then
+  composer exec -- piqule check
+  exit $?
 fi
 
-docker run --rm \
-  -v "$PWD:/app" \
-  -w /app \
-  piqule \
-  composer check
+echo "Piqule is not installed"
+exit 1

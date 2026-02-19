@@ -1,0 +1,22 @@
+{
+  "mode": << config(jsonlint.mode)|default(["json5"])|format('"%s"')|join("") >>,
+  "compact": << config(jsonlint.compact)|default(["true"])|scalar >>,
+  "continue": << config(jsonlint.continue)|default(["true"])|scalar >>,
+  "duplicate-keys": << config(jsonlint.duplicate_keys)|default(["false"])|scalar >>,
+  "patterns": [
+<< config(jsonlint.patterns)
+   |default([
+      "**/*.json",
+      "**/*.json5",
+      "**/*.jsonc",
+      "!**/vendor/**",
+      "!**/node_modules/**",
+      "!**/.git/**",
+      "!**/coverage/**",
+      "!**/build/**",
+      "!**/var/**"
+   ])
+   |format('    "%s"')
+   |join(",\n") >>
+  ]
+}

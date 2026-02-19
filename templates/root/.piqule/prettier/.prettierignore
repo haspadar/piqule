@@ -1,1 +1,0 @@
-<< config(prettierignore.paths)|default(["vendor/","node_modules/",".piqule/","**/phpmetrics/**","**/coverage-report/**","**/*.md"])|join("\n") >>

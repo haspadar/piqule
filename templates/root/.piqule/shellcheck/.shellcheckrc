@@ -1,0 +1,18 @@
+# ============================================================
+# ShellCheck configuration (Piqule managed)
+# ============================================================
+
+# Target shell (bash, sh, dash, ksh)
+shell=<< config(shellcheck.shell)|default(["bash"])|scalar >>
+
+# Minimum severity: error, warning, info, style
+severity=<< config(shellcheck.severity)|default(["warning"])|scalar >>
+
+# Allow sourcing external files
+external-sources=<< config(shellcheck.external_sources)|default(["true"])|scalar >>
+
+# Additional include path for sourced files (optional)
+# source-path=<< config(shellcheck.source_path)|default(["."])|scalar >>
+
+# Excluded rules (comma-separated)
+<< config(shellcheck.exclude)|default([])|join("\n") >>
