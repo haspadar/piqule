@@ -25,6 +25,13 @@ return [
             'max' => 120,
         ],
     ],
+    'phpcs' => [
+        'excludes' => [
+            "vendor/*",
+            "tests/*",
+            "templates/*",
+        ]
+    ],
 
     'ci' => [
         'php' => [
