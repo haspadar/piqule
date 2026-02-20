@@ -31,7 +31,7 @@ composer require --dev haspadar/piqule
 Synchronize managed configuration files into the project:
 
 ```bash
-bin/piqule-sync.php
+vendor/bin/piqule sync
 ```
 
 ---
