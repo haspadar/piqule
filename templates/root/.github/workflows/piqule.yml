@@ -106,6 +106,7 @@ jobs:
       - name: Run ${{ matrix.check }}
         run: |
           docker run --rm \
+            --user $(id -u):$(id -g) \
             -v "$PWD:/project" \
             -w /project \
             piqule \
