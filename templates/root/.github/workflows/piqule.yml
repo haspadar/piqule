@@ -58,7 +58,7 @@ jobs:
             -v "$PWD:/project" \
             -w /project \
             piqule \
-            ${{ matrix.check }}
+            check ${{ matrix.check }}
 
 
   # ============================================================
@@ -108,4 +108,4 @@ jobs:
             -v "$PWD:/project" \
             -w /project \
             piqule \
-            ${{ matrix.check }}
+            check ${{ matrix.check }}
