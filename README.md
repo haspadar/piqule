@@ -1,4 +1,4 @@
-# Opinionated PHP Quality Policies
+# PHP Quality Laws
 
 [![CI](https://github.com/haspadar/piqule/actions/workflows/ci.yml/badge.svg)](https://github.com/haspadar/piqule/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/gh/haspadar/piqule/branch/main/graph/badge.svg)](https://codecov.io/gh/haspadar/piqule)
@@ -9,108 +9,87 @@
 [![Hits-of-Code](https://hitsofcode.com/github/haspadar/piqule?branch=main)](https://hitsofcode.com/github/haspadar/piqule/view?branch=main)
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/haspadar/piqule?labelColor=171717&color=FF570A&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
-**Piqule** provides a distribution of PHP quality policies.
+Quality checks for PHP projects.
 
-It delivers predefined static analysis rules, CI workflows, and tooling
-configurations by copying them into project repositories.
-
-Piqule defines a single source of truth for quality policies;
-conflicts and deviations are resolved explicitly through Git.
-
----
-
-## Tooling overview
-
-| Tool            | Purpose               | What Piqule provides                                |
-|-----------------|-----------------------|-----------------------------------------------------|
-| PHPStan         | Static analysis       | Strict ruleset and high analysis level              |
-| Psalm           | Static analysis       | Complementary checks and early error detection      |
-| PHP-CS-Fixer    | Code style            | Deterministic formatting rules                      |
-| PHPMD           | Numeric metrics       | Size and complexity thresholds (methods, classes)   |
-| PMD (CPD)       | Duplication detection | Copy-paste / duplicated code detection              | 
-| Infection       | Mutation testing      | Test quality validation                             |
-| Markdownlint    | Markdown linting      | Consistent documentation style                      |
-| Hadolint        | Dockerfile linting    | Secure and reproducible Dockerfiles                 |
-| Actionlint      | CI linting            | GitHub Actions correctness                          |
-| Yamllint        | YAML linting          | Configuration consistency                           |
-| Typos           | Spell checking        | Low-noise typo detection                            |
-| Renovate        | Dependency automation | Managed dependency update rules                     |
-| PR Size Checker | Process guard         | Pull request reviewability enforcement              |
+Installed via Composer.  
+Executed locally, in Git hooks, or in CI.
 
 ---
 
 ## Installation
 
-Piqule defines quality policies and configuration files.
-Actual analysis tools are installed explicitly per project.
-
-### 1) Install Piqule
+Install Piqule as a development dependency:
 
 ```bash
 composer require --dev haspadar/piqule
 ```
 
-### 2) Install PHP analysis tools
+---
+
+## Synchronization
+
+Synchronize managed configuration files into the project:
 
 ```bash
-composer require --dev \
-friendsofphp/php-cs-fixer \
-phpunit/phpunit \
-phpstan/phpstan \
-vimeo/psalm \
-phpmd/phpmd \
-phpmetrics/phpmetrics \
-infection/infection
+bin/piqule-sync.php
 ```
 
 ---
 
-## Configuration synchronization
+## Running Quality Checks
 
-Synchronizes predefined configuration files into the project.
-Some files are applied only if missing, while others are always kept in sync.
-No merging is performed; conflicts are resolved via Git.
+### Directly
 
 ```bash
-bin/piqule-sync.php
-bin/piqule-sync.php --dry-run
+vendor/bin/piqule check
+vendor/bin/piqule check phpstan
+vendor/bin/piqule check phpcs
 ```
 
-## Composer scripts (optional)
+### Via Docker
 
-Piqule provides configuration files for PHP tooling.
-Composer scripts are project-specific and not enforced.
+Build the image:
 
-A reference setup used in this repository:
-https://github.com/haspadar/piqule/blob/main/composer.json
+```bash
+docker buildx build -f docker/Dockerfile -t piqule:latest --load .
+```
 
-## Docker image
+Run checks:
 
-Piqule includes a Dockerfile that builds a Docker image with
-infrastructure-level linters.
+```bash
+docker run --rm -it \
+  -v "$PWD:/project" \
+  -w /project \
+  piqule:latest \
+  bash docker/bin/check
+```
 
-The Docker image contains:
+---
+
+## Included Tooling
+
+Piqule Docker image contains:
+
+### PHP Quality Tools
+
+- PHPStan
+- Psalm
+- PHPUnit
+- PHPMD
+- PHP Metrics
+- PHP_CodeSniffer
+- PHP-CS-Fixer
+- Infection
+
+### Infrastructure & Configuration Linters
 
 - actionlint
 - hadolint
+- shellcheck
 - markdownlint-cli2
+- jsonlint
 - yamllint
 - typos
-- pmd (CPD)
-
-The Docker image is provided as a **ready-to-use local environment**
-for running linters without installing them on the host system.
-The Docker image is optional and independent of CI workflows.
-
-Before building the Docker image, ensure managed files are synchronized using `bin/piqule-sync.php`.
-
-Example local usage:
-
-```bash
-docker build -t piqule -f .piqule/Dockerfile .
-docker run --rm -v "$PWD:/app" -w /app piqule markdownlint-cli2 "**/*.md"
-docker run --rm -it -v "$PWD:/app" piqule fish
-```
 
 ---
 
