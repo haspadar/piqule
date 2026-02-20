@@ -42,7 +42,7 @@ add_check() {
 
 add_check "Actionlint"        "actionlint"        "actionlint"
 add_check "Hadolint"          "hadolint"          "files=\$(bash .piqule/hadolint/args.sh); [ -z \"\$files\" ] || printf \"%s\" \"\$files\" | xargs -0 -n1 hadolint --config .piqule/hadolint/.hadolint.yml"
-add_check "Markdown"          "markdownlint-cli2" "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc ."
+add_check "Markdown"          "markdownlint"      "markdownlint-cli2 --config .piqule/markdownlint/.markdownlint-cli2.jsonc ."
 add_check "Yamllint"          "yamllint"          "yamllint -c .piqule/yamllint/.yamllint.yml ."
 add_check "Typos"             "typos"             "typos --config .piqule/typos/_typos.toml ."
 add_check "ShellCheck"        "shellcheck"        "files=\$(bash .piqule/shellcheck/args.sh); [ -z \"\$files\" ] || shellcheck --rcfile .piqule/shellcheck/.shellcheckrc \$files"
