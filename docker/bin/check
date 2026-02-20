@@ -46,7 +46,7 @@ add_check "Markdown"     "markdownlint" "markdownlint-cli2 --config .piqule/mark
 add_check "Yamllint"     "yamllint"     "yamllint -c .piqule/yamllint/.yamllint.yml ."
 add_check "Typos"        "typos"        "typos --config .piqule/typos/_typos.toml"
 add_check "ShellCheck"   "shellcheck"   "bash .piqule/shellcheck/args.sh | xargs -0 -r shellcheck --rcfile .piqule/shellcheck/.shellcheckrc"
-add_check "JSONLint"     "jsonlint"     "jsonlint -q .piqule/jsonlint/config.json"
+add_check "JSONLint"     "jsonlint"     "jsonlint -f .piqule/jsonlint/config.json"
 add_check "XML"          "xmllint"      "xmllint --noout .piqule/*/*.xml"
 add_check "PHPCS"        "phpcs"        "phpcs --standard=.piqule/phpcs/phpcs.xml"
 add_check "PHP CS Fixer" "php-cs-fixer" "php-cs-fixer fix --config=.piqule/php-cs-fixer/php-cs-fixer.project.php --dry-run --diff"
