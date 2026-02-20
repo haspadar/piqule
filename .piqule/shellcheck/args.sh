@@ -4,11 +4,8 @@ set -euo pipefail
 # Tracked files only (faster + stable); output is NUL-separated.
 git ls-files -z -- \
   ':!:vendor/**' \
-  ':!:node_modules/**' \
   ':!:.git/**' \
-  ':!:coverage/**' \
-  ':!:build/**' \
-  ':!:var/**' \
+  ':!:templates/**' \
 | while IFS= read -r -d '' file; do
     # Only executable files
     if [ ! -x "$file" ]; then

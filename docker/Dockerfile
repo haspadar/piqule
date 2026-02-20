@@ -12,7 +12,6 @@ ARG NODE_IMAGE=node:24-trixie
 ARG ACTIONLINT_VERSION=1.7.11
 ARG HADOLINT_VERSION=2.14.0
 ARG MARKDOWNLINT_VERSION=0.20.0
-ARG YAMLLINT_VERSION=1.38.0
 ARG TYPOS_VERSION=1.43.4
 ARG SHELLCHECK_VERSION=0.10.0
 ARG JSONLINT_VERSION=17.0.1
@@ -45,11 +44,10 @@ FROM composer:2 AS composer
 
 FROM ${PHP_IMAGE}
 
-# Re-declare ARGs in this stage
+# Re-declare ARGs
 ARG ACTIONLINT_VERSION
 ARG HADOLINT_VERSION
 ARG MARKDOWNLINT_VERSION
-ARG YAMLLINT_VERSION
 ARG TYPOS_VERSION
 ARG SHELLCHECK_VERSION
 ARG JSONLINT_VERSION
@@ -83,6 +81,7 @@ COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 ENV COMPOSER_HOME=/opt/composer
 ENV PATH="$COMPOSER_HOME/vendor/bin:/usr/local/bin:/usr/local/lib/node_modules/.bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV XDEBUG_MODE=off
 
 # ------------------------------------------------------------
 # Install everything in a single layer
@@ -102,14 +101,13 @@ RUN set -eux; \
         curl \
         unzip \
         python3 \
-        python3-venv \
-        pipx \
         libyaml-dev \
         libxml2-utils \
         libicu-dev \
         libzip-dev \
         zlib1g-dev \
-        libonig-dev; \
+        libonig-dev \
+        yamllint; \
     rm -rf /var/lib/apt/lists/*; \
     \
     docker-php-ext-install intl zip mbstring; \
@@ -174,11 +172,6 @@ RUN set -eux; \
         "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
         "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
     npm cache clean --force; \
-    \
-    # --------------------------------------------------------\
-    # Python linters\
-    # --------------------------------------------------------\
-    pipx install "yamllint==${YAMLLINT_VERSION}"; \
     \
     # --------------------------------------------------------\
     # PHP quality tools\

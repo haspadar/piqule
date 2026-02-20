@@ -32,6 +32,13 @@ return [
             "templates/*",
         ]
     ],
+    'shellcheck' => [
+        'ignore_dirs' => [
+            "vendor",
+            ".git",
+            "templates"
+        ]
+    ],
 
     'ci' => [
         'php' => [
