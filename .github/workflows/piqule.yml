@@ -96,7 +96,7 @@ jobs:
       - name: Build Piqule Docker image
         run: |
           docker build \
-            --build-arg PHP_IMAGE=php:${{ matrix.php }}-cli-trixie \
+            --build-arg PHP_VERSION=${{ matrix.php }} \
             -f docker/Dockerfile \
             -t piqule .
 
