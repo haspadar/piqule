@@ -61,7 +61,7 @@ docker run --rm -it \
   -v "$PWD:/project" \
   -w /project \
   piqule:latest \
-  bash docker/bin/check
+  check
 ```
 
 ---
