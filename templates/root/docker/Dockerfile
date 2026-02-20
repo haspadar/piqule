@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=<< config(docker.php_version)|default(["8.3"])|scalar >>
 ARG PHP_IMAGE=php:${PHP_VERSION}-cli-trixie
 
 ARG NODE_IMAGE=node:24-trixie

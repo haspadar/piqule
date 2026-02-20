@@ -1,0 +1,111 @@
+name: Piqule
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+
+  # ============================================================
+  # Infra checks (не зависят от PHP)
+  # ============================================================
+
+  piqule-infra:
+    name: Piqule / ${{ matrix.check }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        check:
+          - actionlint
+          - hadolint
+          - markdownlint
+          - yamllint
+          - typos
+          - shellcheck
+          - jsonlint
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout
+      # ------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      # ------------------------------------------------------------
+      # Build Docker image
+      # ------------------------------------------------------------
+      - name: Build Piqule Docker image
+        run: |
+          docker build \
+            -f docker/Dockerfile \
+            -t piqule .
+
+      # ------------------------------------------------------------
+      # Run selected check
+      # ------------------------------------------------------------
+      - name: Run ${{ matrix.check }}
+        run: |
+          docker run --rm \
+            -v "$PWD:/project" \
+            -w /project \
+            piqule \
+            ${{ matrix.check }}
+
+
+  # ============================================================
+  # PHP-dependent checks
+  # ============================================================
+
+  piqule-php:
+    name: Piqule / ${{ matrix.check }} (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [<< config(ci.php.matrix)|default(["8.3"])|format('"%s"')|join(",") >>]
+        check:
+          - phpcs
+          - phpstan
+          - psalm
+          - phpmd
+          - phpmetrics
+          - phpunit
+          - infection
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout
+      # ------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      # ------------------------------------------------------------
+      # Build Docker image for selected PHP version
+      # ------------------------------------------------------------
+      - name: Build Piqule Docker image
+        run: |
+          docker build \
+            --build-arg PHP_IMAGE=php:${{ matrix.php }}-cli-trixie \
+            -f docker/Dockerfile \
+            -t piqule .
+
+      # ------------------------------------------------------------
+      # Run selected check
+      # ------------------------------------------------------------
+      - name: Run ${{ matrix.check }}
+        run: |
+          docker run --rm \
+            -v "$PWD:/project" \
+            -w /project \
+            piqule \
+            ${{ matrix.check }}

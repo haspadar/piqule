@@ -43,4 +43,7 @@ return [
             'max_lines_changed' => 400,
         ],
     ],
+    'docker' => [
+        'php_version' => '8.3',
+    ],
 ];
