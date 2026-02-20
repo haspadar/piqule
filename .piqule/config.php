@@ -27,16 +27,16 @@ return [
     ],
     'phpcs' => [
         'excludes' => [
-            "vendor/*",
-            "tests/*",
-            "templates/*",
+            'vendor/*',
+            'tests/*',
+            'templates/*',
         ]
     ],
     'shellcheck' => [
         'ignore_dirs' => [
-            "vendor",
-            ".git",
-            "templates"
+            'vendor',
+            '.git',
+            'templates'
         ]
     ],
 
