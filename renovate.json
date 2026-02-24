@@ -16,45 +16,43 @@
     "labels": ["security"]
   },
 
-  "composer": { "enabled": false },
-  "github-actions": { "enabled": true },
-  "dockerfile": { "enabled": false },
+  "composer": {
+    "enabled": true
+  },
+
+  "github-actions": {
+    "enabled": true
+  },
+
+  "dockerfile": {
+    "enabled": true
+  },
 
   "packageRules": [
     {
-      "description": "Pin GitHub Actions to commit SHA",
+      "description": "Update pinned GitHub Actions SHAs",
       "matchManagers": ["github-actions"],
-      "pinDigests": true
+      "updatePinnedDependencies": true
+    },
+    {
+      "description": "Automerge safe updates",
+      "matchDatasources": ["github-releases", "packagist", "npm", "docker"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "description": "Mark major updates as breaking",
+      "matchUpdateTypes": ["major"],
+      "labels": ["breaking"]
     },
     {
       "description": "Group CI and toolchain updates",
       "groupName": "CI and toolchain",
-      "matchManagers": ["github-actions", "regex"]
+      "matchManagers": ["github-actions", "dockerfile", "regex"]
     }
   ],
 
   "customManagers": [
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHP_IMAGE=php:(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "php",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG NODE_IMAGE=node:(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "node",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-
     {
       "customType": "regex",
       "fileMatch": ["docker/Dockerfile$"],
@@ -104,10 +102,10 @@
       "customType": "regex",
       "fileMatch": ["docker/Dockerfile$"],
       "matchStrings": [
-        "ARG YAMLLINT_VERSION=(?<currentValue>[^\\s]+)"
+        "ARG JSONLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
-      "depNameTemplate": "yamllint",
-      "datasourceTemplate": "pypi"
+      "depNameTemplate": "@prantlf/jsonlint",
+      "datasourceTemplate": "npm"
     },
 
     {
@@ -181,16 +179,6 @@
       ],
       "depNameTemplate": "friendsofphp/php-cs-fixer",
       "datasourceTemplate": "packagist"
-    },
-
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG JSONLINT_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "@prantlf/jsonlint",
-      "datasourceTemplate": "npm"
     }
   ]
 }
