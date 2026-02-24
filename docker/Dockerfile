@@ -210,6 +210,4 @@ RUN chmod +x /usr/local/lib/piqule/*
 ENTRYPOINT ["/usr/local/lib/piqule/entrypoint"]
 
 USER appuser
-ENV COMPOSER_HOME=/home/appuser/.composer
-ENV PATH="$COMPOSER_HOME/vendor/bin:$PATH"
 WORKDIR /project

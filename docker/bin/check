@@ -14,6 +14,27 @@ fi
 
 cd "$PROJECT"
 
+VENDOR_READY=false
+
+ensure_vendor() {
+  if [ ! -f composer.json ]; then
+    return 0
+  fi
+
+  if [ "$VENDOR_READY" = true ]; then
+    return 0
+  fi
+
+  if [ -f vendor/autoload.php ]; then
+    VENDOR_READY=true
+    return 0
+  fi
+
+  printf "\033[34m[RUN]  Composer install\033[0m\n"
+  composer install --no-interaction --no-progress
+  VENDOR_READY=true
+}
+
 TITLE_WIDTH=18
 CURRENT=0
 REQUESTED_KEY="${1:-}"
@@ -75,9 +96,19 @@ done
 
 run_check() {
   local title="$1"
-  local cmd="$2"
+  local key="$2"
+  local cmd="$3"
 
   CURRENT=$((CURRENT + 1))
+
+  # ------------------------------------------------------------
+  # Ensure project dependencies for checks that need autoload
+  # ------------------------------------------------------------
+  case "$key" in
+    phpunit|infection|phpstan|psalm)
+      ensure_vendor
+      ;;
+  esac
 
   if [ "$TOTAL" -gt 1 ]; then
     printf "\033[34m[RUN]  %-${TITLE_WIDTH}s (%d/%d)\033[0m\n" \
@@ -125,7 +156,7 @@ for i in "${!CHECK_TITLES[@]}"; do
   fi
 
   matched=true
-  run_check "$title" "$cmd"
+  run_check "$title" "$key" "$cmd"
 done
 
 if [ -n "$REQUESTED_KEY" ] && [ "$matched" = false ]; then
