@@ -42,17 +42,8 @@ return [
 
     'ci' => [
         'php' => [
-            'matrix' => ['8.3', '8.5'],
+            'matrix' => ['8.3', '8.4', '8.5'],
         ],
-
-        'phpmd' => [
-            'php_version' => '8.3',
-        ],
-
-        'tests' => [
-            'php_version' => '8.3',
-        ],
-
         'pr' => [
             'max_lines_changed' => 400,
         ],
