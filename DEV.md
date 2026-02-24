@@ -4,19 +4,15 @@
 
 Location:
 
-```bash
-templates/root/
-```
+`templates/root/`
 
 Structure mirrors target project root.
 
 Example:
 
-```bash
-templates/root/.github/workflows/ci.yml
-templates/root/.piqule/phpstan.neon
-templates/root/docker/Dockerfile
-```
+`templates/root/.github/workflows/ci.yml`  
+`templates/root/.piqule/phpstan.neon`  
+`templates/root/docker/Dockerfile`
 
 Everything under `templates/root/` is copied relative to project root.
 
@@ -26,9 +22,7 @@ Everything under `templates/root/` is copied relative to project root.
 
 Run:
 
-```bash
-bin/piqule-sync.php
-```
+`bin/piqule sync`
 
 Flow:
 
@@ -43,30 +37,22 @@ Flow:
 
 Syntax:
 
-```bash
-<< config(path.to.value) >>
-```
+`<< config(path.to.value) >>`
 
 Example:
 
-```bash
-<< config(coverage.project.target) >>
-```
+`<< config(coverage.project.target) >>`
 
 Supported actions:
 
-```bash
-default([...])
-join(',')
-format('%s')
-scalar
-```
+- `default([...])`
+- `join(',')`
+- `format('%s')`
+- `scalar`
 
 Example:
 
-```bash
-<< config(paths)|default(['src'])|join(',') >>
-```
+`<< config(paths)|default(['src'])|join(',') >>`
 
 ---
 
@@ -74,9 +60,7 @@ Example:
 
 Optional file:
 
-```bash
-.piqule/config.php
-```
+`.piqule/config.php`
 
 Example:
 
@@ -94,34 +78,46 @@ return [
 
 Accessed via dot notation:
 
-```bash
-coverage.project.target
-```
+`coverage.project.target`
 
 ---
 
 ## Docker
 
-Build:
+### Build
 
 ```bash
 docker buildx build -f docker/Dockerfile -t piqule:latest --load .
 ```
 
-Run shell:
+### Run all checks
+
+```bash
+docker run --rm \
+  -v "$PWD:/project" \
+  -w /project \
+  piqule:latest \
+  check
+```
+
+### Run specific check
+
+```bash
+docker run --rm \
+  -v "$PWD:/project" \
+  -w /project \
+  piqule:latest \
+  check phpunit
+```
+
+### Open interactive shell
 
 ```bash
 docker run --rm -it \
   --entrypoint bash \
   -v "$PWD:/project" \
   -w /project \
-  piqule:latest 
-```
-
-Run checks:
-
-```bash
-bash docker/bin/check
+  piqule:latest
 ```
 
 ---
@@ -130,9 +126,7 @@ bash docker/bin/check
 
 Pinned in:
 
-```bash
-docker/Dockerfile
-```
+`docker/Dockerfile`
 
 Updated via `ARG` variables.
 
@@ -140,6 +134,4 @@ Updated via `ARG` variables.
 
 ## Entry Point
 
-```bash
-/usr/local/lib/piqule/entrypoint
-```
+`/usr/local/lib/piqule/entrypoint`

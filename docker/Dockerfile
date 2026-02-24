@@ -85,6 +85,7 @@ COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 # ------------------------------------------------------------
 
 ENV COMPOSER_HOME=/opt/composer
+ENV COMPOSER_CACHE_DIR=/home/appuser/.cache/composer
 ENV PATH="$COMPOSER_HOME/vendor/bin:/usr/local/bin:/usr/local/lib/node_modules/.bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV XDEBUG_MODE=off
 
@@ -193,9 +194,11 @@ RUN set -eux; \
         "infection/infection:^${INFECTION_VERSION}"; \
     \
     # --------------------------------------------------------\
-    # Non-root user\
+    # Non-root user and writable dirs\
     # --------------------------------------------------------\
-    useradd --uid 1000 --create-home --shell /bin/bash appuser
+    useradd --uid 1000 --create-home --shell /bin/bash appuser; \
+    mkdir -p /home/appuser/.cache/composer; \
+    chown -R appuser:appuser /home/appuser
 
 # ------------------------------------------------------------
 # Runtime scripts
