@@ -27,12 +27,12 @@ jobs:
       # ------------------------------------------------------------
       # Set up Docker Buildx
       # ------------------------------------------------------------
-      - uses: docker/setup-buildx-action@f95db51c1c5eaa2bfb0f2e0dfc7c3e2ad1b60b1a  # v3.3.0
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f  # v3.12.0
 
       # ------------------------------------------------------------
       # Login to GHCR
       # ------------------------------------------------------------
-      - uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289a1c7c9  # v3.1.0
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9  # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -41,7 +41,7 @@ jobs:
       # ------------------------------------------------------------
       # Build and push image
       # ------------------------------------------------------------
-      - uses: docker/build-push-action@3b5e8027fcad23fda98b88c1b87cfa8a3d3a94a4  # v5.3.0
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8  # v6.19.2
         with:
           context: .
           file: docker/Dockerfile
