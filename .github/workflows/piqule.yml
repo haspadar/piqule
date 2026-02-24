@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   piqule:
-    name: Piqule / ${{ matrix.check }} (PHP ${{ matrix.php }})
+    name: ${{ matrix.check }} / PHP ${{ matrix.php }}
     runs-on: ubuntu-latest
 
     strategy:
