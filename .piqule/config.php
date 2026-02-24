@@ -25,6 +25,20 @@ return [
             'max' => 120,
         ],
     ],
+    'phpcs' => [
+        'excludes' => [
+            'vendor/*',
+            'tests/*',
+            'templates/*',
+        ]
+    ],
+    'shellcheck' => [
+        'ignore_dirs' => [
+            'vendor',
+            '.git',
+            'templates'
+        ]
+    ],
 
     'ci' => [
         'php' => [
