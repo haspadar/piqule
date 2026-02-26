@@ -42,21 +42,16 @@ The `.piqule/` directory is generated and may be safely deleted.
 
 ---
 
-## Tooling
-
-### PHP
+## Checks
 
 - PHPStan
 - Psalm
 - PHPUnit
+- Infection
 - PHPMD
 - PHP Metrics
 - PHP_CodeSniffer
 - PHP-CS-Fixer
-- Infection
-
-### Infrastructure
-
 - actionlint
 - hadolint
 - shellcheck
@@ -64,6 +59,12 @@ The `.piqule/` directory is generated and may be safely deleted.
 - jsonlint
 - yamllint
 - typos
+
+GitHub CI includes:
+- Pull request size limit
+- Code coverage (Codecov)
+
+These checks ensure consistency and quality in pull requests and releases.
 
 ---
 
