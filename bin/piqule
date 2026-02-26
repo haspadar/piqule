@@ -16,7 +16,7 @@ shift || true
 
 case "$COMMAND" in
   sync)
-    php "$(dirname "$0")/piqule-sync" "$@"
+    "$(dirname "$0")/piqule-sync" "$@"
     ;;
   check|fix)
     ensure_project_root
