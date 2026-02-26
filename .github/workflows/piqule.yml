@@ -11,14 +11,17 @@ permissions:
   contents: read
 
 jobs:
-  piqule:
-    name: ${{ matrix.check }} (PHP ${{ matrix.php }})
+
+  # ============================================================
+  # Infra checks (Docker runtime only)
+  # ============================================================
+  piqule-infra:
+    name: ${{ matrix.check }} (infra)
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php: ["8.3", "8.4", "8.5"]
         check:
           - actionlint
           - hadolint
@@ -27,6 +30,40 @@ jobs:
           - typos
           - shellcheck
           - jsonlint
+
+    steps:
+      # ------------------------------------------------------------
+      # Checkout repository
+      # ------------------------------------------------------------
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      # ------------------------------------------------------------
+      # Build local infra image
+      # ------------------------------------------------------------
+      - run: docker buildx build -t piqule-infra:local --load .
+
+      # ------------------------------------------------------------
+      # Sync configuration
+      # ------------------------------------------------------------
+      - run: bin/piqule sync
+
+      # ------------------------------------------------------------
+      # Run selected check
+      # ------------------------------------------------------------
+      - run: bin/piqule check ${{ matrix.check }}
+
+  # ============================================================
+  # PHP checks (Composer runtime + PHP matrix)
+  # ============================================================
+  piqule-php:
+    name: ${{ matrix.check }} (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4", "8.5"]
+        check:
           - phpcs
           - phpstan
           - psalm
@@ -39,7 +76,7 @@ jobs:
       # ------------------------------------------------------------
       # Checkout repository
       # ------------------------------------------------------------
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       # ------------------------------------------------------------
       # Setup PHP
@@ -53,11 +90,6 @@ jobs:
       # Install dependencies
       # ------------------------------------------------------------
       - run: composer install --no-interaction --no-progress
-
-      # ------------------------------------------------------------
-      # Build local infra image
-      # ------------------------------------------------------------
-      - run: docker buildx build -t piqule-infra:local --load .
 
       # ------------------------------------------------------------
       # Sync configuration
