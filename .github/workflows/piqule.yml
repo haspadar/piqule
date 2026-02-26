@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-  pull-requests: read
-
 jobs:
 
   # ============================================================
@@ -19,6 +15,9 @@ jobs:
     name: PR Size
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -35,6 +34,8 @@ jobs:
   infra:
     name: ${{ matrix.check }} (infra)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -63,6 +64,8 @@ jobs:
   php:
     name: ${{ matrix.check }} (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
