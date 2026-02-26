@@ -8,11 +8,20 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-SEED=${PHPUNIT_SEED:-random}
+SEED="${PHPUNIT_SEED:-}"
 
 BIN="$(.piqule/_composer.sh phpunit)"
 
-"$BIN" \
-  -c "$CONFIG" \
-  --order-by=random \
-  --random-order-seed="$SEED"
+ARGS=(-c "$CONFIG" --order-by=random)
+
+if [ -n "$SEED" ]; then
+  case "$SEED" in
+    (*[!0-9]*)
+      echo "PHPUNIT_SEED must be a positive integer, got: $SEED" >&2
+      exit 1
+      ;;
+  esac
+  ARGS+=(--random-order-seed="$SEED")
+fi
+
+"$BIN" "${ARGS[@]}"
