@@ -6,4 +6,4 @@ if [ ! -d ".github/workflows" ]; then
   exit 0
 fi
 
-actionlint
+.piqule/_docker.sh actionlint
