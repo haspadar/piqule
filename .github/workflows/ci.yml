@@ -63,7 +63,7 @@ jobs:
     name: PHPCS
     uses: ./.github/workflows/_phpcs.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: '["8.3","8.4","8.5"]'
 
   # ------------------------------------------------------------
   # PHPStan (min + max)
@@ -72,7 +72,7 @@ jobs:
     name: PHPStan
     uses: ./.github/workflows/_phpstan.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: '["8.3","8.4","8.5"]'
 
   # ------------------------------------------------------------
   # Psalm (min + max)
@@ -81,7 +81,7 @@ jobs:
     name: Psalm
     uses: ./.github/workflows/_psalm.yml
     with:
-      php-matrix: '["8.3","8.5"]'
+      php-matrix: '["8.3","8.4","8.5"]'
 
   # ------------------------------------------------------------
   # PHPMetrics (hard gate)

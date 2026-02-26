@@ -7,7 +7,6 @@
   "timezone": "UTC",
 
   "labels": ["dependencies"],
-
   "prConcurrentLimit": 3,
   "prHourlyLimit": 0,
 
@@ -35,27 +34,44 @@
       "updatePinnedDependencies": true
     },
     {
-      "description": "Automerge safe updates",
-      "matchDatasources": ["github-releases", "packagist", "npm", "docker"],
+      "description": "Automerge infra linters (patch/minor)",
+      "matchDatasources": ["github-releases", "npm"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true
+    },
+    {
+      "description": "Do not automerge docker images",
+      "matchDatasources": ["docker"],
+      "automerge": false
     },
     {
       "description": "Mark major updates as breaking",
       "matchUpdateTypes": ["major"],
       "labels": ["breaking"]
-    },
-    {
-      "description": "Group CI and toolchain updates",
-      "groupName": "CI and toolchain",
-      "matchManagers": ["github-actions", "dockerfile", "regex"]
     }
   ],
 
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "ARG DEBIAN_IMAGE=(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "ARG NODE_MAJOR=(?<currentValue>\\d+)"
+      ],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG ACTIONLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -64,7 +80,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG HADOLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -73,7 +89,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG TYPOS_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -82,7 +98,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG SHELLCHECK_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -91,7 +107,7 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG MARKDOWNLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
@@ -100,85 +116,12 @@
     },
     {
       "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
+      "fileMatch": ["^Dockerfile$"],
       "matchStrings": [
         "ARG JSONLINT_VERSION=(?<currentValue>[^\\s]+)"
       ],
       "depNameTemplate": "@prantlf/jsonlint",
       "datasourceTemplate": "npm"
-    },
-
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPSTAN_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "phpstan/phpstan",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PSALM_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "vimeo/psalm",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPUNIT_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "phpunit/phpunit",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG INFECTION_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "infection/infection",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPMD_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "phpmd/phpmd",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPMETRICS_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "phpmetrics/phpmetrics",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPCS_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "phpcsstandards/php_codesniffer",
-      "datasourceTemplate": "packagist"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": ["docker/Dockerfile$"],
-      "matchStrings": [
-        "ARG PHPCSFIXER_VERSION=(?<currentValue>[^\\s]+)"
-      ],
-      "depNameTemplate": "friendsofphp/php-cs-fixer",
-      "datasourceTemplate": "packagist"
     }
   ]
 }
