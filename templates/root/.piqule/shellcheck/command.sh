@@ -14,13 +14,8 @@ fi
 
 FILES=()
 while IFS= read -r -d '' file; do
-  # Only executable files
-  if [ ! -x "$file" ]; then
-    continue
-  fi
-
-  # Only shell scripts by shebang
-  if head -n1 "$file" | grep -qE '^#!/.*\b(bash|sh)\b'; then
+  # Include .sh files and files with bash/sh shebang
+  if [[ "$file" == *.sh ]] || head -n1 "$file" | grep -qE '^#!/.*\b(bash|sh)\b'; then
     FILES+=("$file")
   fi
 done < <(
