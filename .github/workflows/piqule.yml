@@ -7,9 +7,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
 
   # ============================================================
@@ -18,6 +15,9 @@ jobs:
   piqule-infra:
     name: ${{ matrix.check }} (infra)
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -32,24 +32,10 @@ jobs:
           - jsonlint
 
     steps:
-      # ------------------------------------------------------------
-      # Checkout repository
-      # ------------------------------------------------------------
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      # ------------------------------------------------------------
-      # Build local infra image
-      # ------------------------------------------------------------
       - run: docker buildx build -t piqule-infra:local --load .
 
-      # ------------------------------------------------------------
-      # Sync configuration
-      # ------------------------------------------------------------
-      - run: bin/piqule sync
-
-      # ------------------------------------------------------------
-      # Run selected check
-      # ------------------------------------------------------------
       - run: bin/piqule check ${{ matrix.check }}
 
   # ============================================================
@@ -58,6 +44,9 @@ jobs:
   piqule-php:
     name: ${{ matrix.check }} (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
@@ -73,25 +62,13 @@ jobs:
           - infection
 
     steps:
-      # ------------------------------------------------------------
-      # Checkout repository
-      # ------------------------------------------------------------
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      # ------------------------------------------------------------
-      # Setup PHP
-      # ------------------------------------------------------------
       - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
         with:
           php-version: ${{ matrix.php }}
           coverage: xdebug
 
-      # ------------------------------------------------------------
-      # Install dependencies
-      # ------------------------------------------------------------
       - run: composer install --no-interaction --no-progress
 
-      # ------------------------------------------------------------
-      # Run selected check
-      # ------------------------------------------------------------
       - run: bin/piqule check ${{ matrix.check }}
