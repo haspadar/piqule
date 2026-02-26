@@ -5,19 +5,36 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
 
   # ============================================================
-  # Infra checks (Docker runtime only)
+  # PR SIZE CHECK
   # ============================================================
-  piqule-infra:
-    name: ${{ matrix.check }} (infra)
+  pr_size:
+    name: PR Size
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - uses: maidsafe/pr_size_checker@fa5820312a361f3f51aad2d3d9cb941d9e1d27db
+        with:
+          max_lines_changed: 250
+
+  # ============================================================
+  # INFRA CHECKS (Docker runtime)
+  # ============================================================
+  infra:
+    name: ${{ matrix.check }} (infra)
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -34,19 +51,18 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - run: docker buildx build -t piqule-infra:local --load .
+      - name: Build infra image
+        run: docker buildx build -t piqule-infra:local --load .
 
-      - run: bin/piqule check ${{ matrix.check }}
+      - name: Run check
+        run: bin/piqule check ${{ matrix.check }}
 
   # ============================================================
-  # PHP checks (Composer runtime + PHP matrix)
+  # PHP STATIC + TESTS
   # ============================================================
-  piqule-php:
+  php:
     name: ${{ matrix.check }} (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
 
     strategy:
       fail-fast: false
@@ -58,8 +74,6 @@ jobs:
           - psalm
           - phpmd
           - phpmetrics
-          - phpunit
-          - infection
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -68,7 +82,48 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: xdebug
+          extensions: mbstring, dom, json
 
-      - run: composer install --no-interaction --no-progress
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
 
-      - run: bin/piqule check ${{ matrix.check }}
+      - name: Run static check
+        run: bin/piqule check ${{ matrix.check }}
+
+      # ------------------------------------------------------------
+      # PHPUnit (if config exists)
+      # ------------------------------------------------------------
+      - name: PHPUnit (coverage)
+        if: hashFiles('.piqule/phpunit/phpunit.xml') != ''
+        run: |
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/phpunit \
+            -c .piqule/phpunit/phpunit.xml \
+            --coverage-clover=.piqule/codecov/coverage.xml
+
+      # ------------------------------------------------------------
+      # Upload coverage to Codecov (if coverage exists)
+      # ------------------------------------------------------------
+      - name: Upload coverage
+        if: hashFiles('.piqule/codecov/coverage.xml') != ''
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: .piqule/codecov/coverage.xml
+          codecov_yml_path: .piqule/codecov/.codecov.yml
+          fail_ci_if_error: true
+
+      # ------------------------------------------------------------
+      # Infection (if config exists)
+      # ------------------------------------------------------------
+      - name: Infection
+        if: hashFiles('.piqule/infection/infection.json5') != ''
+        env:
+          INFECTION_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+        run: |
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/infection \
+            --configuration=.piqule/infection/infection.json5 \
+            --threads=max
