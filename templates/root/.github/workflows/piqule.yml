@@ -92,11 +92,6 @@ jobs:
       - run: composer install --no-interaction --no-progress
 
       # ------------------------------------------------------------
-      # Sync configuration
-      # ------------------------------------------------------------
-      - run: << config(ci.piqule_bin)|default(["vendor/bin/piqule"])|scalar >> sync
-
-      # ------------------------------------------------------------
       # Run selected check
       # ------------------------------------------------------------
       - run: << config(ci.piqule_bin)|default(["vendor/bin/piqule"])|scalar >> check ${{ matrix.check }}
