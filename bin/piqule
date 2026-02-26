@@ -1,38 +1,29 @@
-#!/usr/bin/env php
-<?php
+#!/usr/bin/env bash
+set -euo pipefail
 
-declare(strict_types=1);
-
-$command = $argv[1] ?? 'check';
-$args = array_slice($argv, 2);
-
-if ($command === 'sync') {
-    require __DIR__ . '/piqule-sync';
-    exit(0);
+# ------------------------------------------------------------
+# Ensure we are in project root
+# ------------------------------------------------------------
+ensure_project_root() {
+  if [ ! -d ".piqule" ]; then
+    echo "Error: run piqule from project root ('.piqule' directory not found)"
+    exit 1
+  fi
 }
 
-$docker = trim(shell_exec('command -v docker 2>/dev/null') ?? '');
+COMMAND="${1:-}"
+shift || true
 
-if ($docker === '') {
-    fwrite(STDERR, "Docker is required\n");
-    exit(1);
-}
-
-exec('docker info >/dev/null 2>&1', $out, $code);
-if ($code !== 0) {
-    fwrite(STDERR, "Docker daemon is not running\n");
-    exit(1);
-}
-
-$cwd = getcwd();
-
-$cmd = sprintf(
-    'docker run --rm -t -v %s:/project -w /project piqule %s %s',
-    escapeshellarg($cwd),
-    escapeshellarg($command),
-    implode(' ', array_map('escapeshellarg', $args))
-);
-
-passthru($cmd, $exitCode);
-
-exit($exitCode);
+case "$COMMAND" in
+  sync)
+    "$(dirname "$0")/piqule-sync" "$@"
+    ;;
+  check|fix)
+    ensure_project_root
+    "$(dirname "$0")/piqule-${COMMAND}" "$@"
+    ;;
+  *)
+    echo "Usage: piqule [sync|check|fix]"
+    exit 1
+    ;;
+esac

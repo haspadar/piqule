@@ -12,7 +12,7 @@ Example:
 
 `templates/root/.github/workflows/ci.yml`  
 `templates/root/.piqule/phpstan.neon`  
-`templates/root/docker/Dockerfile`
+`templates/root/Dockerfile`
 
 Everything under `templates/root/` is copied relative to project root.
 
@@ -26,10 +26,11 @@ Run:
 
 Flow:
 
-1. Load `.piqule/config.php` (if exists)
+1. Load `.piqule.php` (if exists)
 2. Scan `templates/root/`
 3. Resolve placeholders
-4. Copy files to project root
+4. Write files to project root
+5. `.piqule/` is fully generated
 
 ---
 
@@ -52,7 +53,7 @@ Supported actions:
 
 Example:
 
-`<< config(paths)|default(['src'])|join(',') >>`
+`<< config(paths)|default(["src"])|join(",") >>`
 
 ---
 
@@ -60,7 +61,7 @@ Example:
 
 Optional file:
 
-`.piqule/config.php`
+`.piqule.php`
 
 Example:
 
@@ -80,58 +81,37 @@ Accessed via dot notation:
 
 `coverage.project.target`
 
+If the file does not exist, defaults are used.
+
 ---
 
-## Docker
+## Docker (Infra Image)
 
-### Build
+The infra image is defined by:
 
-```bash
-docker buildx build -f docker/Dockerfile -t piqule:latest --load .
-```
+`Dockerfile` (project root)
 
-### Run all checks
+Build locally:
 
 ```bash
-docker run --rm \
-  -v "$PWD:/project" \
-  -w /project \
-  piqule:latest \
-  check
+docker buildx build -t piqule-infra:local --load .
 ```
 
-### Run specific check
+Runtime image is selected via:
 
-```bash
-docker run --rm \
-  -v "$PWD:/project" \
-  -w /project \
-  piqule:latest \
-  check phpunit
-```
+- `.piqule.php` → `docker.image`
+- `PIQULE_INFRA_IMAGE` environment variable (highest priority)
 
-### Open interactive shell
-
-```bash
-docker run --rm -it \
-  --entrypoint bash \
-  -v "$PWD:/project" \
-  -w /project \
-  piqule:latest
-```
+Execution is delegated to `.piqule/_docker.sh`.
 
 ---
 
 ## Tool Versions
 
-Pinned in:
+Pinned via `ARG` variables in:
 
-`docker/Dockerfile`
+`Dockerfile`
 
-Updated via `ARG` variables.
+Updated via Renovate.
 
 ---
-
-## Entry Point
-
-`/usr/local/lib/piqule/entrypoint`

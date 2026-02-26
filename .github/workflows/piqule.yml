@@ -5,20 +5,42 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
-
-permissions:
-  contents: read
 
 jobs:
-  piqule:
-    name: ${{ matrix.check }} (PHP ${{ matrix.php }})
+
+  # ============================================================
+  # PR SIZE CHECK
+  # ============================================================
+  pr_size:
+    name: PR Size
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - uses: maidsafe/pr_size_checker@fa5820312a361f3f51aad2d3d9cb941d9e1d27db
+        with:
+          max_lines_changed: 250
+
+
+  # ============================================================
+  # INFRA CHECKS (Docker runtime)
+  # ============================================================
+  infra:
+    name: ${{ matrix.check }} (infra)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     strategy:
       fail-fast: false
       matrix:
-        php: ["8.3", "8.4", "8.5"]
         check:
           - actionlint
           - hadolint
@@ -27,23 +49,116 @@ jobs:
           - typos
           - shellcheck
           - jsonlint
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+
+      - name: Build infra image
+        run: |
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            -t piqule-infra:local \
+            --load .
+
+      - name: Run check
+        run: bin/piqule check ${{ matrix.check }}
+
+
+  # ============================================================
+  # PHP STATIC ANALYSIS
+  # ============================================================
+  php-static:
+    name: ${{ matrix.check }} (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4", "8.5"]
+        check:
           - phpcs
           - phpstan
           - psalm
           - phpmd
           - phpmetrics
-          - phpunit
-          - infection
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Run ${{ matrix.check }}
+      - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, json
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run static check
+        run: bin/piqule check ${{ matrix.check }}
+
+
+  # ============================================================
+  # PHP TESTS + COVERAGE + MUTATION
+  # ============================================================
+  php-tests:
+    name: Tests / Coverage / Mutation (PHP 8.3)
+    runs-on: ubuntu-latest
+    needs: php-static
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
+        with:
+          php-version: 8.3
+          coverage: xdebug
+          extensions: mbstring, dom, json
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # ------------------------------------------------------------
+      # PHPUnit (if config exists)
+      # ------------------------------------------------------------
+      - name: PHPUnit (coverage)
+        if: hashFiles('.piqule/phpunit/phpunit.xml') != ''
         run: |
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
-            -v "$PWD:/project" \
-            -w /project \
-            ghcr.io/${{ github.repository_owner }}/piqule:${{ matrix.php }} \
-            check ${{ matrix.check }}
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/phpunit \
+            -c .piqule/phpunit/phpunit.xml \
+            --coverage-clover=.piqule/codecov/coverage.xml
+
+      # ------------------------------------------------------------
+      # Upload coverage to Codecov (if coverage exists)
+      # ------------------------------------------------------------
+      - name: Upload coverage
+        if: hashFiles('.piqule/codecov/coverage.xml') != ''
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: .piqule/codecov/coverage.xml
+          codecov_yml_path: .piqule/codecov/.codecov.yml
+          fail_ci_if_error: true
+
+      # ------------------------------------------------------------
+      # Infection (if config exists)
+      # ------------------------------------------------------------
+      - name: Infection
+        if: hashFiles('.piqule/infection/infection.json5') != ''
+        env:
+          INFECTION_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+        run: |
+          XDEBUG_MODE=coverage \
+          php -d memory_limit=1G \
+          vendor/bin/infection \
+            --configuration=.piqule/infection/infection.json5 \
+            --threads=max

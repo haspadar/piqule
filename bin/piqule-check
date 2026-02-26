@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REQUESTED="${1:-}"
+
+TITLE_WIDTH=18
+CURRENT=0
+
+green()  { printf "\033[32m%s\033[0m\n" "$1"; }
+blue()   { printf "\033[34m%s\033[0m\n" "$1"; }
+red()    { printf "\033[31m%s\033[0m\n" "$1"; }
+
+CHECK_KEYS=(
+  actionlint
+  hadolint
+  markdownlint
+  yamllint
+  typos
+  shellcheck
+  jsonlint
+  phpstan
+  psalm
+  phpmd
+  phpmetrics
+  phpcs
+  php-cs-fixer
+  phpunit
+  infection
+)
+
+run_check() {
+  local key="$1"
+
+  if [ ! -f ".piqule/$key/command.sh" ]; then
+    red "Unknown check: $key"
+    exit 1
+  fi
+
+  CURRENT=$((CURRENT + 1))
+
+  if [ "$TOTAL" -gt 1 ]; then
+    blue "[RUN]  $(printf "%-${TITLE_WIDTH}s" "$key") ($CURRENT/$TOTAL)"
+  else
+    blue "[RUN]  $key"
+  fi
+
+  set +e
+  bash ".piqule/$key/command.sh"
+  STATUS=$?
+  set -e
+
+  if [ "$STATUS" -ne 0 ]; then
+    red "[FAIL] $key"
+    exit "$STATUS"
+  fi
+
+  green "[OK]   $key"
+  echo
+}
+
+if [ -n "$REQUESTED" ]; then
+  TOTAL=1
+  run_check "$REQUESTED"
+  green "All checks passed"
+  exit 0
+fi
+
+TOTAL="${#CHECK_KEYS[@]}"
+
+for key in "${CHECK_KEYS[@]}"; do
+  run_check "$key"
+done
+
+green "All checks passed"
