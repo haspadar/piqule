@@ -16,11 +16,17 @@ ARGS=(-c "$CONFIG" --order-by=random)
 
 if [ -n "$SEED" ]; then
   case "$SEED" in
-    (*[!0-9]*)
+    (''|*[!0-9]*)
       echo "PHPUNIT_SEED must be a positive integer, got: $SEED" >&2
       exit 1
       ;;
   esac
+
+  if [ "$SEED" -eq 0 ]; then
+    echo "PHPUNIT_SEED must be greater than zero" >&2
+    exit 1
+  fi
+
   ARGS+=(--random-order-seed="$SEED")
 fi
 
