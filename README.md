@@ -5,72 +5,46 @@
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fhaspadar%2Fpiqule%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/haspadar/piqule/main)
 [![PHPStan Level](https://img.shields.io/badge/PHPStan-Level%209-brightgreen)](https://phpstan.org/)
 [![Psalm](https://img.shields.io/badge/psalm-level%201-brightgreen)](https://psalm.dev)
-
 [![Hits-of-Code](https://hitsofcode.com/github/haspadar/piqule?branch=main)](https://hitsofcode.com/github/haspadar/piqule/view?branch=main)
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/haspadar/piqule?labelColor=171717&color=FF570A&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
-Quality checks for PHP projects.
+Opinionated quality policies for PHP projects.
 
-Installed via Composer.  
-Executed locally, in Git hooks, or in CI.
+Zero configuration required.  
+Reproducible and consistent checks across environments.
 
 ---
 
-## Installation
-
-Install Piqule as a development dependency:
+## Install
 
 ```bash
 composer require --dev haspadar/piqule
-```
-
----
-
-## Synchronization
-
-Synchronize managed configuration files into the project:
-
-```bash
 vendor/bin/piqule sync
 ```
 
 ---
 
-## Running Quality Checks
+## Configure
 
-### Directly
+Create `.piqule.php` in the project root if customization is needed.
 
-```bash
-vendor/bin/piqule check
-vendor/bin/piqule check phpstan
-vendor/bin/piqule check phpcs
-```
-
-### Via Docker
-
-Build the image:
-
-```bash
-docker buildx build -f docker/Dockerfile -t piqule:latest --load .
-```
-
-Run checks:
-
-```bash
-docker run --rm -it \
-  -v "$PWD:/project" \
-  -w /project \
-  piqule:latest \
-  check
-```
+The `.piqule/` directory is generated and may be safely deleted.
 
 ---
 
-## Included Tooling
+## Commands
 
-Piqule Docker image contains:
+- `piqule sync` — generate configuration from templates
+- `piqule check` — run all checks
+- `piqule check <tool>` — run specific tool
+- `piqule fix` — run auto-fixable tools
+- `piqule fix <tool>` — run specific fixer
 
-### PHP Quality Tools
+---
+
+## Tooling
+
+### PHP
 
 - PHPStan
 - Psalm
@@ -81,7 +55,7 @@ Piqule Docker image contains:
 - PHP-CS-Fixer
 - Infection
 
-### Infrastructure & Configuration Linters
+### Infrastructure
 
 - actionlint
 - hadolint
@@ -95,9 +69,14 @@ Piqule Docker image contains:
 
 ## Contributing
 
-Fork the repository, apply changes, and open a pull request.
+Contributions are welcome.
 
-Before submitting, ensure all Piqule checks pass locally or in CI.
+1. Fork the repository
+2. Create a feature branch
+3. Ensure all checks pass
+4. Open a pull request
+
+All pull requests must pass CI before merging.
 
 ---
 
