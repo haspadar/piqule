@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 $config = require __DIR__ . '/rules.php';
 $report = json_decode(
-    file_get_contents(__DIR__ . '/config.json'),
+    file_get_contents(__DIR__ . '/phpmetrics.json'),
     true,
     flags: JSON_THROW_ON_ERROR,
 );
