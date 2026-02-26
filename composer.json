@@ -4,7 +4,6 @@
     "type": "library",
     "license": "MIT",
     "bin": [
-        "bin/piqule-sync",
         "bin/piqule"
     ],
     "autoload": {
