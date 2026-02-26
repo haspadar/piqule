@@ -16,7 +16,7 @@ FILES=()
 while IFS= read -r -d '' file; do
   # Include .sh files and files with bash/sh shebang
   if [[ "$file" == *.sh ]] || \
-     head -n1 "$file" | grep -qE '^#!.*(bash|sh)([[:space:]]|$)'; then
+     head -n1 "$file" | grep -qE '^#!.*[[:space:]/](bash|sh)([[:space:]]|$)'; then
     FILES+=("$file")
   fi
 done < <(
