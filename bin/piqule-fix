@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJECT="$(pwd)"
+
+# Psalm auto-fix
+vendor/bin/psalm \
+  --config=.piqule/psalm/psalm.xml \
+  --no-plugins \
+  --no-cache \
+  --alter \
+  --issues=MissingOverrideAttribute
+
+# PHPCBF (code sniffer fixer)
+vendor/bin/phpcbf \
+  --standard=.piqule/phpcs/phpcs.xml \
+  "$PROJECT"
+
+# PHP CS Fixer
+vendor/bin/php-cs-fixer fix \
+  "$PROJECT" \
+  --config=.piqule/php-cs-fixer/php-cs-fixer.project.php

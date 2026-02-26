@@ -35,12 +35,12 @@ try {
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
         ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $projectConfigData = file_exists($projectRoot . '/.piqule/config.php')
-        ? require $projectRoot . '/.piqule/config.php'
+    $projectConfigData = file_exists($projectRoot . '/.piqule.php')
+        ? require $projectRoot . '/.piqule.php'
         : [];
     if (!is_array($projectConfigData)) {
         throw new PiquleException(
-            '.piqule/config.php must return array',
+            '.piqule.php must return array',
         );
     }
 
