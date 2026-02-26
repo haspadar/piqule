@@ -48,4 +48,8 @@ return [
             'max_lines_changed' => 400,
         ],
     ],
+
+    'docker' => [
+        'image' => 'piqule-infra:local',
+    ],
 ];
