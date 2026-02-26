@@ -47,6 +47,7 @@ return [
         'pr' => [
             'max_lines_changed' => 400,
         ],
+        'piqule_bin' => 'bin/piqule',
     ],
 
     'docker' => [

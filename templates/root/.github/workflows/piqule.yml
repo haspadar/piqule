@@ -62,9 +62,9 @@ jobs:
       # ------------------------------------------------------------
       # Sync configuration
       # ------------------------------------------------------------
-      - run: vendor/bin/piqule sync
+      - run: << config(ci.piqule_bin)|default(["vendor/bin/piqule"])|scalar >> sync
 
       # ------------------------------------------------------------
       # Run selected check
       # ------------------------------------------------------------
-      - run: vendor/bin/piqule check ${{ matrix.check }}
+      - run: << config(ci.piqule_bin)|default(["vendor/bin/piqule"])|scalar >> check ${{ matrix.check }}

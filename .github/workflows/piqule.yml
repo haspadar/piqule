@@ -62,9 +62,9 @@ jobs:
       # ------------------------------------------------------------
       # Sync configuration
       # ------------------------------------------------------------
-      - run: vendor/bin/piqule sync
+      - run: bin/piqule sync
 
       # ------------------------------------------------------------
       # Run selected check
       # ------------------------------------------------------------
-      - run: vendor/bin/piqule check ${{ matrix.check }}
+      - run: bin/piqule check ${{ matrix.check }}
