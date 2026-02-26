@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 
 ARG DEBIAN_IMAGE=debian:trixie-slim
-
 ARG NODE_MAJOR=24
 
 ARG ACTIONLINT_VERSION=1.7.11
@@ -75,7 +74,7 @@ RUN set -eux; \
     esac; \
     \
     # --------------------------------------------------------\
-    # Infra linters (binary releases) \
+    # Infra linters \
     # --------------------------------------------------------\
     mkdir -p /tmp/actionlint; \
     curl -sSfL \
@@ -105,20 +104,17 @@ RUN set -eux; \
     chmod +x /usr/local/bin/shellcheck; \
     rm -rf "shellcheck-v${SHELLCHECK_VERSION}"; \
     \
-    # --------------------------------------------------------\
-    # Node linters \
-    # --------------------------------------------------------\
     npm install -g \
       "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
       "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
-    npm cache clean --force
-
-# --------------------------------------------------------
-# Create non-root user for runtime safety
-# --------------------------------------------------------
-RUN useradd -m -u 10001 piqule \
-    && mkdir -p /project \
-    && chown -R piqule:piqule /project
+    npm cache clean --force; \
+    \
+    # --------------------------------------------------------\
+    # Non-root runtime \
+    # --------------------------------------------------------\
+    useradd -m -u 10001 piqule; \
+    mkdir -p /project; \
+    chown -R piqule:piqule /project
 
 USER piqule
 WORKDIR /project
