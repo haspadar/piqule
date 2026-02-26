@@ -28,6 +28,7 @@ jobs:
         with:
           max_lines_changed: 250
 
+
   # ============================================================
   # INFRA CHECKS (Docker runtime)
   # ============================================================
@@ -58,10 +59,11 @@ jobs:
       - name: Run check
         run: bin/piqule check ${{ matrix.check }}
 
+
   # ============================================================
-  # PHP STATIC + TESTS
+  # PHP STATIC ANALYSIS
   # ============================================================
-  php:
+  php-static:
     name: ${{ matrix.check }} (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
     permissions:
@@ -84,7 +86,6 @@ jobs:
       - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
         with:
           php-version: ${{ matrix.php }}
-          coverage: xdebug
           extensions: mbstring, dom, json
 
       - name: Install dependencies
@@ -92,6 +93,29 @@ jobs:
 
       - name: Run static check
         run: bin/piqule check ${{ matrix.check }}
+
+
+  # ============================================================
+  # PHP TESTS + COVERAGE + MUTATION
+  # ============================================================
+  php-tests:
+    name: Tests / Coverage / Mutation (PHP 8.3)
+    runs-on: ubuntu-latest
+    needs: php-static
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
+        with:
+          php-version: 8.3
+          coverage: xdebug
+          extensions: mbstring, dom, json
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       # ------------------------------------------------------------
       # PHPUnit (if config exists)
