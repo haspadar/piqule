@@ -113,4 +113,12 @@ RUN set -eux; \
       "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
     npm cache clean --force
 
+# --------------------------------------------------------
+# Create non-root user for runtime safety
+# --------------------------------------------------------
+RUN useradd -m -u 10001 piqule \
+    && mkdir -p /project \
+    && chown -R piqule:piqule /project
+
+USER piqule
 WORKDIR /project
