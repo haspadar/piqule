@@ -18,3 +18,4 @@ php -d error_reporting='E_ALL & ~E_DEPRECATED' \
 if [ -f "$VERIFY" ]; then
   php "$VERIFY"
 fi
+
