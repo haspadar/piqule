@@ -4,7 +4,7 @@ set -euo pipefail
 CONFIG=".piqule/phpunit/phpunit.xml"
 
 if [ ! -f "$CONFIG" ]; then
-  echo "PHPUnit config not found: $CONFIG"
+  echo "PHPUnit config not found: $CONFIG" >&2
   exit 1
 fi
 
