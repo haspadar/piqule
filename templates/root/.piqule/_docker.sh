@@ -11,6 +11,7 @@ PROJECT_ROOT="$(pwd)"
 IMAGE="${PIQULE_INFRA_IMAGE:-<< config(docker.image) | default(["ghcr.io/haspadar/piqule-infra:latest"]) | scalar >>}"
 
 docker run --rm \
+  --user "$(id -u):$(id -g)" \
   -v "$PROJECT_ROOT:/project" \
   -w /project \
   "$IMAGE" \
