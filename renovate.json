@@ -10,21 +10,16 @@
   "prConcurrentLimit": 3,
   "prHourlyLimit": 0,
 
+  "enabledManagers": [
+    "composer",
+    "github-actions",
+    "dockerfile",
+    "regex"
+  ],
+
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security"]
-  },
-
-  "composer": {
-    "enabled": true
-  },
-
-  "github-actions": {
-    "enabled": true
-  },
-
-  "dockerfile": {
-    "enabled": true
   },
 
   "packageRules": [
