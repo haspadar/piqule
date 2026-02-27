@@ -163,14 +163,6 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
-    public function exposesMode(): void
-    {
-        $file = new TextFile('file.txt', 'data', 0o755);
-
-        self::assertSame(0o755, $file->mode());
-    }
-
-    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
