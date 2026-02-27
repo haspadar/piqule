@@ -22,13 +22,13 @@ final readonly class DiskStorage implements Storage
         $path = $this->pathOf($location);
 
         if (!is_file($path)) {
-            throw new PiquleException("Location not found: {$location}");
+            throw new PiquleException("Location not found: $location");
         }
 
         $contents = file_get_contents($path);
 
         if ($contents === false) {
-            throw new PiquleException("Unable to read location: {$location}");
+            throw new PiquleException("Unable to read location: $location");
         }
 
         return $contents;
