@@ -10,7 +10,7 @@ use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Action\ScalarAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
@@ -27,7 +27,7 @@ final class ConfiguredFileTest extends TestCase
         return [
             'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
             'default' => fn(string $raw): Action => new DefaultListAction($raw),
-            'format' => fn(string $raw): Action => new FormatAction($raw),
+            'format' => fn(string $raw): Action => new FormatEachAction($raw),
             'join' => fn(string $raw): Action => new JoinAction($raw),
             'scalar' => fn(string $raw): Action => new ScalarAction(),
         ];
@@ -147,7 +147,7 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function formatsUsingEmptyTemplate(): void
     {
-        $result = (new FormatAction('""'))
+        $result = (new FormatEachAction('""'))
             ->transformed(new ListArgs(['a']));
 
         self::assertSame([''], $result->values());

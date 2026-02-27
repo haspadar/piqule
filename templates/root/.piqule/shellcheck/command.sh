@@ -24,7 +24,7 @@ done < <(
     -type f \
 << config(shellcheck.ignore_dirs)
    |default_list(["vendor","node_modules",".git","coverage","build","var"])
-   |format('    ! -path "./%s/*" \')
+   |format_each('    ! -path "./%s/*" \')
    |join("\n")
 >>
     -print0

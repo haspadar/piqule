@@ -5,7 +5,7 @@
     "directories": [
 << config(infection.source.directories)
     |default_list(["../../src"])
-    |format('        "%s"')
+    |format_each('        "%s"')
     |join(",")
 >>
     ]

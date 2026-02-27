@@ -1,7 +1,7 @@
 extends: default
 
 ignore: |
-<< config(yamllint.ignore)|default_list(["vendor/**","node_modules/**","build/**","var/**",".piqule/**/html/**",".piqule/**/coverage-report/**"])|format("  %s")|join("\n") >>
+<< config(yamllint.ignore)|default_list(["vendor/**","node_modules/**","build/**","var/**",".piqule/**/html/**",".piqule/**/coverage-report/**"])|format_each("  %s")|join("\n") >>
 
 rules:
   document-start: disable

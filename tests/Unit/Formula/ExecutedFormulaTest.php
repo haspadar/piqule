@@ -7,7 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Formula;
 use Haspadar\Piqule\Config\NestedConfig;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Formula\ExecutedFormula;
@@ -26,7 +26,7 @@ final class ExecutedFormulaTest extends TestCase
             [
                 'config' => fn(string $raw) => new ConfigAction($config, $raw),
                 'default' => fn(string $raw) => new DefaultListAction($raw),
-                'format' => fn(string $raw) => new FormatAction($raw),
+                'format' => fn(string $raw) => new FormatEachAction($raw),
                 'join' => fn(string $raw) => new JoinAction($raw),
             ],
         );

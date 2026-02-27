@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
-use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-final class FormatActionTest extends TestCase
+final class FormatEachActionTest extends TestCase
 {
     #[Test]
     public function formatsSingleStringValue(): void
     {
-        $result = (new FormatAction('ext=%s'))
+        $result = (new FormatEachAction('ext=%s'))
             ->transformed(new ListArgs(['mbstring']));
 
         self::assertSame(
@@ -26,7 +26,7 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsMultipleValues(): void
     {
-        $result = (new FormatAction('v=%s'))
+        $result = (new FormatEachAction('v=%s'))
             ->transformed(new ListArgs(['a', 'b']));
 
         self::assertSame(
@@ -38,7 +38,7 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsBooleanValuesUsingCanonicalStringRepresentation(): void
     {
-        $result = (new FormatAction('flag=%s'))
+        $result = (new FormatEachAction('flag=%s'))
             ->transformed(new ListArgs([true, false]));
 
         self::assertSame(
@@ -50,7 +50,7 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsNumericValues(): void
     {
-        $result = (new FormatAction('n=%s'))
+        $result = (new FormatEachAction('n=%s'))
             ->transformed(new ListArgs([10, 3.5]));
 
         self::assertSame(
@@ -62,7 +62,7 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function formatsUsingEmptyTemplate(): void
     {
-        $result = (new FormatAction(''))
+        $result = (new FormatEachAction(''))
             ->transformed(new ListArgs(['a', 'b']));
 
         self::assertSame(
@@ -74,7 +74,7 @@ final class FormatActionTest extends TestCase
     #[Test]
     public function returnsEmptyListWhenInputIsEmpty(): void
     {
-        $result = (new FormatAction('%s'))
+        $result = (new FormatEachAction('%s'))
             ->transformed(new ListArgs([]));
 
         self::assertSame(

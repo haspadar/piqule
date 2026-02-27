@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Formula\Actions;
 
 use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Tests\Constraint\Formula\Actions\HasActionNames;
@@ -30,11 +30,11 @@ final class ParsedActionsTest extends TestCase
             new ParsedActions(
                 'format("x=%s")',
                 [
-                    'format' => fn(string $raw) => new FormatAction($raw),
+                    'format' => fn(string $raw) => new FormatEachAction($raw),
                 ],
             ),
             new HasActionNames([
-                FormatAction::class,
+                FormatEachAction::class,
             ]),
         );
     }

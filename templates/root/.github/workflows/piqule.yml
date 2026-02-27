@@ -80,7 +80,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [<< config(ci.php.matrix)|default_list(["8.3"])|format('"%s"')|join(", ") >>]
+        php: [<< config(ci.php.matrix)|default_list(["8.3"])|format_each('"%s"')|join(", ") >>]
         check:
           - phpcs
           - phpstan

@@ -5,9 +5,9 @@
         findUnusedCode="false"
 >
     <projectFiles>
-<< config(psalm.project.directories)|default_list(["../../src"])|format('        <directory name="%s" />')|join("\n") >>
+<< config(psalm.project.directories)|default_list(["../../src"])|format_each('        <directory name="%s" />')|join("\n") >>
         <ignoreFiles>
-<< config(psalm.project.ignore)|default_list(["../../vendor"])|format('            <directory name="%s" />')|join("\n") >>
+<< config(psalm.project.ignore)|default_list(["../../vendor"])|format_each('            <directory name="%s" />')|join("\n") >>
         </ignoreFiles>
     </projectFiles>
 </psalm>

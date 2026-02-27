@@ -10,7 +10,7 @@ use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
-final readonly class FormatAction implements Action
+final readonly class FormatEachAction implements Action
 {
     public function __construct(
         private string $raw,

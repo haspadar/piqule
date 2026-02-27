@@ -1,5 +1,5 @@
 {
-  "mode": << config(jsonlint.mode)|default_list(["json5"])|format('"%s"')|join("") >>,
+  "mode": << config(jsonlint.mode)|default_list(["json5"])|format_each('"%s"')|join("") >>,
   "compact": << config(jsonlint.compact)|default_list(["true"])|scalar >>,
   "continue": << config(jsonlint.continue)|default_list(["true"])|scalar >>,
   "duplicate-keys": << config(jsonlint.duplicate_keys)|default_list(["false"])|scalar >>,
@@ -16,7 +16,7 @@
       "!**/build/**",
       "!**/var/**"
    ])
-   |format('    "%s"')
+   |format_each('    "%s"')
    |join(",\n") >>
   ]
 }

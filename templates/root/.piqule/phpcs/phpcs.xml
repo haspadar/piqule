@@ -4,12 +4,12 @@
 
     << config(phpcs.files)
     |default_list(["../../src"])
-    |format("<file>%s</file>")
+    |format_each("<file>%s</file>")
     |join("\n    ") >>
 
     << config(phpcs.excludes)
     |default_list(["vendor/*","tests/*"])
-    |format("<exclude-pattern>%s</exclude-pattern>")
+    |format_each("<exclude-pattern>%s</exclude-pattern>")
     |join("\n    ") >>
 
     <arg name="extensions" value="php"/>
