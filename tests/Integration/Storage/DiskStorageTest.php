@@ -148,4 +148,14 @@ final class DiskStorageTest extends TestCase
             $storage->mode('file.txt'),
         );
     }
+
+    #[Test]
+    public function throwsWhenReadingModeOfMissingLocation(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new DiskStorage(
+            (new TempFolder())->path(),
+        ))->mode('missing.txt');
+    }
 }
