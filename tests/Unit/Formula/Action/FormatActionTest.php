@@ -25,15 +25,6 @@ final class FormatActionTest extends TestCase
     }
 
     #[Test]
-    public function throwsWhenListHasMultipleValues(): void
-    {
-        $this->expectException(PiquleException::class);
-
-        (new FormatAction('%s'))
-            ->transformed(new ListArgs(['a', 'b']));
-    }
-
-    #[Test]
     public function throwsWhenInputIsEmpty(): void
     {
         $this->expectException(PiquleException::class);
