@@ -60,4 +60,33 @@ final class FlatConfigTest extends TestCase
 
         $config->values('invalid.key');
     }
+
+    #[Test]
+    public function throwsWhenValueIsAssociativeArray(): void
+    {
+        $config = new FlatConfig([
+            'logging.channels' => [
+                'main' => 'stdout',
+            ],
+        ]);
+
+        $this->expectException(PiquleException::class);
+
+        $config->values('logging.channels');
+    }
+
+    #[Test]
+    public function throwsWhenListContainsNonScalar(): void
+    {
+        $config = new FlatConfig([
+            'build.targets' => [
+                'cli',
+                new stdClass(),
+            ],
+        ]);
+
+        $this->expectException(PiquleException::class);
+
+        $config->values('build.targets');
+    }
 }
