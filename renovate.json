@@ -49,9 +49,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
-        "ARG DEBIAN_IMAGE=(?<currentValue>[^\\s]+)"
+        "ARG DEBIAN_IMAGE=(?<depName>[^:]+):(?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "docker"
     },
