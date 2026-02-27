@@ -17,8 +17,8 @@
     "configDir": "../phpunit"
   },
 
-  "initialTestsPhpOptions": "<< config(infection.php_options)|default_list(["-d memory_limit=1G"])|scalar >>",
-  "timeout": << config(infection.timeout)|default_list(["30"])|scalar >>,
+  "initialTestsPhpOptions": "<< config(infection.php_options)|default_scalar("-d memory_limit=1G") >>",
+  "timeout": << config(infection.timeout)|default_scalar("30") >>,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",

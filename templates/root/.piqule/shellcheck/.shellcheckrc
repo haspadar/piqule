@@ -3,16 +3,16 @@
 # ============================================================
 
 # Target shell (bash, sh, dash, ksh)
-shell=<< config(shellcheck.shell)|default_list(["bash"])|scalar >>
+shell=<< config(shellcheck.shell)|default_scalar("bash") >>
 
 # Minimum severity: error, warning, info, style
-severity=<< config(shellcheck.severity)|default_list(["warning"])|scalar >>
+severity=<< config(shellcheck.severity)|default_scalar("warning") >>
 
 # Allow sourcing external files
-external-sources=<< config(shellcheck.external_sources)|default_list(["true"])|scalar >>
+external-sources=<< config(shellcheck.external_sources)|default_scalar("true") >>
 
 # Additional include path for sourced files (optional)
-# source-path=<< config(shellcheck.source_path)|default_list(["."])|scalar >>
+# source-path=<< config(shellcheck.source_path)|default_scalar(".") >>
 
 # Excluded rules (comma-separated)
 << config(shellcheck.exclude)|default_list([])|join("\n") >>

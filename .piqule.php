@@ -1,53 +1,30 @@
 <?php
 
 return [
-    'markdownlint' => [
-        'ignores' => [
-            '**/vendor/**',
-            '**/node_modules/**',
-            '**/coverage/**',
-            '**/.git/**',
-            '**/templates/**',
-        ],
+    'markdownlint.ignores' => [
+        '**/vendor/**',
+        '**/node_modules/**',
+        '**/coverage/**',
+        '**/.git/**',
+        '**/templates/**',
     ],
 
-    'yamllint' => [
-        'ignore' => [
-            'vendor/**',
-            'node_modules/**',
-            'build/**',
-            'var/**',
-            'templates/**',
-            '.piqule/**/html/**',
-            '.piqule/**/coverage-report/**',
-        ],
-        'line_length' => [
-            'max' => 120,
-        ],
+    'yamllint.ignore' => [
+        'vendor/**',
+        'node_modules/**',
+        'build/**',
+        'var/**',
+        'templates/**',
+        '.piqule/**/html/**',
+        '.piqule/**/coverage-report/**',
     ],
-    'phpcs' => [
-        'excludes' => [
-            'vendor/*',
-            'tests/*',
-            'templates/*',
-        ]
-    ],
-    'shellcheck' => [
-        'ignore_dirs' => [
-            'vendor',
-            '.git',
-            'templates'
-        ]
-    ],
+    'yamllint.line_length.max' => 120,
 
-    'ci' => [
-        'php' => [
-            'matrix' => ['8.3', '8.4', '8.5'],
-        ],
-        'pr' => [
-            'max_lines_changed' => 400,
-        ],
-        'piqule_bin' => 'bin/piqule',
-    ],
+    'phpcs.excludes' => ['vendor/*', 'tests/*', 'templates/*'],
 
+    'shellcheck.ignore_dirs' => ['vendor', '.git', 'templates'],
+
+    'ci.php.matrix' => ['8.3', '8.4', '8.5'],
+    'ci.pr.max_lines_changed' => 400,
+    'ci.piqule_bin' => 'bin/piqule',
 ];
