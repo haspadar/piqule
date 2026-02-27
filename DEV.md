@@ -85,9 +85,11 @@ The DSL operates in stages:
    - `format_each`
 3. `join` reduces the list to a single value
 4. Scalar-level actions:
-   - `default_scalar`
-   - `format`
-   - `scalar`
+    - `default_scalar`
+    - `format`
+    - `scalar`
+
+`default_scalar` fails fast if the resolved pipeline value contains more than one item.
 
 ### Examples
 
