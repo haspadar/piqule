@@ -14,6 +14,7 @@ use Haspadar\Piqule\Files\MappedFiles;
 use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Action\DefaultListAction;
+use Haspadar\Piqule\Formula\Action\FormatAction;
 use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Action\ScalarAction;
@@ -56,6 +57,7 @@ try {
                 'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
                 'default_list' => fn(string $raw): Action => new DefaultListAction($raw),
                 'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
+                'format' => fn(string $raw): Action => new FormatAction($raw),
                 'join' => fn(string $raw): Action => new JoinAction($raw),
                 'scalar' => fn(string $raw): Action => new ScalarAction(),
             ], ),
