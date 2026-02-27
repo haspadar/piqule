@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
-use Haspadar\Piqule\Config\NestedConfig;
+use Haspadar\Piqule\Config\FlatConfig;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
@@ -18,10 +18,8 @@ final class ConfigActionTest extends TestCase
     {
         self::assertThat(
             (new ConfigAction(
-                new NestedConfig([
-                    'phpmetrics' => [
-                        'include' => ['mbstring', 'intl'],
-                    ],
+                new FlatConfig([
+                    'phpmetrics.include' => ['mbstring', 'intl'],
                 ]),
                 'phpmetrics.include',
             ))->transformed(new ListArgs([])),
@@ -34,10 +32,8 @@ final class ConfigActionTest extends TestCase
     {
         self::assertThat(
             (new ConfigAction(
-                new NestedConfig([
-                    'feature' => [
-                        'flags' => [true, false],
-                    ],
+                new FlatConfig([
+                    'feature.flags' => [true, false],
                 ]),
                 'feature.flags',
             ))->transformed(new ListArgs([])),
@@ -50,7 +46,7 @@ final class ConfigActionTest extends TestCase
     {
         self::assertThat(
             (new ConfigAction(
-                new NestedConfig([]),
+                new FlatConfig([]),
                 'missing.key',
             ))->transformed(new ListArgs([])),
             new HasArgsValues([]),

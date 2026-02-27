@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File;
 
-use Haspadar\Piqule\Config\NestedConfig;
+use Haspadar\Piqule\Config\FlatConfig;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Formula\Action\Action;
@@ -22,12 +22,12 @@ use PHPUnit\Framework\TestCase;
 
 final class ConfiguredFileTest extends TestCase
 {
-    private function actions(NestedConfig $config): array
+    private function actions(FlatConfig $config): array
     {
         return [
             'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
-            'default' => fn(string $raw): Action => new DefaultListAction($raw),
-            'format' => fn(string $raw): Action => new FormatEachAction($raw),
+            'default_list' => fn(string $raw): Action => new DefaultListAction($raw),
+            'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
             'join' => fn(string $raw): Action => new JoinAction($raw),
             'scalar' => fn(string $raw): Action => new ScalarAction(),
         ];
@@ -36,13 +36,13 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function replacesPlaceholderUsingPipeline(): void
     {
-        $config = new NestedConfig([]);
+        $config = new FlatConfig([]);
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'file',
-                    '<< config(a)|default(["x","y"])|format("%s")|join(",") >>',
+                    '<< config(a)|default_list(["x","y"])|format_each("%s")|join(",") >>',
                 ),
                 $this->actions($config),
             ),
@@ -53,7 +53,7 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function leavesFileUntouchedWhenNoPlaceholdersPresent(): void
     {
-        $config = new NestedConfig([]);
+        $config = new FlatConfig([]);
 
         self::assertThat(
             new ConfiguredFile(
@@ -68,19 +68,17 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
-    public function supportsNestedConfigKeys(): void
+    public function supportsFlatConfigKeys(): void
     {
-        $config = new NestedConfig([
-            'coverage' => [
-                'range' => '80...100',
-            ],
+        $config = new FlatConfig([
+            'coverage.range' => '80...100',
         ]);
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'config.yaml',
-                    'coverage: << config(coverage.range)|default([""])|join("") >>',
+                    'coverage: << config(coverage.range)|default_list([""])|join("") >>',
                 ),
                 $this->actions($config),
             ),
@@ -91,7 +89,7 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function returnsEmptyStringWhenMissingAndNoDefault(): void
     {
-        $config = new NestedConfig([]);
+        $config = new FlatConfig([]);
 
         self::assertThat(
             new ConfiguredFile(
@@ -108,7 +106,7 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function wrapsUnknownActionWithFileContext(): void
     {
-        $config = new NestedConfig([]);
+        $config = new FlatConfig([]);
 
         self::assertThat(
             new ConfiguredFile(
@@ -129,7 +127,7 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function throwsWhenFormulaProducesMultipleValues(): void
     {
-        $config = new NestedConfig([
+        $config = new FlatConfig([
             'a' => ['x', 'y'],
         ]);
 
@@ -138,7 +136,7 @@ final class ConfiguredFileTest extends TestCase
         (new ConfiguredFile(
             new TextFile(
                 'file',
-                '<< config(a)|default(["x"]) >>',
+                '<< config(a)|default_list(["x"]) >>',
             ),
             $this->actions($config),
         ))->contents();
@@ -166,8 +164,12 @@ final class ConfiguredFileTest extends TestCase
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
-            new TextFile('file', '<< config(a)|default(["x"])|join("") >>', 0o755),
-            $this->actions(new NestedConfig([])),
+            new TextFile(
+                'file',
+                '<< config(a)|default_list(["x"])|join("") >>',
+                0o755,
+            ),
+            $this->actions(new FlatConfig([])),
         );
 
         self::assertSame(0o755, $file->mode());
