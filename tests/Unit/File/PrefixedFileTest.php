@@ -36,7 +36,7 @@ final class PrefixedFileTest extends TestCase
                 '.config',
                 new TextFile(
                     'tools/setup.sh',
-                    '#!/bin/sh',
+                    "#!/usr/bin/env bash\nset -e\n",
                 ),
             ))->name(),
             'File name must be prefixed',
@@ -52,7 +52,7 @@ final class PrefixedFileTest extends TestCase
                 '.config/',
                 new TextFile(
                     'bin/install.sh',
-                    '#!/bin/sh',
+                    "#!/usr/bin/env sh\nprintf install\n",
                 ),
             ))->name(),
             'Trailing slash in prefix must be ignored',
@@ -68,7 +68,7 @@ final class PrefixedFileTest extends TestCase
                 '.env',
                 new TextFile(
                     '/runtime/app.env',
-                    'KEY=value',
+                    "KEY=value\n",
                 ),
             ))->name(),
             'Leading slash in file name must be ignored',
@@ -84,7 +84,7 @@ final class PrefixedFileTest extends TestCase
                 '',
                 new TextFile(
                     'root/config.yaml',
-                    'value: true',
+                    "value: true\n",
                 ),
             ))->name(),
             'Empty prefix must not introduce leading slash',
@@ -97,8 +97,8 @@ final class PrefixedFileTest extends TestCase
         $file = new PrefixedFile(
             '.config',
             new TextFile(
-                'bin/install.sh',
-                '#!/bin/sh',
+                'scripts/install.sh',
+                "#!/bin/custom-shell\necho ok\n",
                 0o755,
             ),
         );
