@@ -10,11 +10,9 @@ use Haspadar\Piqule\Formula\Args\ParsedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
-final readonly class DefaultAction implements Action
+final readonly class DefaultListAction implements Action
 {
-    public function __construct(
-        private string $raw,
-    ) {}
+    public function __construct(private string $raw) {}
 
     #[Override]
     public function transformed(Args $args): Args

@@ -9,7 +9,7 @@ use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
-use Haspadar\Piqule\Formula\Action\DefaultAction;
+use Haspadar\Piqule\Formula\Action\DefaultListAction;
 use Haspadar\Piqule\Formula\Action\FormatAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Action\ScalarAction;
@@ -26,7 +26,7 @@ final class ConfiguredFileTest extends TestCase
     {
         return [
             'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
-            'default' => fn(string $raw): Action => new DefaultAction($raw),
+            'default' => fn(string $raw): Action => new DefaultListAction($raw),
             'format' => fn(string $raw): Action => new FormatAction($raw),
             'join' => fn(string $raw): Action => new JoinAction($raw),
             'scalar' => fn(string $raw): Action => new ScalarAction(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Actions;
 
-use Haspadar\Piqule\Formula\Action\DefaultAction;
+use Haspadar\Piqule\Formula\Action\DefaultListAction;
 use Haspadar\Piqule\Formula\Action\FormatAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
@@ -46,12 +46,12 @@ final class ParsedActionsTest extends TestCase
             new ParsedActions(
                 'default(["x"])|join(",")',
                 [
-                    'default' => fn(string $raw) => new DefaultAction($raw),
+                    'default' => fn(string $raw) => new DefaultListAction($raw),
                     'join' => fn(string $raw) => new JoinAction($raw),
                 ],
             ),
             new HasActionNames([
-                DefaultAction::class,
+                DefaultListAction::class,
                 JoinAction::class,
             ]),
         );

@@ -2,13 +2,13 @@ coverage:
   status:
     project:
       default:
-        target: << config(coverage.project.target)|default(["80%"])|scalar >>
-        threshold: << config(coverage.project.threshold)|default(["2%"])|scalar >>
+        target: << config(coverage.project.target)|default_list(["80%"])|scalar >>
+        threshold: << config(coverage.project.threshold)|default_list(["2%"])|scalar >>
 
     patch:
       default:
-        target: << config(coverage.patch.target)|default(["80%"])|scalar >>
-        threshold: << config(coverage.patch.threshold)|default(["5%"])|scalar >>
+        target: << config(coverage.patch.target)|default_list(["80%"])|scalar >>
+        threshold: << config(coverage.patch.threshold)|default_list(["5%"])|scalar >>
 
 comment:
   layout: "reach, diff, flags, files"

@@ -3,12 +3,12 @@
     <description>Structural and semantic PHP rules</description>
 
     << config(phpcs.files)
-    |default(["../../src"])
+    |default_list(["../../src"])
     |format("<file>%s</file>")
     |join("\n    ") >>
 
     << config(phpcs.excludes)
-    |default(["vendor/*","tests/*"])
+    |default_list(["vendor/*","tests/*"])
     |format("<exclude-pattern>%s</exclude-pattern>")
     |join("\n    ") >>
 
