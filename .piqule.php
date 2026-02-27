@@ -50,7 +50,4 @@ return [
         'piqule_bin' => 'bin/piqule',
     ],
 
-    'docker' => [
-        'image' => 'piqule-infra:local',
-    ],
 ];
