@@ -31,4 +31,10 @@ final readonly class ReplacedFile implements File
             $this->origin->contents(),
         );
     }
+
+    #[Override]
+    public function mode(): int
+    {
+        return $this->origin->mode();
+    }
 }

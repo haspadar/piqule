@@ -32,4 +32,6 @@ interface Storage
      * @return iterable<string> relative entry paths
      */
     public function entries(string $location): iterable;
+
+    public function mode(string $location): int;
 }

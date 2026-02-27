@@ -82,14 +82,36 @@ final readonly class DiskStorage implements Storage
             && !mkdir($directory, 0o777, true)
             && !is_dir($directory)
         ) {
-            throw new PiquleException("Unable to create directory: {$directory}");
+            throw new PiquleException("Unable to create directory: $directory");
         }
 
         if (file_put_contents($path, $file->contents()) === false) {
-            throw new PiquleException("Unable to write location: {$location}");
+            throw new PiquleException("Unable to write location: $location");
+        }
+
+        if (!chmod($path, $file->mode())) {
+            throw new PiquleException("Unable to set permissions: $location");
         }
 
         return $this;
+    }
+
+    #[Override]
+    public function mode(string $location): int
+    {
+        $path = $this->pathOf($location);
+
+        if (!is_file($path)) {
+            throw new PiquleException("Location not found: $location");
+        }
+
+        $perms = fileperms($path);
+
+        if ($perms === false) {
+            throw new PiquleException("Unable to read permissions: $location");
+        }
+
+        return $perms & 0o777;
     }
 
     private function pathOf(string $location): string

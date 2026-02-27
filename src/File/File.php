@@ -12,4 +12,6 @@ interface File
     public function name(): string;
 
     public function contents(): string;
+
+    public function mode(): int;
 }

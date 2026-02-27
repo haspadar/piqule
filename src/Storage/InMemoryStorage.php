@@ -10,11 +10,11 @@ use Override;
 
 final readonly class InMemoryStorage implements Storage
 {
-    /** @var array<string, string> */
+    /** @var array<string, File> */
     private array $entries;
 
     /**
-     * @param array<string, string> $entries
+     * @param array<string, File> $entries location => File
      */
     public function __construct(array $entries = [])
     {
@@ -28,7 +28,17 @@ final readonly class InMemoryStorage implements Storage
             throw new PiquleException("Location not found: {$location}");
         }
 
-        return $this->entries[$location];
+        return $this->entries[$location]->contents();
+    }
+
+    #[Override]
+    public function mode(string $location): int
+    {
+        if (!array_key_exists($location, $this->entries)) {
+            throw new PiquleException("Location not found: {$location}");
+        }
+
+        return $this->entries[$location]->mode();
     }
 
     #[Override]
@@ -40,12 +50,10 @@ final readonly class InMemoryStorage implements Storage
     #[Override]
     public function write(File $file): self
     {
-        return new self(
-            [
-                ...$this->entries,
-                $file->name() => $file->contents(),
-            ],
-        );
+        return new self([
+            ...$this->entries,
+            $file->name() => $file,
+        ]);
     }
 
     #[Override]
