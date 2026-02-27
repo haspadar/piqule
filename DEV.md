@@ -69,6 +69,7 @@ Example:
 ### Supported actions
 
 - `default_list([...])`
+- `default_scalar("value")`
 - `format_each('%s')`
 - `join(',')`
 - `format('%s')`
@@ -80,18 +81,29 @@ The DSL operates in stages:
 
 1. `config(...)` produces a list of values
 2. List-level actions:
-    - `default_list`
-    - `format_each`
+   - `default_list`
+   - `format_each`
 3. `join` reduces the list to a single value
 4. Scalar-level actions:
+    - `default_scalar`
     - `format`
     - `scalar`
+
+`default_scalar` fails fast if the resolved pipeline value contains more than one item.
 
 ### Examples
 
 List formatting:
 
 `<< config(paths)|default_list(["src"])|format_each('%s')|join(",") >>`
+
+Scalar default without explicit assertion:
+
+`<< config(phpstan.memory)|default_scalar("1G") >>`
+
+Explicit scalar assertion:
+
+`<< config(phpstan.memory)|scalar >>`
 
 Final value formatting:
 
