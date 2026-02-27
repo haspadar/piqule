@@ -38,6 +38,12 @@ final readonly class ConfiguredFile implements File
         );
     }
 
+    #[Override]
+    public function mode(): int
+    {
+        return $this->origin->mode();
+    }
+
     private function replaced(string $expression): string
     {
         try {

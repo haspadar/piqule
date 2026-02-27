@@ -38,4 +38,10 @@ final readonly class PrefixedFile implements File
     {
         return $this->origin->contents();
     }
+
+    #[Override]
+    public function mode(): int
+    {
+        return $this->origin->mode();
+    }
 }

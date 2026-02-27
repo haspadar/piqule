@@ -128,4 +128,24 @@ final class InMemoryStorageTest extends TestCase
             new HasEntries('container', []),
         );
     }
+
+    #[Test]
+    public function storesAndReturnsMode(): void
+    {
+        $storage = new InMemoryStorage();
+
+        $storage = $storage->write(
+            new TextFile('file.txt', 'data', 0o755),
+        );
+
+        self::assertSame(0o755, $storage->mode('file.txt'));
+    }
+
+    #[Test]
+    public function throwsWhenReadingModeForMissingLocation(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new InMemoryStorage())->mode('missing.txt');
+    }
 }

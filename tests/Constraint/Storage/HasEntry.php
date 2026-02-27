@@ -11,19 +11,23 @@ final class HasEntry extends Constraint
 {
     public function __construct(
         private readonly string $location,
-        private readonly string $expected,
+        private readonly string $contents,
+        private readonly int $mode = 0o644,
     ) {}
 
     public function toString(): string
     {
-        return "has entry {$this->export($this->location)} with contents {$this->export($this->expected)}";
+        return "has entry {$this->export($this->location)} "
+            . "with contents {$this->export($this->contents)} "
+            . "and mode {$this->export($this->mode)}";
     }
 
     protected function matches($other): bool
     {
         return $other instanceof Storage
             && $other->exists($this->location)
-            && $other->read($this->location) === $this->expected;
+            && $other->read($this->location) === $this->contents
+            && $other->mode($this->location) === $this->mode;
     }
 
     protected function failureDescription($other): string
@@ -43,8 +47,10 @@ final class HasEntry extends Constraint
             return "\nBut no entry exists at location {$this->export($this->location)}";
         }
 
-        return "\nExpected: {$this->export($this->expected)}"
-            . "\nBut was:  {$this->export($other->read($this->location))}";
+        return "\nExpected contents: {$this->export($this->contents)}"
+            . "\nBut was: {$this->export($other->read($this->location))}"
+            . "\nExpected mode: {$this->export($this->mode)}"
+            . "\nBut was: {$this->export($other->mode($this->location))}";
     }
 
     private function export(mixed $value): string

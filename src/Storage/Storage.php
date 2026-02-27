@@ -32,4 +32,11 @@ interface Storage
      * @return iterable<string> relative entry paths
      */
     public function entries(string $location): iterable;
+
+    /**
+     * Retrieves the file mode (permissions) at the given location
+     *
+     * @throws PiquleException if the location does not exist
+     */
+    public function mode(string $location): int;
 }

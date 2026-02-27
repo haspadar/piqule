@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
-namespace Haspadar\Piqule\File;
-
 use Override;
 
 final readonly class ReplacedFile implements File
@@ -30,5 +28,11 @@ final readonly class ReplacedFile implements File
             $this->replace,
             $this->origin->contents(),
         );
+    }
+
+    #[Override]
+    public function mode(): int
+    {
+        return $this->origin->mode();
     }
 }
