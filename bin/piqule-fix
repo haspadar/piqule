@@ -6,7 +6,6 @@ PROJECT="$(pwd)"
 # Psalm auto-fix
 vendor/bin/psalm \
   --config=.piqule/psalm/psalm.xml \
-  --no-plugins \
   --no-cache \
   --alter \
   --issues=MissingOverrideAttribute
