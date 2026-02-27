@@ -7,14 +7,7 @@ namespace Haspadar\Piqule\Config;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
-/**
- * Provides access to a nested configuration array
- *
- * Returns an empty list if the path is missing
- * Throws PiquleException if the resolved value is not a scalar
- * or a sequential list of scalars
- */
-final readonly class NestedConfig implements Config
+final readonly class FlatConfig implements Config
 {
     /**
      * @param array<string, mixed> $origin
@@ -27,7 +20,11 @@ final readonly class NestedConfig implements Config
      */
     public function values(string $name): array
     {
-        $value = $this->traverse($name);
+        if (!array_key_exists($name, $this->origin)) {
+            return [];
+        }
+
+        $value = $this->origin[$name];
 
         if (is_scalar($value)) {
             return [$value];
@@ -66,26 +63,5 @@ final readonly class NestedConfig implements Config
 
         /** @var list<int|float|string|bool> $value */
         return $value;
-    }
-
-    private function traverse(string $name): mixed
-    {
-        /** @var array<string, mixed> $current */
-        $current = $this->origin;
-        foreach (explode('.', $name) as $part) {
-            if (!array_key_exists($part, $current)) {
-                return [];
-            }
-
-            $next = $current[$part];
-            if (!is_array($next)) {
-                return $next;
-            }
-
-            /** @var array<string, mixed> $current */
-            $current = $next;
-        }
-
-        return $current;
     }
 }

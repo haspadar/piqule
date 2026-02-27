@@ -12,4 +12,4 @@ BIN="$(.piqule/_composer.sh phpstan)"
 
 "$BIN" analyse \
   -c "$CONFIG" \
-  --memory-limit=<< config(phpstan.memory)|default_list(["1G"])|scalar >>
+  --memory-limit=<< config(phpstan.memory)|default_scalar("1G") >>

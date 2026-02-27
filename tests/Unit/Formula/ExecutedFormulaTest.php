@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula;
 
-use Haspadar\Piqule\Config\NestedConfig;
+use Haspadar\Piqule\Config\FlatConfig;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Action\DefaultListAction;
 use Haspadar\Piqule\Formula\Action\FormatEachAction;
@@ -19,14 +19,14 @@ use PHPUnit\Framework\TestCase;
 
 final class ExecutedFormulaTest extends TestCase
 {
-    private function actions(string $expression, NestedConfig $config): ParsedActions
+    private function actions(string $expression, FlatConfig $config): ParsedActions
     {
         return new ParsedActions(
             (new NormalizedFormula($expression))->result(),
             [
                 'config' => fn(string $raw) => new ConfigAction($config, $raw),
-                'default' => fn(string $raw) => new DefaultListAction($raw),
-                'format' => fn(string $raw) => new FormatEachAction($raw),
+                'default_list' => fn(string $raw) => new DefaultListAction($raw),
+                'format_each' => fn(string $raw) => new FormatEachAction($raw),
                 'join' => fn(string $raw) => new JoinAction($raw),
             ],
         );
@@ -35,14 +35,14 @@ final class ExecutedFormulaTest extends TestCase
     #[Test]
     public function formatsAndJoinsList(): void
     {
-        $config = new NestedConfig([
+        $config = new FlatConfig([
             'a' => ['x', 'y'],
         ]);
 
         self::assertThat(
             new ExecutedFormula(
                 $this->actions(
-                    'config(a)|default(["x"])|format("v=%s")|join(",")',
+                    'config(a)|default_list(["x"])|format_each("v=%s")|join(",")',
                     $config,
                 ),
             ),
@@ -56,8 +56,8 @@ final class ExecutedFormulaTest extends TestCase
         self::assertThat(
             new ExecutedFormula(
                 $this->actions(
-                    'config(missing)|default(["fallback"])|join(",")',
-                    new NestedConfig([]),
+                    'config(missing)|default_list(["fallback"])|join(",")',
+                    new FlatConfig([]),
                 ),
             ),
             new HasFormulaResult('fallback'),
@@ -67,14 +67,14 @@ final class ExecutedFormulaTest extends TestCase
     #[Test]
     public function handlesBooleanValue(): void
     {
-        $config = new NestedConfig([
+        $config = new FlatConfig([
             'flag' => true,
         ]);
 
         self::assertThat(
             new ExecutedFormula(
                 $this->actions(
-                    'config(flag)|default([false])|format("flag=%s")|join("")',
+                    'config(flag)|default_list([false])|format_each("flag=%s")|join("")',
                     $config,
                 ),
             ),
@@ -87,13 +87,13 @@ final class ExecutedFormulaTest extends TestCase
     {
         $this->expectException(PiquleException::class);
 
-        $config = new NestedConfig([
+        $config = new FlatConfig([
             'a' => ['x', 'y'],
         ]);
 
         (new ExecutedFormula(
             $this->actions(
-                'config(a)|default(["x"])',
+                'config(a)|default_list(["x"])',
                 $config,
             ),
         ))->result();
@@ -105,8 +105,8 @@ final class ExecutedFormulaTest extends TestCase
         self::assertThat(
             new ExecutedFormula(
                 $this->actions(
-                    'format("%s")',
-                    new NestedConfig([]),
+                    'format_each("%s")',
+                    new FlatConfig([]),
                 ),
             ),
             new HasFormulaResult(''),

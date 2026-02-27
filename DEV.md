@@ -123,17 +123,12 @@ Example:
 <?php
 
 return [
-    'coverage' => [
-        'project' => [
-            'target' => '85%',
-        ],
-    ],
+    'coverage.project.target' => '85%',
+    'docker.image' => 'ghcr.io/haspadar/piqule-infra:latest',
 ];
 ```
 
-Accessed via dot notation:
-
-`coverage.project.target`
+Keys are flat and use dot-separated names directly.
 
 If the file does not exist, defaults are used.
 

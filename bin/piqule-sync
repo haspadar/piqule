@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Config\NestedConfig;
+use Haspadar\Piqule\Config\FlatConfig;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
@@ -46,7 +46,7 @@ try {
         );
     }
 
-    $config = new NestedConfig($projectConfigData);
+    $config = new FlatConfig($projectConfigData);
 
     $files = new CombinedFiles([
         new MappedFiles(
