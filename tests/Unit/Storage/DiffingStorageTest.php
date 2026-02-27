@@ -115,4 +115,35 @@ final class DiffingStorageTest extends TestCase
             ))->exists('b.txt'),
         );
     }
+
+    #[Test]
+    public function delegatesEntriesToOrigin(): void
+    {
+        self::assertSame(
+            ['a/one.txt', 'a/two.txt'],
+            iterator_to_array(
+                (new DiffingStorage(
+                    new InMemoryStorage([
+                        'a/one.txt' => new TextFile('a/one.txt', '1'),
+                        'a/two.txt' => new TextFile('a/two.txt', '2'),
+                    ]),
+                    new FakeStorageReaction(),
+                ))->entries('a'),
+            ),
+        );
+    }
+
+    #[Test]
+    public function delegatesModeToOrigin(): void
+    {
+        self::assertSame(
+            0o755,
+            (new DiffingStorage(
+                new InMemoryStorage([
+                    'x.sh' => new TextFile('x.sh', 'echo x', 0o755),
+                ]),
+                new FakeStorageReaction(),
+            ))->mode('x.sh'),
+        );
+    }
 }
