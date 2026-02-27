@@ -140,4 +140,12 @@ final class InMemoryStorageTest extends TestCase
 
         self::assertSame(0o755, $storage->mode('file.txt'));
     }
+
+    #[Test]
+    public function throwsWhenReadingModeForMissingLocation(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new InMemoryStorage())->mode('missing.txt');
+    }
 }
