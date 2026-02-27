@@ -14,7 +14,7 @@
     "composer",
     "github-actions",
     "dockerfile",
-    "regex"
+    "custom.regex"
   ],
 
   "vulnerabilityAlerts": {
