@@ -161,4 +161,23 @@ final class ConfiguredFileTest extends TestCase
 
         self::assertSame(['ab'], $result->values());
     }
+
+    #[Test]
+    public function exposesMode(): void
+    {
+        $file = new TextFile('file.txt', 'data', 0o755);
+
+        self::assertSame(0o755, $file->mode());
+    }
+
+    #[Test]
+    public function preservesOriginMode(): void
+    {
+        $file = new ConfiguredFile(
+            new TextFile('file', '<< config(a)|default(["x"])|join("") >>', 0o755),
+            $this->actions(new NestedConfig([])),
+        );
+
+        self::assertSame(0o755, $file->mode());
+    }
 }

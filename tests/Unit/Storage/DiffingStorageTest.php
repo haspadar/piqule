@@ -38,7 +38,7 @@ final class DiffingStorageTest extends TestCase
 
         (new DiffingStorage(
             new InMemoryStorage([
-                'updated.txt' => 'old',
+                'updated.txt' => new TextFile('updated.txt', 'old'),
             ]),
             $reaction,
         ))->write(
@@ -52,27 +52,41 @@ final class DiffingStorageTest extends TestCase
     }
 
     #[Test]
-    public function doesNotReportAnythingWhenContentsAreTheSame(): void
+    public function reportsUpdatedWhenModeChanges(): void
     {
         $reaction = new FakeStorageReaction();
 
         (new DiffingStorage(
             new InMemoryStorage([
-                'same.txt' => 'data',
+                'file.txt' => new TextFile('file.txt', 'data', 0o644),
             ]),
             $reaction,
         ))->write(
-            new TextFile('same.txt', 'data'),
+            new TextFile('file.txt', 'data', 0o755),
         );
 
         self::assertSame(
-            [],
-            $reaction->createdPaths(),
-        );
-        self::assertSame(
-            [],
+            ['file.txt'],
             $reaction->updatedPaths(),
         );
+    }
+
+    #[Test]
+    public function doesNotReportAnythingWhenContentsAndModeAreTheSame(): void
+    {
+        $reaction = new FakeStorageReaction();
+
+        (new DiffingStorage(
+            new InMemoryStorage([
+                'same.txt' => new TextFile('same.txt', 'data', 0o644),
+            ]),
+            $reaction,
+        ))->write(
+            new TextFile('same.txt', 'data', 0o644),
+        );
+
+        self::assertSame([], $reaction->createdPaths());
+        self::assertSame([], $reaction->updatedPaths());
     }
 
     #[Test]
@@ -81,7 +95,9 @@ final class DiffingStorageTest extends TestCase
         self::assertSame(
             'data',
             (new DiffingStorage(
-                new InMemoryStorage(['a.txt' => 'data']),
+                new InMemoryStorage([
+                    'a.txt' => new TextFile('a.txt', 'data'),
+                ]),
                 new FakeStorageReaction(),
             ))->read('a.txt'),
         );
@@ -92,7 +108,9 @@ final class DiffingStorageTest extends TestCase
     {
         self::assertTrue(
             (new DiffingStorage(
-                new InMemoryStorage(['b.txt' => 'x']),
+                new InMemoryStorage([
+                    'b.txt' => new TextFile('b.txt', 'x'),
+                ]),
                 new FakeStorageReaction(),
             ))->exists('b.txt'),
         );

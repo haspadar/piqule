@@ -90,4 +90,23 @@ final class PrefixedFileTest extends TestCase
             'Empty prefix must not introduce leading slash',
         );
     }
+
+    #[Test]
+    public function preservesOriginMode(): void
+    {
+        $file = new PrefixedFile(
+            '.config',
+            new TextFile(
+                'bin/install.sh',
+                '#!/bin/sh',
+                0o755,
+            ),
+        );
+
+        self::assertSame(
+            0o755,
+            $file->mode(),
+            'PrefixedFile must preserve origin mode',
+        );
+    }
 }

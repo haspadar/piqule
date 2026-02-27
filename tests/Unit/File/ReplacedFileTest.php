@@ -42,4 +42,16 @@ final class ReplacedFileTest extends TestCase
             ))->name(),
         );
     }
+
+    #[Test]
+    public function preservesOriginMode(): void
+    {
+        $file = new ReplacedFile(
+            new TextFile('file.txt', 'abc', 0o700),
+            'a',
+            'b',
+        );
+
+        self::assertSame(0o700, $file->mode());
+    }
 }

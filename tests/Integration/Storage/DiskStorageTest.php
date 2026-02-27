@@ -118,4 +118,34 @@ final class DiskStorageTest extends TestCase
             ]),
         );
     }
+
+    #[Test]
+    public function writesFileWithCustomMode(): void
+    {
+        $folder = new TempFolder();
+
+        self::assertThat(
+            (new DiskStorage($folder->path()))
+                ->write(new TextFile('file.txt', 'data', 0o755)),
+            new HasEntry('file.txt', 'data', 0o755),
+        );
+    }
+
+    #[Test]
+    public function updatesFileModeWhenOverwritten(): void
+    {
+        $folder = (new TempFolder())
+            ->withFile('file.txt', 'data');
+
+        $storage = new DiskStorage($folder->path());
+
+        $storage = $storage->write(
+            new TextFile('file.txt', 'data', 0o755),
+        );
+
+        self::assertSame(
+            0o755,
+            $storage->mode('file.txt'),
+        );
+    }
 }

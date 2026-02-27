@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Files;
 
+use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFiles;
@@ -18,8 +19,8 @@ final class FolderFilesTest extends TestCase
         self::assertThat(
             new FolderFiles(
                 new InMemoryStorage([
-                    'a/one.txt' => '1',
-                    'a/two.txt' => '2',
+                    'a/one.txt' => new TextFile('a/one.txt', '1'),
+                    'a/two.txt' => new TextFile('a/two.txt', '2'),
                 ]),
                 'a',
             ),

@@ -35,4 +35,31 @@ final class TextFileTest extends TestCase
             'File must expose provided contents',
         );
     }
+
+    #[Test]
+    public function usesDefaultModeWhenNotProvided(): void
+    {
+        self::assertSame(
+            0o644,
+            (new TextFile(
+                'file.txt',
+                'data',
+            ))->mode(),
+            'Default mode must be 0644',
+        );
+    }
+
+    #[Test]
+    public function exposesProvidedMode(): void
+    {
+        self::assertSame(
+            0o755,
+            (new TextFile(
+                'script.sh',
+                '#!/bin/sh',
+                0o755,
+            ))->mode(),
+            'File must expose provided mode',
+        );
+    }
 }
