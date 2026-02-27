@@ -28,9 +28,9 @@ final class ParsedActionsTest extends TestCase
     {
         self::assertThat(
             new ParsedActions(
-                'format("x=%s")',
+                'format_each("x=%s")',
                 [
-                    'format' => fn(string $raw) => new FormatEachAction($raw),
+                    'format_each' => fn(string $raw) => new FormatEachAction($raw),
                 ],
             ),
             new HasActionNames([
@@ -44,9 +44,9 @@ final class ParsedActionsTest extends TestCase
     {
         self::assertThat(
             new ParsedActions(
-                'default(["x"])|join(",")',
+                'default_list(["x"])|join(",")',
                 [
-                    'default' => fn(string $raw) => new DefaultListAction($raw),
+                    'default_list' => fn(string $raw) => new DefaultListAction($raw),
                     'join' => fn(string $raw) => new JoinAction($raw),
                 ],
             ),
