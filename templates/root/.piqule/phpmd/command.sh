@@ -12,7 +12,7 @@ BIN="$(.piqule/_composer.sh phpmd)"
 
 "$BIN" \
 << config(phpmd.paths)
-   |default(["src"])
+   |default_list(["src"])
    |join(" ")
 >> \
 text \

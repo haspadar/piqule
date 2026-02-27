@@ -23,8 +23,8 @@ done < <(
   find . \
     -type f \
 << config(shellcheck.ignore_dirs)
-   |default(["vendor","node_modules",".git","coverage","build","var"])
-   |format('    ! -path "./%s/*" \')
+   |default_list(["vendor","node_modules",".git","coverage","build","var"])
+   |format_each('    ! -path "./%s/*" \')
    |join("\n")
 >>
     -print0

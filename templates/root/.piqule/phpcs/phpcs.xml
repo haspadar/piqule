@@ -3,13 +3,13 @@
     <description>Structural and semantic PHP rules</description>
 
     << config(phpcs.files)
-    |default(["../../src"])
-    |format("<file>%s</file>")
+    |default_list(["../../src"])
+    |format_each("<file>%s</file>")
     |join("\n    ") >>
 
     << config(phpcs.excludes)
-    |default(["vendor/*","tests/*"])
-    |format("<exclude-pattern>%s</exclude-pattern>")
+    |default_list(["vendor/*","tests/*"])
+    |format_each("<exclude-pattern>%s</exclude-pattern>")
     |join("\n    ") >>
 
     <arg name="extensions" value="php"/>

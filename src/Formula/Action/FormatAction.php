@@ -8,6 +8,7 @@ use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
+use Haspadar\Piqule\PiquleException;
 use Override;
 
 final readonly class FormatAction implements Action
@@ -19,15 +20,28 @@ final readonly class FormatAction implements Action
     #[Override]
     public function transformed(Args $args): Args
     {
+        $values = $args->values();
+
+        if ($values === []) {
+            throw new PiquleException(
+                'Cannot format empty value',
+            );
+        }
+
+        if (count($values) > 1) {
+            throw new PiquleException(
+                'Cannot format list: expected single value',
+            );
+        }
+
         $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
         $templateValues = $templateArgs->values();
-        $template = (string) $templateValues[0];
+        $template = (string) ($templateValues[0] ?? '');
 
-        return new ListArgs(
-            array_map(
-                static fn(string $item): string => sprintf($template, $item),
-                (new StringifiedArgs($args))->values(),
-            ),
-        );
+        $scalar = (new StringifiedArgs($args))->values()[0];
+
+        return new ListArgs([
+            sprintf($template, $scalar),
+        ]);
     }
 }

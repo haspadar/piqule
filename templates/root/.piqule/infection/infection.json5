@@ -4,8 +4,8 @@
   "source": {
     "directories": [
 << config(infection.source.directories)
-    |default(["../../src"])
-    |format('        "%s"')
+    |default_list(["../../src"])
+    |format_each('        "%s"')
     |join(",")
 >>
     ]
@@ -17,8 +17,8 @@
     "configDir": "../phpunit"
   },
 
-  "initialTestsPhpOptions": "<< config(infection.php_options)|default(["-d memory_limit=1G"])|scalar >>",
-  "timeout": << config(infection.timeout)|default(["30"])|scalar >>,
+  "initialTestsPhpOptions": "<< config(infection.php_options)|default_list(["-d memory_limit=1G"])|scalar >>",
+  "timeout": << config(infection.timeout)|default_list(["30"])|scalar >>,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",

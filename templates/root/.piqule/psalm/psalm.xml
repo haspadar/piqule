@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <psalm
-        errorLevel="<< config(psalm.error_level)|default(["1"])|join("") >>"
+        errorLevel="<< config(psalm.error_level)|default_list(["1"])|join("") >>"
         xmlns="https://getpsalm.org/schema/config"
         findUnusedCode="false"
 >
     <projectFiles>
-<< config(psalm.project.directories)|default(["../../src"])|format('        <directory name="%s" />')|join("\n") >>
+<< config(psalm.project.directories)|default_list(["../../src"])|format_each('        <directory name="%s" />')|join("\n") >>
         <ignoreFiles>
-<< config(psalm.project.ignore)|default(["../../vendor"])|format('            <directory name="%s" />')|join("\n") >>
+<< config(psalm.project.ignore)|default_list(["../../vendor"])|format_each('            <directory name="%s" />')|join("\n") >>
         </ignoreFiles>
     </projectFiles>
 </psalm>

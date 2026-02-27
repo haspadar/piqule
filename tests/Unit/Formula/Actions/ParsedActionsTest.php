@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Actions;
 
-use Haspadar\Piqule\Formula\Action\DefaultAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\DefaultListAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Tests\Constraint\Formula\Actions\HasActionNames;
@@ -28,13 +28,13 @@ final class ParsedActionsTest extends TestCase
     {
         self::assertThat(
             new ParsedActions(
-                'format("x=%s")',
+                'format_each("x=%s")',
                 [
-                    'format' => fn(string $raw) => new FormatAction($raw),
+                    'format_each' => fn(string $raw) => new FormatEachAction($raw),
                 ],
             ),
             new HasActionNames([
-                FormatAction::class,
+                FormatEachAction::class,
             ]),
         );
     }
@@ -44,14 +44,14 @@ final class ParsedActionsTest extends TestCase
     {
         self::assertThat(
             new ParsedActions(
-                'default(["x"])|join(",")',
+                'default_list(["x"])|join(",")',
                 [
-                    'default' => fn(string $raw) => new DefaultAction($raw),
+                    'default_list' => fn(string $raw) => new DefaultListAction($raw),
                     'join' => fn(string $raw) => new JoinAction($raw),
                 ],
             ),
             new HasActionNames([
-                DefaultAction::class,
+                DefaultListAction::class,
                 JoinAction::class,
             ]),
         );

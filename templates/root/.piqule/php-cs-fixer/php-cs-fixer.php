@@ -98,4 +98,4 @@ return (new PhpCsFixer\Config())
         'single_quote' => true,
         'ternary_operator_spaces' => true,
     ])
-    ->setUnsupportedPhpVersionAllowed(<< config(php_cs_fixer.allow_unsupported)|default(["true"])|join("") >>);
+    ->setUnsupportedPhpVersionAllowed(<< config(php_cs_fixer.allow_unsupported)|default_list(["true"])|join("") >>);

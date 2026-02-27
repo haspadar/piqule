@@ -2,19 +2,35 @@
 
 ## Templates
 
+Templates are stored in two locations:
+
+- `templates/root/`
+- `templates/git/`
+
+### Root Templates
+
 Location:
 
 `templates/root/`
 
 Structure mirrors target project root.
 
+Everything under `templates/root/` is copied relative to project root.
+
 Example:
 
-`templates/root/.github/workflows/ci.yml`  
-`templates/root/.piqule/phpstan.neon`  
-`templates/root/Dockerfile`
+`templates/root/.github/workflows/piqule.yml`  
+`templates/root/.piqule/phpstan.neon`
 
-Everything under `templates/root/` is copied relative to project root.
+### Git Templates
+
+Location:
+
+`templates/git/`
+
+Everything under `templates/git/` is copied into:
+
+`.git/`
 
 ---
 
@@ -26,11 +42,17 @@ Run:
 
 Flow:
 
-1. Load `.piqule.php` (if exists)
+1. Load `.piqule.php` if it exists (optional)
 2. Scan `templates/root/`
-3. Resolve placeholders
-4. Write files to project root
-5. `.piqule/` is fully generated
+3. Scan `templates/git/`
+4. Resolve placeholders
+5. Write files to project root
+6. Write files into `.git/`
+7. `.github/` and `.piqule/` are fully generated
+
+Note:
+
+`.piqule.php` is optional and is not generated automatically.
 
 ---
 
@@ -44,16 +66,36 @@ Example:
 
 `<< config(coverage.project.target) >>`
 
-Supported actions:
+### Supported actions
 
-- `default([...])`
+- `default_list([...])`
+- `format_each('%s')`
 - `join(',')`
 - `format('%s')`
 - `scalar`
 
-Example:
+### Semantics
 
-`<< config(paths)|default(["src"])|join(",") >>`
+The DSL operates in stages:
+
+1. `config(...)` produces a list of values
+2. List-level actions:
+    - `default_list`
+    - `format_each`
+3. `join` reduces the list to a single value
+4. Scalar-level actions:
+    - `format`
+    - `scalar`
+
+### Examples
+
+List formatting:
+
+`<< config(paths)|default_list(["src"])|format_each('%s')|join(",") >>`
+
+Final value formatting:
+
+`<< config(paths)|default_list(["src"])|join(",")|format('paths: %s') >>`
 
 ---
 
@@ -85,17 +127,7 @@ If the file does not exist, defaults are used.
 
 ---
 
-## Docker (Infra Image)
-
-The infra image is defined by:
-
-`Dockerfile` (project root)
-
-Build locally:
-
-```bash
-docker buildx build -t piqule-infra:local --load .
-```
+## Infra Image
 
 Runtime image is selected via:
 
@@ -108,10 +140,6 @@ Execution is delegated to `.piqule/_docker.sh`.
 
 ## Tool Versions
 
-Pinned via `ARG` variables in:
-
-`Dockerfile`
+Pinned inside the infra image.
 
 Updated via Renovate.
-
----

@@ -20,15 +20,15 @@ done < <(
     -type f \
     \( \
 << config(hadolint.patterns)
-   |default(["Dockerfile*"])
-   |format('      -name "%s" -o \')
+   |default_list(["Dockerfile*"])
+   |format_each('      -name "%s" -o \')
    |join("\n")
 >>
       -false \
     \) \
 << config(hadolint.ignore)
-   |default(["vendor","node_modules",".git"])
-   |format('    ! -path "./%s/*" \')
+   |default_list(["vendor","node_modules",".git"])
+   |format_each('    ! -path "./%s/*" \')
    |join("\n")
 >>
     -print0

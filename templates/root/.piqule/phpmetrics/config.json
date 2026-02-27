@@ -2,27 +2,27 @@
   "composer": false,
   "includes": [
 << config(phpmetrics.includes)
-|default(["../../src"])
-|format('    "%s"')
+|default_list(["../../src"])
+|format_each('    "%s"')
 |join(",\n")
 >>
   ],
   "excludes": [
 << config(phpmetrics.excludes)
-|default(["vendor","tests","build","bin","var","node_modules"])
-|format('    "%s"')
+|default_list(["vendor","tests","build","bin","var","node_modules"])
+|format_each('    "%s"')
 |join(",\n")
 >>
   ],
   "extensions": [
 << config(phpmetrics.extensions)
-|default(["php"])
-|format('    "%s"')
+|default_list(["php"])
+|format_each('    "%s"')
 |join(",\n")
 >>
   ],
   "report": {
-    "html": "<< config(phpmetrics.report.html)|default(["html"])|join("") >>",
-    "json": "<< config(phpmetrics.report.json)|default(["phpmetrics.json"])|join("") >>"
+    "html": "<< config(phpmetrics.report.html)|default_list(["html"])|join("") >>",
+    "json": "<< config(phpmetrics.report.json)|default_list(["phpmetrics.json"])|join("") >>"
   }
 }
