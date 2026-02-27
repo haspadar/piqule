@@ -21,24 +21,23 @@ final readonly class DiffingStorage implements Storage
         $path = $file->name();
 
         if (!$this->origin->exists($path)) {
+            $newOrigin = $this->origin->write($file);
             $this->reaction->created($path);
 
-            return new self(
-                $this->origin->write($file),
-                $this->reaction,
-            );
+            return new self($newOrigin, $this->reaction);
         }
 
-        if ($this->origin->read($path) !== $file->contents()) {
-            $this->reaction->updated($path);
+        $changed = $this->origin->read($path) !== $file->contents()
+            || $this->origin->mode($path) !== $file->mode();
 
-            return new self(
-                $this->origin->write($file),
-                $this->reaction,
-            );
+        if (!$changed) {
+            return $this;
         }
 
-        return $this;
+        $newOrigin = $this->origin->write($file);
+        $this->reaction->updated($path);
+
+        return new self($newOrigin, $this->reaction);
     }
 
     #[Override]
@@ -57,5 +56,11 @@ final readonly class DiffingStorage implements Storage
     public function entries(string $location): iterable
     {
         return $this->origin->entries($location);
+    }
+
+    #[Override]
+    public function mode(string $location): int
+    {
+        return $this->origin->mode($location);
     }
 }

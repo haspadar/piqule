@@ -22,6 +22,7 @@ final readonly class FolderFiles implements Files
             yield new TextFile(
                 $path,
                 $this->storage->read($path),
+                $this->storage->mode($path),
             );
         }
     }
