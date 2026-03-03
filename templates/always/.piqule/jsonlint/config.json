@@ -1,0 +1,11 @@
+{
+  "mode": << config(jsonlint.mode)|format_each('"%s"')|join("") >>,
+  "compact": << config(jsonlint.compact) >>,
+  "continue": << config(jsonlint.continue) >>,
+  "duplicate-keys": << config(jsonlint.duplicate_keys) >>,
+  "patterns": [
+<< config(jsonlint.patterns)
+   |format_each('    "%s"')
+   |join(",\n") >>
+  ]
+}

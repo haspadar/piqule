@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<psalm
+        errorLevel="<< config(psalm.error_level)|join("") >>"
+        xmlns="https://getpsalm.org/schema/config"
+        findUnusedCode="false"
+>
+    <projectFiles>
+<< config(psalm.project.directories)|format_each('        <directory name="%s" />')|join("\n") >>
+        <ignoreFiles>
+<< config(psalm.project.ignore)|format_each('            <directory name="%s" />')|join("\n") >>
+        </ignoreFiles>
+    </projectFiles>
+</psalm>

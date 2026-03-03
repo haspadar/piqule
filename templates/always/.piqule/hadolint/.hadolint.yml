@@ -1,0 +1,9 @@
+# Hadolint configuration (Piqule managed)
+
+failure-threshold: << config(hadolint.failure_threshold) >>
+
+ignored: << config(hadolint.ignored_yaml) >>
+
+override:
+  error: << config(hadolint.override.error_yaml) >>
+  warning: << config(hadolint.override.warning_yaml) >>

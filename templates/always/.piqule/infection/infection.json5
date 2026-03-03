@@ -1,0 +1,32 @@
+{
+  "$schema": "../../vendor/infection/infection/resources/schema.json",
+
+  "source": {
+    "directories": [
+<< config(infection.source.directories)
+    |format_each('        "%s"')
+    |join(",")
+>>
+    ]
+  },
+
+  "testFramework": "phpunit",
+
+  "phpUnit": {
+    "configDir": "../phpunit"
+  },
+
+  "initialTestsPhpOptions": "<< config(infection.php_options) >>",
+  "timeout": << config(infection.timeout) >>,
+  "logs": {
+    "text": "infection.log",
+    "summary": "infection-summary.log",
+    "stryker": {
+      "badge": "/^(main|develop)$/"
+    }
+  },
+
+  "mutators": {
+    "@default": true
+  }
+}
