@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Storage;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\InMemoryStorage;
 use Haspadar\Piqule\Storage\OnceStorage;
+use Haspadar\Piqule\Tests\Constraint\Storage\ReactionWasSilent;
 use Haspadar\Piqule\Tests\Fake\Storage\Reaction\FakeStorageReaction;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -21,10 +22,10 @@ final class OnceStorageTest extends TestCase
         (new OnceStorage(
             new InMemoryStorage(),
             $reaction,
-        ))->write(new TextFile('bootstrap.php', '<?php'));
+        ))->write(new TextFile('init.env', 'APP_ENV=local'));
 
         self::assertSame(
-            ['bootstrap.php'],
+            ['init.env'],
             $reaction->createdPaths(),
             'created() must be called for a new file',
         );
@@ -37,20 +38,15 @@ final class OnceStorageTest extends TestCase
 
         (new OnceStorage(
             new InMemoryStorage([
-                'bootstrap.php' => new TextFile('bootstrap.php', '<?php // original'),
+                'config.php' => new TextFile('config.php', '<?php // original'),
             ]),
             $reaction,
-        ))->write(new TextFile('bootstrap.php', '<?php // new'));
+        ))->write(new TextFile('config.php', '<?php // new'));
 
-        self::assertSame(
-            [],
-            $reaction->createdPaths(),
-            'created() must not be called when file already exists',
-        );
-        self::assertSame(
-            [],
-            $reaction->updatedPaths(),
-            'updated() must not be called when file already exists',
+        self::assertThat(
+            $reaction,
+            new ReactionWasSilent(),
+            'no reaction must be triggered when file already exists',
         );
     }
 
@@ -62,12 +58,51 @@ final class OnceStorageTest extends TestCase
             new FakeStorageReaction(),
         );
 
-        $result = $storage->write(new TextFile('init.env', 'APP_ENV=local'));
+        $result = $storage->write(new TextFile('run.sh', '#!/bin/bash'));
 
         self::assertNotSame(
             $storage,
             $result,
             'write() must return a new instance to preserve immutability',
+        );
+    }
+
+    #[Test]
+    public function readsFileContentFromOrigin(): void
+    {
+        self::assertSame(
+            '<?php',
+            (new OnceStorage(
+                new InMemoryStorage(['bootstrap.php' => new TextFile('bootstrap.php', '<?php')]),
+                new FakeStorageReaction(),
+            ))->read('bootstrap.php'),
+            'read() must delegate to origin storage',
+        );
+    }
+
+    #[Test]
+    public function listsEntriesFromOrigin(): void
+    {
+        self::assertContains(
+            'env.php',
+            (new OnceStorage(
+                new InMemoryStorage(['env.php' => new TextFile('env.php', '')]),
+                new FakeStorageReaction(),
+            ))->entries(''),
+            'entries() must delegate to origin storage',
+        );
+    }
+
+    #[Test]
+    public function returnsModeFromOrigin(): void
+    {
+        self::assertSame(
+            0o755,
+            (new OnceStorage(
+                new InMemoryStorage(['deploy.sh' => new TextFile('deploy.sh', '', 0o755)]),
+                new FakeStorageReaction(),
+            ))->mode('deploy.sh'),
+            'mode() must delegate to origin storage',
         );
     }
 }
