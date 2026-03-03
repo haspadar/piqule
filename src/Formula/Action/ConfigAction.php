@@ -26,7 +26,7 @@ final readonly class ConfigAction implements Action
     public function transformed(Args $args): Args
     {
         return new StringifiedArgs(
-            new ListArgs($this->config->values($this->key)),
+            new ListArgs($this->config->list($this->key)),
         );
     }
 }
