@@ -51,6 +51,23 @@ final class OnceStorageTest extends TestCase
     }
 
     #[Test]
+    public function returnsSameInstanceWhenFileAlreadyExists(): void
+    {
+        $storage = new OnceStorage(
+            new InMemoryStorage([
+                'config.php' => new TextFile('config.php', '<?php // original'),
+            ]),
+            new FakeStorageReaction(),
+        );
+
+        self::assertSame(
+            $storage,
+            $storage->write(new TextFile('config.php', '<?php // new')),
+            'write() must return the same instance when file already exists',
+        );
+    }
+
+    #[Test]
     public function returnsNewInstanceAfterCreation(): void
     {
         $storage = new OnceStorage(

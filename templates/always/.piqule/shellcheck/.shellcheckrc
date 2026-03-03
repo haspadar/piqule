@@ -14,5 +14,5 @@ external-sources=<< config(shellcheck.external_sources) >>
 # Additional include path for sourced files (optional)
 # source-path=<< config(shellcheck.source_path) >>
 
-# Excluded rules (comma-separated)
+# Excluded rules (one per line)
 << config(shellcheck.exclude)|join("\n") >>
