@@ -8,6 +8,7 @@ use Override;
 
 final class DefaultConfig implements Config
 {
+    private const array INCLUDES = ['../../src'];
     private const array DEFAULTS = [
         'ci.php.matrix' => ['8.3'],
         'ci.php.test_version' => ['8.3'],
@@ -25,7 +26,7 @@ final class DefaultConfig implements Config
         'hadolint.override.warning_yaml' => '[]',
         'hadolint.patterns' => ['Dockerfile*'],
         'infection.php_options' => '-d memory_limit=1G',
-        'infection.source.directories' => ['../../src'],
+        'infection.source.directories' => self::INCLUDES,
         'infection.timeout' => '30',
         'jsonlint.compact' => 'true',
         'jsonlint.continue' => 'true',
@@ -47,7 +48,7 @@ final class DefaultConfig implements Config
         'php_cs_fixer.exclude' => ['vendor', 'tests'],
         'php_cs_fixer.paths' => ['../..'],
         'phpcs.excludes' => ['vendor/*', 'tests/*'],
-        'phpcs.files' => ['../../src'],
+        'phpcs.files' => self::INCLUDES,
         'phpmd.class_complexity' => [50],
         'phpmd.class_length' => [200],
         'phpmd.cyclomatic' => [10],
@@ -67,7 +68,7 @@ final class DefaultConfig implements Config
         'phpmetrics.halstead.max_difficulty_per_method' => [15],
         'phpmetrics.halstead.max_effort_per_method' => [15000],
         'phpmetrics.halstead.max_volume_per_method' => [1000],
-        'phpmetrics.includes' => ['../../src'],
+        'phpmetrics.includes' => self::INCLUDES,
         'phpmetrics.inheritance.max_depth' => [3],
         'phpmetrics.report.html' => ['html'],
         'phpmetrics.report.json' => ['phpmetrics.json'],
@@ -77,12 +78,12 @@ final class DefaultConfig implements Config
         'phpmetrics.structure.max_methods_per_class' => [10],
         'phpstan.level' => [9],
         'phpstan.memory' => '1G',
-        'phpstan.paths' => ['../../src'],
-        'phpunit.source.include' => ['../../src'],
+        'phpstan.paths' => self::INCLUDES,
+        'phpunit.source.include' => self::INCLUDES,
         'phpunit.testsuites.integration' => ['../../tests/Integration'],
         'phpunit.testsuites.unit' => ['../../tests/Unit'],
         'psalm.error_level' => [1],
-        'psalm.project.directories' => ['../../src'],
+        'psalm.project.directories' => self::INCLUDES,
         'psalm.project.ignore' => ['../../vendor'],
         'shellcheck.exclude' => [],
         'shellcheck.external_sources' => 'true',
