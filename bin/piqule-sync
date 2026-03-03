@@ -3,7 +3,9 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Config\FlatConfig;
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
@@ -11,18 +13,11 @@ use Haspadar\Piqule\Files\CombinedFiles;
 use Haspadar\Piqule\Files\EachFile;
 use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Files\MappedFiles;
-use Haspadar\Piqule\Formula\Action\Action;
-use Haspadar\Piqule\Formula\Action\ConfigAction;
-use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\DefaultScalarAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
-use Haspadar\Piqule\Formula\Action\FormatEachAction;
-use Haspadar\Piqule\Formula\Action\JoinAction;
-use Haspadar\Piqule\Formula\Action\ScalarAction;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\DiskStorage;
+use Haspadar\Piqule\Storage\OnceStorage;
 use Haspadar\Piqule\Storage\Reaction\ReportingStorageReaction;
 use Haspadar\Piqule\Storage\Reaction\StorageReactions;
 
@@ -37,32 +32,20 @@ try {
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
         ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $projectConfigData = file_exists($projectRoot . '/.piqule.php')
+    $config = file_exists($projectRoot . '/.piqule.php')
         ? require $projectRoot . '/.piqule.php'
-        : [];
-    if (!is_array($projectConfigData)) {
-        throw new PiquleException(
-            '.piqule.php must return array',
-        );
-    }
+        : new OverrideConfig(new DefaultConfig(), []);
 
-    $config = new FlatConfig($projectConfigData);
+    $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
+    $disk = new DiskStorage($projectRoot);
 
-    $files = new CombinedFiles([
+    $alwaysFiles = new CombinedFiles([
         new MappedFiles(
             new FolderFiles(
-                new DiskStorage($libraryRoot . '/templates/root'),
+                new DiskStorage($libraryRoot . '/templates/always'),
                 '',
             ),
-            fn(File $file): File => new ConfiguredFile($file, [
-                'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
-                'default_list' => fn(string $raw): Action => new DefaultListAction($raw),
-                'default_scalar' => fn(string $raw): Action => new DefaultScalarAction($raw),
-                'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
-                'format' => fn(string $raw): Action => new FormatAction($raw),
-                'join' => fn(string $raw): Action => new JoinAction($raw),
-                'scalar' => fn(string $raw): Action => new ScalarAction(),
-            ], ),
+            fn(File $file): File => new ConfiguredFile($file, $config),
         ),
         new MappedFiles(
             new FolderFiles(
@@ -73,14 +56,16 @@ try {
         ),
     ]);
 
-    $storage = new DiffingStorage(
-        new DiskStorage($projectRoot),
-        new StorageReactions([
-            new ReportingStorageReaction($output),
-        ]),
+    $onceFiles = new MappedFiles(
+        new FolderFiles(
+            new DiskStorage($libraryRoot . '/templates/once'),
+            '',
+        ),
+        fn(File $file): File => new ConfiguredFile($file, $config),
     );
 
-    (new EachFile($files, fn(File $file) => $storage->write($file)))->run();
+    (new EachFile($alwaysFiles, fn(File $file) => (new DiffingStorage($disk, $reactions))->write($file)))->run();
+    (new EachFile($onceFiles, fn(File $file) => (new OnceStorage($disk, $reactions))->write($file)))->run();
 } catch (PiquleException $e) {
     $output->error($e->getMessage());
     exit(1);

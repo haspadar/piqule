@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Actions;
 
-use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\DefaultScalarAction;
 use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
@@ -45,32 +43,15 @@ final class ParsedActionsTest extends TestCase
     {
         self::assertThat(
             new ParsedActions(
-                'default_list(["x"])|join(",")',
+                'format_each("v=%s")|join(",")',
                 [
-                    'default_list' => fn(string $raw) => new DefaultListAction($raw),
+                    'format_each' => fn(string $raw) => new FormatEachAction($raw),
                     'join' => fn(string $raw) => new JoinAction($raw),
                 ],
             ),
             new HasActionNames([
-                DefaultListAction::class,
+                FormatEachAction::class,
                 JoinAction::class,
-            ]),
-        );
-    }
-
-    #[Test]
-    public function parsesDefaultScalarAction(): void
-    {
-        self::assertThat(
-            new ParsedActions(
-                'default_scalar("256M")',
-                [
-                    'default_scalar' => fn(string $raw)
-                    => new DefaultScalarAction($raw),
-                ],
-            ),
-            new HasActionNames([
-                DefaultScalarAction::class,
             ]),
         );
     }

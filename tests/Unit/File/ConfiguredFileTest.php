@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File;
 
-use Haspadar\Piqule\Config\FlatConfig;
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
-use Haspadar\Piqule\Formula\Action\Action;
-use Haspadar\Piqule\Formula\Action\ConfigAction;
-use Haspadar\Piqule\Formula\Action\DefaultListAction;
-use Haspadar\Piqule\Formula\Action\FormatEachAction;
-use Haspadar\Piqule\Formula\Action\JoinAction;
-use Haspadar\Piqule\Formula\Action\ScalarAction;
-use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFileContents;
 use Haspadar\Piqule\Tests\Constraint\HasFormulaError;
@@ -22,38 +16,33 @@ use PHPUnit\Framework\TestCase;
 
 final class ConfiguredFileTest extends TestCase
 {
-    private function actions(FlatConfig $config): array
-    {
-        return [
-            'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
-            'default_list' => fn(string $raw): Action => new DefaultListAction($raw),
-            'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
-            'join' => fn(string $raw): Action => new JoinAction($raw),
-            'scalar' => fn(string $raw): Action => new ScalarAction(),
-        ];
-    }
-
     #[Test]
     public function replacesPlaceholderUsingPipeline(): void
     {
-        $config = new FlatConfig([]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['ci.php.matrix' => ['8.3', '8.4']],
+        );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'file',
-                    '<< config(a)|default_list(["x","y"])|format_each("%s")|join(",") >>',
+                    '<< config(ci.php.matrix)|format_each("%s")|join(",") >>',
                 ),
-                $this->actions($config),
+                $config,
             ),
-            new HasFileContents('x,y'),
+            new HasFileContents('8.3,8.4'),
         );
     }
 
     #[Test]
     public function leavesFileUntouchedWhenNoPlaceholdersPresent(): void
     {
-        $config = new FlatConfig([]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            [],
+        );
 
         self::assertThat(
             new ConfiguredFile(
@@ -61,52 +50,59 @@ final class ConfiguredFileTest extends TestCase
                     'plain.txt',
                     "just text\nno placeholders here",
                 ),
-                $this->actions($config),
+                $config,
             ),
             new HasFileContents("just text\nno placeholders here"),
         );
     }
 
     #[Test]
-    public function supportsFlatConfigKeys(): void
+    public function supportsDotSeparatedConfigKeys(): void
     {
-        $config = new FlatConfig([
-            'coverage.range' => '80...100',
-        ]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['coverage.patch.target' => 85],
+        );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'config.yaml',
-                    'coverage: << config(coverage.range)|default_list([""])|join("") >>',
+                    'coverage: << config(coverage.patch.target)|format("%s%%") >>',
                 ),
-                $this->actions($config),
+                $config,
             ),
-            new HasFileContents('coverage: 80...100'),
+            new HasFileContents('coverage: 85%'),
         );
     }
 
     #[Test]
-    public function returnsEmptyStringWhenMissingAndNoDefault(): void
+    public function usesDefaultValueWhenKeyNotOverridden(): void
     {
-        $config = new FlatConfig([]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            [],
+        );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'broken.yaml',
-                    'value: << config(missing.key)|join(",") >>',
+                    'value: << config(shellcheck.shell)|join("") >>',
                 ),
-                $this->actions($config),
+                $config,
             ),
-            new HasFileContents('value: '),
+            new HasFileContents('value: bash'),
         );
     }
 
     #[Test]
     public function wrapsUnknownActionWithFileContext(): void
     {
-        $config = new FlatConfig([]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            [],
+        );
 
         self::assertThat(
             new ConfiguredFile(
@@ -114,7 +110,7 @@ final class ConfiguredFileTest extends TestCase
                     'broken.yaml',
                     '<< unknown(a) >>',
                 ),
-                $this->actions($config),
+                $config,
             ),
             new HasFormulaError(
                 'broken.yaml',
@@ -127,37 +123,20 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function throwsWhenFormulaProducesMultipleValues(): void
     {
-        $config = new FlatConfig([
-            'a' => ['x', 'y'],
-        ]);
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['ci.php.matrix' => ['8.3', '8.4']],
+        );
 
         $this->expectException(PiquleException::class);
 
         (new ConfiguredFile(
             new TextFile(
                 'file',
-                '<< config(a)|default_list(["x"]) >>',
+                '<< config(ci.php.matrix) >>',
             ),
-            $this->actions($config),
+            $config,
         ))->contents();
-    }
-
-    #[Test]
-    public function formatsUsingEmptyTemplate(): void
-    {
-        $result = (new FormatEachAction('""'))
-            ->transformed(new ListArgs(['a']));
-
-        self::assertSame([''], $result->values());
-    }
-
-    #[Test]
-    public function joinsWithEmptyDelimiter(): void
-    {
-        $result = (new JoinAction(''))
-            ->transformed(new ListArgs(['a', 'b']));
-
-        self::assertSame(['ab'], $result->values());
     }
 
     #[Test]
@@ -166,10 +145,10 @@ final class ConfiguredFileTest extends TestCase
         $file = new ConfiguredFile(
             new TextFile(
                 'file',
-                '<< config(a)|default_list(["x"])|join("") >>',
+                '<< config(shellcheck.shell)|join("") >>',
                 0o755,
             ),
-            $this->actions(new FlatConfig([])),
+            new OverrideConfig(new DefaultConfig(), []),
         );
 
         self::assertSame(0o755, $file->mode());

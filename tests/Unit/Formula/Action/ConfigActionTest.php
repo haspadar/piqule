@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 
-use Haspadar\Piqule\Config\FlatConfig;
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
 use Haspadar\Piqule\Formula\Action\ConfigAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
@@ -18,10 +19,11 @@ final class ConfigActionTest extends TestCase
     {
         self::assertThat(
             (new ConfigAction(
-                new FlatConfig([
-                    'phpmetrics.include' => ['mbstring', 'intl'],
-                ]),
-                'phpmetrics.include',
+                new OverrideConfig(
+                    new DefaultConfig(),
+                    ['phpmetrics.includes' => ['mbstring', 'intl']],
+                ),
+                'phpmetrics.includes',
             ))->transformed(new ListArgs([])),
             new HasArgsValues(['mbstring', 'intl']),
         );
@@ -32,22 +34,26 @@ final class ConfigActionTest extends TestCase
     {
         self::assertThat(
             (new ConfigAction(
-                new FlatConfig([
-                    'feature.flags' => [true, false],
-                ]),
-                'feature.flags',
+                new OverrideConfig(
+                    new DefaultConfig(),
+                    ['shellcheck.external_sources' => false],
+                ),
+                'shellcheck.external_sources',
             ))->transformed(new ListArgs([])),
-            new HasArgsValues(['true', 'false']),
+            new HasArgsValues(['false']),
         );
     }
 
     #[Test]
-    public function returnsEmptyListWhenConfigValueMissing(): void
+    public function returnsDefaultValuesWhenKeyNotOverridden(): void
     {
         self::assertThat(
             (new ConfigAction(
-                new FlatConfig([]),
-                'missing.key',
+                new OverrideConfig(
+                    new DefaultConfig(),
+                    [],
+                ),
+                'shellcheck.exclude',
             ))->transformed(new ListArgs([])),
             new HasArgsValues([]),
         );

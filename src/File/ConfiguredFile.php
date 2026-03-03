@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
+use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Formula\Action\Action;
+use Haspadar\Piqule\Formula\Action\ConfigAction;
+use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
+use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Formula\ExecutedFormula;
 use Haspadar\Piqule\Formula\NormalizedFormula;
@@ -14,12 +19,9 @@ use Throwable;
 
 final readonly class ConfiguredFile implements File
 {
-    /**
-     * @param array<string, callable(string): Action> $actions
-     */
     public function __construct(
         private File $origin,
-        private array $actions,
+        private Config $config,
     ) {}
 
     #[Override]
@@ -50,7 +52,7 @@ final readonly class ConfiguredFile implements File
             return (new ExecutedFormula(
                 new ParsedActions(
                     (new NormalizedFormula($expression))->result(),
-                    $this->actions,
+                    $this->actions(),
                 ),
             ))->result();
         } catch (Throwable $e) {
@@ -64,5 +66,18 @@ final readonly class ConfiguredFile implements File
                 previous: $e,
             );
         }
+    }
+
+    /**
+     * @return array<string, callable(string): Action>
+     */
+    private function actions(): array
+    {
+        return [
+            'config' => fn(string $raw): Action => new ConfigAction($this->config, $raw),
+            'format' => fn(string $raw): Action => new FormatAction($raw),
+            'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
+            'join' => fn(string $raw): Action => new JoinAction($raw),
+        ];
     }
 }
