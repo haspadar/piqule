@@ -1,6 +1,11 @@
 <?php
 
-return [
+declare(strict_types=1);
+
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
+
+return new OverrideConfig(new DefaultConfig(), [
     'markdownlint.ignores' => [
         '**/vendor/**',
         '**/node_modules/**',
@@ -18,7 +23,7 @@ return [
         '.piqule/**/html/**',
         '.piqule/**/coverage-report/**',
     ],
-    'yamllint.line_length.max' => 120,
+    'yamllint.line_length.max' => [120],
 
     'phpcs.excludes' => ['vendor/*', 'tests/*', 'templates/*'],
 
@@ -27,4 +32,4 @@ return [
     'ci.php.matrix' => ['8.3', '8.4', '8.5'],
     'ci.pr.max_lines_changed' => 400,
     'ci.piqule_bin' => 'bin/piqule',
-];
+]);
