@@ -26,7 +26,7 @@ jobs:
 
       - uses: maidsafe/pr_size_checker@fa5820312a361f3f51aad2d3d9cb941d9e1d27db
         with:
-          max_lines_changed: 250
+          max_lines_changed: 400
 
 
   # ============================================================

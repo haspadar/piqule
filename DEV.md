@@ -73,7 +73,6 @@ Example:
 - `format_each('%s')`
 - `join(',')`
 - `format('%s')`
-- `scalar`
 
 ### Semantics
 
@@ -87,7 +86,6 @@ The DSL operates in stages:
 4. Scalar-level actions:
     - `default_scalar`
     - `format`
-    - `scalar`
 
 `default_scalar` fails fast if the resolved pipeline value contains more than one item.
 
@@ -100,10 +98,6 @@ List formatting:
 Scalar default without explicit assertion:
 
 `<< config(phpstan.memory)|default_scalar("1G") >>`
-
-Explicit scalar assertion:
-
-`<< config(phpstan.memory)|scalar >>`
 
 Final value formatting:
 
