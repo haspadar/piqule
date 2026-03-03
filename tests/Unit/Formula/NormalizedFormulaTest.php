@@ -18,11 +18,11 @@ final class NormalizedFormulaTest extends TestCase
 
             |   default(["x"])
 
-            |   scalar
+            |   format("%s")
             FORMULA;
 
         self::assertSame(
-            'config(a)|default(["x"])|scalar',
+            'config(a)|default(["x"])|format("%s")',
             (new NormalizedFormula($raw))->result(),
         );
     }
@@ -42,9 +42,9 @@ final class NormalizedFormulaTest extends TestCase
     public function trimsOuterWhitespace(): void
     {
         self::assertSame(
-            'config(a)|scalar',
+            'config(a)|format("%s")',
             (new NormalizedFormula(
-                '   config(a)|scalar   ',
+                '   config(a)|format("%s")   ',
             ))->result(),
         );
     }
@@ -53,9 +53,9 @@ final class NormalizedFormulaTest extends TestCase
     public function preservesJsonLiteral(): void
     {
         self::assertSame(
-            'config(a)|default([1])|scalar',
+            'config(a)|default([1])|format("%s")',
             (new NormalizedFormula(
-                'config(a) | default([1]) | scalar',
+                'config(a) | default([1]) | format("%s")',
             ))->result(),
         );
     }
