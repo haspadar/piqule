@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Fake\Formula;
 
 use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\Formula\Actions\Actions;
+use Override;
 
 final readonly class FakeActions implements Actions
 {

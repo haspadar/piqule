@@ -72,27 +72,14 @@ final class OverrideConfigTest extends TestCase
     }
 
     #[Test]
-    public function returnsEmptyListForUnknownMetric(): void
+    public function throwsWhenListCalledForUndeclaredKey(): void
     {
-        self::assertSame(
-            [],
-            (new OverrideConfig(
-                new FakeConfig([]),
-                [],
-            ))->list('phpmetrics.size.max_loc_per_class'),
-        );
-    }
+        $this->expectException(PiquleException::class);
 
-    #[Test]
-    public function allowsOverrideForUnknownMetric(): void
-    {
-        self::assertSame(
-            [500],
-            (new OverrideConfig(
-                new FakeConfig([]),
-                ['phpmetrics.size.max_loc_per_class' => 500],
-            ))->list('phpmetrics.size.max_loc_per_class'),
-        );
+        (new OverrideConfig(
+            new FakeConfig([]),
+            [],
+        ))->list('phpmetrics.size.max_loc_per_class');
     }
 
     #[Test]

@@ -105,6 +105,12 @@ final readonly class OverrideConfig implements Config
     #[Override]
     public function list(string $name): array
     {
+        if (!$this->defaults->has($name)) {
+            throw new PiquleException(
+                sprintf('Unknown config key "%s"', $name),
+            );
+        }
+
         if (!array_key_exists($name, $this->overrides)) {
             return $this->defaults->list($name);
         }
