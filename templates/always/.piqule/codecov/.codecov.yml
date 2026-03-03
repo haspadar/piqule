@@ -1,0 +1,18 @@
+coverage:
+  status:
+    project:
+      default:
+        target: << config(coverage.project.target)|format("%s%%") >>
+        threshold: << config(coverage.project.threshold)|format("%s%%") >>
+
+    patch:
+      default:
+        target: << config(coverage.patch.target)|format("%s%%") >>
+        threshold: << config(coverage.patch.threshold)|format("%s%%") >>
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: false

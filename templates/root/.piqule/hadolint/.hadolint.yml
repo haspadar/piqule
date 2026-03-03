@@ -1,9 +1,0 @@
-# Hadolint configuration (Piqule managed)
-
-failure-threshold: << config(hadolint.failure_threshold)|default_scalar("error") >>
-
-ignored: << config(hadolint.ignored_yaml)|default_scalar("[]") >>
-
-override:
-  error: << config(hadolint.override.error_yaml)|default_scalar("[]") >>
-  warning: << config(hadolint.override.warning_yaml)|default_scalar("[]") >>

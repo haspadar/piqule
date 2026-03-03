@@ -1,0 +1,25 @@
+{
+  "composer": false,
+  "includes": [
+<< config(phpmetrics.includes)
+|format_each('    "%s"')
+|join(",\n")
+>>
+  ],
+  "excludes": [
+<< config(phpmetrics.excludes)
+|format_each('    "%s"')
+|join(",\n")
+>>
+  ],
+  "extensions": [
+<< config(phpmetrics.extensions)
+|format_each('    "%s"')
+|join(",\n")
+>>
+  ],
+  "report": {
+    "html": "<< config(phpmetrics.report.html)|join("") >>",
+    "json": "<< config(phpmetrics.report.json)|join("") >>"
+  }
+}
