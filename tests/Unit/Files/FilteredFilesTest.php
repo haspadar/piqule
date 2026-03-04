@@ -19,15 +19,15 @@ final class FilteredFilesTest extends TestCase
         self::assertThat(
             new FilteredFiles(
                 new TextFiles([
-                    'pre-push' => '#!/usr/bin/env sh',
-                    'pre-push-piqule' => '#!/usr/bin/env sh',
-                    'commit-msg' => '#!/usr/bin/env sh',
+                    'pre-push' => 'exit 1',
+                    'pre-push-piqule' => 'exit 2',
+                    'commit-msg' => 'exit 3',
                 ]),
                 fn(File $file): bool => !str_ends_with($file->name(), 'pre-push'),
             ),
             new HasFiles([
-                'pre-push-piqule' => '#!/usr/bin/env sh',
-                'commit-msg' => '#!/usr/bin/env sh',
+                'pre-push-piqule' => 'exit 2',
+                'commit-msg' => 'exit 3',
             ]),
             'FilteredFiles must exclude files that do not satisfy the predicate',
         );
@@ -39,7 +39,7 @@ final class FilteredFilesTest extends TestCase
         self::assertThat(
             new FilteredFiles(
                 new TextFiles([
-                    'pre-push' => '#!/usr/bin/env sh',
+                    'pre-push' => 'exit 0',
                 ]),
                 fn(File $file): bool => str_starts_with($file->name(), 'commit'),
             ),
@@ -54,14 +54,14 @@ final class FilteredFilesTest extends TestCase
         self::assertThat(
             new FilteredFiles(
                 new TextFiles([
-                    'pre-push' => '#!/usr/bin/env sh',
-                    'pre-commit' => '#!/usr/bin/env sh',
+                    'pre-push' => 'run push checks',
+                    'pre-commit' => 'run commit checks',
                 ]),
                 fn(File $file): bool => str_starts_with($file->name(), 'pre-'),
             ),
             new HasFiles([
-                'pre-push' => '#!/usr/bin/env sh',
-                'pre-commit' => '#!/usr/bin/env sh',
+                'pre-push' => 'run push checks',
+                'pre-commit' => 'run commit checks',
             ]),
             'FilteredFiles must return all files when every file satisfies the predicate',
         );
