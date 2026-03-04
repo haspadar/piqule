@@ -16,6 +16,7 @@ final class ListArgsTest extends TestCase
         self::assertSame(
             ['alpha', 'beta', 'gamma'],
             (new ListArgs(['alpha', 'beta', 'gamma']))->values(),
+            'ListArgs must return all provided values',
         );
     }
 
@@ -25,6 +26,7 @@ final class ListArgsTest extends TestCase
         self::assertSame(
             [],
             (new ListArgs([]))->values(),
+            'ListArgs must return an empty list when constructed with an empty array',
         );
     }
 }

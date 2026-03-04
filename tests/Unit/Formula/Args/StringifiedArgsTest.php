@@ -21,6 +21,7 @@ final class StringifiedArgsTest extends TestCase
         self::assertSame(
             ['true'],
             $args->values(),
+            'StringifiedArgs must convert boolean true to the literal string "true"',
         );
     }
 
@@ -34,6 +35,7 @@ final class StringifiedArgsTest extends TestCase
         self::assertSame(
             ['false'],
             $args->values(),
+            'StringifiedArgs must convert boolean false to the literal string "false"',
         );
     }
 
@@ -53,6 +55,7 @@ final class StringifiedArgsTest extends TestCase
         self::assertSame(
             ['true', 'false', '10', '3.14', 'x'],
             $args->values(),
+            'StringifiedArgs must convert all scalar types to their string representations',
         );
     }
 }

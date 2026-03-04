@@ -31,6 +31,7 @@ final class FolderFilesTest extends TestCase
                 'a/one.txt' => '1',
                 'a/two.txt' => '2',
             ]),
+            'FolderFiles must expose only files from the specified folder, ignoring files in other folders',
         );
     }
 }

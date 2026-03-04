@@ -19,6 +19,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction(' | '))
                 ->transformed(new ListArgs(['red', 'green', 'blue'])),
             new HasArgsValues(['red | green | blue']),
+            'JoinAction must join values using the given delimiter',
         );
     }
 
@@ -29,6 +30,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction(''))
                 ->transformed(new ListArgs(['a', 'b'])),
             new HasArgsValues(['ab']),
+            'JoinAction must concatenate values without a separator when the delimiter is empty',
         );
     }
 
@@ -39,6 +41,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction(','))
                 ->transformed(new ListArgs(['one'])),
             new HasArgsValues(['one']),
+            'JoinAction must return the single value unchanged when the list has one element',
         );
     }
 
@@ -49,6 +52,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction(','))
                 ->transformed(new ListArgs([])),
             new HasArgsValues(['']),
+            'JoinAction must return a single empty string when no values are provided',
         );
     }
 
@@ -59,6 +63,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction('\n'))
                 ->transformed(new ListArgs(['a', 'b', 'c'])),
             new HasArgsValues(["a\nb\nc"]),
+            'JoinAction must interpret \\n as a newline character in the delimiter',
         );
     }
 
@@ -69,6 +74,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction('\t'))
                 ->transformed(new ListArgs(['a', 'b'])),
             new HasArgsValues(["a\tb"]),
+            'JoinAction must interpret \\t as a tab character in the delimiter',
         );
     }
 
@@ -79,6 +85,7 @@ final class JoinActionTest extends TestCase
             (new JoinAction('\\\\'))
                 ->transformed(new ListArgs(['a', 'b'])),
             new HasArgsValues(['a\\b']),
+            'JoinAction must interpret \\\\ as a literal backslash in the delimiter',
         );
     }
 }

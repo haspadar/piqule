@@ -24,6 +24,7 @@ final class ReplacedFileTest extends TestCase
                 '{{version}}',
                 '1.2.3',
             ))->contents(),
+            'ReplacedFile must substitute the placeholder in file contents',
         );
     }
 
@@ -40,6 +41,7 @@ final class ReplacedFileTest extends TestCase
                 'x',
                 'y',
             ))->name(),
+            'ReplacedFile must delegate name() to the origin file',
         );
     }
 
@@ -52,6 +54,6 @@ final class ReplacedFileTest extends TestCase
             'b',
         );
 
-        self::assertSame(0o700, $file->mode());
+        self::assertSame(0o700, $file->mode(), 'ReplacedFile must preserve the origin file mode');
     }
 }

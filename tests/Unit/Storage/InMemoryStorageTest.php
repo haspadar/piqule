@@ -22,11 +22,12 @@ final class InMemoryStorageTest extends TestCase
                 new TextFile('read/file.txt', 'hello'),
             ),
             new HasEntry('read/file.txt', 'hello'),
+            'InMemoryStorage must make written contents readable',
         );
     }
 
     #[Test]
-    public function overwritesExistingContents(): void
+    public function overwritesExistingContentsWhenWritingToSamePath(): void
     {
         $path = './overwrite.txt';
 
@@ -35,6 +36,7 @@ final class InMemoryStorageTest extends TestCase
                 ->write(new TextFile($path, 'first'))
                 ->write(new TextFile($path, 'second')),
             new HasEntry($path, 'second'),
+            'InMemoryStorage must overwrite existing contents when writing to the same path',
         );
     }
 
@@ -102,6 +104,7 @@ final class InMemoryStorageTest extends TestCase
                 'alpha/file-1.log',
                 'alpha/file-2.log',
             ]),
+            'InMemoryStorage must list only entries under the given location',
         );
     }
 
@@ -115,6 +118,7 @@ final class InMemoryStorageTest extends TestCase
             new HasEntries('root', [
                 'root/shallow.txt',
             ]),
+            'InMemoryStorage must not list deeply nested entries when listing a location',
         );
     }
 
@@ -126,6 +130,7 @@ final class InMemoryStorageTest extends TestCase
                 ->write(new TextFile('container/nested/one.dat', '1'))
                 ->write(new TextFile('container/nested/two.dat', '2')),
             new HasEntries('container', []),
+            'InMemoryStorage must return no entries when all files are in nested subdirectories',
         );
     }
 
@@ -138,7 +143,7 @@ final class InMemoryStorageTest extends TestCase
             new TextFile('file.txt', 'data', 0o755),
         );
 
-        self::assertSame(0o755, $storage->mode('file.txt'));
+        self::assertSame(0o755, $storage->mode('file.txt'), 'InMemoryStorage must store and return the file mode');
     }
 
     #[Test]

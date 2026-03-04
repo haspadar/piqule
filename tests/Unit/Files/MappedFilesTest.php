@@ -33,6 +33,7 @@ final class MappedFilesTest extends TestCase
                 'README.md' => 'Hello, Piqule',
                 'config/app.ini' => 'name=Piqule',
             ]),
+            'MappedFiles must apply the mapping function to every file in the source',
         );
     }
 }

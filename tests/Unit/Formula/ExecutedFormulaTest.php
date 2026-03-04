@@ -20,6 +20,7 @@ final class ExecutedFormulaTest extends TestCase
         self::assertThat(
             new ExecutedFormula(new FakeActions([])),
             new HasFormulaResult(''),
+            'ExecutedFormula must return an empty string when no actions produce values',
         );
     }
 
@@ -33,6 +34,7 @@ final class ExecutedFormulaTest extends TestCase
                 ]),
             ),
             new HasFormulaResult('ok'),
+            'ExecutedFormula must return the single value as a string',
         );
     }
 
@@ -46,6 +48,7 @@ final class ExecutedFormulaTest extends TestCase
                 ]),
             ),
             new HasFormulaResult('1'),
+            'ExecutedFormula must stringify a boolean value to its integer string representation',
         );
     }
 

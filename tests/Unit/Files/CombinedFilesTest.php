@@ -28,6 +28,7 @@ final class CombinedFilesTest extends TestCase
                 'README.md' => 'Piqule',
                 'config/app.ini' => 'name=piqule',
             ]),
+            'CombinedFiles must expose all files from all provided sources',
         );
     }
 }

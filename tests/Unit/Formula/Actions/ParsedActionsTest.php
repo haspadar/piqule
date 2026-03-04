@@ -19,6 +19,7 @@ final class ParsedActionsTest extends TestCase
         self::assertThat(
             new ParsedActions('', []),
             new HasActionNames([]),
+            'ParsedActions must return an empty list when the expression is empty',
         );
     }
 
@@ -35,6 +36,7 @@ final class ParsedActionsTest extends TestCase
             new HasActionNames([
                 FormatEachAction::class,
             ]),
+            'ParsedActions must parse a single action from the expression',
         );
     }
 
@@ -53,6 +55,7 @@ final class ParsedActionsTest extends TestCase
                 FormatEachAction::class,
                 JoinAction::class,
             ]),
+            'ParsedActions must preserve the order of actions as they appear in the expression',
         );
     }
 }

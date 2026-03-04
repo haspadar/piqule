@@ -16,6 +16,7 @@ final class MessageTest extends TestCase
         self::assertSame(
             'hello',
             (new Message('hello'))->body(),
+            'Message must return the body it was constructed with',
         );
     }
 }

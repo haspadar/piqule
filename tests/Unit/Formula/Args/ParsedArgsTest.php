@@ -20,6 +20,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['["one","two","three"]']),
             ))->values(),
+            'ParsedArgs must parse a JSON list of strings into individual values',
         );
     }
 
@@ -31,6 +32,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['[1,2,3]']),
             ))->values(),
+            'ParsedArgs must parse a JSON list of numbers into individual values',
         );
     }
 
@@ -42,6 +44,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['[true,false]']),
             ))->values(),
+            'ParsedArgs must parse a JSON list of booleans into individual values',
         );
     }
 
@@ -53,6 +56,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['["x",42,false]']),
             ))->values(),
+            'ParsedArgs must parse a JSON list of mixed scalar types into individual values',
         );
     }
 
@@ -64,6 +68,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['["a,b","c"]']),
             ))->values(),
+            'ParsedArgs must treat commas inside quoted strings as part of the value',
         );
     }
 
@@ -75,6 +80,7 @@ final class ParsedArgsTest extends TestCase
             (new ParsedArgs(
                 new ListArgs(['[]']),
             ))->values(),
+            'ParsedArgs must return an empty list when the JSON literal is an empty array',
         );
     }
 

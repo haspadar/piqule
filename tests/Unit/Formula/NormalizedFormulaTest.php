@@ -24,28 +24,31 @@ final class NormalizedFormulaTest extends TestCase
         self::assertSame(
             'config(a)|default(["x"])|format("%s")',
             (new NormalizedFormula($raw))->result(),
+            'NormalizedFormula must collapse a multiline expression into a single line without extra whitespace',
         );
     }
 
     #[Test]
-    public function normalizesPipeSpacing(): void
+    public function normalizesPipeSpacingWhenSpacesAroundPipeArePresent(): void
     {
         self::assertSame(
             'config(a)|join(",")',
             (new NormalizedFormula(
                 'config(a)   |   join(",")',
             ))->result(),
+            'NormalizedFormula must remove whitespace around pipe separators',
         );
     }
 
     #[Test]
-    public function trimsOuterWhitespace(): void
+    public function trimsOuterWhitespaceWhenExpressionHasSurroundingSpaces(): void
     {
         self::assertSame(
             'config(a)|format("%s")',
             (new NormalizedFormula(
                 '   config(a)|format("%s")   ',
             ))->result(),
+            'NormalizedFormula must trim leading and trailing whitespace from the expression',
         );
     }
 
@@ -57,6 +60,7 @@ final class NormalizedFormulaTest extends TestCase
             (new NormalizedFormula(
                 'config(a) | default([1]) | format("%s")',
             ))->result(),
+            'NormalizedFormula must preserve JSON literals while normalizing pipe spacing',
         );
     }
 }
