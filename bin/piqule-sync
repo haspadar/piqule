@@ -9,12 +9,13 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
-use Haspadar\Piqule\Files\CombinedFiles;
 use Haspadar\Piqule\Files\EachFile;
+use Haspadar\Piqule\Files\FilteredFiles;
 use Haspadar\Piqule\Files\FolderFiles;
 use Haspadar\Piqule\Files\MappedFiles;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Storage\AppendingStorage;
 use Haspadar\Piqule\Storage\DiffingStorage;
 use Haspadar\Piqule\Storage\DiskStorage;
 use Haspadar\Piqule\Storage\OnceStorage;
@@ -39,22 +40,21 @@ try {
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);
 
-    $alwaysFiles = new CombinedFiles([
-        new MappedFiles(
-            new FolderFiles(
-                new DiskStorage($libraryRoot . '/templates/always'),
-                '',
-            ),
-            fn(File $file): File => new ConfiguredFile($file, $config),
+    $alwaysFiles = new MappedFiles(
+        new FolderFiles(
+            new DiskStorage($libraryRoot . '/templates/always'),
+            '',
         ),
-        new MappedFiles(
-            new FolderFiles(
-                new DiskStorage($libraryRoot . '/templates/git'),
-                '',
-            ),
-            fn(File $file): File => new PrefixedFile('.git', $file),
+        fn(File $file): File => new ConfiguredFile($file, $config),
+    );
+
+    $gitFiles = new MappedFiles(
+        new FolderFiles(
+            new DiskStorage($libraryRoot . '/templates/git'),
+            '',
         ),
-    ]);
+        fn(File $file): File => new PrefixedFile('.git', $file),
+    );
 
     $onceFiles = new MappedFiles(
         new FolderFiles(
@@ -64,7 +64,19 @@ try {
         fn(File $file): File => new ConfiguredFile($file, $config),
     );
 
+    $gitDiffFiles = new FilteredFiles(
+        $gitFiles,
+        fn(File $f): bool => !str_ends_with($f->name(), 'pre-push'),
+    );
+
+    $gitAppendFiles = new FilteredFiles(
+        $gitFiles,
+        fn(File $f): bool => str_ends_with($f->name(), 'pre-push'),
+    );
+
     (new EachFile($alwaysFiles, fn(File $file) => (new DiffingStorage($disk, $reactions))->write($file)))->run();
+    (new EachFile($gitDiffFiles, fn(File $file) => (new DiffingStorage($disk, $reactions))->write($file)))->run();
+    (new EachFile($gitAppendFiles, fn(File $file) => (new AppendingStorage($disk, $reactions, '# BEGIN piqule'))->write($file)))->run();
     (new EachFile($onceFiles, fn(File $file) => (new OnceStorage($disk, $reactions))->write($file)))->run();
 } catch (PiquleException $e) {
     $output->error($e->getMessage());

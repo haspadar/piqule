@@ -59,8 +59,9 @@ Flow:
 4. Scan `templates/once/`
 5. Resolve placeholders
 6. Write `templates/always/` → project root (overwrite on change)
-7. Write `templates/git/` → `.git/`
-8. Write `templates/once/` → project root (only if file doesn't exist)
+7. Write `templates/git/` (non-pre-push files) → `.git/` (overwrite on change)
+8. Write `templates/git/` (pre-push file) → `.git/hooks/pre-push` (append if marker absent)
+9. Write `templates/once/` → project root (only if file doesn't exist)
 
 Note:
 
@@ -167,7 +168,7 @@ Config → Formula → File → Files → Storage
 - **Formula** (`src/Formula/`) — evaluates `<< ... >>` placeholder expressions via a pipeline of `Action` objects
 - **File** (`src/File/`) — represents a single file with `name()`, `contents()`, `mode()`; decorators add behaviour (placeholder resolution, path prefix, string replacement)
 - **Files** (`src/Files/`) — iterable collection of `File` objects; composable via decorators
-- **Storage** (`src/Storage/`) — filesystem abstraction; decorators add write policy (diffing or once-only) and reactions
+- **Storage** (`src/Storage/`) — filesystem abstraction; decorators add write policy (diffing, once-only, or appending) and reactions
 - **Output** (`src/Output/`) — console output interface; `Console` writes to stdout, `Message` is a value object for a single line
 
 For a full description of every class and the decorator pattern, see [docs/architecture.md](docs/architecture.md).

@@ -1,15 +1,4 @@
 #!/usr/bin/env sh
-set -e
-
-if [ -x "vendor/bin/piqule" ]; then
-  vendor/bin/piqule check
-  exit $?
-fi
-
-if command -v composer >/dev/null 2>&1; then
-  composer exec -- piqule check
-  exit $?
-fi
-
-echo "Piqule is not installed"
-exit 1
+# BEGIN piqule
+[ -f "$(dirname "$0")/pre-push-piqule" ] && "$(dirname "$0")/pre-push-piqule" "$@"
+# END piqule
