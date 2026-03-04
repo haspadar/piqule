@@ -83,7 +83,23 @@ use Override;
  *   'typos.exclude'?: list<string>,
  *   'typos.ignore_re'?: list<string>,
  *   'yamllint.ignore'?: list<string>,
- *   'yamllint.line_length.max'?: list<int|float>
+ *   'yamllint.line_length.max'?: list<int|float>,
+ *   'actionlint.enabled'?: bool,
+ *   'hadolint.enabled'?: bool,
+ *   'markdownlint.enabled'?: bool,
+ *   'yamllint.enabled'?: bool,
+ *   'typos.enabled'?: bool,
+ *   'shellcheck.enabled'?: bool,
+ *   'jsonlint.enabled'?: bool,
+ *   'phpstan.enabled'?: bool,
+ *   'psalm.enabled'?: bool,
+ *   'phpmd.enabled'?: bool,
+ *   'phpmetrics.enabled'?: bool,
+ *   'phpcs.enabled'?: bool,
+ *   'php-cs-fixer.enabled'?: bool,
+ *   'phpunit.enabled'?: bool,
+ *   'infection.enabled'?: bool,
+ *   'renovate.enabled'?: bool
  * }
  */
 final readonly class OverrideConfig implements Config

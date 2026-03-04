@@ -67,4 +67,24 @@ final class DefaultConfigTest extends TestCase
             'DefaultConfig must return empty list for unknown keys without validation',
         );
     }
+
+    #[Test]
+    public function returnsTrueForToolEnabledByDefault(): void
+    {
+        self::assertSame(
+            [true],
+            (new DefaultConfig())->list('hadolint.enabled'),
+            'hadolint must be enabled by default',
+        );
+    }
+
+    #[Test]
+    public function returnsFalseForRenovateEnabledByDefault(): void
+    {
+        self::assertSame(
+            [false],
+            (new DefaultConfig())->list('renovate.enabled'),
+            'renovate must be disabled by default',
+        );
+    }
 }

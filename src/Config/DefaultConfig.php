@@ -95,6 +95,22 @@ final class DefaultConfig implements Config
         'typos.ignore_re' => ['vendor/.*'],
         'yamllint.ignore' => ['vendor/**', 'node_modules/**', 'build/**', 'var/**', '.piqule/**/html/**', '.piqule/**/coverage-report/**'],
         'yamllint.line_length.max' => [120],
+        'actionlint.enabled' => true,
+        'hadolint.enabled' => true,
+        'markdownlint.enabled' => true,
+        'yamllint.enabled' => true,
+        'typos.enabled' => true,
+        'shellcheck.enabled' => true,
+        'jsonlint.enabled' => true,
+        'phpstan.enabled' => true,
+        'psalm.enabled' => true,
+        'phpmd.enabled' => true,
+        'phpmetrics.enabled' => true,
+        'phpcs.enabled' => true,
+        'php-cs-fixer.enabled' => true,
+        'phpunit.enabled' => true,
+        'infection.enabled' => true,
+        'renovate.enabled' => false,
     ];
 
     #[Override]
