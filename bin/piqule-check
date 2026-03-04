@@ -3,6 +3,7 @@
 
 declare(strict_types=1);
 
+use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
 
@@ -10,9 +11,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
 
-$config = file_exists($projectRoot . '/.piqule.php')
-    ? require $projectRoot . '/.piqule.php'
-    : new OverrideConfig(new DefaultConfig(), []);
+if (file_exists($projectRoot . '/.piqule.php')) {
+    $loaded = require $projectRoot . '/.piqule.php';
+    if (!$loaded instanceof Config) {
+        fwrite(STDERR, ".piqule.php must return an instance of Config\n");
+        exit(1);
+    }
+    $config = $loaded;
+} else {
+    $config = new OverrideConfig(new DefaultConfig(), []);
+}
 
 $requested = $argv[1] ?? '';
 
@@ -34,15 +42,22 @@ $checks = [
     'infection',
 ];
 
+$isEnabled = function(string $key) use ($config): bool {
+    $enabledKey = "{$key}.enabled";
+    return $config->has($enabledKey)
+        ? (bool) ($config->list($enabledKey)[0] ?? true)
+        : true;
+};
+
 $titleWidth = 18;
-$total = $requested !== '' ? 1 : count($checks);
+$total = $requested !== '' ? 1 : count(array_filter($checks, $isEnabled));
 $current = 0;
 
 $green = fn(string $s) => "\033[32m{$s}\033[0m\n";
 $blue  = fn(string $s) => "\033[34m{$s}\033[0m\n";
 $red   = fn(string $s) => "\033[31m{$s}\033[0m\n";
 
-$runCheck = function(string $key) use ($projectRoot, $config, $green, $blue, $red, $total, &$current, $titleWidth): bool {
+$runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current, $titleWidth): bool {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
@@ -50,12 +65,7 @@ $runCheck = function(string $key) use ($projectRoot, $config, $green, $blue, $re
         return false;
     }
 
-    $enabledKey = "{$key}.enabled";
-    $enabled = $config->has($enabledKey)
-        ? (bool) ($config->list($enabledKey)[0] ?? true)
-        : true;
-
-    if (!$enabled) {
+    if (!$isEnabled($key)) {
         echo ($blue)("[SKIP] {$key}");
         return true;
     }
@@ -68,7 +78,7 @@ $runCheck = function(string $key) use ($projectRoot, $config, $green, $blue, $re
         echo ($blue)("[RUN]  {$key}");
     }
 
-    passthru("bash {$command}", $status);
+    passthru('bash ' . escapeshellarg($command), $status);
 
     if ($status !== 0) {
         echo ($red)("[FAIL] {$key}");
