@@ -110,7 +110,6 @@ final class DefaultConfig implements Config
         'php-cs-fixer.enabled' => true,
         'phpunit.enabled' => true,
         'infection.enabled' => true,
-        'renovate.enabled' => false,
     ];
 
     #[Override]

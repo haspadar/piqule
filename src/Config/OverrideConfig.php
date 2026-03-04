@@ -98,8 +98,7 @@ use Override;
  *   'phpcs.enabled'?: bool,
  *   'php-cs-fixer.enabled'?: bool,
  *   'phpunit.enabled'?: bool,
- *   'infection.enabled'?: bool,
- *   'renovate.enabled'?: bool
+ *   'infection.enabled'?: bool
  * }
  */
 final readonly class OverrideConfig implements Config

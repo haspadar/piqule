@@ -77,14 +77,4 @@ final class DefaultConfigTest extends TestCase
             'hadolint must be enabled by default',
         );
     }
-
-    #[Test]
-    public function returnsFalseForRenovateEnabledByDefault(): void
-    {
-        self::assertSame(
-            [false],
-            (new DefaultConfig())->list('renovate.enabled'),
-            'renovate must be disabled by default',
-        );
-    }
 }
