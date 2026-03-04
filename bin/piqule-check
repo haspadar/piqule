@@ -44,12 +44,9 @@ $checks = [
 
 $isEnabled = function(string $key) use ($config): bool {
     $enabledKey = "{$key}.enabled";
-    return $config->has($enabledKey)
-        ? (bool) ($config->list($enabledKey)[0] ?? true)
-        : true;
+    return !$config->has($enabledKey) || (bool)($config->list($enabledKey)[0] ?? true);
 };
 
-$titleWidth = 18;
 $total = $requested !== '' ? 1 : count(array_filter($checks, $isEnabled));
 $current = 0;
 
@@ -57,7 +54,7 @@ $green = fn(string $s) => "\033[32m{$s}\033[0m\n";
 $blue  = fn(string $s) => "\033[34m{$s}\033[0m\n";
 $red   = fn(string $s) => "\033[31m{$s}\033[0m\n";
 
-$runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current, $titleWidth): bool {
+$runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current,): bool {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
@@ -72,6 +69,7 @@ $runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, 
 
     $current++;
 
+    $titleWidth = 18;
     if ($total > 1) {
         echo ($blue)(sprintf('[RUN]  %-' . $titleWidth . 's (%d/%d)', $key, $current, $total));
     } else {
