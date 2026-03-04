@@ -20,24 +20,28 @@ final readonly class AppendingStorage implements Storage
     #[Override]
     public function write(File $file): self
     {
-        if (!$this->origin->exists($file->name())) {
+        $path = $file->name();
+
+        if (!$this->origin->exists($path)) {
             $newOrigin = $this->origin->write($file);
-            $this->reaction->created($file->name());
+            $this->reaction->created($path);
 
             return new self($newOrigin, $this->reaction, $this->marker);
         }
 
-        if (str_contains($this->origin->read($file->name()), $this->marker)) {
+        $current = $this->origin->read($path);
+
+        if (str_contains($current, $this->marker)) {
             return $this;
         }
 
         $merged = new TextFile(
-            $file->name(),
-            $this->origin->read($file->name()) . "\n" . $file->contents(),
-            $this->origin->mode($file->name()),
+            $path,
+            $current . "\n" . $file->contents(),
+            $this->origin->mode($path),
         );
         $newOrigin = $this->origin->write($merged);
-        $this->reaction->updated($file->name());
+        $this->reaction->updated($path);
 
         return new self($newOrigin, $this->reaction, $this->marker);
     }
