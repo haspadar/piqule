@@ -152,3 +152,45 @@ Execution is delegated to `.piqule/_docker.sh`.
 Pinned inside the infra image.
 
 Updated via Renovate.
+
+---
+
+## Architecture Overview
+
+Source code is organized into layers. Each layer depends only on its own interfaces:
+
+```
+Config → Formula → File → Files → Storage
+```
+
+- **Config** (`src/Config/`) — flat key-value store; `DefaultConfig` declares all valid keys, `OverrideConfig` applies user overrides
+- **Formula** (`src/Formula/`) — evaluates `<< ... >>` placeholder expressions via a pipeline of `Action` objects
+- **File** (`src/File/`) — represents a single file with `name()`, `contents()`, `mode()`; decorators add behaviour (placeholder resolution, path prefix, string replacement)
+- **Files** (`src/Files/`) — iterable collection of `File` objects; composable via decorators
+- **Storage** (`src/Storage/`) — filesystem abstraction; decorators add write policy (diffing or once-only) and reactions
+- **Output** (`src/Output/`) — console output interface; `Console` writes to stdout, `Message` is a value object for a single line
+
+For a full description of every class and the decorator pattern, see [docs/architecture.md](docs/architecture.md).
+
+---
+
+## Adding a New Tool
+
+1. Create `templates/always/.piqule/<tool>/` and add a `command.sh` inside it
+2. Add any config keys the tool needs to `src/Config/DefaultConfig.php` (`DEFAULTS` array)
+3. Register the new key type in `src/Config/OverrideConfig.php` (`OverrideMap` PHPDoc)
+4. Add the tool name to `CHECK_KEYS` in `bin/piqule-check`
+5. Run `vendor/bin/piqule sync` to verify template rendering
+6. Write unit and integration tests
+
+---
+
+## Adding a Config Key
+
+1. Add the key to `DEFAULTS` in `src/Config/DefaultConfig.php`:
+   - Scalar value → stored as-is, returned as single-element list
+   - List value → `list<scalar>`
+2. Add the corresponding entry to the `OverrideMap` PHPDoc type in `src/Config/OverrideConfig.php`
+3. Use the key in a template placeholder: `<< config(my.new.key) >>`
+
+Keys are flat dot-separated names. Accessing an undeclared key throws `PiquleException`.
