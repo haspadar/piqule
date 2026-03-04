@@ -2,25 +2,26 @@
 
 ## Templates
 
-Templates are stored in two locations:
+Templates are stored in three locations:
 
-- `templates/root/`
+- `templates/always/`
 - `templates/git/`
+- `templates/once/`
 
-### Root Templates
+### Always Templates
 
 Location:
 
-`templates/root/`
+`templates/always/`
 
 Structure mirrors target project root.
 
-Everything under `templates/root/` is copied relative to project root.
+Everything under `templates/always/` is copied relative to project root on every `sync`, overwriting on change.
 
 Example:
 
-`templates/root/.github/workflows/piqule.yml`  
-`templates/root/.piqule/phpstan.neon`
+`templates/always/.github/workflows/piqule.yml`
+`templates/always/.piqule/phpstan.neon`
 
 ### Git Templates
 
@@ -31,6 +32,16 @@ Location:
 Everything under `templates/git/` is copied into:
 
 `.git/`
+
+### Once Templates
+
+Location:
+
+`templates/once/`
+
+Everything under `templates/once/` is copied relative to project root only if the target file does not exist yet. User edits survive subsequent `sync` runs.
+
+`.piqule.php` is generated from `templates/once/` on the first `sync`.
 
 ---
 
@@ -43,16 +54,17 @@ Run:
 Flow:
 
 1. Load `.piqule.php` if it exists (optional)
-2. Scan `templates/root/`
+2. Scan `templates/always/`
 3. Scan `templates/git/`
-4. Resolve placeholders
-5. Write files to project root
-6. Write files into `.git/`
-7. `.github/` and `.piqule/` are fully generated
+4. Scan `templates/once/`
+5. Resolve placeholders
+6. Write `templates/always/` → project root (overwrite on change)
+7. Write `templates/git/` → `.git/`
+8. Write `templates/once/` → project root (only if file doesn't exist)
 
 Note:
 
-`.piqule.php` is optional and is not generated automatically.
+`.piqule.php` is generated from `templates/once/` on the first `sync`. Edit it freely — subsequent syncs will not overwrite it.
 
 ---
 
@@ -64,15 +76,14 @@ Syntax:
 
 Example:
 
-`<< config(coverage.project.target) >>`
+`<< config(phpstan.level) >>`
 
 ### Supported actions
 
-- `default_list([...])`
-- `default_scalar("value")`
-- `format_each('%s')`
-- `join(',')`
-- `format('%s')`
+- `config(key)` — loads a list of values from configuration
+- `format_each(template)` — formats each list item
+- `join(delimiter)` — reduces the list to a single scalar value
+- `format(template)` — formats the scalar value
 
 ### Semantics
 
@@ -80,28 +91,20 @@ The DSL operates in stages:
 
 1. `config(...)` produces a list of values
 2. List-level actions:
-   - `default_list`
    - `format_each`
 3. `join` reduces the list to a single value
 4. Scalar-level actions:
-    - `default_scalar`
-    - `format`
-
-`default_scalar` fails fast if the resolved pipeline value contains more than one item.
+   - `format`
 
 ### Examples
 
 List formatting:
 
-`<< config(paths)|default_list(["src"])|format_each('%s')|join(",") >>`
-
-Scalar default without explicit assertion:
-
-`<< config(phpstan.memory)|default_scalar("1G") >>`
+`<< config(phpunit.testsuites.unit)|format_each("            <directory>%s</directory>")|join("\n") >>`
 
 Final value formatting:
 
-`<< config(paths)|default_list(["src"])|join(",")|format('paths: %s') >>`
+`<< config(phpstan.level)|join(",")|format('level: %s') >>`
 
 ---
 
@@ -116,13 +119,18 @@ Example:
 ```php
 <?php
 
-return [
-    'coverage.project.target' => '85%',
+declare(strict_types=1);
+
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
+
+return new OverrideConfig(new DefaultConfig(), [
+    'ci.php.matrix' => ['8.3', '8.4', '8.5'],
     'docker.image' => 'ghcr.io/haspadar/piqule-infra:latest',
-];
+]);
 ```
 
-Keys are flat and use dot-separated names directly.
+Keys are flat and use dot-separated names. All valid keys are declared in `DefaultConfig`.
 
 If the file does not exist, defaults are used.
 
