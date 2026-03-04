@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# This hook is not wired automatically. To enable it, add the following line
+# to .git/hooks/pre-push (inside the # BEGIN piqule / # END piqule block):
+#
+#   [ -f "$(dirname "$0")/pre-push-renovate" ] && "$(dirname "$0")/pre-push-renovate" "$@"
+#
+set -e
+
+if [ ! -f "renovate.json" ]; then
+  exit 0
+fi
+
+npx --yes --package renovate -- renovate-config-validator renovate.json

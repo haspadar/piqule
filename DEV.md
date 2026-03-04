@@ -148,6 +148,26 @@ Execution is delegated to `.piqule/_docker.sh`.
 
 ---
 
+## Infra Image Build
+
+Build:
+
+```bash
+docker buildx build -t ghcr.io/haspadar/piqule-infra:local --load .
+```
+
+Run shell:
+
+```bash
+docker run --rm -it \
+  --entrypoint bash \
+  -v "$PWD:/project" \
+  -w /project \
+  ghcr.io/haspadar/piqule-infra:local
+```
+
+---
+
 ## Tool Versions
 
 Pinned inside the infra image.
@@ -180,9 +200,10 @@ For a full description of every class and the decorator pattern, see [docs/archi
 1. Create `templates/always/.piqule/<tool>/` and add a `command.sh` inside it
 2. Add any config keys the tool needs to `src/Config/DefaultConfig.php` (`DEFAULTS` array)
 3. Register the new key type in `src/Config/OverrideConfig.php` (`OverrideMap` PHPDoc)
-4. Add the tool name to `CHECK_KEYS` in `bin/piqule-check`
-5. Run `vendor/bin/piqule sync` to verify template rendering
-6. Write unit and integration tests
+4. Add the tool name to `$checks` in `bin/piqule-check`
+5. Add `'<tool>.enabled' => true` to `DefaultConfig` and `'<tool>.enabled'?: bool` to `OverrideMap` in `OverrideConfig`
+6. Run `vendor/bin/piqule sync` to verify template rendering
+7. Write unit and integration tests
 
 ---
 
