@@ -22,6 +22,7 @@ final class UnquotedArgsTest extends TestCase
         self::assertSame(
             ["a'b"],
             $args->values(),
+            'UnquotedArgs must remove wrapping double quotes from a single string value',
         );
     }
 
@@ -37,6 +38,7 @@ final class UnquotedArgsTest extends TestCase
         self::assertSame(
             ["a'b", 'c'],
             $args->values(),
+            'UnquotedArgs must remove wrapping quotes from each item in a parsed list',
         );
     }
 
@@ -50,6 +52,7 @@ final class UnquotedArgsTest extends TestCase
         self::assertSame(
             ['hello'],
             $args->values(),
+            'UnquotedArgs must leave values that are not wrapped in quotes unchanged',
         );
     }
 
@@ -63,6 +66,7 @@ final class UnquotedArgsTest extends TestCase
         self::assertSame(
             [''],
             $args->values(),
+            'UnquotedArgs must return an empty string when the value is an empty quoted string',
         );
     }
 
@@ -76,6 +80,7 @@ final class UnquotedArgsTest extends TestCase
         self::assertSame(
             ['"value"'],
             $args->values(),
+            'UnquotedArgs must remove only the outermost layer of wrapping quotes',
         );
     }
 }

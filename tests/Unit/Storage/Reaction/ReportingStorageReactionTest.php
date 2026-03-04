@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 final class ReportingStorageReactionTest extends TestCase
 {
     #[Test]
-    public function writesSuccessOnCreated(): void
+    public function writesSuccessMessageWhenFileIsCreated(): void
     {
         $output = new FakeOutput();
 
@@ -22,11 +22,12 @@ final class ReportingStorageReactionTest extends TestCase
         self::assertCount(
             1,
             $output->successes(),
+            'ReportingStorageReaction must write one success message when a file is created',
         );
     }
 
     #[Test]
-    public function writesInfoOnUpdated(): void
+    public function writesInfoMessageWhenFileIsUpdated(): void
     {
         $output = new FakeOutput();
 
@@ -36,6 +37,7 @@ final class ReportingStorageReactionTest extends TestCase
         self::assertCount(
             1,
             $output->infos(),
+            'ReportingStorageReaction must write one info message when a file is updated',
         );
     }
 }

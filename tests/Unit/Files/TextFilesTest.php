@@ -23,6 +23,7 @@ final class TextFilesTest extends TestCase
                 'README.md' => 'Piqule',
                 'config/app.ini' => 'name=piqule',
             ]),
+            'TextFiles must expose all files provided as key-value pairs',
         );
     }
 }

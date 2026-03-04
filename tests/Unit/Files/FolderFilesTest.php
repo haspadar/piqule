@@ -28,6 +28,7 @@ final class FolderFilesTest extends TestCase
                 'a/one.txt' => '1',
                 'a/two.txt' => '2',
             ]),
+            'FolderFiles must expose all files from the given storage folder',
         );
     }
 }

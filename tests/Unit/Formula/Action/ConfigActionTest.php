@@ -26,6 +26,7 @@ final class ConfigActionTest extends TestCase
                 'phpmetrics.includes',
             ))->transformed(new ListArgs([])),
             new HasArgsValues(['mbstring', 'intl']),
+            'ConfigAction must return list values from the config for the given key',
         );
     }
 
@@ -41,6 +42,7 @@ final class ConfigActionTest extends TestCase
                 'shellcheck.external_sources',
             ))->transformed(new ListArgs([])),
             new HasArgsValues(['false']),
+            'ConfigAction must convert boolean config values to their string representations',
         );
     }
 
@@ -56,6 +58,7 @@ final class ConfigActionTest extends TestCase
                 'shellcheck.exclude',
             ))->transformed(new ListArgs([])),
             new HasArgsValues([]),
+            'ConfigAction must return the default config values when the key is not overridden',
         );
     }
 }

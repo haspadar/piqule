@@ -28,6 +28,7 @@ final class DiffingStorageTest extends TestCase
         self::assertSame(
             ['created.txt'],
             $reaction->createdPaths(),
+            'DiffingStorage must report created() when writing a file that does not exist',
         );
     }
 
@@ -48,6 +49,7 @@ final class DiffingStorageTest extends TestCase
         self::assertSame(
             ['updated.txt'],
             $reaction->updatedPaths(),
+            'DiffingStorage must report updated() when contents differ',
         );
     }
 
@@ -68,11 +70,12 @@ final class DiffingStorageTest extends TestCase
         self::assertSame(
             ['file.txt'],
             $reaction->updatedPaths(),
+            'DiffingStorage must report updated() when the file mode changes',
         );
     }
 
     #[Test]
-    public function doesNotReportAnythingWhenContentsAndModeAreTheSame(): void
+    public function doesNotReportCreatedWhenContentsAndModeAreTheSame(): void
     {
         $reaction = new FakeStorageReaction();
 
@@ -85,8 +88,32 @@ final class DiffingStorageTest extends TestCase
             new TextFile('same.txt', 'data', 0o644),
         );
 
-        self::assertSame([], $reaction->createdPaths());
-        self::assertSame([], $reaction->updatedPaths());
+        self::assertSame(
+            [],
+            $reaction->createdPaths(),
+            'DiffingStorage must not report created() when contents and mode are identical',
+        );
+    }
+
+    #[Test]
+    public function doesNotReportUpdatedWhenContentsAndModeAreTheSame(): void
+    {
+        $reaction = new FakeStorageReaction();
+
+        (new DiffingStorage(
+            new InMemoryStorage([
+                'same.txt' => new TextFile('same.txt', 'data', 0o644),
+            ]),
+            $reaction,
+        ))->write(
+            new TextFile('same.txt', 'data', 0o644),
+        );
+
+        self::assertSame(
+            [],
+            $reaction->updatedPaths(),
+            'DiffingStorage must not report updated() when contents and mode are identical',
+        );
     }
 
     #[Test]
@@ -100,6 +127,7 @@ final class DiffingStorageTest extends TestCase
                 ]),
                 new FakeStorageReaction(),
             ))->read('a.txt'),
+            'DiffingStorage must delegate read() to the origin storage',
         );
     }
 
@@ -113,6 +141,7 @@ final class DiffingStorageTest extends TestCase
                 ]),
                 new FakeStorageReaction(),
             ))->exists('b.txt'),
+            'DiffingStorage must delegate exists() to the origin storage',
         );
     }
 
@@ -130,6 +159,7 @@ final class DiffingStorageTest extends TestCase
                     new FakeStorageReaction(),
                 ))->entries('a'),
             ),
+            'DiffingStorage must delegate entries() to the origin storage',
         );
     }
 
@@ -144,6 +174,7 @@ final class DiffingStorageTest extends TestCase
                 ]),
                 new FakeStorageReaction(),
             ))->mode('x.sh'),
+            'DiffingStorage must delegate mode() to the origin storage',
         );
     }
 }

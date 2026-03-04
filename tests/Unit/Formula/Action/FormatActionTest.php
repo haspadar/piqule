@@ -21,6 +21,7 @@ final class FormatActionTest extends TestCase
         self::assertSame(
             ['prefix: value'],
             $result->values(),
+            'FormatAction must apply the template to a single input value',
         );
     }
 

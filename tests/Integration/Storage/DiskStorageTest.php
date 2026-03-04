@@ -25,11 +25,12 @@ final class DiskStorageTest extends TestCase
                 new TextFile('a/b/read.txt', 'hello'),
             ),
             new HasEntry('a/b/read.txt', 'hello'),
+            'DiskStorage must write a file and make its contents readable',
         );
     }
 
     #[Test]
-    public function overwritesExistingFile(): void
+    public function overwritesExistingFileWhenWritingToSamePath(): void
     {
         self::assertThat(
             (new DiskStorage(
@@ -40,6 +41,7 @@ final class DiskStorageTest extends TestCase
                 new TextFile('overwrite.txt', 'second'),
             ),
             new HasEntry('overwrite.txt', 'second'),
+            'DiskStorage must overwrite an existing file with new contents',
         );
     }
 
@@ -88,6 +90,7 @@ final class DiskStorageTest extends TestCase
                     ->path(),
             ),
             new HasEntries('a', ['a/one.txt', 'a/two.txt']),
+            'DiskStorage must list all entries in the specified folder',
         );
     }
 
@@ -101,6 +104,7 @@ final class DiskStorageTest extends TestCase
                     ->path(),
             ),
             new HasEntries('file.txt', []),
+            'DiskStorage must return no entries when the location is a file, not a directory',
         );
     }
 
@@ -116,6 +120,7 @@ final class DiskStorageTest extends TestCase
             new HasEntries('a', [
                 'a/b/c/deep.txt',
             ]),
+            'DiskStorage must list files from nested subdirectories recursively',
         );
     }
 
@@ -128,6 +133,7 @@ final class DiskStorageTest extends TestCase
             (new DiskStorage($folder->path()))
                 ->write(new TextFile('file.txt', 'data', 0o755)),
             new HasEntry('file.txt', 'data', 0o755),
+            'DiskStorage must write a file with the specified mode',
         );
     }
 
@@ -146,6 +152,7 @@ final class DiskStorageTest extends TestCase
         self::assertSame(
             0o755,
             $storage->mode('file.txt'),
+            'DiskStorage must update the file mode when overwriting an existing file',
         );
     }
 

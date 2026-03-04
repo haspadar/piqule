@@ -14,29 +14,31 @@ use stdClass;
 final class OverrideConfigTest extends TestCase
 {
     #[Test]
-    public function hasRecognizesDeclaredCiMatrix(): void
+    public function returnsTrueWhenKeyIsDeclared(): void
     {
         self::assertTrue(
             (new OverrideConfig(
                 new FakeConfig(['ci.php.matrix' => ['8.3']]),
                 ['ci.php.matrix' => '8.4'],
             ))->has('ci.php.matrix'),
+            'OverrideConfig must report a declared key as present',
         );
     }
 
     #[Test]
-    public function hasReturnsFalseForUnknownToolKey(): void
+    public function returnsFalseWhenKeyIsNotDeclared(): void
     {
         self::assertFalse(
             (new OverrideConfig(
                 new FakeConfig(['phpstan.level' => ['8']]),
                 ['phpstan.level' => '9'],
             ))->has('phpstan.memory'),
+            'OverrideConfig must report an undeclared key as absent',
         );
     }
 
     #[Test]
-    public function returnsDefaultPhpstanLevel(): void
+    public function returnsDefaultValueWhenKeyIsNotOverridden(): void
     {
         self::assertSame(
             ['8'],
@@ -44,11 +46,12 @@ final class OverrideConfigTest extends TestCase
                 new FakeConfig(['phpstan.level' => ['8']]),
                 [],
             ))->list('phpstan.level'),
+            'OverrideConfig must return the default value when the key is not overridden',
         );
     }
 
     #[Test]
-    public function overridesShellcheckSeverity(): void
+    public function returnsOverriddenScalarValueWhenKeyIsOverridden(): void
     {
         self::assertSame(
             ['error'],
@@ -56,11 +59,12 @@ final class OverrideConfigTest extends TestCase
                 new FakeConfig(['shellcheck.severity' => ['warning']]),
                 ['shellcheck.severity' => 'error'],
             ))->list('shellcheck.severity'),
+            'OverrideConfig must return the overridden scalar value as a single-item list',
         );
     }
 
     #[Test]
-    public function overridesPhpunitTestsuitesWithList(): void
+    public function returnsOverriddenListValueWhenKeyIsOverridden(): void
     {
         self::assertSame(
             ['Unit', 'Integration'],
@@ -68,6 +72,7 @@ final class OverrideConfigTest extends TestCase
                 new FakeConfig(['phpunit.testsuites.unit' => ['Unit']]),
                 ['phpunit.testsuites.unit' => ['Unit', 'Integration']],
             ))->list('phpunit.testsuites.unit'),
+            'OverrideConfig must return the overridden list value as-is',
         );
     }
 

@@ -23,6 +23,7 @@ final class StorageReactionsTest extends TestCase
         self::assertSame(
             ['file.txt'],
             $first->createdPaths(),
+            'StorageReactions must delegate created() to all contained reactions',
         );
     }
 
@@ -38,6 +39,7 @@ final class StorageReactionsTest extends TestCase
         self::assertSame(
             ['file.txt'],
             $second->updatedPaths(),
+            'StorageReactions must delegate updated() to all contained reactions',
         );
     }
 }

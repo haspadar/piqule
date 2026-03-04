@@ -20,6 +20,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             ['ext=mbstring'],
             $result->values(),
+            'FormatEachAction must apply the template to a single string value',
         );
     }
 
@@ -32,6 +33,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             ['v=a', 'v=b'],
             $result->values(),
+            'FormatEachAction must apply the template to each value in the list',
         );
     }
 
@@ -44,6 +46,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             ['flag=true', 'flag=false'],
             $result->values(),
+            'FormatEachAction must convert booleans to their canonical string representation',
         );
     }
 
@@ -56,6 +59,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             ['n=10', 'n=3.5'],
             $result->values(),
+            'FormatEachAction must format integer and float values using the template',
         );
     }
 
@@ -68,6 +72,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             ['', ''],
             $result->values(),
+            'FormatEachAction must produce empty strings when the template is empty',
         );
     }
 
@@ -80,6 +85,7 @@ final class FormatEachActionTest extends TestCase
         self::assertSame(
             [],
             $result->values(),
+            'FormatEachAction must return an empty list when no values are provided',
         );
     }
 }

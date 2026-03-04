@@ -57,7 +57,7 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
-    public function supportsDotSeparatedConfigKeys(): void
+    public function resolvesDotSeparatedConfigKey(): void
     {
         $config = new OverrideConfig(
             new DefaultConfig(),
@@ -151,6 +151,6 @@ final class ConfiguredFileTest extends TestCase
             new OverrideConfig(new DefaultConfig(), []),
         );
 
-        self::assertSame(0o755, $file->mode());
+        self::assertSame(0o755, $file->mode(), 'ConfiguredFile must preserve the origin file mode');
     }
 }
