@@ -20,7 +20,7 @@ jobs:
       pull-requests: read
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           fetch-depth: 0
 
@@ -51,7 +51,7 @@ jobs:
           - jsonlint
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
@@ -89,7 +89,7 @@ jobs:
           - phpmetrics
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
         with:
@@ -114,7 +114,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1
         with:
