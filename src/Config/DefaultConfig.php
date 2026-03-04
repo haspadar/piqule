@@ -126,14 +126,12 @@ final class DefaultConfig implements Config
             return [];
         }
 
-        /** @var list<int|float|string|bool>|scalar $value */
         $value = self::DEFAULTS[$name];
 
         if (is_scalar($value)) {
             return [$value];
         }
 
-        /** @var list<int|float|string|bool> $value */
         return $value;
     }
 }
