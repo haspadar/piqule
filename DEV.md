@@ -148,6 +148,26 @@ Execution is delegated to `.piqule/_docker.sh`.
 
 ---
 
+## Infra Image Build
+
+Build:
+
+```bash
+docker buildx build -t ghcr.io/haspadar/piqule-infra:local --load .
+```
+
+Run shell:
+
+```bash
+docker run --rm -it \
+  --entrypoint bash \
+  -v "$PWD:/project" \
+  -w /project \
+  ghcr.io/haspadar/piqule-infra:local
+```
+
+---
+
 ## Tool Versions
 
 Pinned inside the infra image.
