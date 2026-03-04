@@ -66,12 +66,12 @@ try {
 
     $gitDiffFiles = new FilteredFiles(
         $gitFiles,
-        fn(File $f): bool => !str_ends_with($f->name(), 'pre-push'),
+        fn(File $f): bool => !str_ends_with($f->name(), '/pre-push'),
     );
 
     $gitAppendFiles = new FilteredFiles(
         $gitFiles,
-        fn(File $f): bool => str_ends_with($f->name(), 'pre-push'),
+        fn(File $f): bool => str_ends_with($f->name(), '/pre-push'),
     );
 
     (new EachFile($alwaysFiles, fn(File $file) => (new DiffingStorage($disk, $reactions))->write($file)))->run();
