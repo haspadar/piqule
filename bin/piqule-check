@@ -1,74 +1,93 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env php
+<?php
 
-REQUESTED="${1:-}"
+declare(strict_types=1);
 
-TITLE_WIDTH=18
-CURRENT=0
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
 
-green()  { printf "\033[32m%s\033[0m\n" "$1"; }
-blue()   { printf "\033[34m%s\033[0m\n" "$1"; }
-red()    { printf "\033[31m%s\033[0m\n" "$1"; }
+require_once __DIR__ . '/../vendor/autoload.php';
 
-CHECK_KEYS=(
-  actionlint
-  hadolint
-  markdownlint
-  yamllint
-  typos
-  shellcheck
-  jsonlint
-  phpstan
-  psalm
-  phpmd
-  phpmetrics
-  phpcs
-  php-cs-fixer
-  phpunit
-  infection
-)
+$projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
 
-run_check() {
-  local key="$1"
+$config = file_exists($projectRoot . '/.piqule.php')
+    ? require $projectRoot . '/.piqule.php'
+    : new OverrideConfig(new DefaultConfig(), []);
 
-  if [ ! -f ".piqule/$key/command.sh" ]; then
-    red "Unknown check: $key"
-    exit 1
-  fi
+$requested = $argv[1] ?? '';
 
-  CURRENT=$((CURRENT + 1))
+$checks = [
+    'actionlint',
+    'hadolint',
+    'markdownlint',
+    'yamllint',
+    'typos',
+    'shellcheck',
+    'jsonlint',
+    'phpstan',
+    'psalm',
+    'phpmd',
+    'phpmetrics',
+    'phpcs',
+    'php-cs-fixer',
+    'phpunit',
+    'infection',
+];
 
-  if [ "$TOTAL" -gt 1 ]; then
-    blue "[RUN]  $(printf "%-${TITLE_WIDTH}s" "$key") ($CURRENT/$TOTAL)"
-  else
-    blue "[RUN]  $key"
-  fi
+$titleWidth = 18;
+$total = $requested !== '' ? 1 : count($checks);
+$current = 0;
 
-  set +e
-  bash ".piqule/$key/command.sh"
-  STATUS=$?
-  set -e
+$green = fn(string $s) => "\033[32m{$s}\033[0m\n";
+$blue  = fn(string $s) => "\033[34m{$s}\033[0m\n";
+$red   = fn(string $s) => "\033[31m{$s}\033[0m\n";
 
-  if [ "$STATUS" -ne 0 ]; then
-    red "[FAIL] $key"
-    exit "$STATUS"
-  fi
+$runCheck = function(string $key) use ($projectRoot, $config, $green, $blue, $red, $total, &$current, $titleWidth): bool {
+    $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
-  green "[OK]   $key"
-  echo
+    if (!file_exists($command)) {
+        echo ($red)("Unknown check: {$key}");
+        return false;
+    }
+
+    $enabledKey = "{$key}.enabled";
+    $enabled = $config->has($enabledKey)
+        ? (bool) ($config->list($enabledKey)[0] ?? true)
+        : true;
+
+    if (!$enabled) {
+        echo ($blue)("[SKIP] {$key}");
+        return true;
+    }
+
+    $current++;
+
+    if ($total > 1) {
+        echo ($blue)(sprintf('[RUN]  %-' . $titleWidth . 's (%d/%d)', $key, $current, $total));
+    } else {
+        echo ($blue)("[RUN]  {$key}");
+    }
+
+    passthru("bash {$command}", $status);
+
+    if ($status !== 0) {
+        echo ($red)("[FAIL] {$key}");
+        return false;
+    }
+
+    echo ($green)("[OK]   {$key}");
+    echo "\n";
+    return true;
+};
+
+if ($requested !== '') {
+    exit($runCheck($requested) ? 0 : 1);
 }
 
-if [ -n "$REQUESTED" ]; then
-  TOTAL=1
-  run_check "$REQUESTED"
-  green "All checks passed"
-  exit 0
-fi
+foreach ($checks as $key) {
+    if (!$runCheck($key)) {
+        exit(1);
+    }
+}
 
-TOTAL="${#CHECK_KEYS[@]}"
-
-for key in "${CHECK_KEYS[@]}"; do
-  run_check "$key"
-done
-
-green "All checks passed"
+echo ($green)('All checks passed');
