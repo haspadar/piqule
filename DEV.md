@@ -62,10 +62,19 @@ Flow:
 7. Write `templates/git/` (non-pre-push files) → `.git/` (overwrite on change)
 8. Write `templates/git/` (pre-push file) → `.git/hooks/pre-push` (append if marker absent)
 9. Write `templates/once/` → project root (only if file doesn't exist)
+10. Pin template checksums → `.piqule/templates.md5`
 
 Note:
 
 `.piqule.php` is generated from `templates/once/` on the first `sync`. Edit it freely — subsequent syncs will not overwrite it.
+
+---
+
+## Template Pinning
+
+`bin/piqule-pin` computes a combined MD5 checksum of all files in `templates/always/` and `templates/git/` and writes it to `.piqule/templates.md5`. Called automatically by `piqule sync`.
+
+`bin/piqule-verify` compares the current checksum against the pinned value. If they differ, it prints a warning and suggests running `piqule sync`. Called automatically by `piqule check` and `piqule fix`. Silent if `.piqule/templates.md5` does not exist.
 
 ---
 
