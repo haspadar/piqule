@@ -8,6 +8,9 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
+/**
+ * Writes a file only when its contents or mode differ from what is already stored
+ */
 final readonly class DiffingStorage implements Storage
 {
     public function __construct(

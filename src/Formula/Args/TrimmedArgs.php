@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Formula\Args;
 
 use Override;
 
+/**
+ * Trims leading and trailing whitespace from string values; non-strings are passed through unchanged
+ */
 final readonly class TrimmedArgs implements Args
 {
     public function __construct(

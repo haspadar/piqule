@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Config;
 
+/**
+ * Read-only access to flat dot-notated configuration keys
+ */
 interface Config
 {
+    /**
+     * Returns true if the key is declared in this configuration
+     */
     public function has(string $name): bool;
 
     /**

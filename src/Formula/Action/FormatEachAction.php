@@ -10,6 +10,9 @@ use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
+/**
+ * Applies a sprintf template to each incoming value individually
+ */
 final readonly class FormatEachAction implements Action
 {
     public function __construct(

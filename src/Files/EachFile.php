@@ -9,6 +9,9 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Runnable;
 use Override;
 
+/**
+ * Iterates over all files in a collection and applies a side-effectful action to each
+ */
 final readonly class EachFile implements Runnable
 {
     /**

@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Files;
 
 use Haspadar\Piqule\File\File;
 
+/**
+ * An iterable collection of files
+ */
 interface Files
 {
     /**

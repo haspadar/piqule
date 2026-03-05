@@ -8,6 +8,9 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
+/**
+ * Writes a file only if it does not already exist in the underlying storage
+ */
 final readonly class OnceStorage implements Storage
 {
     public function __construct(

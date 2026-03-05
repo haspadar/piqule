@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Formula\Args;
 
 use Override;
 
+/**
+ * Args backed by a plain PHP list of scalar values
+ */
 final readonly class ListArgs implements Args
 {
     /**

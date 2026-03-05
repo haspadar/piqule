@@ -8,6 +8,9 @@ use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\Storage;
 use Override;
 
+/**
+ * Reads all files from a given storage folder as a Files collection
+ */
 final readonly class FolderFiles implements Files
 {
     public function __construct(

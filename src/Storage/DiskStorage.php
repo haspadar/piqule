@@ -10,6 +10,9 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 use SplFileInfo;
 
+/**
+ * Filesystem-backed storage rooted at a given directory
+ */
 final readonly class DiskStorage implements Storage
 {
     public function __construct(

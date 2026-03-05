@@ -10,6 +10,9 @@ use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Override;
 
+/**
+ * Loads values from configuration by key, ignoring any incoming args
+ */
 final readonly class ConfigAction implements Action
 {
     public function __construct(

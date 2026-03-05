@@ -9,6 +9,9 @@ use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
+/**
+ * Appends file contents to an existing file unless the marker string is already present
+ */
 final readonly class AppendingStorage implements Storage
 {
     public function __construct(

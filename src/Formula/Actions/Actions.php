@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Formula\Actions;
 
 use Haspadar\Piqule\Formula\Action\Action;
 
+/**
+ * An ordered sequence of DSL pipeline actions
+ */
 interface Actions
 {
     /**

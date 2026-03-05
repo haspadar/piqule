@@ -7,6 +7,9 @@ namespace Haspadar\Piqule\Storage;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 
+/**
+ * Persistent key-value store for named files
+ */
 interface Storage
 {
     /**

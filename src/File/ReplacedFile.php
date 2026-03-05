@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\File;
 
 use Override;
 
+/**
+ * Performs a literal string replacement in the wrapped file's contents
+ */
 final readonly class ReplacedFile implements File
 {
     public function __construct(

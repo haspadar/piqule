@@ -8,6 +8,9 @@ use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Parses a DSL expression string into an ordered list of Action instances
+ */
 final readonly class ParsedActions implements Actions
 {
     /**

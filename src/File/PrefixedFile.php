@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\File;
 
 use Override;
 
+/**
+ * Prepends a path prefix to the wrapped file's name
+ */
 final readonly class PrefixedFile implements File
 {
     public function __construct(

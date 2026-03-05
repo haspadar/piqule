@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Config;
 
 use Override;
 
+/**
+ * Built-in configuration with all declared keys and their default values
+ */
 final class DefaultConfig implements Config
 {
     private const array INCLUDES = ['../../src'];

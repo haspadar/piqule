@@ -7,6 +7,9 @@ namespace Haspadar\Piqule\Storage\Reaction;
 use Haspadar\Piqule\Output\Output;
 use Override;
 
+/**
+ * Reports created and updated storage events to an Output channel
+ */
 final readonly class ReportingStorageReaction implements StorageReaction
 {
     public function __construct(

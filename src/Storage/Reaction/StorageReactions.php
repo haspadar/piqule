@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Storage\Reaction;
 
 use Override;
 
+/**
+ * Composite StorageReaction that broadcasts events to a list of reactions
+ */
 final readonly class StorageReactions implements StorageReaction
 {
     /**
