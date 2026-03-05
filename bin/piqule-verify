@@ -9,12 +9,19 @@ if [ ! -f "$PINNED" ]; then
   exit 0
 fi
 
-command -v md5sum &>/dev/null && MD5="md5sum" || MD5="md5 -r"
+if command -v md5sum >/dev/null 2>&1; then
+  MD5_CMD=(md5sum)
+elif command -v md5 >/dev/null 2>&1; then
+  MD5_CMD=(md5 -r)
+else
+  echo "Error: neither md5sum nor md5 is available" >&2
+  exit 1
+fi
 
 CURRENT="$(find "$TEMPLATES_DIR/always" "$TEMPLATES_DIR/git" -type f \
   | sort \
-  | xargs "$MD5" \
-  | "$MD5" \
+  | xargs "${MD5_CMD[@]}" \
+  | "${MD5_CMD[@]}" \
   | awk '{print $1}')"
 
 if [ "$CURRENT" != "$(cat "$PINNED")" ]; then
