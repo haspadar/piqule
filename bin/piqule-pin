@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LIBRARY_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+TEMPLATES_DIR="${LIBRARY_ROOT}/templates"
+OUTPUT=".piqule/templates.md5"
+
+if command -v md5sum >/dev/null 2>&1; then
+  MD5_CMD=(md5sum)
+elif command -v md5 >/dev/null 2>&1; then
+  MD5_CMD=(md5 -r)
+else
+  echo "Error: neither md5sum nor md5 is available" >&2
+  exit 1
+fi
+
+find "$TEMPLATES_DIR/always" "$TEMPLATES_DIR/git" -type f \
+  | sort \
+  | xargs "${MD5_CMD[@]}" \
+  | "${MD5_CMD[@]}" \
+  | awk '{print $1}' > "$OUTPUT"
+
+echo -e "\033[32mTemplates pinned to ${OUTPUT}\033[0m"

@@ -6,8 +6,10 @@ namespace Haspadar\Piqule\Files;
 
 use Closure;
 use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\Runnable;
+use Override;
 
-final readonly class EachFile
+final readonly class EachFile implements Runnable
 {
     /**
      * @param Closure(File): void $action
@@ -17,6 +19,7 @@ final readonly class EachFile
         private Closure $action,
     ) {}
 
+    #[Override]
     public function run(): void
     {
         foreach ($this->files->all() as $file) {
