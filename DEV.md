@@ -88,9 +88,9 @@ Note:
 
 ## Template Pinning
 
-`bin/piqule-pin` computes a combined MD5 checksum of all files in `templates/always/` and `templates/git/` and writes it to `.piqule/templates.md5`. Called automatically by `piqule sync`.
+`bin/piqule-pin` computes a combined MD5 checksum of all files in `templates/always/` and `templates/git/` and writes it to `.piqule/templates.md5`. Called automatically by `bin/piqule sync`.
 
-`bin/piqule-verify` compares the current checksum against the pinned value. If they differ, it prints a warning and suggests running `piqule sync`. Called automatically by `piqule check` and `piqule fix`. Silent if `.piqule/templates.md5` does not exist.
+`bin/piqule-verify` compares the current checksum against the pinned value. If they differ, it prints a warning and suggests running `bin/piqule sync`. Called automatically by `bin/piqule check` and `bin/piqule fix`. Silent if `.piqule/templates.md5` does not exist.
 
 ---
 
