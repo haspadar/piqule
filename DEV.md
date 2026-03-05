@@ -33,6 +33,22 @@ Everything under `templates/git/` is copied into:
 
 `.git/`
 
+Files are written with `DiffingStorage` (overwrite on change), except `pre-push` — it is appended via `AppendingStorage` using the marker `# BEGIN piqule` / `# END piqule`. This makes the operation idempotent: if the block is already present, `sync` skips it.
+
+The appended block wires `pre-push-piqule`:
+
+```sh
+# BEGIN piqule
+[ -f "$(dirname "$0")/pre-push-piqule" ] && "$(dirname "$0")/pre-push-piqule" "$@"
+# END piqule
+```
+
+`pre-push-renovate` is copied to `.git/hooks/` but not wired automatically. To enable it, add the following line inside the `# BEGIN piqule / # END piqule` block in `.git/hooks/pre-push`:
+
+```sh
+[ -f "$(dirname "$0")/pre-push-renovate" ] && "$(dirname "$0")/pre-push-renovate" "$@"
+```
+
 ### Once Templates
 
 Location:
