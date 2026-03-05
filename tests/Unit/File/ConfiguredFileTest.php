@@ -33,6 +33,7 @@ final class ConfiguredFileTest extends TestCase
                 $config,
             ),
             new HasFileContents('8.3,8.4'),
+            'placeholder must resolve to joined matrix values',
         );
     }
 
@@ -53,6 +54,7 @@ final class ConfiguredFileTest extends TestCase
                 $config,
             ),
             new HasFileContents("just text\nno placeholders here"),
+            'file without placeholders must be returned unchanged',
         );
     }
 

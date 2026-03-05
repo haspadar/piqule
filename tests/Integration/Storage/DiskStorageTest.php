@@ -48,12 +48,12 @@ final class DiskStorageTest extends TestCase
     #[Test]
     public function reportsExistingLocation(): void
     {
-        $folder = (new TempFolder())
-            ->withFile('exists/file.txt', 'data');
-
         self::assertTrue(
-            (new DiskStorage($folder->path()))
-                ->exists('exists/file.txt'),
+            (new DiskStorage(
+                (new TempFolder())
+                    ->withFile('exists/file.txt', 'data')
+                    ->path(),
+            ))->exists('exists/file.txt'),
             'DiskStorage must report existing location',
         );
     }
@@ -127,11 +127,10 @@ final class DiskStorageTest extends TestCase
     #[Test]
     public function writesFileWithCustomMode(): void
     {
-        $folder = new TempFolder();
-
         self::assertThat(
-            (new DiskStorage($folder->path()))
-                ->write(new TextFile('file.txt', 'data', 0o755)),
+            (new DiskStorage(
+                (new TempFolder())->path(),
+            ))->write(new TextFile('file.txt', 'data', 0o755)),
             new HasEntry('file.txt', 'data', 0o755),
             'DiskStorage must write a file with the specified mode',
         );
@@ -140,18 +139,14 @@ final class DiskStorageTest extends TestCase
     #[Test]
     public function updatesFileModeWhenOverwritten(): void
     {
-        $folder = (new TempFolder())
-            ->withFile('file.txt', 'data');
-
-        $storage = new DiskStorage($folder->path());
-
-        $storage = $storage->write(
-            new TextFile('file.txt', 'data', 0o755),
-        );
-
         self::assertSame(
             0o755,
-            $storage->mode('file.txt'),
+            (new DiskStorage(
+                (new TempFolder())
+                    ->withFile('file.txt', 'data')
+                    ->path(),
+            ))->write(new TextFile('file.txt', 'data', 0o755))
+                ->mode('file.txt'),
             'DiskStorage must update the file mode when overwriting an existing file',
         );
     }

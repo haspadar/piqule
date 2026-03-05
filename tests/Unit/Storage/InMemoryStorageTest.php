@@ -137,13 +137,13 @@ final class InMemoryStorageTest extends TestCase
     #[Test]
     public function storesAndReturnsMode(): void
     {
-        $storage = new InMemoryStorage();
-
-        $storage = $storage->write(
-            new TextFile('file.txt', 'data', 0o755),
+        self::assertSame(
+            0o755,
+            (new InMemoryStorage())
+                ->write(new TextFile('file.txt', 'data', 0o755))
+                ->mode('file.txt'),
+            'InMemoryStorage must store and return the file mode',
         );
-
-        self::assertSame(0o755, $storage->mode('file.txt'), 'InMemoryStorage must store and return the file mode');
     }
 
     #[Test]
