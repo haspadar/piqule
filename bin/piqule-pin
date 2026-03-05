@@ -9,8 +9,8 @@ command -v md5sum &>/dev/null && MD5="md5sum" || MD5="md5 -r"
 
 find "$TEMPLATES_DIR/always" "$TEMPLATES_DIR/git" -type f \
   | sort \
-  | xargs $MD5 \
-  | $MD5 \
+  | xargs "$MD5" \
+  | "$MD5" \
   | awk '{print $1}' > "$OUTPUT"
 
 echo -e "\033[32mTemplates pinned to ${OUTPUT}\033[0m"
