@@ -17,9 +17,11 @@ shift || true
 case "$COMMAND" in
   sync)
     "$(dirname "$0")/piqule-sync" "$@"
+    "$(dirname "$0")/piqule-pin"
     ;;
   check|fix)
     ensure_project_root
+    "$(dirname "$0")/piqule-verify"
     "$(dirname "$0")/piqule-${COMMAND}" "$@"
     ;;
   *)
