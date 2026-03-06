@@ -22,7 +22,7 @@ final readonly class ParsedActions implements Actions
     ) {}
 
     /**
-     * Parses DSL expression into a sequence of actions.
+     * Parses DSL expression into a sequence of actions
      *
      * DSL intentionally does not support nested parentheses
      * in action arguments. Arguments are treated as flat strings.

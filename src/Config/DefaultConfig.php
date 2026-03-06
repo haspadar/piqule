@@ -116,7 +116,7 @@ final class DefaultConfig implements Config
     ];
 
     /**
-     * Checks whether a configuration key exists in built-in defaults.
+     * Checks whether a configuration key exists in built-in defaults
      */
     #[Override]
     public function has(string $name): bool
@@ -125,7 +125,7 @@ final class DefaultConfig implements Config
     }
 
     /**
-     * Returns the configuration value as a list.
+     * Returns the configuration value as a list
      *
      * @return list<int|float|string|bool>
      */

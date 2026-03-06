@@ -23,7 +23,7 @@ final readonly class DiskStorage implements Storage
     ) {}
 
     /**
-     * Reads and returns the file contents at the given location.
+     * Reads and returns the file contents at the given location
      *
      * @throws PiquleException
      */
@@ -46,7 +46,7 @@ final readonly class DiskStorage implements Storage
     }
 
     /**
-     * Recursively yields relative file paths within the given folder.
+     * Recursively yields relative file paths within the given folder
      *
      * @return iterable<string>
      */
@@ -82,7 +82,7 @@ final readonly class DiskStorage implements Storage
     }
 
     /**
-     * Checks whether a file exists at the given location.
+     * Checks whether a file exists at the given location
      */
     #[Override]
     public function exists(string $location): bool
@@ -91,7 +91,7 @@ final readonly class DiskStorage implements Storage
     }
 
     /**
-     * Writes a file to disk, creating parent directories as needed.
+     * Writes a file to disk, creating parent directories as needed
      *
      * @throws PiquleException
      */
@@ -121,7 +121,7 @@ final readonly class DiskStorage implements Storage
     }
 
     /**
-     * Returns the file permission bits (masked to 0o777) for the given location.
+     * Returns the file permission bits (masked to 0o777) for the given location
      *
      * @throws PiquleException
      */

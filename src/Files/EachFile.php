@@ -24,7 +24,7 @@ final readonly class EachFile implements Runnable
     ) {}
 
     /**
-     * Executes the action for every file in the collection.
+     * Executes the action for every file in the collection
      */
     #[Override]
     public function run(): void
