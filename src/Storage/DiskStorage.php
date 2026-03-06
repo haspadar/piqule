@@ -15,9 +15,6 @@ use SplFileInfo;
  */
 final readonly class DiskStorage implements Storage
 {
-    /**
-     * @param string $root Absolute path to the storage root directory
-     */
     public function __construct(
         private string $root,
     ) {}
@@ -145,24 +142,6 @@ final readonly class DiskStorage implements Storage
 
     private function pathOf(string $location): string
     {
-        $parts = [];
-
-        foreach (explode('/', str_replace('\\', '/', $location)) as $part) {
-            if ($part === '' || $part === '.') {
-                continue;
-            }
-
-            if ($part === '..') {
-                if ($parts === []) {
-                    throw new PiquleException("Invalid location: $location");
-                }
-                array_pop($parts);
-                continue;
-            }
-
-            $parts[] = $part;
-        }
-
-        return rtrim($this->root, '/') . '/' . implode('/', $parts);
+        return (new SafePath($this->root))->resolve($location);
     }
 }
