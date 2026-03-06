@@ -15,6 +15,7 @@ use Override;
 final readonly class EachFile implements Runnable
 {
     /**
+     * @param Files $files File collection to iterate
      * @param Closure(File): void $action
      */
     public function __construct(
@@ -22,6 +23,9 @@ final readonly class EachFile implements Runnable
         private Closure $action,
     ) {}
 
+    /**
+     * Executes the action for every file in the collection.
+     */
     #[Override]
     public function run(): void
     {

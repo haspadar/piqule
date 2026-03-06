@@ -15,10 +15,18 @@ use SplFileInfo;
  */
 final readonly class DiskStorage implements Storage
 {
+    /**
+     * @param string $root Absolute path to the storage root directory
+     */
     public function __construct(
         private string $root,
     ) {}
 
+    /**
+     * Reads and returns the file contents at the given location.
+     *
+     * @throws PiquleException
+     */
     #[Override]
     public function read(string $location): string
     {
@@ -37,6 +45,11 @@ final readonly class DiskStorage implements Storage
         return $contents;
     }
 
+    /**
+     * Recursively yields relative file paths within the given folder.
+     *
+     * @return iterable<string>
+     */
     #[Override]
     public function entries(string $location): iterable
     {
@@ -68,12 +81,20 @@ final readonly class DiskStorage implements Storage
         }
     }
 
+    /**
+     * Checks whether a file exists at the given location.
+     */
     #[Override]
     public function exists(string $location): bool
     {
         return is_file($this->pathOf($location));
     }
 
+    /**
+     * Writes a file to disk, creating parent directories as needed.
+     *
+     * @throws PiquleException
+     */
     #[Override]
     public function write(File $file): self
     {
@@ -99,6 +120,11 @@ final readonly class DiskStorage implements Storage
         return $this;
     }
 
+    /**
+     * Returns the file permission bits (masked to 0o777) for the given location.
+     *
+     * @throws PiquleException
+     */
     #[Override]
     public function mode(string $location): int
     {
@@ -119,8 +145,24 @@ final readonly class DiskStorage implements Storage
 
     private function pathOf(string $location): string
     {
-        return rtrim($this->root, '/')
-            . '/'
-            . ltrim($location, '/');
+        $parts = [];
+
+        foreach (explode('/', str_replace('\\', '/', $location)) as $part) {
+            if ($part === '' || $part === '.') {
+                continue;
+            }
+
+            if ($part === '..') {
+                if ($parts === []) {
+                    throw new PiquleException("Invalid location: $location");
+                }
+                array_pop($parts);
+                continue;
+            }
+
+            $parts[] = $part;
+        }
+
+        return rtrim($this->root, '/') . '/' . implode('/', $parts);
     }
 }

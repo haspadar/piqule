@@ -13,11 +13,18 @@ use Override;
  */
 final readonly class FolderFiles implements Files
 {
+    /**
+     * @param Storage $storage Source storage to read files from
+     * @param string $folder Folder path relative to storage root
+     */
     public function __construct(
         private Storage $storage,
         private string $folder,
     ) {}
 
+    /**
+     * @return iterable<TextFile>
+     */
     #[Override]
     public function all(): iterable
     {
