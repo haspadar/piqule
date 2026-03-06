@@ -33,6 +33,22 @@ Everything under `templates/git/` is copied into:
 
 `.git/`
 
+Files are written with `DiffingStorage` (overwrite on change), except `pre-push` — it is appended via `AppendingStorage` using the marker `# BEGIN piqule` / `# END piqule`. This makes the operation idempotent: if the block is already present, `sync` skips it.
+
+The appended block wires `pre-push-piqule`:
+
+```sh
+# BEGIN piqule
+[ -f "$(dirname "$0")/pre-push-piqule" ] && "$(dirname "$0")/pre-push-piqule" "$@"
+# END piqule
+```
+
+`pre-push-renovate` is copied to `.git/hooks/` but not wired automatically. To enable it, add the following line inside the `# BEGIN piqule / # END piqule` block in `.git/hooks/pre-push`:
+
+```sh
+[ -f "$(dirname "$0")/pre-push-renovate" ] && "$(dirname "$0")/pre-push-renovate" "$@"
+```
+
 ### Once Templates
 
 Location:
@@ -62,10 +78,19 @@ Flow:
 7. Write `templates/git/` (non-pre-push files) → `.git/` (overwrite on change)
 8. Write `templates/git/` (pre-push file) → `.git/hooks/pre-push` (append if marker absent)
 9. Write `templates/once/` → project root (only if file doesn't exist)
+10. Pin template checksums → `.piqule/templates.md5`
 
 Note:
 
 `.piqule.php` is generated from `templates/once/` on the first `sync`. Edit it freely — subsequent syncs will not overwrite it.
+
+---
+
+## Template Pinning
+
+`bin/piqule-pin` computes a combined MD5 checksum of all files in `templates/always/` and `templates/git/` and writes it to `.piqule/templates.md5`. Called automatically by `bin/piqule sync`.
+
+`bin/piqule-verify` compares the current checksum against the pinned value. If they differ, it prints a warning and suggests running `bin/piqule sync`. Called automatically by `bin/piqule check` and `bin/piqule fix`. Silent if `.piqule/templates.md5` does not exist.
 
 ---
 
