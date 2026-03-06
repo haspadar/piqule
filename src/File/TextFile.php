@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\File;
 
 use Override;
 
+/**
+ * An in-memory file with an explicit name, contents, and mode
+ */
 final readonly class TextFile implements File
 {
     public function __construct(

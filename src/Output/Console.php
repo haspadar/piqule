@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Output;
 
 use Override;
 
+/**
+ * Writes colorized messages to STDOUT (info, success) and STDERR (error)
+ */
 final readonly class Console implements Output
 {
     #[Override]

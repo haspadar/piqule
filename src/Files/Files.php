@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Files;
 
 use Haspadar\Piqule\File\File;
 
+/**
+ * A collection of files that exposes an iterable via all()
+ */
 interface Files
 {
     /**

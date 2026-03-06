@@ -8,6 +8,9 @@ use Closure;
 use Haspadar\Piqule\File\File;
 use Override;
 
+/**
+ * Yields only the files from the wrapped collection that satisfy a predicate
+ */
 final readonly class FilteredFiles implements Files
 {
     /**

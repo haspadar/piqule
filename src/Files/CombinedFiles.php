@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Files;
 
 use Override;
 
+/**
+ * Merges multiple Files sources into a single sequential collection
+ */
 final readonly class CombinedFiles implements Files
 {
     /**

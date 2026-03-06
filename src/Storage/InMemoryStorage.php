@@ -8,6 +8,9 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Immutable in-memory storage backed by a location-to-File map
+ */
 final readonly class InMemoryStorage implements Storage
 {
     /** @var array<string, File> */

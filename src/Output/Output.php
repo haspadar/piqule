@@ -4,11 +4,23 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Output;
 
+/**
+ * Writes user-facing messages to an output channel
+ */
 interface Output
 {
+    /**
+     * Emits an informational message
+     */
     public function info(string $text): void;
 
+    /**
+     * Emits a success message
+     */
     public function success(string $text): void;
 
+    /**
+     * Emits an error message
+     */
     public function error(string $text): void;
 }

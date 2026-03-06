@@ -6,6 +6,9 @@ namespace Haspadar\Piqule\Config;
 
 use Override;
 
+/**
+ * Built-in configuration with all declared keys and their default values
+ */
 final class DefaultConfig implements Config
 {
     private const array INCLUDES = ['../../src'];
@@ -112,12 +115,20 @@ final class DefaultConfig implements Config
         'infection.enabled' => true,
     ];
 
+    /**
+     * Checks whether a configuration key exists in built-in defaults
+     */
     #[Override]
     public function has(string $name): bool
     {
         return array_key_exists($name, self::DEFAULTS);
     }
 
+    /**
+     * Returns the configuration value as a list
+     *
+     * @return list<int|float|string|bool>
+     */
     #[Override]
     public function list(string $name): array
     {

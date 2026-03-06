@@ -8,6 +8,9 @@ use Closure;
 use Haspadar\Piqule\File\File;
 use Override;
 
+/**
+ * Applies a transformation closure to each file in the wrapped collection
+ */
 final readonly class MappedFiles implements Files
 {
     /**

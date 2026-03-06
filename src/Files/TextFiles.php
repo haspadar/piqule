@@ -7,6 +7,9 @@ namespace Haspadar\Piqule\Files;
 use Haspadar\Piqule\File\TextFile;
 use Override;
 
+/**
+ * A Files collection built from a map of path => content strings
+ */
 final readonly class TextFiles implements Files
 {
     /**

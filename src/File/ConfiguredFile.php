@@ -17,6 +17,9 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 use Throwable;
 
+/**
+ * Replaces DSL placeholders in a file's contents using configuration values
+ */
 final readonly class ConfiguredFile implements File
 {
     public function __construct(

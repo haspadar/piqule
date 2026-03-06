@@ -8,6 +8,9 @@ use Haspadar\Piqule\Formula\Action\Action;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Parses a DSL expression string into an ordered list of Action instances
+ */
 final readonly class ParsedActions implements Actions
 {
     /**
@@ -19,7 +22,7 @@ final readonly class ParsedActions implements Actions
     ) {}
 
     /**
-     * Parses DSL expression into a sequence of actions.
+     * Parses DSL expression into a sequence of actions
      *
      * DSL intentionally does not support nested parentheses
      * in action arguments. Arguments are treated as flat strings.

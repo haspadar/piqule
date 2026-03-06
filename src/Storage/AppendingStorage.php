@@ -9,6 +9,9 @@ use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
+/**
+ * Appends file contents to an existing file unless the marker string is already present
+ */
 final readonly class AppendingStorage implements Storage
 {
     public function __construct(
@@ -17,6 +20,12 @@ final readonly class AppendingStorage implements Storage
         private string $marker,
     ) {}
 
+    /**
+     * Writes the file to storage with append semantics:
+     * - Creates a new file and emits created() if the file does not exist yet.
+     * - Appends contents to an existing file and emits updated() if the marker is absent.
+     * - No-ops if the marker is already present in the existing file.
+     */
     #[Override]
     public function write(File $file): self
     {

@@ -8,6 +8,9 @@ use InvalidArgumentException;
 use JsonException;
 use Override;
 
+/**
+ * Decodes a single JSON list literal from the wrapped Args into a typed scalar list
+ */
 final readonly class ParsedArgs implements Args
 {
     public function __construct(

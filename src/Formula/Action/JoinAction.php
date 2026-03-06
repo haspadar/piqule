@@ -9,6 +9,9 @@ use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
+/**
+ * Joins all incoming values into a single string using a delimiter
+ */
 final readonly class JoinAction implements Action
 {
     public function __construct(

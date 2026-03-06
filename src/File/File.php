@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
+/**
+ * A named file with content and POSIX permissions
+ */
 interface File
 {
     /**
@@ -11,6 +14,9 @@ interface File
      */
     public function name(): string;
 
+    /**
+     * Raw file content
+     */
     public function contents(): string;
 
     /**

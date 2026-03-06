@@ -11,6 +11,9 @@ use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Applies a sprintf template to a single incoming value
+ */
 final readonly class FormatAction implements Action
 {
     public function __construct(

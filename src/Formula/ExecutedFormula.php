@@ -9,6 +9,9 @@ use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Evaluates a pipeline of actions and returns the resulting scalar string
+ */
 final readonly class ExecutedFormula implements Formula
 {
     public function __construct(
