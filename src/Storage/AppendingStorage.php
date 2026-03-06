@@ -21,7 +21,10 @@ final readonly class AppendingStorage implements Storage
     ) {}
 
     /**
-     * Appends file contents to an existing file if the marker is absent; creates a new file otherwise.
+     * Writes the file to storage with append semantics:
+     * - Creates a new file and emits created() if the file does not exist yet.
+     * - Appends contents to an existing file and emits updated() if the marker is absent.
+     * - No-ops if the marker is already present in the existing file.
      */
     #[Override]
     public function write(File $file): self
@@ -52,36 +55,24 @@ final readonly class AppendingStorage implements Storage
         return new self($newOrigin, $this->reaction, $this->marker);
     }
 
-    /**
-     * Reads file contents from the underlying storage.
-     */
     #[Override]
     public function read(string $location): string
     {
         return $this->origin->read($location);
     }
 
-    /**
-     * Checks whether a file exists in the underlying storage.
-     */
     #[Override]
     public function exists(string $location): bool
     {
         return $this->origin->exists($location);
     }
 
-    /**
-     * Returns an iterable of file paths within the given folder.
-     */
     #[Override]
     public function entries(string $location): iterable
     {
         return $this->origin->entries($location);
     }
 
-    /**
-     * Returns the file permission bits for the given location.
-     */
     #[Override]
     public function mode(string $location): int
     {
