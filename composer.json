@@ -24,7 +24,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=8.3",
+        "php": "~8.3.16 || ~8.4.3 || ~8.5.0",
         "ext-xdebug": "*",
         "friendsofphp/php-cs-fixer": "^3.91",
         "infection/infection": "^0.32.0",
