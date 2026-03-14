@@ -7,7 +7,7 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/bootstrap-autoload.php';
 
 $projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
 
