@@ -15,7 +15,7 @@ final class DefaultConfig implements Config
     private const array DEFAULTS = [
         'ci.php.matrix' => ['8.3'],
         'ci.php.test_version' => ['8.3'],
-        'ci.piqule_bin' => 'bin/piqule',
+        'ci.piqule_bin' => 'vendor/bin/piqule',
         'ci.pr.max_lines_changed' => 250,
         'coverage.patch.target' => 80,
         'coverage.patch.threshold' => 5,
