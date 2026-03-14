@@ -8,6 +8,11 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
+if [ ! -d "tests" ]; then
+  echo "No tests directory found, skipping PHPUnit"
+  exit 0
+fi
+
 SEED="${PHPUNIT_SEED:-}"
 
 BIN="$(.piqule/_composer.sh phpunit)"
