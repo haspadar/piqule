@@ -31,5 +31,5 @@ return new OverrideConfig(new DefaultConfig(), [
 
     'ci.php.matrix' => ['8.3', '8.4', '8.5'],
     'ci.pr.max_lines_changed' => 400,
-    'ci.piqule_bin' => 'bin/piqule',
+    'ci.piqule_bin' => 'vendor/bin/piqule',
 ]);

@@ -59,6 +59,16 @@ final class DefaultConfigTest extends TestCase
     }
 
     #[Test]
+    public function returnsVendorBinaryPathWhenPiquleRunsInCi(): void
+    {
+        self::assertSame(
+            ['vendor/bin/piqule'],
+            (new DefaultConfig())->list('ci.piqule_bin'),
+            'CI must run the Composer-installed piqule binary by default',
+        );
+    }
+
+    #[Test]
     public function returnsEmptyListWhenKeyIsUnknown(): void
     {
         self::assertSame(
