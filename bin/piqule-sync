@@ -22,11 +22,7 @@ use Haspadar\Piqule\Storage\OnceStorage;
 use Haspadar\Piqule\Storage\Reaction\ReportingStorageReaction;
 use Haspadar\Piqule\Storage\Reaction\StorageReactions;
 
-$autoload = file_exists(__DIR__ . '/../vendor/autoload.php')
-    ? __DIR__ . '/../vendor/autoload.php'
-    : __DIR__ . '/../../../autoload.php';
-
-require_once $autoload;
+require_once __DIR__ . '/bootstrap-autoload.php';
 
 $output = new Console();
 
