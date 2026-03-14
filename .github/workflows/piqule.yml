@@ -55,7 +55,7 @@ jobs:
 
       - uses: shivammathur/setup-php@a33066c0017f7fe81bdb8e24512c418a6f7eb08a
         with:
-          php-version: 8.3
+          php-version: 8.3.16
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -87,7 +87,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["8.3", "8.4", "8.5"]
+        php: ["8.3.16", "8.4.3", "8.5.0"]
         check:
           - phpcs
           - phpstan
@@ -125,7 +125,7 @@ jobs:
 
       - uses: shivammathur/setup-php@a33066c0017f7fe81bdb8e24512c418a6f7eb08a
         with:
-          php-version: 8.3
+          php-version: 8.3.16
           coverage: xdebug
           extensions: mbstring, dom, json
 
