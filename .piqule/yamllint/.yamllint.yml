@@ -4,6 +4,7 @@ ignore: |
   vendor/**
   tests/**
   .git/**
+  templates/**
   .piqule/**/html/**
   .piqule/**/coverage-report/**
 

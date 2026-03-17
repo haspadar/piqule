@@ -28,24 +28,22 @@ vendor/bin/piqule sync
 
 Customization is optional. If needed, create `.piqule.php` in the project root.
 
-Use `AppendConfig` to extend the defaults — values are added to existing lists, not replaced:
+Pass `include` and `exclude` to `DefaultConfig` to extend the default directory lists — changes cascade to all tools automatically:
 
 ```php
 <?php
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Config\AppendConfig;
 use Haspadar\Piqule\Config\DefaultConfig;
 
-return new AppendConfig(new DefaultConfig(), [
-    'dirs.include' => ['lib'],       // propagates to PHPStan, Psalm, PHPUnit, Infection, PHPMD, PHP Metrics, PHP_CodeSniffer
-    'dirs.exclude' => ['legacy'],    // propagates to PHP_CodeSniffer, PHP-CS-Fixer, and all linters
-    'php.version'  => ['8.4'],       // propagates to ci.php.matrix and ci.php.test_version
-]);
+return new DefaultConfig(
+    include: ['src', 'lib'],                          // propagates to PHPStan, Psalm, PHPUnit, Infection, PHPMD, PHP Metrics, PHP_CodeSniffer
+    exclude: ['vendor', 'tests', '.git', 'legacy'],   // propagates to PHP_CodeSniffer, PHP-CS-Fixer, and all linters
+);
 ```
 
-Use `OverrideConfig` to replace any value entirely:
+Use `OverrideConfig` to replace any individual key:
 
 ```php
 <?php
@@ -56,8 +54,8 @@ use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
 
 return new OverrideConfig(new DefaultConfig(), [
-    'php.version'            => ['8.4'],              // replace, not append
-    'phpstan.level'          => [8],
+    'phpstan.level'           => [8],
+    'ci.php.matrix'           => ['8.3', '8.4', '8.5'],
     'ci.pr.max_lines_changed' => 400,
 ]);
 ```
