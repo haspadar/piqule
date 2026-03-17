@@ -11,6 +11,6 @@ fi
 BIN="$(.piqule/_composer.sh phpmd)"
 
 "$BIN" \
-src \
+../../src \
 text \
 "$CONFIG"
