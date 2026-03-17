@@ -27,7 +27,7 @@ final readonly class CiSection implements ConfigSection
             'ci.php.matrix' => $this->phpMatrix,
             'ci.php.test_version' => $this->phpTestVersion,
             'ci.piqule_bin' => 'vendor/bin/piqule',
-            'ci.pr.max_lines_changed' => 1000,
+            'ci.pr.max_lines_changed' => 250,
         ];
     }
 }
