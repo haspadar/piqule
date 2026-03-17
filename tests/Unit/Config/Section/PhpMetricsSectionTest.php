@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 final class PhpMetricsSectionTest extends TestCase
 {
     #[Test]
-    public function propagatesIncludesAndExcludes(): void
+    public function propagatesExcludes(): void
     {
         $section = new PhpMetricsSection(['../../src'], ['vendor', '.git']);
 

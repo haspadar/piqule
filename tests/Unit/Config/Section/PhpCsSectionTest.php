@@ -11,14 +11,22 @@ use PHPUnit\Framework\TestCase;
 final class PhpCsSectionTest extends TestCase
 {
     #[Test]
-    public function propagatesIncludesAndExcludes(): void
+    public function propagatesIncludesToFiles(): void
     {
-        $section = new PhpCsSection(['../../src'], ['vendor/*']);
-
         self::assertSame(
             ['../../src'],
-            $section->toArray()['phpcs.files'],
+            (new PhpCsSection(['../../src'], ['vendor/*']))->toArray()['phpcs.files'],
             'phpcs.files must reflect the given includes',
+        );
+    }
+
+    #[Test]
+    public function propagatesExcludesToExcludes(): void
+    {
+        self::assertSame(
+            ['vendor/*'],
+            (new PhpCsSection(['../../src'], ['vendor/*']))->toArray()['phpcs.excludes'],
+            'phpcs.excludes must reflect the given excludes',
         );
     }
 }

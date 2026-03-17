@@ -19,9 +19,9 @@ final readonly class JsonlintSection implements ConfigSection
     public function toArray(): array
     {
         return [
-            'jsonlint.compact' => 'true',
-            'jsonlint.continue' => 'true',
-            'jsonlint.duplicate_keys' => 'false',
+            'jsonlint.compact' => true,
+            'jsonlint.continue' => true,
+            'jsonlint.duplicate_keys' => false,
             'jsonlint.mode' => ['json5'],
             'jsonlint.patterns' => array_merge(
                 ['**/*.json', '**/*.json5', '**/*.jsonc'],

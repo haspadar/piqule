@@ -11,12 +11,14 @@ use PHPUnit\Framework\TestCase;
 final class DockerSectionTest extends TestCase
 {
     #[Test]
-    public function declaresDockerImageKey(): void
+    public function declaresDockerImageWithPinnedDigest(): void
     {
-        self::assertArrayHasKey(
-            'docker.image',
-            (new DockerSection())->toArray(),
-            'DockerSection must declare docker.image key',
+        $image = (new DockerSection())->toArray()['docker.image'];
+
+        self::assertMatchesRegularExpression(
+            '/^ghcr\.io\/haspadar\/piqule-infra@sha256:[a-f0-9]{64}$/',
+            (string) $image,
+            'docker.image must be a pinned digest reference',
         );
     }
 }
