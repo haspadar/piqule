@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
 use Haspadar\Piqule\Config\AppendConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Fake\Config\FakeConfig;
 use PHPUnit\Framework\Attributes\Test;
@@ -120,5 +121,21 @@ final class AppendConfigTest extends TestCase
             new FakeConfig(['phpstan.paths' => []]),
             ['phpstan.paths' => [new stdClass()]],
         ))->list('phpstan.paths');
+    }
+
+    #[Test]
+    public function appendsToOverriddenValueWhenComposedWithDecorator(): void
+    {
+        self::assertSame(
+            ['../../base', '../../app'],
+            (new AppendConfig(
+                new OverrideConfig(
+                    new FakeConfig(['phpstan.paths' => ['../../src']]),
+                    ['phpstan.paths' => ['../../base']],
+                ),
+                ['phpstan.paths' => ['../../app']],
+            ))->list('phpstan.paths'),
+            'AppendConfig must append to the value produced by the inner decorator, not to the original',
+        );
     }
 }
