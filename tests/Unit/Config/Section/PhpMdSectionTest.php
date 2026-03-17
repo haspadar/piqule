@@ -14,8 +14,8 @@ final class PhpMdSectionTest extends TestCase
     public function propagatesIncludesToPaths(): void
     {
         self::assertSame(
-            ['../../src'],
-            (new PhpMdSection(['../../src']))->toArray()['phpmd.paths'],
+            ['src'],
+            (new PhpMdSection(['src']))->toArray()['phpmd.paths'],
             'phpmd.paths must reflect the given includes',
         );
     }
