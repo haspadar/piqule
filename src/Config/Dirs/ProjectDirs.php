@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Config;
+namespace Haspadar\Piqule\Config\Dirs;
 
 use Override;
 
 /**
- * Directories suffixed with /** for recursive glob exclusion patterns
+ * Directories prefixed with ../../ for tools that run inside .piqule/<tool>/
  */
-final readonly class TrailingGlobDirs implements Dirs
+final readonly class ProjectDirs implements Dirs
 {
     /** @param list<string> $dirs */
     public function __construct(private array $dirs) {}
@@ -18,6 +18,6 @@ final readonly class TrailingGlobDirs implements Dirs
     #[Override]
     public function toList(): array
     {
-        return array_map(fn(string $dir): string => $dir . '/**', $this->dirs);
+        return array_map(fn(string $dir): string => '../../' . $dir, $this->dirs);
     }
 }

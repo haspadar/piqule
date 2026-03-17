@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Tests\Unit\Config;
+namespace Haspadar\Piqule\Tests\Unit\Config\Dirs;
 
-use Haspadar\Piqule\Config\TrailingSlashDirs;
+use Haspadar\Piqule\Config\Dirs\TrailingSlashDirs;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

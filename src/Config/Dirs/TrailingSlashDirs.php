@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Config;
+namespace Haspadar\Piqule\Config\Dirs;
 
 use Override;
 
 /**
- * Directories prefixed with ../../ for tools that run inside .piqule/<tool>/
+ * Directories suffixed with / to match directory entries explicitly
  */
-final readonly class ProjectDirs implements Dirs
+final readonly class TrailingSlashDirs implements Dirs
 {
     /** @param list<string> $dirs */
     public function __construct(private array $dirs) {}
@@ -18,6 +18,6 @@ final readonly class ProjectDirs implements Dirs
     #[Override]
     public function toList(): array
     {
-        return array_map(fn(string $dir): string => '../../' . $dir, $this->dirs);
+        return array_map(fn(string $dir): string => $dir . '/', $this->dirs);
     }
 }

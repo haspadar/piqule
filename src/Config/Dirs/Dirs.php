@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Config;
+namespace Haspadar\Piqule\Config\Dirs;
 
 /**
  * A list of directories transformed for use in a config value
