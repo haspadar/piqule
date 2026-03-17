@@ -10,4 +10,7 @@
 << config(psalm.project.ignore)|format_each('            <directory name="%s" />')|join("\n") >>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <InvalidAttribute errorLevel="suppress" />
+    </issueHandlers>
 </psalm>
