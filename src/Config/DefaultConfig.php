@@ -36,35 +36,35 @@ final class DefaultConfig implements Config
 
     public function __construct()
     {
-        $dirsInclude = ['src'];
-        $dirsExclude = ['vendor', 'tests', '.git'];
+        $include = ['src'];
+        $exclude = ['vendor', 'tests', '.git'];
         $phpVersion = ['8.3'];
-        $includes = (new ProjectDirs($dirsInclude))->toList();
-        $excludes = (new GlobDirs($dirsExclude))->toList();
+        $projectIncludes = (new ProjectDirs($include))->toList();
+        $globExcludes = (new GlobDirs($exclude))->toList();
 
         $sections = [
             new CiSection($phpVersion, $phpVersion),
             new CoverageSection(),
             new DockerSection(),
             new ActionlintSection(),
-            new HadolintSection($dirsExclude),
-            new JsonlintSection($dirsExclude),
-            new MarkdownlintSection($dirsExclude),
-            new ShellcheckSection($dirsExclude),
-            new TyposSection($dirsExclude),
-            new YamllintSection($dirsExclude),
-            new PhpCsFixerSection($dirsExclude),
-            new PhpCsSection($includes, $excludes),
-            new PhpMdSection($includes),
-            new PhpMetricsSection($includes, $dirsExclude),
-            new PhpStanSection($includes),
-            new PhpUnitSection($includes),
-            new PsalmSection($includes, $dirsExclude),
-            new InfectionSection($includes),
+            new HadolintSection($exclude),
+            new JsonlintSection($exclude),
+            new MarkdownlintSection($exclude),
+            new ShellcheckSection($exclude),
+            new TyposSection($exclude),
+            new YamllintSection($exclude),
+            new PhpCsFixerSection($exclude),
+            new PhpCsSection($projectIncludes, $globExcludes),
+            new PhpMdSection($include),
+            new PhpMetricsSection($projectIncludes, $exclude),
+            new PhpStanSection($projectIncludes),
+            new PhpUnitSection($projectIncludes),
+            new PsalmSection($projectIncludes, $exclude),
+            new InfectionSection($projectIncludes),
         ];
 
         $this->defaults = array_merge(
-            ['dirs.include' => $dirsInclude, 'dirs.exclude' => $dirsExclude, 'php.version' => $phpVersion],
+            ['dirs.include' => $include, 'dirs.exclude' => $exclude, 'php.version' => $phpVersion],
             ...array_map(fn($s) => $s->toArray(), $sections),
         );
     }
