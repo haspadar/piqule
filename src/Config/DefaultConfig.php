@@ -6,7 +6,6 @@ namespace Haspadar\Piqule\Config;
 
 use Haspadar\Piqule\Config\Dirs\GlobDirs;
 use Haspadar\Piqule\Config\Dirs\ProjectDirs;
-use Override;
 use Haspadar\Piqule\Config\Section\ActionlintSection;
 use Haspadar\Piqule\Config\Section\CiSection;
 use Haspadar\Piqule\Config\Section\CoverageSection;
@@ -25,6 +24,7 @@ use Haspadar\Piqule\Config\Section\PsalmSection;
 use Haspadar\Piqule\Config\Section\ShellcheckSection;
 use Haspadar\Piqule\Config\Section\TyposSection;
 use Haspadar\Piqule\Config\Section\YamllintSection;
+use Override;
 
 /**
  * Built-in configuration with all declared keys and their default values
@@ -34,10 +34,14 @@ final class DefaultConfig implements Config
     /** @var array<string, scalar|list<scalar>> */
     private readonly array $defaults;
 
-    public function __construct()
-    {
-        $include = ['src'];
-        $exclude = ['vendor', 'tests', '.git'];
+    /**
+     * @param list<string> $include
+     * @param list<string> $exclude
+     */
+    public function __construct(
+        array $include = ['src'],
+        array $exclude = ['vendor', 'tests', '.git'],
+    ) {
         $phpVersion = ['8.3'];
         $projectIncludes = (new ProjectDirs($include))->toList();
         $globExcludes = (new GlobDirs($exclude))->toList();
@@ -63,10 +67,12 @@ final class DefaultConfig implements Config
             new InfectionSection($projectIncludes),
         ];
 
-        $this->defaults = array_merge(
+        /** @var array<string, scalar|list<scalar>> $defaults */
+        $defaults = array_merge(
             ['dirs.include' => $include, 'dirs.exclude' => $exclude, 'php.version' => $phpVersion],
             ...array_map(fn($s) => $s->toArray(), $sections),
         );
+        $this->defaults = $defaults;
     }
 
     /**
