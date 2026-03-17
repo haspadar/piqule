@@ -8,6 +8,9 @@
         <directory name="../../src" />
         <ignoreFiles>
             <directory name="../../vendor" />
+            <directory name="../../tests" />
+            <directory name="../../.git" />
+            <directory name="../../templates" />
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>

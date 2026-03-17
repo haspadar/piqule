@@ -26,11 +26,24 @@ vendor/bin/piqule sync
 
 ## Configure
 
-Customization is optional.
+Customization is optional. If needed, create `.piqule.php` in the project root.
 
-If needed, create `.piqule.php` in the project root.
+Pass `include` and `exclude` to `DefaultConfig` to extend the default directory lists — changes cascade to all tools automatically:
 
-Use `OverrideConfig` with dot-separated keys:
+```php
+<?php
+
+declare(strict_types=1);
+
+use Haspadar\Piqule\Config\DefaultConfig;
+
+return new DefaultConfig(
+    include: ['src', 'lib'],                          // propagates to PHPStan, Psalm, PHPUnit, Infection, PHPMD, PHP Metrics, PHP_CodeSniffer
+    exclude: ['vendor', 'tests', '.git', 'legacy'],   // propagates to PHP_CodeSniffer, PHP-CS-Fixer, and all linters
+);
+```
+
+Use `OverrideConfig` to replace any individual key:
 
 ```php
 <?php
@@ -41,9 +54,9 @@ use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
 
 return new OverrideConfig(new DefaultConfig(), [
-    'ci.php.matrix' => ['8.3', '8.4', '8.5'],
+    'phpstan.level'           => [8],
+    'ci.php.matrix'           => ['8.3', '8.4', '8.5'],
     'ci.pr.max_lines_changed' => 400,
-    'ci.piqule_bin' => 'vendor/bin/piqule',
 ]);
 ```
 

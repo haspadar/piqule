@@ -6,10 +6,8 @@
   "excludes": [
     "vendor",
     "tests",
-    "build",
-    "bin",
-    "var",
-    "node_modules"
+    ".git",
+    "templates"
   ],
   "extensions": [
     "php"

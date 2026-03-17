@@ -24,6 +24,6 @@ return [
     ],
     'coupling' => [
         'max_afferent' => 10,
-        'max_efferent' => 10,
+        'max_efferent' => 25,
     ],
 ];

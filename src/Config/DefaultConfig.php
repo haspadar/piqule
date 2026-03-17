@@ -4,6 +4,26 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Config;
 
+use Haspadar\Piqule\Config\Dirs\GlobDirs;
+use Haspadar\Piqule\Config\Dirs\ProjectDirs;
+use Haspadar\Piqule\Config\Section\ActionlintSection;
+use Haspadar\Piqule\Config\Section\CiSection;
+use Haspadar\Piqule\Config\Section\CoverageSection;
+use Haspadar\Piqule\Config\Section\DockerSection;
+use Haspadar\Piqule\Config\Section\HadolintSection;
+use Haspadar\Piqule\Config\Section\InfectionSection;
+use Haspadar\Piqule\Config\Section\JsonlintSection;
+use Haspadar\Piqule\Config\Section\MarkdownlintSection;
+use Haspadar\Piqule\Config\Section\PhpCsFixerSection;
+use Haspadar\Piqule\Config\Section\PhpCsSection;
+use Haspadar\Piqule\Config\Section\PhpMdSection;
+use Haspadar\Piqule\Config\Section\PhpMetricsSection;
+use Haspadar\Piqule\Config\Section\PhpStanSection;
+use Haspadar\Piqule\Config\Section\PhpUnitSection;
+use Haspadar\Piqule\Config\Section\PsalmSection;
+use Haspadar\Piqule\Config\Section\ShellcheckSection;
+use Haspadar\Piqule\Config\Section\TyposSection;
+use Haspadar\Piqule\Config\Section\YamllintSection;
 use Override;
 
 /**
@@ -11,109 +31,49 @@ use Override;
  */
 final class DefaultConfig implements Config
 {
-    private const array INCLUDES = ['../../src'];
-    private const array DEFAULTS = [
-        'ci.php.matrix' => ['8.3'],
-        'ci.php.test_version' => ['8.3'],
-        'ci.piqule_bin' => 'vendor/bin/piqule',
-        'ci.pr.max_lines_changed' => 250,
-        'coverage.patch.target' => 80,
-        'coverage.patch.threshold' => 5,
-        'coverage.project.target' => 80,
-        'coverage.project.threshold' => 2,
-        'docker.image' => 'ghcr.io/haspadar/piqule-infra@sha256:a7d41e9fef08156778df6f9172145970a617962bee9e17f1484ebc9b41f6ac29',
-        'hadolint.failure_threshold' => 'error',
-        'hadolint.ignore' => ['vendor', 'node_modules', '.git'],
-        'hadolint.ignored_yaml' => '[]',
-        'hadolint.override.error_yaml' => '[]',
-        'hadolint.override.warning_yaml' => '[]',
-        'hadolint.patterns' => ['Dockerfile*'],
-        'infection.php_options' => '-d memory_limit=1G',
-        'infection.source.directories' => self::INCLUDES,
-        'infection.timeout' => '30',
-        'jsonlint.compact' => 'true',
-        'jsonlint.continue' => 'true',
-        'jsonlint.duplicate_keys' => 'false',
-        'jsonlint.mode' => ['json5'],
-        'jsonlint.patterns' => [
-            '**/*.json',
-            '**/*.json5',
-            '**/*.jsonc',
-            '!**/vendor/**',
-            '!**/node_modules/**',
-            '!**/.git/**',
-            '!**/coverage/**',
-            '!**/build/**',
-            '!**/var/**',
-        ],
-        'markdownlint.ignores' => ['**/vendor/**', '**/node_modules/**', '**/coverage/**', '**/.git/**'],
-        'php_cs_fixer.allow_unsupported' => ['true'],
-        'php_cs_fixer.exclude' => ['vendor', 'tests'],
-        'php_cs_fixer.paths' => ['../..'],
-        'phpcs.excludes' => ['vendor/*', 'tests/*'],
-        'phpcs.files' => self::INCLUDES,
-        'phpmd.class_complexity' => [50],
-        'phpmd.class_length' => [200],
-        'phpmd.cyclomatic' => [10],
-        'phpmd.max_fields' => [10],
-        'phpmd.max_methods' => [10],
-        'phpmd.max_parameters' => [5],
-        'phpmd.method_length' => [50],
-        'phpmd.npath' => [200],
-        'phpmd.paths' => ['src'],
-        'phpmetrics.complexity.max_cyclomatic_per_method' => [10],
-        'phpmetrics.complexity.max_weighted_methods_per_class' => [20],
-        'phpmetrics.coupling.max_afferent' => [10],
-        'phpmetrics.coupling.max_efferent' => [10],
-        'phpmetrics.excludes' => ['vendor', 'tests', 'build', 'bin', 'var', 'node_modules'],
-        'phpmetrics.extensions' => ['php'],
-        'phpmetrics.halstead.max_bugs_per_method' => [0.5],
-        'phpmetrics.halstead.max_difficulty_per_method' => [15],
-        'phpmetrics.halstead.max_effort_per_method' => [15000],
-        'phpmetrics.halstead.max_volume_per_method' => [1000],
-        'phpmetrics.includes' => self::INCLUDES,
-        'phpmetrics.inheritance.max_depth' => [3],
-        'phpmetrics.report.html' => ['html'],
-        'phpmetrics.report.json' => ['phpmetrics.json'],
-        'phpmetrics.size.max_loc_per_class' => [1000],
-        'phpmetrics.size.max_logical_loc_per_class' => [600],
-        'phpmetrics.size.max_logical_loc_per_method' => [20],
-        'phpmetrics.structure.max_methods_per_class' => [10],
-        'phpstan.level' => [9],
-        'phpstan.memory' => '1G',
-        'phpstan.paths' => self::INCLUDES,
-        'phpunit.source.include' => self::INCLUDES,
-        'phpunit.testsuites.integration' => ['../../tests/Integration'],
-        'phpunit.testsuites.unit' => ['../../tests/Unit'],
-        'psalm.error_level' => [1],
-        'psalm.project.directories' => self::INCLUDES,
-        'psalm.project.ignore' => ['../../vendor'],
-        'shellcheck.exclude' => [],
-        'shellcheck.external_sources' => 'true',
-        'shellcheck.ignore_dirs' => ['vendor', 'node_modules', '.git', 'coverage', 'build', 'var'],
-        'shellcheck.severity' => 'warning',
-        'shellcheck.shell' => 'bash',
-        'shellcheck.source_path' => '.',
-        'typos.exclude' => ['.git/', 'vendor/', 'node_modules/'],
-        'typos.ignore_re' => ['vendor/.*'],
-        'yamllint.ignore' => ['vendor/**', 'node_modules/**', 'build/**', 'var/**', '.piqule/**/html/**', '.piqule/**/coverage-report/**'],
-        'yamllint.line_length.max' => [120],
-        'actionlint.enabled' => true,
-        'hadolint.enabled' => true,
-        'markdownlint.enabled' => true,
-        'yamllint.enabled' => true,
-        'typos.enabled' => true,
-        'shellcheck.enabled' => true,
-        'jsonlint.enabled' => true,
-        'phpstan.enabled' => true,
-        'psalm.enabled' => true,
-        'phpmd.enabled' => true,
-        'phpmetrics.enabled' => true,
-        'phpcs.enabled' => true,
-        'php-cs-fixer.enabled' => true,
-        'phpunit.enabled' => true,
-        'infection.enabled' => true,
-    ];
+    /** @var array<string, scalar|list<scalar>> */
+    private readonly array $defaults;
+
+    /**
+     * @param list<string> $include
+     * @param list<string> $exclude
+     */
+    public function __construct(
+        array $include = ['src'],
+        array $exclude = ['vendor', 'tests', '.git'],
+    ) {
+        $phpVersion = ['8.3'];
+        $projectIncludes = (new ProjectDirs($include))->toList();
+        $globExcludes = (new GlobDirs($exclude))->toList();
+
+        $sections = [
+            new CiSection($phpVersion, $phpVersion),
+            new CoverageSection(),
+            new DockerSection(),
+            new ActionlintSection(),
+            new HadolintSection($exclude),
+            new JsonlintSection($exclude),
+            new MarkdownlintSection($exclude),
+            new ShellcheckSection($exclude),
+            new TyposSection($exclude),
+            new YamllintSection($exclude),
+            new PhpCsFixerSection($exclude),
+            new PhpCsSection($projectIncludes, $globExcludes),
+            new PhpMdSection($include),
+            new PhpMetricsSection($projectIncludes, $exclude),
+            new PhpStanSection($projectIncludes),
+            new PhpUnitSection($projectIncludes),
+            new PsalmSection($projectIncludes, $exclude),
+            new InfectionSection($projectIncludes),
+        ];
+
+        /** @var array<string, scalar|list<scalar>> $defaults */
+        $defaults = array_merge(
+            ['dirs.include' => $include, 'dirs.exclude' => $exclude, 'php.version' => $phpVersion],
+            ...array_map(fn($s) => $s->toArray(), $sections),
+        );
+        $this->defaults = $defaults;
+    }
 
     /**
      * Checks whether a configuration key exists in built-in defaults
@@ -121,7 +81,7 @@ final class DefaultConfig implements Config
     #[Override]
     public function has(string $name): bool
     {
-        return array_key_exists($name, self::DEFAULTS);
+        return array_key_exists($name, $this->defaults);
     }
 
     /**
@@ -136,12 +96,8 @@ final class DefaultConfig implements Config
             return [];
         }
 
-        $value = self::DEFAULTS[$name];
+        $value = $this->defaults[$name];
 
-        if (is_scalar($value)) {
-            return [$value];
-        }
-
-        return $value;
+        return is_scalar($value) ? [$value] : $value;
     }
 }

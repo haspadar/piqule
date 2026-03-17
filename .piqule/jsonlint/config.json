@@ -7,11 +7,9 @@
     "**/*.json",
     "**/*.json5",
     "**/*.jsonc",
-    "!**/vendor/**",
-    "!**/node_modules/**",
-    "!**/.git/**",
-    "!**/coverage/**",
-    "!**/build/**",
-    "!**/var/**"
+    "!vendor/**",
+    "!tests/**",
+    "!.git/**",
+    "!templates/**"
   ]
 }
