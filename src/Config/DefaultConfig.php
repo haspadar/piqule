@@ -43,7 +43,7 @@ final class DefaultConfig implements Config
         $excludes = (new GlobDirs($dirsExclude))->toList();
 
         $sections = [
-            new CiSection($phpVersion),
+            new CiSection($phpVersion, $phpVersion),
             new CoverageSection(),
             new DockerSection(),
             new ActionlintSection(),

@@ -11,15 +11,21 @@ use Override;
  */
 final readonly class CiSection implements ConfigSection
 {
-    /** @param list<string> $phpVersion */
-    public function __construct(private array $phpVersion) {}
+    /**
+     * @param list<string> $phpMatrix
+     * @param list<string> $phpTestVersion
+     */
+    public function __construct(
+        private array $phpMatrix,
+        private array $phpTestVersion,
+    ) {}
 
     #[Override]
     public function toArray(): array
     {
         return [
-            'ci.php.matrix' => $this->phpVersion,
-            'ci.php.test_version' => $this->phpVersion,
+            'ci.php.matrix' => $this->phpMatrix,
+            'ci.php.test_version' => $this->phpTestVersion,
             'ci.piqule_bin' => 'vendor/bin/piqule',
             'ci.pr.max_lines_changed' => 250,
         ];

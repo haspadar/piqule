@@ -11,26 +11,26 @@ use PHPUnit\Framework\TestCase;
 final class CiSectionTest extends TestCase
 {
     #[Test]
-    public function propagatesPhpVersionToMatrixAndTestVersion(): void
+    public function propagatesMatrixVersionsIndependentlyFromTestVersion(): void
     {
-        $section = new CiSection(['8.4']);
+        $section = new CiSection(['8.3', '8.4', '8.5'], ['8.3']);
 
         self::assertSame(
-            ['8.4'],
+            ['8.3', '8.4', '8.5'],
             $section->toArray()['ci.php.matrix'],
-            'ci.php.matrix must reflect the given PHP version',
+            'ci.php.matrix must reflect the given matrix versions',
         );
     }
 
     #[Test]
-    public function setsTestVersionToSameAsMatrix(): void
+    public function propagatesTestVersionIndependentlyFromMatrix(): void
     {
-        $section = new CiSection(['8.4']);
+        $section = new CiSection(['8.3', '8.4', '8.5'], ['8.3']);
 
         self::assertSame(
-            $section->toArray()['ci.php.matrix'],
+            ['8.3'],
             $section->toArray()['ci.php.test_version'],
-            'ci.php.test_version must match ci.php.matrix',
+            'ci.php.test_version must reflect the given test version independently',
         );
     }
 }
