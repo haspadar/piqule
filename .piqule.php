@@ -29,6 +29,8 @@ return new OverrideConfig(new DefaultConfig(), [
 
     'shellcheck.ignore_dirs' => ['vendor', '.git', 'templates'],
 
+    'phpmetrics.coupling.max_efferent' => [25],
+
     'ci.php.matrix' => ['8.3', '8.4', '8.5'],
     'ci.pr.max_lines_changed' => 400,
     'ci.piqule_bin' => 'bin/piqule',
