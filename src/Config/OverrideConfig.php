@@ -13,7 +13,7 @@ use Override;
  *   'dirs.exclude'?: list<string>,
  *   'php.version'?: list<string>,
  *   'ci.php.matrix'?: list<string>,
- *   'ci.php.test_version'?: string,
+ *   'ci.php.test_version'?: list<string>,
  *   'ci.piqule_bin'?: string,
  *   'ci.pr.max_lines_changed'?: int,
  *   'coverage.patch.target'?: int|float,
