@@ -182,14 +182,14 @@ final class AppendingStorageTest extends TestCase
     public function readsFileContentFromOrigin(): void
     {
         $storage = new AppendingStorage(
-            new InMemoryStorage(['record.json' => new TextFile('record.json', "{\"name\":\"readable\"}")]),
+            new InMemoryStorage(['record.json' => new TextFile('record.json', '{"name":"readable"}')]),
             new FakeStorageReaction(),
             '# read-marker',
         );
 
         self::assertThat(
             $storage,
-            new HasEntry('record.json', "{\"name\":\"readable\"}"),
+            new HasEntry('record.json', '{"name":"readable"}'),
             'read() must delegate to origin storage',
         );
     }
