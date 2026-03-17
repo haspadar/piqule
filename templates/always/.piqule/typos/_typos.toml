@@ -3,9 +3,6 @@
 
 [default]
 binary = false
-extend-ignore-re = [
-<< config(typos.ignore_re)|format_each('    "%s",')|join("\n") >>
-]
 
 [files]
 extend-exclude = [
