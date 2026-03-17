@@ -9,6 +9,9 @@ use Override;
 
 /**
  * @phpstan-type OverrideMap array{
+ *   'dirs.include'?: list<string>,
+ *   'dirs.exclude'?: list<string>,
+ *   'php.version'?: list<string>,
  *   'ci.php.matrix'?: list<string>,
  *   'ci.php.test_version'?: string,
  *   'ci.piqule_bin'?: string,
@@ -81,7 +84,6 @@ use Override;
  *   'shellcheck.shell'?: string,
  *   'shellcheck.source_path'?: string,
  *   'typos.exclude'?: list<string>,
- *   'typos.ignore_re'?: list<string>,
  *   'yamllint.ignore'?: list<string>,
  *   'yamllint.line_length.max'?: list<int|float>,
  *   'actionlint.enabled'?: bool,
