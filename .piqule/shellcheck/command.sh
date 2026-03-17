@@ -23,8 +23,8 @@ done < <(
   find . \
     -type f \
     ! -path "./vendor/*" \
+    ! -path "./tests/*" \
     ! -path "./.git/*" \
-    ! -path "./templates/*" \
     -print0
 )
 
