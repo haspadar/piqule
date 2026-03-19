@@ -8,14 +8,14 @@
 [![Hits-of-Code](https://hitsofcode.com/github/haspadar/piqule?branch=main)](https://hitsofcode.com/github/haspadar/piqule/view?branch=main)
 [![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/haspadar/piqule?labelColor=171717&color=FF570A&label=CodeRabbit+Reviews)](https://coderabbit.ai)
 
-Opinionated quality policies for PHP projects.
+Quality checks for PHP projects.
 
-Zero configuration required.  
-Reproducible and consistent checks across environments.
+Installed via Composer.  
+Executed locally, in Git hooks, or in CI.
 
 ---
 
-## Install
+## Installation
 
 ```bash
 composer require --dev haspadar/piqule
@@ -38,8 +38,8 @@ declare(strict_types=1);
 use Haspadar\Piqule\Config\DefaultConfig;
 
 return new DefaultConfig(
-    include: ['src', 'lib'],                          // propagates to PHPStan, Psalm, PHPUnit, Infection, PHPMD, PHP Metrics, PHP_CodeSniffer
-    exclude: ['vendor', 'tests', '.git', 'legacy'],   // propagates to PHP_CodeSniffer, PHP-CS-Fixer, and all linters
+    include: ['src', 'lib'],
+    exclude: ['vendor', 'tests', '.git', 'legacy'],
 );
 ```
 
@@ -91,18 +91,12 @@ return new OverrideConfig(new DefaultConfig(), [
 - jsonlint
 - yamllint
 - typos
-
-GitHub CI includes:
 - Pull request size limit
 - Code coverage (Codecov)
-
-These checks ensure consistency and quality in pull requests and releases.
 
 ---
 
 ## Contributing
-
-Contributions are welcome.
 
 1. Fork the repository
 2. Create a feature branch
