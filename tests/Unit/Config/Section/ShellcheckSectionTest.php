@@ -19,4 +19,14 @@ final class ShellcheckSectionTest extends TestCase
             'shellcheck.ignore_dirs must reflect dirs.exclude',
         );
     }
+
+    #[Test]
+    public function enablesShellcheckByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new ShellcheckSection([]))->toArray()['shellcheck.enabled'],
+            'shellcheck.enabled must default to true',
+        );
+    }
 }

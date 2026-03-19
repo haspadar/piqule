@@ -19,4 +19,24 @@ final class YamllintSectionTest extends TestCase
             'yamllint.ignore must combine dirs.exclude glob patterns with .piqule internal paths',
         );
     }
+
+    #[Test]
+    public function enablesYamllintByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new YamllintSection([]))->toArray()['yamllint.enabled'],
+            'yamllint.enabled must default to true',
+        );
+    }
+
+    #[Test]
+    public function setsLineLengthMaxTo120(): void
+    {
+        self::assertSame(
+            [120],
+            (new YamllintSection([]))->toArray()['yamllint.line_length.max'],
+            'yamllint.line_length.max must default to 120',
+        );
+    }
 }

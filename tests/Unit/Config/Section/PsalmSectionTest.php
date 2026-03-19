@@ -19,4 +19,34 @@ final class PsalmSectionTest extends TestCase
             'psalm.project.ignore must prefix dirs.exclude with ../../',
         );
     }
+
+    #[Test]
+    public function propagatesIncludesToProjectDirectories(): void
+    {
+        self::assertSame(
+            ['../../src'],
+            (new PsalmSection(['../../src'], []))->toArray()['psalm.project.directories'],
+            'psalm.project.directories must reflect dirs.include',
+        );
+    }
+
+    #[Test]
+    public function setsErrorLevelTo1(): void
+    {
+        self::assertSame(
+            [1],
+            (new PsalmSection([], []))->toArray()['psalm.error_level'],
+            'psalm.error_level must default to 1',
+        );
+    }
+
+    #[Test]
+    public function enablesPsalmByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new PsalmSection([], []))->toArray()['psalm.enabled'],
+            'psalm.enabled must default to true',
+        );
+    }
 }

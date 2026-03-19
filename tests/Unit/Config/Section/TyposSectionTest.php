@@ -19,4 +19,14 @@ final class TyposSectionTest extends TestCase
             'typos.exclude must use trailing slash patterns from dirs.exclude',
         );
     }
+
+    #[Test]
+    public function enablesTyposByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new TyposSection([]))->toArray()['typos.enabled'],
+            'typos.enabled must default to true',
+        );
+    }
 }

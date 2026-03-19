@@ -33,4 +33,14 @@ final class CiSectionTest extends TestCase
             'ci.php.test_version must reflect the given test version independently',
         );
     }
+
+    #[Test]
+    public function setsMaxLinesChangedTo250(): void
+    {
+        self::assertSame(
+            250,
+            (new CiSection([], []))->toArray()['ci.pr.max_lines_changed'],
+            'ci.pr.max_lines_changed must default to 250',
+        );
+    }
 }
