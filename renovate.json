@@ -43,6 +43,12 @@
       "description": "Mark major updates as breaking",
       "matchUpdateTypes": ["major"],
       "labels": ["breaking"]
+    },
+    {
+      "description": "No major updates for composer packages",
+      "matchManagers": ["composer"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ],
 
