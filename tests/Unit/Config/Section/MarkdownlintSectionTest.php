@@ -19,4 +19,14 @@ final class MarkdownlintSectionTest extends TestCase
             'markdownlint.ignores must use trailing /** glob patterns from dirs.exclude',
         );
     }
+
+    #[Test]
+    public function enablesMarkdownlintByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new MarkdownlintSection([]))->toArray()['markdownlint.enabled'],
+            'markdownlint.enabled must default to true',
+        );
+    }
 }

@@ -87,4 +87,34 @@ final class DefaultConfigTest extends TestCase
             'hadolint must be enabled by default',
         );
     }
+
+    #[Test]
+    public function defaultsIncludeToSrc(): void
+    {
+        self::assertSame(
+            ['src'],
+            (new DefaultConfig())->list('dirs.include'),
+            'dirs.include must default to src',
+        );
+    }
+
+    #[Test]
+    public function defaultsExcludeToVendorTestsGit(): void
+    {
+        self::assertSame(
+            ['vendor', 'tests', '.git'],
+            (new DefaultConfig())->list('dirs.exclude'),
+            'dirs.exclude must default to vendor, tests, .git',
+        );
+    }
+
+    #[Test]
+    public function defaultsPhpVersionTo83(): void
+    {
+        self::assertSame(
+            ['8.3'],
+            (new DefaultConfig())->list('php.version'),
+            'php.version must default to 8.3',
+        );
+    }
 }

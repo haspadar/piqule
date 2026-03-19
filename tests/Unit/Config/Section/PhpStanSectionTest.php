@@ -19,4 +19,34 @@ final class PhpStanSectionTest extends TestCase
             'phpstan.paths must reflect the given includes',
         );
     }
+
+    #[Test]
+    public function setsAnalysisLevelTo9(): void
+    {
+        self::assertSame(
+            [9],
+            (new PhpStanSection([]))->toArray()['phpstan.level'],
+            'phpstan.level must default to 9',
+        );
+    }
+
+    #[Test]
+    public function setsMemoryLimitTo1G(): void
+    {
+        self::assertSame(
+            '1G',
+            (new PhpStanSection([]))->toArray()['phpstan.memory'],
+            'phpstan.memory must default to 1G',
+        );
+    }
+
+    #[Test]
+    public function enablesPhpStanByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new PhpStanSection([]))->toArray()['phpstan.enabled'],
+            'phpstan.enabled must default to true',
+        );
+    }
 }

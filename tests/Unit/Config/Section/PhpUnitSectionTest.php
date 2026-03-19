@@ -19,4 +19,24 @@ final class PhpUnitSectionTest extends TestCase
             'phpunit.source.include must reflect the given includes',
         );
     }
+
+    #[Test]
+    public function setsIntegrationTestsuitePath(): void
+    {
+        self::assertSame(
+            ['../../tests/Integration'],
+            (new PhpUnitSection([]))->toArray()['phpunit.testsuites.integration'],
+            'phpunit.testsuites.integration must default to ../../tests/Integration',
+        );
+    }
+
+    #[Test]
+    public function enablesPhpUnitByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new PhpUnitSection([]))->toArray()['phpunit.enabled'],
+            'phpunit.enabled must default to true',
+        );
+    }
 }

@@ -29,4 +29,14 @@ final class PhpCsSectionTest extends TestCase
             'phpcs.excludes must reflect the given excludes',
         );
     }
+
+    #[Test]
+    public function enablesPhpCsByDefault(): void
+    {
+        self::assertSame(
+            true,
+            (new PhpCsSection([], []))->toArray()['phpcs.enabled'],
+            'phpcs.enabled must default to true',
+        );
+    }
 }
