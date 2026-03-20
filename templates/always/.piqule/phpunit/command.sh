@@ -36,4 +36,4 @@ if [ -n "$SEED" ]; then
 fi
 
 PHP_OPTIONS="<< config(phpunit.php_options) >>"
-php $PHP_OPTIONS "$BIN" "${ARGS[@]}"
+php "$PHP_OPTIONS" "$BIN" "${ARGS[@]}"
