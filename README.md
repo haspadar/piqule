@@ -63,6 +63,17 @@ return new OverrideConfig(new DefaultConfig(), [
 
 ---
 
+## Workflow
+
+To change configuration:
+
+1. Edit `.piqule.php`
+2. Run `vendor/bin/piqule sync`
+
+Do not edit `.piqule/` or `.github/workflows/piqule.yml` directly — they are generated and will be overwritten.
+
+---
+
 ## Commands
 
 - `piqule sync` — generate configuration from templates
