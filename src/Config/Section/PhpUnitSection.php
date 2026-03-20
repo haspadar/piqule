@@ -21,6 +21,7 @@ final readonly class PhpUnitSection implements ConfigSection
             'phpunit.source.include' => $this->includes,
             'phpunit.testsuites.integration' => ['../../tests/Integration'],
             'phpunit.testsuites.unit' => ['../../tests/Unit'],
+            'phpunit.php_options' => '-d memory_limit=1G',
             'phpunit.enabled' => true,
         ];
     }
