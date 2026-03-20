@@ -31,6 +31,16 @@ final class PhpUnitSectionTest extends TestCase
     }
 
     #[Test]
+    public function setsPhpOptionsToMemoryLimit(): void
+    {
+        self::assertSame(
+            '-d memory_limit=1G',
+            (new PhpUnitSection([]))->toArray()['phpunit.php_options'],
+            'phpunit.php_options must default to 1G memory limit',
+        );
+    }
+
+    #[Test]
     public function enablesPhpUnitByDefault(): void
     {
         self::assertSame(

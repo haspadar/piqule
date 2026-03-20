@@ -71,6 +71,7 @@ use Override;
  *   'phpstan.level'?: list<int|float>,
  *   'phpstan.memory'?: string,
  *   'phpstan.paths'?: list<string>,
+ *   'phpunit.php_options'?: string,
  *   'phpunit.source.include'?: list<string>,
  *   'phpunit.testsuites.integration'?: list<string>,
  *   'phpunit.testsuites.unit'?: list<string>,
