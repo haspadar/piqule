@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update draft release
-        uses: release-drafter/release-drafter@139054aeaa9adc52ab36ddf67437541f039b88e2
+        uses: release-drafter/release-drafter@0c6d0637cb68460a43d1bc087b2eabc5e1623465
         with:
           config-name: release-drafter.yml
         env:
