@@ -24,11 +24,11 @@ final readonly class SonarSection implements ConfigSection
     public function toArray(): array
     {
         return [
-            'sonar.sources'             => $this->includes,
-            'sonar.tests'               => ['../../tests'],
-            'sonar.cpd.exclusions'      => $this->excludes,
+            'sonar.sources' => $this->includes,
+            'sonar.tests' => ['../../tests'],
+            'sonar.cpd.exclusions' => $this->excludes,
             'sonar.coverage.exclusions' => $this->excludes,
-            'sonar.enabled'             => true,
+            'sonar.enabled' => true,
         ];
     }
 }
