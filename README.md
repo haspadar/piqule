@@ -101,6 +101,7 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 - jsonlint
 - yamllint
 - typos
+- SonarQube
 - Pull request size limit
 - Code coverage (Codecov)
 
