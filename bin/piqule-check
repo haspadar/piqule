@@ -40,7 +40,6 @@ $checks = [
     'php-cs-fixer',
     'phpunit',
     'infection',
-    'sonar',
 ];
 
 $isEnabled = function(string $key) use ($config): bool {
