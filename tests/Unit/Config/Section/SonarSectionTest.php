@@ -15,28 +15,28 @@ final class SonarSectionTest extends TestCase
     {
         self::assertSame(
             ['../../src'],
-            (new SonarSection(['../../src'], []))->toArray()['sonar.sources'],
+            (new SonarSection(['../../src']))->toArray()['sonar.sources'],
             'sonar.sources must reflect the given includes',
         );
     }
 
     #[Test]
-    public function propagatesExcludesToCpdExclusions(): void
+    public function setsCpdExclusionsToEmptyByDefault(): void
     {
         self::assertSame(
-            ['vendor/**', 'tests/**'],
-            (new SonarSection([], ['vendor/**', 'tests/**']))->toArray()['sonar.cpd.exclusions'],
-            'sonar.cpd.exclusions must reflect the given excludes',
+            [],
+            (new SonarSection([]))->toArray()['sonar.cpd.exclusions'],
+            'sonar.cpd.exclusions must default to empty list',
         );
     }
 
     #[Test]
-    public function propagatesExcludesToCoverageExclusions(): void
+    public function setsCoverageExclusionsToEmptyByDefault(): void
     {
         self::assertSame(
-            ['vendor/**', 'tests/**'],
-            (new SonarSection([], ['vendor/**', 'tests/**']))->toArray()['sonar.coverage.exclusions'],
-            'sonar.coverage.exclusions must reflect the given excludes',
+            [],
+            (new SonarSection([]))->toArray()['sonar.coverage.exclusions'],
+            'sonar.coverage.exclusions must default to empty list',
         );
     }
 
@@ -45,7 +45,7 @@ final class SonarSectionTest extends TestCase
     {
         self::assertSame(
             ['../../tests'],
-            (new SonarSection([], []))->toArray()['sonar.tests'],
+            (new SonarSection([]))->toArray()['sonar.tests'],
             'sonar.tests must default to ../../tests',
         );
     }
@@ -55,7 +55,7 @@ final class SonarSectionTest extends TestCase
     {
         self::assertSame(
             true,
-            (new SonarSection([], []))->toArray()['sonar.enabled'],
+            (new SonarSection([]))->toArray()['sonar.enabled'],
             'sonar.enabled must default to true',
         );
     }
