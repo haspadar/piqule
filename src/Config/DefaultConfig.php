@@ -6,7 +6,6 @@ namespace Haspadar\Piqule\Config;
 
 use Haspadar\Piqule\Config\Dirs\GlobDirs;
 use Haspadar\Piqule\Config\Dirs\ProjectDirs;
-use Haspadar\Piqule\Config\Dirs\TrailingGlobDirs;
 use Haspadar\Piqule\Config\Section\ActionlintSection;
 use Haspadar\Piqule\Config\Section\CiSection;
 use Haspadar\Piqule\Config\Section\CoverageSection;
@@ -67,7 +66,7 @@ final class DefaultConfig implements Config
             new PhpUnitSection($projectIncludes),
             new PsalmSection($projectIncludes, $exclude),
             new InfectionSection($projectIncludes),
-            new SonarSection($projectIncludes, (new TrailingGlobDirs($exclude))->toList()),
+            new SonarSection($projectIncludes),
         ];
 
         /** @var array<string, scalar|list<scalar>> $defaults */

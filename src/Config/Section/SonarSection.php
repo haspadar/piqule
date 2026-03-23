@@ -11,14 +11,8 @@ use Override;
  */
 final readonly class SonarSection implements ConfigSection
 {
-    /**
-     * @param list<string> $includes
-     * @param list<string> $excludes
-     */
-    public function __construct(
-        private array $includes,
-        private array $excludes,
-    ) {}
+    /** @param list<string> $includes */
+    public function __construct(private array $includes) {}
 
     #[Override]
     public function toArray(): array
@@ -26,8 +20,8 @@ final readonly class SonarSection implements ConfigSection
         return [
             'sonar.sources' => $this->includes,
             'sonar.tests' => ['../../tests'],
-            'sonar.cpd.exclusions' => $this->excludes,
-            'sonar.coverage.exclusions' => $this->excludes,
+            'sonar.cpd.exclusions' => [],
+            'sonar.coverage.exclusions' => [],
             'sonar.enabled' => true,
         ];
     }

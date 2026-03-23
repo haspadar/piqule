@@ -101,7 +101,12 @@ use Override;
  *   'phpcs.enabled'?: bool,
  *   'php-cs-fixer.enabled'?: bool,
  *   'phpunit.enabled'?: bool,
- *   'infection.enabled'?: bool
+ *   'infection.enabled'?: bool,
+ *   'sonar.sources'?: list<string>,
+ *   'sonar.tests'?: list<string>,
+ *   'sonar.cpd.exclusions'?: list<string>,
+ *   'sonar.coverage.exclusions'?: list<string>,
+ *   'sonar.enabled'?: bool
  * }
  */
 final readonly class OverrideConfig implements Config
