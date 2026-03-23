@@ -21,22 +21,12 @@ final class SonarSectionTest extends TestCase
     }
 
     #[Test]
-    public function setsCpdExclusionsToEmptyByDefault(): void
+    public function setsExclusionsToEmptyByDefault(): void
     {
         self::assertSame(
             [],
-            (new SonarSection([]))->toArray()['sonar.cpd.exclusions'],
-            'sonar.cpd.exclusions must default to empty list',
-        );
-    }
-
-    #[Test]
-    public function setsCoverageExclusionsToEmptyByDefault(): void
-    {
-        self::assertSame(
-            [],
-            (new SonarSection([]))->toArray()['sonar.coverage.exclusions'],
-            'sonar.coverage.exclusions must default to empty list',
+            (new SonarSection([]))->toArray()['sonar.exclusions'],
+            'sonar.exclusions must default to empty list',
         );
     }
 

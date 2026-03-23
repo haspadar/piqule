@@ -20,8 +20,7 @@ final readonly class SonarSection implements ConfigSection
         return [
             'sonar.sources' => $this->includes,
             'sonar.tests' => ['../../tests'],
-            'sonar.cpd.exclusions' => [],
-            'sonar.coverage.exclusions' => [],
+            'sonar.exclusions' => [],
             'sonar.enabled' => true,
         ];
     }

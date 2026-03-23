@@ -104,8 +104,7 @@ use Override;
  *   'infection.enabled'?: bool,
  *   'sonar.sources'?: list<string>,
  *   'sonar.tests'?: list<string>,
- *   'sonar.cpd.exclusions'?: list<string>,
- *   'sonar.coverage.exclusions'?: list<string>,
+ *   'sonar.exclusions'?: list<string>,
  *   'sonar.enabled'?: bool
  * }
  */
