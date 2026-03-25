@@ -14,8 +14,8 @@ final class SonarSectionTest extends TestCase
     public function propagatesIncludesToSources(): void
     {
         self::assertSame(
-            ['../../src'],
-            (new SonarSection(['../../src']))->toArray()['sonar.sources'],
+            ['src'],
+            (new SonarSection(['src']))->toArray()['sonar.sources'],
             'sonar.sources must reflect the given includes',
         );
     }
@@ -34,9 +34,9 @@ final class SonarSectionTest extends TestCase
     public function setsTestsToDefaultPath(): void
     {
         self::assertSame(
-            ['../../tests'],
+            ['tests'],
             (new SonarSection([]))->toArray()['sonar.tests'],
-            'sonar.tests must default to ../../tests',
+            'sonar.tests must default to tests',
         );
     }
 
