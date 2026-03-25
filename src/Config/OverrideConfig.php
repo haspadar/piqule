@@ -105,7 +105,7 @@ use Override;
  *   'sonar.sources'?: list<string>,
  *   'sonar.tests'?: list<string>,
  *   'sonar.exclusions'?: list<string>,
- *   'sonar.coverage.reportPath'?: list<string>,
+ *   'sonar.php.coverage.reportPaths'?: list<string>,
  *   'sonar.enabled'?: bool
  * }
  */
