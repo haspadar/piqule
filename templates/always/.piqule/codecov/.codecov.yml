@@ -4,11 +4,13 @@ coverage:
       default:
         target: << config(coverage.project.target)|format("%s%%") >>
         threshold: << config(coverage.project.threshold)|format("%s%%") >>
+        coverage_type: branch
 
     patch:
       default:
         target: << config(coverage.patch.target)|format("%s%%") >>
         threshold: << config(coverage.patch.threshold)|format("%s%%") >>
+        coverage_type: branch
 
 comment:
   layout: "reach, diff, flags, files"
