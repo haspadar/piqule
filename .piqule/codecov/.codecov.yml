@@ -4,11 +4,13 @@ coverage:
       default:
         target: 80%
         threshold: 2%
+        coverage_type: branch
 
     patch:
       default:
         target: 80%
         threshold: 5%
+        coverage_type: branch
 
 comment:
   layout: "reach, diff, flags, files"
