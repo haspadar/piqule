@@ -108,6 +108,8 @@ jobs:
     needs: php-static
     permissions:
       contents: read
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -131,12 +133,13 @@ jobs:
           php -d memory_limit=1G \
           vendor/bin/phpunit \
             -c .piqule/phpunit/phpunit.xml \
+            --path-coverage \
             --coverage-clover=.piqule/codecov/coverage.xml
 
       # ------------------------------------------------------------
       # Upload coverage to Codecov (if coverage exists)
       # ------------------------------------------------------------
-      - name: Upload coverage
+      - name: Upload coverage to Codecov
         if: hashFiles('.piqule/codecov/coverage.xml') != ''
         uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad
         with:
@@ -144,6 +147,15 @@ jobs:
           files: .piqule/codecov/coverage.xml
           codecov_yml_path: .piqule/codecov/.codecov.yml
           fail_ci_if_error: true
+
+      # ------------------------------------------------------------
+      # Upload coverage to SonarCloud (branch coverage)
+      # ------------------------------------------------------------
+      - name: Upload coverage to SonarCloud
+        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != '' && env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
       # ------------------------------------------------------------
       # Infection (if config exists)

@@ -66,7 +66,7 @@ final class DefaultConfig implements Config
             new PhpUnitSection($projectIncludes),
             new PsalmSection($projectIncludes, $exclude),
             new InfectionSection($projectIncludes),
-            new SonarSection($projectIncludes),
+            new SonarSection($include),
         ];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
