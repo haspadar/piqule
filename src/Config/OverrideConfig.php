@@ -102,6 +102,8 @@ use Override;
  *   'php-cs-fixer.enabled'?: bool,
  *   'phpunit.enabled'?: bool,
  *   'infection.enabled'?: bool,
+ *   'sonar.organization'?: list<string>,
+ *   'sonar.projectKey'?: list<string>,
  *   'sonar.sources'?: list<string>,
  *   'sonar.tests'?: list<string>,
  *   'sonar.exclusions'?: list<string>,
