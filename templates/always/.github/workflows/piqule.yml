@@ -131,12 +131,13 @@ jobs:
           php -d memory_limit=1G \
           vendor/bin/phpunit \
             -c .piqule/phpunit/phpunit.xml \
+            --path-coverage \
             --coverage-clover=.piqule/codecov/coverage.xml
 
       # ------------------------------------------------------------
       # Upload coverage to Codecov (if coverage exists)
       # ------------------------------------------------------------
-      - name: Upload coverage
+      - name: Upload coverage to Codecov
         if: hashFiles('.piqule/codecov/coverage.xml') != ''
         uses: codecov/codecov-action@1af58845a975a7985b0beb0cbe6fbbb71a41dbad
         with:
