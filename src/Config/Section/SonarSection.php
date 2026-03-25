@@ -21,6 +21,7 @@ final readonly class SonarSection implements ConfigSection
             'sonar.sources' => $this->includes,
             'sonar.tests' => ['../../tests'],
             'sonar.exclusions' => [],
+            'sonar.coverage.reportPath' => ['.piqule/codecov/coverage.xml'],
             'sonar.enabled' => true,
         ];
     }
