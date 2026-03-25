@@ -153,7 +153,7 @@ jobs:
       # ------------------------------------------------------------
       - name: Upload coverage to SonarCloud
         if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != '' && env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarqube-scan-action@aa494459f52eeafd71ad7fbf9d3695be4e803e6e
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
