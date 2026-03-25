@@ -42,7 +42,7 @@ return new DefaultConfig(
 );
 ```
 
-Use `OverrideConfig` to replace any individual key:
+Use `OverrideConfig` to replace any individual key. The full list of available keys is declared in [`src/Config/OverrideConfig.php`](src/Config/OverrideConfig.php):
 
 ```php
 <?php
@@ -101,6 +101,7 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 - jsonlint
 - yamllint
 - typos
+- SonarQube
 - Pull request size limit
 - Code coverage (Codecov)
 

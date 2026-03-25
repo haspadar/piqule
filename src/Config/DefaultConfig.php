@@ -22,6 +22,7 @@ use Haspadar\Piqule\Config\Section\PhpStanSection;
 use Haspadar\Piqule\Config\Section\PhpUnitSection;
 use Haspadar\Piqule\Config\Section\PsalmSection;
 use Haspadar\Piqule\Config\Section\ShellcheckSection;
+use Haspadar\Piqule\Config\Section\SonarSection;
 use Haspadar\Piqule\Config\Section\TyposSection;
 use Haspadar\Piqule\Config\Section\YamllintSection;
 use Override;
@@ -65,6 +66,7 @@ final class DefaultConfig implements Config
             new PhpUnitSection($projectIncludes),
             new PsalmSection($projectIncludes, $exclude),
             new InfectionSection($projectIncludes),
+            new SonarSection($projectIncludes),
         ];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
