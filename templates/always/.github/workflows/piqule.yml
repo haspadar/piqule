@@ -147,6 +147,15 @@ jobs:
           fail_ci_if_error: true
 
       # ------------------------------------------------------------
+      # Upload coverage to SonarCloud (branch coverage)
+      # ------------------------------------------------------------
+      - name: Upload coverage to SonarCloud
+        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != ''
+        uses: SonarSource/sonarqube-scan-action@aa494459f52eeafd71ad7fbf9d3695be4e803e6e
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # ------------------------------------------------------------
       # Infection (if config exists)
       # ------------------------------------------------------------
       - name: Infection
