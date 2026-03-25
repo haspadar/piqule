@@ -150,7 +150,7 @@ jobs:
       # Upload coverage to SonarCloud (branch coverage)
       # ------------------------------------------------------------
       - name: Upload coverage to SonarCloud
-        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != ''
+        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != '' && secrets.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@aa494459f52eeafd71ad7fbf9d3695be4e803e6e
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
