@@ -108,6 +108,8 @@ jobs:
     needs: php-static
     permissions:
       contents: read
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -150,10 +152,10 @@ jobs:
       # Upload coverage to SonarCloud (branch coverage)
       # ------------------------------------------------------------
       - name: Upload coverage to SonarCloud
-        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != '' && secrets.SONAR_TOKEN != ''
+        if: hashFiles('sonar-project.properties') != '' && hashFiles('.piqule/codecov/coverage.xml') != '' && env.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@aa494459f52eeafd71ad7fbf9d3695be4e803e6e
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
       # ------------------------------------------------------------
       # Infection (if config exists)
