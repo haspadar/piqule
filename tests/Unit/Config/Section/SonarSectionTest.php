@@ -45,8 +45,8 @@ final class SonarSectionTest extends TestCase
     {
         self::assertSame(
             ['.piqule/codecov/coverage.xml'],
-            (new SonarSection([]))->toArray()['sonar.coverage.reportPath'],
-            'sonar.coverage.reportPath must default to clover report path',
+            (new SonarSection([]))->toArray()['sonar.php.coverage.reportPaths'],
+            'sonar.php.coverage.reportPaths must default to clover report path',
         );
     }
 
