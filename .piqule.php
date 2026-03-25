@@ -14,5 +14,7 @@ return new OverrideConfig(
         'ci.php.matrix' => ['8.3', '8.4', '8.5'],
         'ci.pr.max_lines_changed' => 2000,
         'ci.piqule_bin' => 'bin/piqule',
+        'sonar.organization' => ['haspadar-org'],
+        'sonar.projectKey' => ['haspadar_piqule'],
     ],
 );
