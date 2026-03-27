@@ -71,6 +71,7 @@ use Override;
  *   'phpstan.level'?: list<int|float>,
  *   'phpstan.memory'?: string,
  *   'phpstan.paths'?: list<string>,
+ *   'phpstan.checked_exceptions'?: list<string>,
  *   'phpunit.php_options'?: string,
  *   'phpunit.source.include'?: list<string>,
  *   'phpunit.testsuites.integration'?: list<string>,
@@ -127,6 +128,9 @@ final readonly class OverrideConfig implements Config
         return $this->defaults->has($name);
     }
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function list(string $name): array
     {
@@ -145,6 +149,7 @@ final readonly class OverrideConfig implements Config
 
     /**
      * @return list<scalar>
+     * @throws PiquleException
      */
     private function normalizedValue(mixed $value, string $name): array
     {
