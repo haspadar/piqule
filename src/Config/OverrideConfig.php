@@ -72,6 +72,7 @@ use Override;
  *   'phpstan.memory'?: string,
  *   'phpstan.paths'?: list<string>,
  *   'phpstan.checked_exceptions'?: list<string>,
+ *   'phpstan.neon_includes'?: list<string>,
  *   'phpunit.php_options'?: string,
  *   'phpunit.source.include'?: list<string>,
  *   'phpunit.testsuites.integration'?: list<string>,
