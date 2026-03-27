@@ -46,6 +46,8 @@ final readonly class DiskStorage implements Storage
      * Recursively yields relative file paths within the given folder
      *
      * @return iterable<string>
+     * @throws PiquleException
+     * @throws \UnexpectedValueException
      */
     #[Override]
     public function entries(string $location): iterable
@@ -80,6 +82,8 @@ final readonly class DiskStorage implements Storage
 
     /**
      * Checks whether a file exists at the given location
+     *
+     * @throws PiquleException
      */
     #[Override]
     public function exists(string $location): bool
@@ -140,6 +144,7 @@ final readonly class DiskStorage implements Storage
         return $perms & 0o777;
     }
 
+    /** @throws PiquleException */
     private function pathOf(string $location): string
     {
         return (new SafePath($this->root))->resolve($location);

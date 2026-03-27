@@ -20,6 +20,9 @@ final readonly class FormatAction implements Action
         private string $raw,
     ) {}
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function transformed(Args $args): Args
     {

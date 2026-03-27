@@ -28,6 +28,7 @@ final readonly class ParsedActions implements Actions
      * in action arguments. Arguments are treated as flat strings.
      *
      * @return list<Action>
+     * @throws PiquleException
      */
     #[Override]
     public function all(): array

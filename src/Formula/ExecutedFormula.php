@@ -18,6 +18,9 @@ final readonly class ExecutedFormula implements Formula
         private Actions $actions,
     ) {}
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function result(): string
     {
