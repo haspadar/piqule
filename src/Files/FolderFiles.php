@@ -23,8 +23,9 @@ final readonly class FolderFiles implements Files
     ) {}
 
     /**
-     * @return iterable<TextFile>
      * @throws \Haspadar\Piqule\PiquleException
+     *
+     * @return iterable<TextFile>
      */
     #[Override]
     public function all(): iterable

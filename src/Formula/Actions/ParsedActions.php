@@ -27,8 +27,9 @@ final readonly class ParsedActions implements Actions
      * DSL intentionally does not support nested parentheses
      * in action arguments. Arguments are treated as flat strings.
      *
-     * @return list<Action>
      * @throws PiquleException
+     *
+     * @return list<Action>
      */
     #[Override]
     public function all(): array

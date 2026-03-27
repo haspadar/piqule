@@ -9,6 +9,7 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 use SplFileInfo;
+use UnexpectedValueException;
 
 /**
  * Filesystem-backed storage rooted at a given directory
@@ -45,9 +46,10 @@ final readonly class DiskStorage implements Storage
     /**
      * Recursively yields relative file paths within the given folder
      *
-     * @return iterable<string>
      * @throws PiquleException
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
+     *
+     * @return iterable<string>
      */
     #[Override]
     public function entries(string $location): iterable

@@ -148,8 +148,9 @@ final readonly class OverrideConfig implements Config
     }
 
     /**
-     * @return list<scalar>
      * @throws PiquleException
+     *
+     * @return list<scalar>
      */
     private function normalizedValue(mixed $value, string $name): array
     {
