@@ -25,6 +25,8 @@ final readonly class AppendingStorage implements Storage
      * - Creates a new file and emits created() if the file does not exist yet.
      * - Appends contents to an existing file and emits updated() if the marker is absent.
      * - No-ops if the marker is already present in the existing file.
+     *
+     * @throws \Haspadar\Piqule\PiquleException
      */
     #[Override]
     public function write(File $file): self

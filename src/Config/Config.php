@@ -19,6 +19,8 @@ interface Config
      *
      * Missing paths and explicitly empty lists are both represented as an empty list
      *
+     * @throws \Haspadar\Piqule\PiquleException
+     *
      * @return list<scalar>
      */
     public function list(string $name): array;

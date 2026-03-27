@@ -49,4 +49,14 @@ final class PhpStanSectionTest extends TestCase
             'phpstan.enabled must default to true',
         );
     }
+
+    #[Test]
+    public function defaultsCheckedExceptionsToThrowable(): void
+    {
+        self::assertSame(
+            ['\Throwable'],
+            (new PhpStanSection([]))->toArray()['phpstan.checked_exceptions'],
+            'phpstan.checked_exceptions must default to [\Throwable]',
+        );
+    }
 }

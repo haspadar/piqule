@@ -18,6 +18,8 @@ final readonly class ParsedArgs implements Args
     ) {}
 
     /**
+     * @throws InvalidArgumentException
+     *
      * @return list<int|float|string|bool>
      */
     #[Override]
@@ -31,6 +33,7 @@ final readonly class ParsedArgs implements Args
         return $decoded;
     }
 
+    /** @throws InvalidArgumentException */
     private function singleRawValue(): string
     {
         $values = $this->origin->values();
@@ -65,6 +68,8 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
+     * @throws InvalidArgumentException
+     *
      * @return array<array-key, mixed>
      */
     private function decodeJsonList(string $raw): array
@@ -93,6 +98,8 @@ final readonly class ParsedArgs implements Args
 
     /**
      * @param array<array-key, mixed> $decoded
+     *
+     * @throws InvalidArgumentException
      */
     private function assertScalarList(array $decoded, string $raw): void
     {

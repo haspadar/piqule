@@ -23,6 +23,8 @@ final readonly class FolderFiles implements Files
     ) {}
 
     /**
+     * @throws \Haspadar\Piqule\PiquleException
+     *
      * @return iterable<TextFile>
      */
     #[Override]

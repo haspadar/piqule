@@ -9,6 +9,7 @@ use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
 use Override;
 use SplFileInfo;
+use UnexpectedValueException;
 
 /**
  * Filesystem-backed storage rooted at a given directory
@@ -45,6 +46,9 @@ final readonly class DiskStorage implements Storage
     /**
      * Recursively yields relative file paths within the given folder
      *
+     * @throws PiquleException
+     * @throws UnexpectedValueException
+     *
      * @return iterable<string>
      */
     #[Override]
@@ -80,6 +84,8 @@ final readonly class DiskStorage implements Storage
 
     /**
      * Checks whether a file exists at the given location
+     *
+     * @throws PiquleException
      */
     #[Override]
     public function exists(string $location): bool
@@ -140,6 +146,7 @@ final readonly class DiskStorage implements Storage
         return $perms & 0o777;
     }
 
+    /** @throws PiquleException */
     private function pathOf(string $location): string
     {
         return (new SafePath($this->root))->resolve($location);

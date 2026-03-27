@@ -33,6 +33,9 @@ final readonly class ConfiguredFile implements File
         return $this->origin->name();
     }
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function contents(): string
     {
@@ -49,6 +52,7 @@ final readonly class ConfiguredFile implements File
         return $this->origin->mode();
     }
 
+    /** @throws PiquleException */
     private function replaced(string $expression): string
     {
         try {
