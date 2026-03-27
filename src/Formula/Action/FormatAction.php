@@ -10,6 +10,7 @@ use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Haspadar\Piqule\PiquleException;
 use Override;
+use Throwable;
 
 /**
  * Applies a sprintf template to a single incoming value
@@ -48,7 +49,7 @@ final readonly class FormatAction implements Action
 
         try {
             $result = sprintf($template, $scalar);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new PiquleException(
                 sprintf('format() failed: %s', $e->getMessage()),
                 previous: $e,
