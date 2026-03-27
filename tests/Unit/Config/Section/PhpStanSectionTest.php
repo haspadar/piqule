@@ -51,6 +51,16 @@ final class PhpStanSectionTest extends TestCase
     }
 
     #[Test]
+    public function defaultsNeonIncludesToStrictRules(): void
+    {
+        self::assertSame(
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon'],
+            (new PhpStanSection([]))->toArray()['phpstan.neon_includes'],
+            'phpstan.neon_includes must default to strict-rules extension',
+        );
+    }
+
+    #[Test]
     public function defaultsCheckedExceptionsToThrowable(): void
     {
         self::assertSame(

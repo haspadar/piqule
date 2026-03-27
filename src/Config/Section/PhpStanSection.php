@@ -22,6 +22,7 @@ final readonly class PhpStanSection implements ConfigSection
             'phpstan.memory' => '1G',
             'phpstan.paths' => $this->includes,
             'phpstan.checked_exceptions' => ['\Throwable'],
+            'phpstan.neon_includes' => ['../../vendor/phpstan/phpstan-strict-rules/rules.neon'],
             'phpstan.enabled' => true,
         ];
     }

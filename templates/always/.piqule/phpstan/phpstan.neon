@@ -1,3 +1,6 @@
+includes:
+<< config(phpstan.neon_includes)|format_each("    - %s")|join("\n") >>
+
 parameters:
     level: << config(phpstan.level)|join("") >>
 
