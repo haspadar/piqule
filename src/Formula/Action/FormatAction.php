@@ -46,8 +46,15 @@ final readonly class FormatAction implements Action
 
         $scalar = (new StringifiedArgs($args))->values()[0];
 
-        return new ListArgs([
-            sprintf($template, $scalar),
-        ]);
+        try {
+            $result = sprintf($template, $scalar);
+        } catch (\Throwable $e) {
+            throw new PiquleException(
+                sprintf('format() failed: %s', $e->getMessage()),
+                previous: $e,
+            );
+        }
+
+        return new ListArgs([$result]);
     }
 }

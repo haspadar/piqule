@@ -21,6 +21,8 @@ interface Storage
 
     /**
      * Persists the given file into this storage
+     *
+     * @throws PiquleException
      */
     public function write(File $file): self;
 
