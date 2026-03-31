@@ -17,9 +17,7 @@ final readonly class UnquotedArgs implements Args
         private Args $origin,
     ) {}
 
-    /**
-     * @return list<int|float|string|bool>
-     */
+    /** @return list<int|float|string|bool> */
     #[Override]
     public function values(): array
     {

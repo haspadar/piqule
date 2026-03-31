@@ -15,9 +15,7 @@ final readonly class SafePath
         private string $root,
     ) {}
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     public function resolve(string $location): string
     {
         $parts = [];

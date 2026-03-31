@@ -13,9 +13,7 @@ use Override;
  */
 final readonly class MappedFiles implements Files
 {
-    /**
-     * @param Closure(File): File $map
-     */
+    /** @param Closure(File): File $map */
     public function __construct(
         private Files $origin,
         private Closure $map,

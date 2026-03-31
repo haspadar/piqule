@@ -101,7 +101,10 @@ final readonly class ParsedArgs implements Args
      *
      * @throws InvalidArgumentException
      */
-    private function assertScalarList(array $decoded, string $raw): void
+    private function assertScalarList(
+        array $decoded,
+        string $raw,
+    ): void
     {
         if (!array_is_list($decoded)) {
             throw new InvalidArgumentException(

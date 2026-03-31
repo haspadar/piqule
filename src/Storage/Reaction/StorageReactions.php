@@ -11,9 +11,7 @@ use Override;
  */
 final readonly class StorageReactions implements StorageReaction
 {
-    /**
-     * @param list<StorageReaction> $reactions
-     */
+    /** @param list<StorageReaction> $reactions */
     public function __construct(
         private array $reactions,
     ) {}

@@ -16,9 +16,7 @@ final readonly class InMemoryStorage implements Storage
     /** @var array<string, File> */
     private array $entries;
 
-    /**
-     * @param array<string, File> $entries location => File
-     */
+    /** @param array<string, File> $entries location => File */
     public function __construct(array $entries = [])
     {
         $this->entries = $entries;

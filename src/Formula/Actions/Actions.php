@@ -11,8 +11,6 @@ use Haspadar\Piqule\Formula\Action\Action;
  */
 interface Actions
 {
-    /**
-     * @return list<Action>
-     */
+    /** @return list<Action> */
     public function all(): array;
 }
