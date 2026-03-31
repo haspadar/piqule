@@ -32,9 +32,7 @@ use Override;
  */
 final class DefaultConfig implements Config
 {
-    /**
-     * @var array<string, scalar|list<scalar>>
-     */
+    /** @var array<string, scalar|list<scalar>> */
     private readonly array $defaults;
 
     /**
