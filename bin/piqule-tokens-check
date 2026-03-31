@@ -1,0 +1,76 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Haspadar\Piqule\Config\Config;
+use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Output\Console;
+use Haspadar\Piqule\Token\CodecovToken;
+use Haspadar\Piqule\Token\InfectionToken;
+use Haspadar\Piqule\Token\Tokens;
+
+require_once __DIR__ . '/bootstrap-autoload.php';
+
+$output = new Console();
+
+$projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
+
+$config = file_exists($projectRoot . '/.piqule.php')
+    ? require $projectRoot . '/.piqule.php'
+    : new OverrideConfig(new DefaultConfig(), []);
+
+$tokens = new Tokens([
+    new CodecovToken(),
+    new InfectionToken(),
+]);
+
+$enabled = array_filter(
+    $tokens->items(),
+    fn($token) => $token->enabled($config),
+);
+
+if ($enabled === []) {
+    exit(0);
+}
+
+exec('command -v gh', $ghOut, $ghExists);
+
+if ($ghExists !== 0) {
+    $output->info('[TOKEN] Install GitHub CLI to verify secrets: https://cli.github.com');
+    exit(0);
+}
+
+exec('gh auth status 2>/dev/null', $authOut, $authStatus);
+
+if ($authStatus !== 0) {
+    $output->info('[TOKEN] Run: gh auth login — to enable secret verification');
+    exit(0);
+}
+
+exec('gh secret list --json name 2>/dev/null', $secretsJson, $secretsStatus);
+
+if ($secretsStatus !== 0) {
+    exit(0);
+}
+
+/** @var list<array{name: string}> $decoded */
+$decoded = json_decode(implode('', $secretsJson), true) ?? [];
+$existing = array_column($decoded, 'name');
+
+exec('gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null', $repoOut, $repoStatus);
+
+$repo = $repoStatus === 0 ? trim($repoOut[0] ?? '') : '';
+$org = $repo !== '' ? explode('/', $repo)[0] : '';
+
+foreach ($enabled as $token) {
+    if (in_array($token->secret(), $existing, true)) {
+        continue;
+    }
+
+    $output->info(sprintf('[TOKEN] %s is missing. Get it at: %s', $token->secret(), $token->url($org)));
+    if ($repo !== '') {
+        $output->info(sprintf('[TOKEN] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
+    }
+}

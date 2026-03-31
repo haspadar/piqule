@@ -18,11 +18,13 @@ case "$COMMAND" in
   sync)
     "$(dirname "$0")/piqule-sync" "$@"
     "$(dirname "$0")/piqule-pin"
+    "$(dirname "$0")/piqule-tokens-check"
     ;;
   check|fix)
     ensure_project_root
     "$(dirname "$0")/piqule-verify"
     "$(dirname "$0")/piqule-${COMMAND}" "$@"
+    "$(dirname "$0")/piqule-tokens-check"
     ;;
   *)
     echo "Usage: piqule [sync|check|fix]"
