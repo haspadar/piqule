@@ -3,6 +3,7 @@
 
 declare(strict_types=1);
 
+use Haspadar\Piqule\Config\ComposerRootNamespace;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
 use Haspadar\Piqule\Config\Config;
@@ -36,6 +37,10 @@ try {
     $config = file_exists($projectRoot . '/.piqule.php')
         ? require $projectRoot . '/.piqule.php'
         : new OverrideConfig(new DefaultConfig(), []);
+
+    $config = new OverrideConfig($config, [
+        'phpcs.root_namespace' => (new ComposerRootNamespace($projectRoot . '/composer.json'))->toString(),
+    ]);
 
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);
