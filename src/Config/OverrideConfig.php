@@ -152,8 +152,7 @@ final readonly class OverrideConfig implements Config
     private function normalizedValue(
         mixed $value,
         string $name,
-    ): array
-    {
+    ): array {
         if (is_scalar($value)) {
             return [$value];
         }
