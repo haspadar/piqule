@@ -18,19 +18,10 @@ final readonly class ComposerRootNamespace
         }
 
         $contents = @file_get_contents($this->path);
-
-        if ($contents === false) {
-            return '';
-        }
-
         /** @var array{autoload?: array{psr-4?: array<string, string>}} $data */
-        $data = json_decode($contents, true) ?? [];
+        $data = json_decode($contents === false ? '{}' : $contents, true) ?? [];
         $psr4 = $data['autoload']['psr-4'] ?? [];
 
-        if ($psr4 === []) {
-            return '';
-        }
-
-        return rtrim(array_key_first($psr4), '\\');
+        return $psr4 !== [] ? rtrim(array_key_first($psr4), '\\') : '';
     }
 }
