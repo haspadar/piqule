@@ -58,6 +58,25 @@ final class ComposerRootNamespaceTest extends TestCase
     }
 
     #[Test]
+    public function returnsFirstWhenMultiplePsr4NamespacesExist(): void
+    {
+        $folder = (new TempFolder())->withFile('composer.json', json_encode([
+            'autoload' => ['psr-4' => [
+                'Acme\\App\\' => 'src/',
+                'Acme\\Tests\\' => 'tests/',
+            ]],
+        ]) ?: '');
+
+        self::assertSame(
+            'Acme\\App',
+            (new ComposerRootNamespace($folder->path() . '/composer.json'))->toString(),
+            'ComposerRootNamespace must return the first PSR-4 namespace when multiple entries exist',
+        );
+
+        $folder->close();
+    }
+
+    #[Test]
     public function returnsEmptyStringWhenComposerJsonIsNotReadable(): void
     {
         $folder = (new TempFolder())->withFile('composer.json', '{}');
