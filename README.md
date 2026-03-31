@@ -86,13 +86,13 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 
 ## Checks
 
-- PHPStan
+- PHPStan — level 9 with [strict rules extension](https://github.com/phpstan/phpstan-strict-rules)
 - Psalm
 - PHPUnit
 - Infection
 - PHPMD
 - PHP Metrics
-- PHP_CodeSniffer
+- PHP_CodeSniffer — with [Slevomat Coding Standard](https://github.com/slevomat/coding-standard) rules (class structure, doc comments, attributes)
 - PHP-CS-Fixer
 - actionlint
 - hadolint
