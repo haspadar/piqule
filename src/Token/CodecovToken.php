@@ -25,9 +25,7 @@ final readonly class CodecovToken implements Token
         return "https://app.codecov.io/account/gh/{$org}/repositories";
     }
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {

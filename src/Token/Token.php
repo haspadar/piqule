@@ -16,8 +16,6 @@ interface Token
 
     public function url(string $org): string;
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     public function enabled(Config $config): bool;
 }

@@ -10,7 +10,9 @@ namespace Haspadar\Piqule\Token;
 final readonly class Tokens
 {
     /** @param list<Token> $items */
-    public function __construct(private array $items) {}
+    public function __construct(private array $items)
+    {
+    }
 
     /** @return list<Token> */
     public function items(): array

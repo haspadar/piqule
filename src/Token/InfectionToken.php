@@ -25,9 +25,7 @@ final readonly class InfectionToken implements Token
         return 'https://dashboard.stryker-mutator.io';
     }
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {
