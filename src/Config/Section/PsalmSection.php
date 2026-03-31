@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config\Section;
 
@@ -16,10 +16,7 @@ final readonly class PsalmSection implements ConfigSection
      * @param list<string> $includes
      * @param list<string> $excludes
      */
-    public function __construct(
-        private array $includes,
-        private array $excludes,
-    ) {}
+    public function __construct(private array $includes, private array $excludes) {}
 
     #[Override]
     public function toArray(): array

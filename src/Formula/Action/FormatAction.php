@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Formula\Action;
 
@@ -17,9 +17,7 @@ use Throwable;
  */
 final readonly class FormatAction implements Action
 {
-    public function __construct(
-        private string $raw,
-    ) {}
+    public function __construct(private string $raw) {}
 
     /** @throws PiquleException */
     #[Override]
@@ -50,7 +48,8 @@ final readonly class FormatAction implements Action
         } catch (Throwable $e) {
             throw new PiquleException(
                 sprintf('format() failed: %s', $e->getMessage()),
-                previous: $e,
+                0,
+                $e,
             );
         }
 

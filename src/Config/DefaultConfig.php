@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
 
@@ -32,7 +32,9 @@ use Override;
  */
 final class DefaultConfig implements Config
 {
-    /** @var array<string, scalar|list<scalar>> */
+    /**
+     * @var array<string, scalar|list<scalar>>
+     */
     private readonly array $defaults;
 
     /**
@@ -72,7 +74,7 @@ final class DefaultConfig implements Config
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge(
             ['dirs.include' => $include, 'dirs.exclude' => $exclude, 'php.version' => $phpVersion],
-            ...array_map(fn($s) => $s->toArray(), $sections),
+            ...array_map(static fn($s) => $s->toArray(), $sections),
         );
         $this->defaults = $defaults;
     }
@@ -100,6 +102,8 @@ final class DefaultConfig implements Config
 
         $value = $this->defaults[$name];
 
-        return is_scalar($value) ? [$value] : $value;
+        return is_scalar($value)
+            ? [$value]
+            : $value;
     }
 }

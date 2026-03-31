@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Formula\Action;
 
@@ -14,9 +14,7 @@ use Override;
  */
 final readonly class JoinAction implements Action
 {
-    public function __construct(
-        private string $raw,
-    ) {}
+    public function __construct(private string $raw) {}
 
     #[Override]
     public function transformed(Args $args): Args

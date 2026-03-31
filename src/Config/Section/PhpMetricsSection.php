@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config\Section;
 
@@ -15,10 +15,7 @@ final readonly class PhpMetricsSection implements ConfigSection
      * @param list<string> $includes
      * @param list<string> $excludes
      */
-    public function __construct(
-        private array $includes,
-        private array $excludes,
-    ) {}
+    public function __construct(private array $includes, private array $excludes) {}
 
     #[Override]
     public function toArray(): array
@@ -32,13 +29,13 @@ final readonly class PhpMetricsSection implements ConfigSection
             'phpmetrics.extensions' => ['php'],
             'phpmetrics.halstead.max_bugs_per_method' => [0.5],
             'phpmetrics.halstead.max_difficulty_per_method' => [15],
-            'phpmetrics.halstead.max_effort_per_method' => [15000],
-            'phpmetrics.halstead.max_volume_per_method' => [1000],
+            'phpmetrics.halstead.max_effort_per_method' => [15_000],
+            'phpmetrics.halstead.max_volume_per_method' => [1_000],
             'phpmetrics.includes' => $this->includes,
             'phpmetrics.inheritance.max_depth' => [3],
             'phpmetrics.report.html' => ['html'],
             'phpmetrics.report.json' => ['phpmetrics.json'],
-            'phpmetrics.size.max_loc_per_class' => [1000],
+            'phpmetrics.size.max_loc_per_class' => [1_000],
             'phpmetrics.size.max_logical_loc_per_class' => [600],
             'phpmetrics.size.max_logical_loc_per_method' => [20],
             'phpmetrics.structure.max_methods_per_class' => [10],

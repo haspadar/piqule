@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Formula\Args;
 
@@ -11,17 +11,14 @@ use Override;
  */
 final readonly class StringifiedArgs implements Args
 {
-    public function __construct(
-        private Args $origin,
-    ) {}
+    public function __construct(private Args $origin) {}
 
     /** @return list<string> */
     #[Override]
     public function values(): array
     {
         return array_map(
-            fn(int|float|string|bool $value): string =>
-            $this->stringify($value),
+            fn(int|float|string|bool $value): string => $this->stringify($value),
             $this->origin->values(),
         );
     }

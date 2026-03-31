@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Files;
 
@@ -14,10 +14,7 @@ use Override;
 final readonly class FilteredFiles implements Files
 {
     /** @param Closure(File): bool $predicate */
-    public function __construct(
-        private Files $origin,
-        private Closure $predicate,
-    ) {}
+    public function __construct(private Files $origin, private Closure $predicate) {}
 
     #[Override]
     public function all(): iterable

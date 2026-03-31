@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Files;
 
@@ -18,10 +18,7 @@ final readonly class EachFile implements Runnable
      * @param Files $files File collection to iterate
      * @param Closure(File): void $action
      */
-    public function __construct(
-        private Files $files,
-        private Closure $action,
-    ) {}
+    public function __construct(private Files $files, private Closure $action) {}
 
     /**
      * Executes the action for every file in the collection

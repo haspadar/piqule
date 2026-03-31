@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
 
@@ -117,10 +117,7 @@ use Override;
 final readonly class OverrideConfig implements Config
 {
     /** @param OverrideMap $overrides */
-    public function __construct(
-        private Config $defaults,
-        private array $overrides,
-    ) {}
+    public function __construct(private Config $defaults, private array $overrides) {}
 
     #[Override]
     public function has(string $name): bool
@@ -146,14 +143,12 @@ final readonly class OverrideConfig implements Config
     }
 
     /**
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @throws PiquleException
-     *
      * @return list<scalar>
      */
-    private function normalizedValue(
-        mixed $value,
-        string $name,
-    ): array {
+    private function normalizedValue(mixed $value, string $name): array
+    {
         if (is_scalar($value)) {
             return [$value];
         }
@@ -172,7 +167,6 @@ final readonly class OverrideConfig implements Config
             }
         }
 
-        /** @var list<scalar> $value */
-        return $value;
+        return array_values(array_filter($value, static fn($item) => is_scalar($item)));
     }
 }

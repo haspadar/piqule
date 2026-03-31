@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Formula\Args;
 
@@ -13,13 +13,10 @@ use Override;
  */
 final readonly class ParsedArgs implements Args
 {
-    public function __construct(
-        private Args $origin,
-    ) {}
+    public function __construct(private Args $origin) {}
 
     /**
      * @throws InvalidArgumentException
-     *
      * @return list<int|float|string|bool>
      */
     #[Override]
@@ -29,8 +26,7 @@ final readonly class ParsedArgs implements Args
         $decoded = $this->decodeJsonList($raw);
         $this->assertScalarList($decoded, $raw);
 
-        /** @var list<int|float|string|bool> $decoded */
-        return $decoded;
+        return array_values(array_filter($decoded, static fn($item) => is_scalar($item)));
     }
 
     /** @throws InvalidArgumentException */
@@ -68,8 +64,8 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @throws InvalidArgumentException
-     *
      * @return array<array-key, mixed>
      */
     private function decodeJsonList(string $raw): array
@@ -97,14 +93,12 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @param array<array-key, mixed> $decoded
-     *
      * @throws InvalidArgumentException
      */
-    private function assertScalarList(
-        array $decoded,
-        string $raw,
-    ): void {
+    private function assertScalarList(array $decoded, string $raw): void
+    {
         if (!array_is_list($decoded)) {
             throw new InvalidArgumentException(
                 sprintf('Expected JSON list literal, got "%s"', $raw),

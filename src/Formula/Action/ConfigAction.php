@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Formula\Action;
 
@@ -8,6 +8,7 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
+use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
@@ -15,17 +16,14 @@ use Override;
  */
 final readonly class ConfigAction implements Action
 {
-    public function __construct(
-        private Config $config,
-        private string $key,
-    ) {}
+    public function __construct(private Config $config, private string $key) {}
 
     /**
      * Returns configuration values for the given key
      *
      * Input arguments are ignored because this action acts as a value source
      *
-     * @throws \Haspadar\Piqule\PiquleException
+     * @throws PiquleException
      */
     #[Override]
     public function transformed(Args $args): Args

@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\TextFile;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
@@ -26,7 +27,7 @@ final readonly class AppendingStorage implements Storage
      * - Appends contents to an existing file and emits updated() if the marker is absent.
      * - No-ops if the marker is already present in the existing file.
      *
-     * @throws \Haspadar\Piqule\PiquleException
+     * @throws PiquleException
      */
     #[Override]
     public function write(File $file): self

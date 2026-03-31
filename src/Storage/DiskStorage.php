@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Storage;
 
@@ -11,14 +11,14 @@ use Override;
 use SplFileInfo;
 use UnexpectedValueException;
 
+use function assert;
+
 /**
  * Filesystem-backed storage rooted at a given directory
  */
 final readonly class DiskStorage implements Storage
 {
-    public function __construct(
-        private string $root,
-    ) {}
+    public function __construct(private string $root) {}
 
     /**
      * Reads and returns the file contents at the given location
@@ -48,7 +48,6 @@ final readonly class DiskStorage implements Storage
      *
      * @throws PiquleException
      * @throws UnexpectedValueException
-     *
      * @return iterable<string>
      */
     #[Override]
@@ -66,7 +65,8 @@ final readonly class DiskStorage implements Storage
         );
 
         foreach ($iterator as $item) {
-            /** @var SplFileInfo $item */
+            assert($item instanceof SplFileInfo);
+
             if ($item->isFile()) {
                 yield ltrim(
                     $location . '/' . $item->getFilename(),

@@ -1,8 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
+
+use Haspadar\Piqule\PiquleException;
 
 /**
  * Read-only access to flat dot-notated configuration keys
@@ -19,8 +21,7 @@ interface Config
      *
      * Missing paths and explicitly empty lists are both represented as an empty list
      *
-     * @throws \Haspadar\Piqule\PiquleException
-     *
+     * @throws PiquleException
      * @return list<scalar>
      */
     public function list(string $name): array;

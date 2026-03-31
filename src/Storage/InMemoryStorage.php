@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Storage;
 
@@ -13,14 +13,8 @@ use Override;
  */
 final readonly class InMemoryStorage implements Storage
 {
-    /** @var array<string, File> */
-    private array $entries;
-
     /** @param array<string, File> $entries location => File */
-    public function __construct(array $entries = [])
-    {
-        $this->entries = $entries;
-    }
+    public function __construct(private array $entries = []) {}
 
     #[Override]
     public function read(string $location): string
@@ -57,6 +51,7 @@ final readonly class InMemoryStorage implements Storage
         ]);
     }
 
+    /** @return iterable<string> */
     #[Override]
     public function entries(string $location): iterable
     {
@@ -75,6 +70,7 @@ final readonly class InMemoryStorage implements Storage
             }
 
             $rest = substr($key, strlen($prefix));
+
             if ($rest !== '' && !str_contains($rest, '/')) {
                 $entries[] = $key;
             }
