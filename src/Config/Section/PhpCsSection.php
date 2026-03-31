@@ -18,6 +18,7 @@ final readonly class PhpCsSection implements ConfigSection
     public function __construct(
         private array $includes,
         private array $excludes,
+        private string $rootNamespace = '',
     ) {}
 
     #[Override]
@@ -26,6 +27,7 @@ final readonly class PhpCsSection implements ConfigSection
         return [
             'phpcs.excludes' => $this->excludes,
             'phpcs.files' => $this->includes,
+            'phpcs.root_namespace' => $this->rootNamespace,
             'phpcs.enabled' => true,
         ];
     }

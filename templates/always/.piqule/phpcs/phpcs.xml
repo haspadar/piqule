@@ -19,7 +19,7 @@
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
             <property name="rootNamespaces" type="array">
-                <element key="src" value="Haspadar\Piqule"/>
+                <element key="src" value="<< config(phpcs.root_namespace)|join("") >>"/>
             </property>
         </properties>
     </rule>
