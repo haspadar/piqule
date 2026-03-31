@@ -35,14 +35,14 @@ if ($enabled === []) {
     exit(0);
 }
 
-exec('command -v gh', $out, $ghExists);
+exec('command -v gh', $ghOut, $ghExists);
 
 if ($ghExists !== 0) {
     $output->info('[TOKEN] Install GitHub CLI to verify secrets: https://cli.github.com');
     exit(0);
 }
 
-exec('gh auth status 2>/dev/null', $out, $authStatus);
+exec('gh auth status 2>/dev/null', $authOut, $authStatus);
 
 if ($authStatus !== 0) {
     $output->info('[TOKEN] Run: gh auth login — to enable secret verification');
@@ -70,5 +70,7 @@ foreach ($enabled as $token) {
     }
 
     $output->info(sprintf('[TOKEN] %s is missing. Get it at: %s', $token->secret(), $token->url($org)));
-    $output->info(sprintf('[TOKEN] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
+    if ($repo !== '') {
+        $output->info(sprintf('[TOKEN] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
+    }
 }

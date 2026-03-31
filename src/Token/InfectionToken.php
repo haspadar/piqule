@@ -22,6 +22,7 @@ final readonly class InfectionToken implements Token
     #[Override]
     public function url(string $org): string
     {
+        // Stryker dashboard is org-agnostic
         return 'https://dashboard.stryker-mutator.io';
     }
 
