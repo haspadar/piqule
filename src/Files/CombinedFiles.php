@@ -11,9 +11,7 @@ use Override;
  */
 final readonly class CombinedFiles implements Files
 {
-    /**
-     * @param list<Files> $sources
-     */
+    /** @param list<Files> $sources */
     public function __construct(
         private array $sources,
     ) {}

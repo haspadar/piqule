@@ -15,9 +15,7 @@ final readonly class TrimmedArgs implements Args
         private Args $origin,
     ) {}
 
-    /**
-     * @return list<int|float|string|bool>
-     */
+    /** @return list<int|float|string|bool> */
     #[Override]
     public function values(): array
     {

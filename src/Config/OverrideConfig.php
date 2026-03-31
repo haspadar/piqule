@@ -115,9 +115,7 @@ use Override;
  */
 final readonly class OverrideConfig implements Config
 {
-    /**
-     * @param OverrideMap $overrides
-     */
+    /** @param OverrideMap $overrides */
     public function __construct(
         private Config $defaults,
         private array $overrides,
@@ -129,9 +127,7 @@ final readonly class OverrideConfig implements Config
         return $this->defaults->has($name);
     }
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function list(string $name): array
     {
@@ -153,8 +149,10 @@ final readonly class OverrideConfig implements Config
      *
      * @return list<scalar>
      */
-    private function normalizedValue(mixed $value, string $name): array
-    {
+    private function normalizedValue(
+        mixed $value,
+        string $name,
+    ): array {
         if (is_scalar($value)) {
             return [$value];
         }

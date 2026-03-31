@@ -18,9 +18,7 @@ final readonly class OnceStorage implements Storage
         private StorageReaction $reaction,
     ) {}
 
-    /**
-     * @throws \Haspadar\Piqule\PiquleException
-     */
+    /** @throws \Haspadar\Piqule\PiquleException */
     #[Override]
     public function write(File $file): self
     {

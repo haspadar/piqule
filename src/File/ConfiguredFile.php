@@ -33,9 +33,7 @@ final readonly class ConfiguredFile implements File
         return $this->origin->name();
     }
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function contents(): string
     {
@@ -75,9 +73,7 @@ final readonly class ConfiguredFile implements File
         }
     }
 
-    /**
-     * @return array<string, callable(string): Action>
-     */
+    /** @return array<string, callable(string): Action> */
     private function actions(): array
     {
         return [

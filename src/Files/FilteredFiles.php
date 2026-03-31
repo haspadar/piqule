@@ -13,9 +13,7 @@ use Override;
  */
 final readonly class FilteredFiles implements Files
 {
-    /**
-     * @param Closure(File): bool $predicate
-     */
+    /** @param Closure(File): bool $predicate */
     public function __construct(
         private Files $origin,
         private Closure $predicate,

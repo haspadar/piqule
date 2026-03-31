@@ -11,8 +11,6 @@ use Haspadar\Piqule\File\File;
  */
 interface Files
 {
-    /**
-     * @return iterable<File>
-     */
+    /** @return iterable<File> */
     public function all(): iterable;
 }

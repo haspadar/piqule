@@ -15,9 +15,7 @@ final readonly class StringifiedArgs implements Args
         private Args $origin,
     ) {}
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     #[Override]
     public function values(): array
     {
