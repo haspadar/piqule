@@ -38,9 +38,11 @@ try {
         ? require $projectRoot . '/.piqule.php'
         : new OverrideConfig(new DefaultConfig(), []);
 
-    $config = new OverrideConfig($config, [
-        'phpcs.root_namespace' => (new ComposerRootNamespace($projectRoot . '/composer.json'))->toString(),
-    ]);
+    if ($config->list('phpcs.root_namespace') === ['']) {
+        $config = new OverrideConfig($config, [
+            'phpcs.root_namespace' => (new ComposerRootNamespace($projectRoot . '/composer.json'))->toString(),
+        ]);
+    }
 
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);
