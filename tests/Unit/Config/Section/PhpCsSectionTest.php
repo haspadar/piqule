@@ -39,4 +39,14 @@ final class PhpCsSectionTest extends TestCase
             'phpcs.enabled must default to true',
         );
     }
+
+    #[Test]
+    public function exposesRootNamespace(): void
+    {
+        self::assertSame(
+            'Acme\\App',
+            (new PhpCsSection([], [], 'Acme\\App'))->toArray()['phpcs.root_namespace'],
+            'phpcs.root_namespace must reflect the given root namespace',
+        );
+    }
 }
