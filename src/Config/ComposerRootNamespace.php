@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
 
@@ -22,6 +22,8 @@ final readonly class ComposerRootNamespace
         $data = json_decode($contents === false ? '{}' : $contents, true) ?? [];
         $psr4 = $data['autoload']['psr-4'] ?? [];
 
-        return $psr4 !== [] ? rtrim(array_key_first($psr4), '\\') : '';
+        return $psr4 !== []
+            ? rtrim(array_key_first($psr4), '\\')
+            : '';
     }
 }

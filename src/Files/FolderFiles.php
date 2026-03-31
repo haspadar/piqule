@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Files;
 
 use Haspadar\Piqule\File\TextFile;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\Storage;
 use Override;
 
@@ -17,14 +18,10 @@ final readonly class FolderFiles implements Files
      * @param Storage $storage Source storage to read files from
      * @param string $folder Folder path relative to storage root
      */
-    public function __construct(
-        private Storage $storage,
-        private string $folder,
-    ) {}
+    public function __construct(private Storage $storage, private string $folder) {}
 
     /**
-     * @throws \Haspadar\Piqule\PiquleException
-     *
+     * @throws PiquleException
      * @return iterable<TextFile>
      */
     #[Override]

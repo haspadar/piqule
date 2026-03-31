@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Files;
 
@@ -13,9 +13,7 @@ use Override;
 final readonly class TextFiles implements Files
 {
     /** @param array<string, string> $files */
-    public function __construct(
-        private array $files,
-    ) {}
+    public function __construct(private array $files) {}
 
     #[Override]
     public function all(): iterable

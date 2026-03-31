@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config\Dirs;
 
@@ -18,6 +18,6 @@ final readonly class TrailingGlobDirs implements Dirs
     #[Override]
     public function toList(): array
     {
-        return array_map(fn(string $dir): string => $dir . '/**', $this->dirs);
+        return array_map(static fn(string $dir): string => $dir . '/**', $this->dirs);
     }
 }

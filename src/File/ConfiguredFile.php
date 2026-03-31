@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\File;
 
@@ -22,10 +22,7 @@ use Throwable;
  */
 final readonly class ConfiguredFile implements File
 {
-    public function __construct(
-        private File $origin,
-        private Config $config,
-    ) {}
+    public function __construct(private File $origin, private Config $config) {}
 
     #[Override]
     public function name(): string
@@ -68,7 +65,8 @@ final readonly class ConfiguredFile implements File
                     trim($expression),
                     $e->getMessage(),
                 ),
-                previous: $e,
+                0,
+                $e,
             );
         }
     }
@@ -78,9 +76,9 @@ final readonly class ConfiguredFile implements File
     {
         return [
             'config' => fn(string $raw): Action => new ConfigAction($this->config, $raw),
-            'format' => fn(string $raw): Action => new FormatAction($raw),
-            'format_each' => fn(string $raw): Action => new FormatEachAction($raw),
-            'join' => fn(string $raw): Action => new JoinAction($raw),
+            'format' => static fn(string $raw): Action => new FormatAction($raw),
+            'format_each' => static fn(string $raw): Action => new FormatEachAction($raw),
+            'join' => static fn(string $raw): Action => new JoinAction($raw),
         ];
     }
 }

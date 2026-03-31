@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Storage;
 
@@ -11,9 +11,7 @@ use Haspadar\Piqule\PiquleException;
  */
 final readonly class SafePath
 {
-    public function __construct(
-        private string $root,
-    ) {}
+    public function __construct(private string $root) {}
 
     /** @throws PiquleException */
     public function resolve(string $location): string
@@ -29,7 +27,9 @@ final readonly class SafePath
                 if ($parts === []) {
                     throw new PiquleException("Invalid location: $location");
                 }
+
                 array_pop($parts);
+
                 continue;
             }
 

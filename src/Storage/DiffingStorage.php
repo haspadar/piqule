@@ -1,10 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\File\File;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
@@ -13,12 +14,9 @@ use Override;
  */
 final readonly class DiffingStorage implements Storage
 {
-    public function __construct(
-        private Storage $origin,
-        private StorageReaction $reaction,
-    ) {}
+    public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
-    /** @throws \Haspadar\Piqule\PiquleException */
+    /** @throws PiquleException */
     #[Override]
     public function write(File $file): self
     {
