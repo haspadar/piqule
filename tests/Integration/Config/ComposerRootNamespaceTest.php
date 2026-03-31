@@ -56,4 +56,21 @@ final class ComposerRootNamespaceTest extends TestCase
 
         $folder->close();
     }
+
+    #[Test]
+    public function returnsEmptyStringWhenComposerJsonIsNotReadable(): void
+    {
+        $folder = (new TempFolder())->withFile('composer.json', '{}');
+        $path = $folder->path() . '/composer.json';
+        chmod($path, 0o000);
+
+        self::assertSame(
+            '',
+            (new ComposerRootNamespace($path))->toString(),
+            'ComposerRootNamespace must return empty string when composer.json is not readable',
+        );
+
+        chmod($path, 0o644);
+        $folder->close();
+    }
 }

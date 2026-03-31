@@ -17,7 +17,7 @@ final readonly class ComposerRootNamespace
             return '';
         }
 
-        $contents = file_get_contents($this->path);
+        $contents = @file_get_contents($this->path);
 
         if ($contents === false) {
             return '';
