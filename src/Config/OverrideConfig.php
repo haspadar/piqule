@@ -41,6 +41,7 @@ use Override;
  *   'php_cs_fixer.paths'?: list<string>,
  *   'phpcs.excludes'?: list<string>,
  *   'phpcs.files'?: list<string>,
+ *   'phpcs.root_namespace'?: string,
  *   'phpmd.class_complexity'?: list<int|float>,
  *   'phpmd.class_length'?: list<int|float>,
  *   'phpmd.cyclomatic'?: list<int|float>,
