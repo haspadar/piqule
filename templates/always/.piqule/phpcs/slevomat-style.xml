@@ -28,7 +28,6 @@
     <rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces"/>
     <rule ref="SlevomatCodingStandard.Strings.DisallowVariableParsing"/>
 
-    <rule ref="SlevomatCodingStandard.Files.FileLength"/>
     <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
         <properties>
             <property name="rootNamespaces" type="array">
