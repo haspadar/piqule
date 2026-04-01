@@ -9,7 +9,6 @@
     <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
     <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations"/>
     <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments"/>
-    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
     <rule ref="SlevomatCodingStandard.Commenting.RequireOneDocComment"/>
     <rule ref="SlevomatCodingStandard.Commenting.ThrowsAnnotationsOrder"/>
     <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment"/>

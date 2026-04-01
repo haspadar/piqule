@@ -5,7 +5,6 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowContinueWithoutIntegerOperandInSwitch"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowEmpty"/>
-    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowTrailingMultiLineTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>

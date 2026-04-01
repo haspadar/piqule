@@ -143,7 +143,6 @@ final readonly class OverrideConfig implements Config
     }
 
     /**
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @throws PiquleException
      * @return list<scalar>
      */

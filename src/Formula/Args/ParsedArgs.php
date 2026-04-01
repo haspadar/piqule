@@ -64,7 +64,6 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @throws InvalidArgumentException
      * @return array<array-key, mixed>
      */
@@ -93,7 +92,6 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint
      * @param array<array-key, mixed> $decoded
      * @throws InvalidArgumentException
      */
