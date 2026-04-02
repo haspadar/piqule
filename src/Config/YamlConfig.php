@@ -58,9 +58,11 @@ final readonly class YamlConfig implements Config
             ? $data['append']
             : [];
 
+        $pathKeys = ['exclude', 'php.src'];
+
         $this->config = new AppendConfig(
-            new OverrideConfig($defaults, $overrides),
-            $appends,
+            new OverrideConfig($defaults, array_diff_key($overrides, array_flip($pathKeys))),
+            array_diff_key($appends, array_flip($pathKeys)),
         );
     }
 

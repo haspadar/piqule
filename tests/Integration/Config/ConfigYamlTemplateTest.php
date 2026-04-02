@@ -51,8 +51,11 @@ final class ConfigYamlTemplateTest extends TestCase
         );
 
         try {
+            $yamlPath = $folder->path() . '/.piqule.yaml';
+            $defaults = (new DefaultConfig())->withYaml($yamlPath);
+
             self::assertThat(
-                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new YamlConfig($yamlPath, $defaults),
                 new HasConfigYamlKey('exclude', ['vendor', 'tests', '.git', 'legacy']),
                 'Append must add "legacy" to the exclude list',
             );
