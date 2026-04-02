@@ -36,12 +36,6 @@ final class DefaultConfig implements Config
         array $exclude = ['vendor', 'tests', '.git'],
         string $composerJson = '',
     ) {
-        $templatePath = dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml';
-        $yaml = Yaml::parseFile($templatePath);
-
-        /** @var array<string, scalar|list<scalar>> $base */
-        $base = $yaml['defaults'] ?? [];
-
         $projectIncludes = (new ProjectDirs($include))->toList();
 
         $dynamic = [
@@ -73,6 +67,9 @@ final class DefaultConfig implements Config
                 ['.piqule/**/html/**', '.piqule/**/coverage-report/**'],
             ),
         ];
+
+        /** @var array<string, scalar|list<scalar>> $base */
+        $base = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml')['defaults'] ?? [];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge($base, $dynamic);
