@@ -142,6 +142,20 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function throwsWhenFirstActionReceivesArguments(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(shellcheck.shell)|first(something) >>',
+            ),
+            new OverrideConfig(new DefaultConfig(), []),
+        ))->contents();
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
