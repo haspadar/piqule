@@ -77,7 +77,10 @@ final readonly class ConfiguredFile implements File
     {
         return [
             'config' => fn(string $raw): Action => new ConfigAction($this->config, $raw),
-            'first' => static fn(string $raw): Action => new FirstAction(),
+            'first' => static fn(string $raw): Action => match (trim($raw)) {
+                '' => new FirstAction(),
+                default => throw new PiquleException('Action "first" does not accept arguments'),
+            },
             'format' => static fn(string $raw): Action => new FormatAction($raw),
             'format_each' => static fn(string $raw): Action => new FormatEachAction($raw),
             'join' => static fn(string $raw): Action => new JoinAction($raw),
