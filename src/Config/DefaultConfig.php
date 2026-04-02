@@ -28,12 +28,12 @@ final class DefaultConfig implements Config
     private readonly array $defaults;
 
     /**
-     * @param list<string> $include
+     * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @throws ParseException
      */
     public function __construct(
-        array $include = [],
+        array $phpSrc = [],
         array $exclude = [],
         private readonly string $composerJson = '',
     ) {
@@ -43,9 +43,9 @@ final class DefaultConfig implements Config
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];
 
-        /** @var list<string> $resolvedInclude */
-        $resolvedInclude = $include !== []
-            ? $include
+        /** @var list<string> $resolvedPhpSrc */
+        $resolvedPhpSrc = $phpSrc !== []
+            ? $phpSrc
             : $base['php.src'];
 
         /** @var list<string> $resolvedExclude */
@@ -54,7 +54,7 @@ final class DefaultConfig implements Config
             : $base['exclude'];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $this->dynamic($resolvedInclude, $resolvedExclude));
+        $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));
         $this->defaults = $defaults;
     }
 
