@@ -117,4 +117,38 @@ final class DefaultConfigTest extends TestCase
             'php.version must default to 8.3',
         );
     }
+
+    #[Test]
+    public function returnsToArrayWithAllDeclaredKeys(): void
+    {
+        $array = (new DefaultConfig())->toArray();
+
+        self::assertArrayHasKey(
+            'phpstan.level',
+            $array,
+            'toArray must include all declared default keys',
+        );
+    }
+
+    #[Test]
+    public function usesRootNamespaceFromComposerJson(): void
+    {
+        $folder = sys_get_temp_dir() . '/piqule-test-' . uniqid('', true);
+        mkdir($folder, 0o755);
+        file_put_contents(
+            $folder . '/composer.json',
+            '{"autoload":{"psr-4":{"Acme\\\\":"src/"}}}',
+        );
+
+        $namespace = (new DefaultConfig(composerJson: $folder . '/composer.json'))->list('phpcs.root_namespace');
+
+        array_map('unlink', glob($folder . '/*') ?: []);
+        rmdir($folder);
+
+        self::assertSame(
+            ['Acme'],
+            $namespace,
+            'DefaultConfig must extract root namespace from composer.json psr-4 section',
+        );
+    }
 }
