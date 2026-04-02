@@ -53,7 +53,7 @@ final readonly class YamlConfig implements Config
         $overrides = isset($data['override']) && is_array($data['override'])
             ? $data['override']
             : [];
-        /** @var array<string, list<scalar>> $appends */
+        /** @var array<string, mixed> $appends */
         $appends = isset($data['append']) && is_array($data['append'])
             ? $data['append']
             : [];

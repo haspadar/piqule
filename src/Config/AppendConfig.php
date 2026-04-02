@@ -19,7 +19,7 @@ use Override;
  */
 final readonly class AppendConfig implements Config
 {
-    /** @param array<string, list<scalar>> $appends */
+    /** @param array<string, mixed> $appends */
     public function __construct(private Config $defaults, private array $appends) {}
 
     #[Override]
@@ -47,7 +47,24 @@ final readonly class AppendConfig implements Config
             return $this->defaults->list($name);
         }
 
-        return [...$this->defaults->list($name), ...$this->appends[$name]];
+        $appends = $this->appends[$name];
+
+        if (!is_array($appends) || !array_is_list($appends)) {
+            throw new PiquleException(
+                sprintf('Append "%s" must be a list<scalar>', $name),
+            );
+        }
+
+        foreach ($appends as $item) {
+            if (!is_scalar($item)) {
+                throw new PiquleException(
+                    sprintf('Append "%s" must contain only scalars', $name),
+                );
+            }
+        }
+
+        /** @var list<scalar> $appends */
+        return [...$this->defaults->list($name), ...$appends];
     }
 
     /** @throws PiquleException */
