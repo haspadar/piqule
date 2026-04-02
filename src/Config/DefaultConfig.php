@@ -41,27 +41,17 @@ final class DefaultConfig implements Config
         $yaml = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml');
 
         /** @var array<string, mixed> $base */
-        $base = isset($yaml['defaults']) && is_array($yaml['defaults'])
-            ? $yaml['defaults']
-            : [];
+        $base = $yaml['defaults'];
 
-        /** @var list<string> $yamlInclude */
-        $yamlInclude = isset($base['php.src']) && is_array($base['php.src'])
-            ? $base['php.src']
-            : [];
         /** @var list<string> $resolvedInclude */
         $resolvedInclude = $include !== []
             ? $include
-            : $yamlInclude;
+            : $base['php.src'];
 
-        /** @var list<string> $yamlExclude */
-        $yamlExclude = isset($base['exclude']) && is_array($base['exclude'])
-            ? $base['exclude']
-            : [];
         /** @var list<string> $resolvedExclude */
         $resolvedExclude = $exclude !== []
             ? $exclude
-            : $yamlExclude;
+            : $base['exclude'];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge($base, $this->dynamic($resolvedInclude, $resolvedExclude));
