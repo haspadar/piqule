@@ -55,7 +55,7 @@ jobs:
 
       - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
         with:
-          php-version: << config(ci.php.test_version)|join("") >>
+          php-version: << config(php.versions)|first() >>
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -76,7 +76,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [<< config(ci.php.matrix)|format_each('"%s"')|join(", ") >>]
+        php: [<< config(php.versions)|format_each('"%s"')|join(", ") >>]
         check:
           - phpcs
           - phpstan
@@ -114,7 +114,7 @@ jobs:
 
       - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
         with:
-          php-version: << config(ci.php.test_version)|join("") >>
+          php-version: << config(php.versions)|first() >>
           coverage: xdebug
           extensions: mbstring, dom, json
 
