@@ -98,16 +98,16 @@ final class DefaultConfig implements Config
     }
 
     /**
-     * @param list<string> $include
+     * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @return array<string, scalar|list<scalar>>
      */
-    private function dynamic(array $include, array $exclude): array
+    private function dynamic(array $phpSrc, array $exclude): array
     {
-        $projectIncludes = (new ProjectDirs($include))->toList();
+        $projectIncludes = (new ProjectDirs($phpSrc))->toList();
 
         return [
-            'php.src' => $include,
+            'php.src' => $phpSrc,
             'exclude' => $exclude,
             'hadolint.ignore' => $exclude,
             'jsonlint.patterns' => array_merge(
@@ -119,7 +119,7 @@ final class DefaultConfig implements Config
             'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
             'phpcs.files' => $projectIncludes,
             'phpcs.root_namespace' => (new ComposerRootNamespace($this->composerJson))->toString(),
-            'phpmd.paths' => $include,
+            'phpmd.paths' => $phpSrc,
             'phpmetrics.includes' => $projectIncludes,
             'phpmetrics.excludes' => $exclude,
             'phpstan.paths' => $projectIncludes,
@@ -128,7 +128,7 @@ final class DefaultConfig implements Config
             'psalm.project.ignore' => (new ProjectDirs($exclude))->toList(),
             'infection.source.directories' => $projectIncludes,
             'shellcheck.ignore_dirs' => $exclude,
-            'sonar.sources' => $include,
+            'sonar.sources' => $phpSrc,
             'typos.exclude' => (new TrailingSlashDirs($exclude))->toList(),
             'yamllint.ignore' => array_merge(
                 (new TrailingGlobDirs($exclude))->toList(),
