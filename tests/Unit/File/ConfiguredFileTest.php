@@ -21,14 +21,14 @@ final class ConfiguredFileTest extends TestCase
     {
         $config = new OverrideConfig(
             new DefaultConfig(),
-            ['ci.php.matrix' => ['8.3', '8.4']],
+            ['php.versions' => ['8.3', '8.4']],
         );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'file',
-                    '<< config(ci.php.matrix)|format_each("%s")|join(",") >>',
+                    '<< config(php.versions)|format_each("%s")|join(",") >>',
                 ),
                 $config,
             ),
@@ -127,7 +127,7 @@ final class ConfiguredFileTest extends TestCase
     {
         $config = new OverrideConfig(
             new DefaultConfig(),
-            ['ci.php.matrix' => ['8.3', '8.4']],
+            ['php.versions' => ['8.3', '8.4']],
         );
 
         $this->expectException(PiquleException::class);
@@ -135,7 +135,7 @@ final class ConfiguredFileTest extends TestCase
         (new ConfiguredFile(
             new TextFile(
                 'file',
-                '<< config(ci.php.matrix) >>',
+                '<< config(php.versions) >>',
             ),
             $config,
         ))->contents();
