@@ -76,6 +76,9 @@ final readonly class YamlConfig implements Config
         return $this->config->list($name);
     }
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function toArray(): array
     {
