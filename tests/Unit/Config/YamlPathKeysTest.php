@@ -16,31 +16,39 @@ final class YamlPathKeysTest extends TestCase
     public function throwsWhenOverridePhpSrcContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessageMatches('/override\.php\.src/');
 
-        new YamlPathKeys(['php.src' => [42]], [], new DefaultConfig());
+        $keys = new YamlPathKeys(['php.src' => [42]], [], new DefaultConfig());
+        $keys->include();
     }
 
     #[Test]
     public function throwsWhenOverrideExcludeContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessageMatches('/override\.exclude/');
 
-        new YamlPathKeys(['exclude' => [true]], [], new DefaultConfig());
+        $keys = new YamlPathKeys(['exclude' => [true]], [], new DefaultConfig());
+        $keys->exclude();
     }
 
     #[Test]
     public function throwsWhenAppendExcludeContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessageMatches('/append\.exclude/');
 
-        new YamlPathKeys([], ['exclude' => [null]], new DefaultConfig());
+        $keys = new YamlPathKeys([], ['exclude' => [null]], new DefaultConfig());
+        $keys->exclude();
     }
 
     #[Test]
     public function throwsWhenAppendPhpSrcContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessageMatches('/append\.php\.src/');
 
-        new YamlPathKeys([], ['php.src' => [3.14]], new DefaultConfig());
+        $keys = new YamlPathKeys([], ['php.src' => [3.14]], new DefaultConfig());
+        $keys->include();
     }
 }
