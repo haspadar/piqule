@@ -3,9 +3,8 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Config\ComposerRootNamespace;
 use Haspadar\Piqule\Config\DefaultConfig;
-use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Config\YamlConfig;
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
@@ -34,15 +33,13 @@ try {
     $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
         ?: throw new PiquleException('Cannot determine piqule install path');
 
-    $config = file_exists($projectRoot . '/.piqule.php')
-        ? require $projectRoot . '/.piqule.php'
-        : new OverrideConfig(new DefaultConfig(), []);
+    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
 
-    if ($config->list('phpcs.root_namespace') === ['']) {
-        $config = new OverrideConfig($config, [
-            'phpcs.root_namespace' => (new ComposerRootNamespace($projectRoot . '/composer.json'))->toString(),
-        ]);
-    }
+    $config = match (true) {
+        file_exists($projectRoot . '/.piqule.yaml') => new YamlConfig($projectRoot . '/.piqule.yaml', $defaults),
+        file_exists($projectRoot . '/.piqule.php')  => require $projectRoot . '/.piqule.php',
+        default                                      => $defaults,
+    };
 
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);

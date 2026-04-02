@@ -116,7 +116,7 @@ use Override;
  */
 final readonly class OverrideConfig implements Config
 {
-    /** @param OverrideMap $overrides */
+    /** @param array<string, mixed> $overrides */
     public function __construct(private Config $defaults, private array $overrides) {}
 
     #[Override]
@@ -167,5 +167,18 @@ final readonly class OverrideConfig implements Config
         }
 
         return array_values(array_filter($value, static fn($item) => is_scalar($item)));
+    }
+
+    /** @throws PiquleException */
+    #[Override]
+    public function toArray(): array
+    {
+        $result = $this->defaults->toArray();
+
+        foreach (array_keys($result) as $key) {
+            $result[$key] = $this->list($key);
+        }
+
+        return $result;
     }
 }

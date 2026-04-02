@@ -25,4 +25,10 @@ interface Config
      * @return list<scalar>
      */
     public function list(string $name): array;
+
+    /**
+     * @throws PiquleException
+     * @return array<string, scalar|list<scalar>>
+     */
+    public function toArray(): array;
 }

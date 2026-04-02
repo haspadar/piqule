@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
 use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -115,6 +116,37 @@ final class DefaultConfigTest extends TestCase
             ['8.3'],
             (new DefaultConfig())->list('php.version'),
             'php.version must default to 8.3',
+        );
+    }
+
+    #[Test]
+    public function returnsToArrayWithAllDeclaredKeys(): void
+    {
+        $array = (new DefaultConfig())->toArray();
+
+        self::assertArrayHasKey(
+            'phpstan.level',
+            $array,
+            'toArray must include all declared default keys',
+        );
+    }
+
+    #[Test]
+    public function usesRootNamespaceFromComposerJson(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            'composer.json',
+            '{"autoload":{"psr-4":{"Acme\\\\":"src/"}}}',
+        );
+
+        $namespace = (new DefaultConfig(composerJson: $folder->path() . '/composer.json'))->list('phpcs.root_namespace');
+
+        $folder->close();
+
+        self::assertSame(
+            ['Acme'],
+            $namespace,
+            'DefaultConfig must extract root namespace from composer.json psr-4 section',
         );
     }
 }

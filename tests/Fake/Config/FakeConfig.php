@@ -26,4 +26,9 @@ final class FakeConfig implements Config
 
         return $this->data[$name];
     }
+
+    public function toArray(): array
+    {
+        return $this->data;
+    }
 }

@@ -132,4 +132,17 @@ final class OverrideConfigTest extends TestCase
             ['jsonlint.mode' => new stdClass()],
         ))->list('jsonlint.mode');
     }
+
+    #[Test]
+    public function toArrayReturnsAllKeysWithOverridesApplied(): void
+    {
+        self::assertSame(
+            ['phpstan.level' => [9], 'phpstan.paths' => ['src']],
+            (new OverrideConfig(
+                new FakeConfig(['phpstan.level' => ['8'], 'phpstan.paths' => ['src']]),
+                ['phpstan.level' => 9],
+            ))->toArray(),
+            'toArray must return all keys with overrides applied',
+        );
+    }
 }
