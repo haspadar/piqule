@@ -43,8 +43,6 @@ final class DefaultConfig implements Config
         $base = $yaml['defaults'] ?? [];
 
         $projectIncludes = (new ProjectDirs($include))->toList();
-        $globExcludes = (new GlobDirs($exclude))->toList();
-        $rootNamespace = (new ComposerRootNamespace($composerJson))->toString();
 
         $dynamic = [
             'php.src' => $include,
@@ -56,9 +54,9 @@ final class DefaultConfig implements Config
             ),
             'markdownlint.ignores' => (new TrailingGlobDirs($exclude))->toList(),
             'php_cs_fixer.exclude' => $exclude,
-            'phpcs.excludes' => $globExcludes,
+            'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
             'phpcs.files' => $projectIncludes,
-            'phpcs.root_namespace' => $rootNamespace,
+            'phpcs.root_namespace' => (new ComposerRootNamespace($composerJson))->toString(),
             'phpmd.paths' => $include,
             'phpmetrics.includes' => $projectIncludes,
             'phpmetrics.excludes' => $exclude,
