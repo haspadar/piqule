@@ -25,30 +25,50 @@ final readonly class YamlPathKeys
      */
     public function __construct(array $overrides, array $appends, DefaultConfig $defaults)
     {
-        /** @var list<string> $include */
         $include = isset($overrides['php.src']) && is_array($overrides['php.src'])
-            ? $overrides['php.src']
-            : $defaults->list('php.src');
+            ? $this->toStringList($overrides['php.src'], 'override.php.src')
+            : $this->toStringList($defaults->list('php.src'), 'php.src');
 
-        /** @var list<string> $exclude */
         $exclude = isset($overrides['exclude']) && is_array($overrides['exclude'])
-            ? $overrides['exclude']
-            : $defaults->list('exclude');
+            ? $this->toStringList($overrides['exclude'], 'override.exclude')
+            : $this->toStringList($defaults->list('exclude'), 'exclude');
 
         if (isset($appends['exclude']) && is_array($appends['exclude'])) {
-            /** @var list<string> $extra */
-            $extra = $appends['exclude'];
+            $extra = $this->toStringList($appends['exclude'], 'append.exclude');
+            /** @var list<string> $exclude */
             $exclude = array_values(array_unique(array_merge($exclude, $extra)));
         }
 
         if (isset($appends['php.src']) && is_array($appends['php.src'])) {
-            /** @var list<string> $extra */
-            $extra = $appends['php.src'];
+            $extra = $this->toStringList($appends['php.src'], 'append.php.src');
+            /** @var list<string> $include */
             $include = array_values(array_unique(array_merge($include, $extra)));
         }
 
         $this->include = $include;
         $this->exclude = $exclude;
+    }
+
+    /**
+     * @param array<mixed> $value
+     * @return list<string>
+     * @throws PiquleException
+     */
+    private function toStringList(array $value, string $key): array
+    {
+        $result = [];
+
+        foreach ($value as $i => $item) {
+            if (!is_string($item)) {
+                throw new PiquleException(
+                    sprintf('"%s" must be a list of strings, got %s at index %d', $key, get_debug_type($item), $i),
+                );
+            }
+
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     /** @return list<string> */
