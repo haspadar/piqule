@@ -32,7 +32,7 @@ final class YamlConfigTest extends TestCase
 
         $path = $this->folder->withFile('.piqule.yaml', ": invalid: yaml: :")->path() . '/.piqule.yaml';
 
-        new YamlConfig($path, new FakeConfig([]));
+        new YamlConfig($path, new FakeConfig([])); // NOSONAR
     }
 
     #[Test]
@@ -42,7 +42,7 @@ final class YamlConfigTest extends TestCase
 
         $path = $this->folder->withFile('.piqule.yaml', "just a string\n")->path() . '/.piqule.yaml';
 
-        new YamlConfig($path, new FakeConfig([]));
+        new YamlConfig($path, new FakeConfig([])); // NOSONAR
     }
 
     #[Test]
