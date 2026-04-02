@@ -27,7 +27,7 @@ vendor/bin/piqule sync
 
 Customization is optional. If needed, create `.piqule.yaml` in the project root.
 
-Use `append` to add values to default lists — changes to `php.src` and `exclude` cascade to all tools automatically:
+Use `append` to add values to default lists — changes to `php.src` cascade to all PHP analysis tools, changes to `exclude` cascade to all tools:
 
 ```yaml
 append:
