@@ -14,12 +14,12 @@ use PHPUnit\Framework\TestCase;
 final class ConfigYamlTemplateTest extends TestCase
 {
     #[Test]
-    public function rendersValidYaml(): void
+    public function defaultsAreAvailable(): void
     {
         self::assertThat(
             new DefaultConfig(),
             new HasConfigYamlKey('php.src', ['src']),
-            'Rendered config.yaml must be valid YAML with a defaults section',
+            'DefaultConfig must expose php.src default',
         );
     }
 
