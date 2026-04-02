@@ -10,6 +10,7 @@ use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
@@ -48,36 +49,15 @@ final class ConfigYamlTemplateTest extends TestCase
         );
     }
 
-    #[Test]
-    public function defaultPhpSrcIsSrc(): void
+    #[TestWith([[['src']], 'php.src', 'php.src default must be ["src"]'])]
+    #[TestWith([[['8.3']], 'php.versions', 'php.versions default must be ["8.3"]'])]
+    #[TestWith([[9], 'phpstan.level', 'phpstan.level default must be 9'])]
+    #[TestWith([[1], 'psalm.error_level', 'psalm.error_level default must be 1'])]
+    public function defaultValueIsRendered(mixed $expected, string $key, string $message): void
     {
         $parsed = self::rendered(self::template(), new DefaultConfig());
 
-        self::assertSame(['src'], $parsed['defaults']['php.src'], 'php.src default must be ["src"]');
-    }
-
-    #[Test]
-    public function defaultPhpVersionsIs83(): void
-    {
-        $parsed = self::rendered(self::template(), new DefaultConfig());
-
-        self::assertSame(['8.3'], $parsed['defaults']['php.versions'], 'php.versions default must be ["8.3"]');
-    }
-
-    #[Test]
-    public function defaultPhpstanLevelIs9(): void
-    {
-        $parsed = self::rendered(self::template(), new DefaultConfig());
-
-        self::assertSame(9, $parsed['defaults']['phpstan.level'], 'phpstan.level default must be 9');
-    }
-
-    #[Test]
-    public function defaultPsalmErrorLevelIs1(): void
-    {
-        $parsed = self::rendered(self::template(), new DefaultConfig());
-
-        self::assertSame(1, $parsed['defaults']['psalm.error_level'], 'psalm.error_level default must be 1');
+        self::assertSame($expected, $parsed['defaults'][$key], $message);
     }
 
     #[Test]
