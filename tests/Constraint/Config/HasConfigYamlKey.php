@@ -21,9 +21,14 @@ final class HasConfigYamlKey extends Constraint
         private readonly string $key,
         private readonly mixed $expected,
     ) {
-        $this->template = (string) file_get_contents(
-            dirname(__DIR__, 3) . '/templates/always/.piqule/config.yaml',
-        );
+        $templatePath = dirname(__DIR__, 3) . '/templates/always/.piqule/config.yaml';
+        $contents = file_get_contents($templatePath);
+
+        if ($contents === false) {
+            throw new \RuntimeException("Cannot read template: {$templatePath}");
+        }
+
+        $this->template = $contents;
     }
 
     protected function matches(mixed $other): bool
@@ -32,11 +37,7 @@ final class HasConfigYamlKey extends Constraint
             return false;
         }
 
-        $parsed = Yaml::parse(
-            (new ConfiguredFile(new TextFile('.piqule/config.yaml', $this->template), $other))->contents(),
-        );
-
-        return ($parsed['defaults'][$this->key] ?? null) === $this->expected;
+        return ($this->render($other)['defaults'][$this->key] ?? null) === $this->expected;
     }
 
     public function toString(): string
@@ -50,13 +51,17 @@ final class HasConfigYamlKey extends Constraint
             return "\nExpected a Config instance";
         }
 
-        $parsed = Yaml::parse(
-            (new ConfiguredFile(new TextFile('.piqule/config.yaml', $this->template), $other))->contents(),
-        );
-
-        $actual = $parsed['defaults'][$this->key] ?? null;
+        $actual = $this->render($other)['defaults'][$this->key] ?? null;
 
         return "\nExpected: " . var_export($this->expected, true)
             . "\nBut was:  " . var_export($actual, true);
+    }
+
+    /** @return array<string, mixed> */
+    private function render(Config $config): mixed
+    {
+        return Yaml::parse(
+            (new ConfiguredFile(new TextFile('.piqule/config.yaml', $this->template), $config))->contents(),
+        );
     }
 }
