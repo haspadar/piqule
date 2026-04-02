@@ -39,9 +39,9 @@ final class DefaultConfig implements Config
         $base = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml')['defaults'] ?? [];
 
         /** @var list<string> $resolvedInclude */
-        $resolvedInclude = $include !== [] ? $include : (isset($base['php.src']) && is_array($base['php.src']) ? $base['php.src'] : ['src']);
+        $resolvedInclude = $include ?: (is_array($base['php.src'] ?? null) ? $base['php.src'] : []);
         /** @var list<string> $resolvedExclude */
-        $resolvedExclude = $exclude !== [] ? $exclude : (isset($base['exclude']) && is_array($base['exclude']) ? $base['exclude'] : ['vendor', 'tests', '.git']);
+        $resolvedExclude = $exclude ?: (is_array($base['exclude'] ?? null) ? $base['exclude'] : []);
 
         $projectIncludes = (new ProjectDirs($resolvedInclude))->toList();
 
