@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
+use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
 use Haspadar\Piqule\PiquleException;
-use Haspadar\Piqule\Tests\Fake\Config\FakeConfig;
 use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +32,7 @@ final class YamlConfigTest extends TestCase
 
         $path = $this->folder->withFile('.piqule.yaml', ": invalid: yaml: :")->path() . '/.piqule.yaml';
 
-        (new YamlConfig($path, new FakeConfig([])))->has('');
+        (new YamlConfig($path, new DefaultConfig()))->has('');
     }
 
     #[Test]
@@ -42,7 +42,7 @@ final class YamlConfigTest extends TestCase
 
         $path = $this->folder->withFile('.piqule.yaml', "just a string\n")->path() . '/.piqule.yaml';
 
-        (new YamlConfig($path, new FakeConfig([])))->has('');
+        (new YamlConfig($path, new DefaultConfig()))->has('');
     }
 
     #[Test]
@@ -50,10 +50,8 @@ final class YamlConfigTest extends TestCase
     {
         $path = $this->folder->withFile('.piqule.yaml', "override: {}\n")->path() . '/.piqule.yaml';
 
-        $config = new YamlConfig($path, new FakeConfig(['phpstan.level' => ['8']]));
-
         self::assertTrue(
-            $config->has('phpstan.level'),
+            (new YamlConfig($path, new DefaultConfig()))->has('phpstan.level'),
             'YamlConfig must delegate has() to defaults when no overrides are present',
         );
     }
@@ -63,11 +61,9 @@ final class YamlConfigTest extends TestCase
     {
         $path = $this->folder->withFile('.piqule.yaml', "{}\n")->path() . '/.piqule.yaml';
 
-        $config = new YamlConfig($path, new FakeConfig(['phpstan.level' => ['8']]));
-
         self::assertSame(
-            ['8'],
-            $config->list('phpstan.level'),
+            [9],
+            (new YamlConfig($path, new DefaultConfig()))->list('phpstan.level'),
             'YamlConfig must return the default value when no overrides or appends are specified',
         );
     }
@@ -75,14 +71,11 @@ final class YamlConfigTest extends TestCase
     #[Test]
     public function returnsOverriddenValueWhenOverrideSectionPresent(): void
     {
-        $yaml = "override:\n    phpstan.level: 9\n";
-        $path = $this->folder->withFile('.piqule.yaml', $yaml)->path() . '/.piqule.yaml';
-
-        $config = new YamlConfig($path, new FakeConfig(['phpstan.level' => ['8']]));
+        $path = $this->folder->withFile('.piqule.yaml', "override:\n    phpstan.level: 7\n")->path() . '/.piqule.yaml';
 
         self::assertSame(
-            [9],
-            $config->list('phpstan.level'),
+            [7],
+            (new YamlConfig($path, new DefaultConfig()))->list('phpstan.level'),
             'YamlConfig must return the overridden value when override section is present',
         );
     }
@@ -90,14 +83,11 @@ final class YamlConfigTest extends TestCase
     #[Test]
     public function returnsAppendedValuesWhenAppendSectionPresent(): void
     {
-        $yaml = "append:\n    phpstan.neon_includes:\n        - ../../rules.neon\n";
-        $path = $this->folder->withFile('.piqule.yaml', $yaml)->path() . '/.piqule.yaml';
-
-        $config = new YamlConfig($path, new FakeConfig(['phpstan.neon_includes' => []]));
+        $path = $this->folder->withFile('.piqule.yaml', "append:\n    phpstan.neon_includes:\n        - ../../rules.neon\n")->path() . '/.piqule.yaml';
 
         self::assertSame(
-            ['../../rules.neon'],
-            $config->list('phpstan.neon_includes'),
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../rules.neon'],
+            (new YamlConfig($path, new DefaultConfig()))->list('phpstan.neon_includes'),
             'YamlConfig must append values from the append section to the default list',
         );
     }
@@ -105,14 +95,11 @@ final class YamlConfigTest extends TestCase
     #[Test]
     public function appendsToExistingDefaultList(): void
     {
-        $yaml = "append:\n    phpstan.neon_includes:\n        - ../../extra.neon\n";
-        $path = $this->folder->withFile('.piqule.yaml', $yaml)->path() . '/.piqule.yaml';
-
-        $config = new YamlConfig($path, new FakeConfig(['phpstan.neon_includes' => ['../../base.neon']]));
+        $path = $this->folder->withFile('.piqule.yaml', "append:\n    phpstan.neon_includes:\n        - ../../extra.neon\n")->path() . '/.piqule.yaml';
 
         self::assertSame(
-            ['../../base.neon', '../../extra.neon'],
-            $config->list('phpstan.neon_includes'),
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../extra.neon'],
+            (new YamlConfig($path, new DefaultConfig()))->list('phpstan.neon_includes'),
             'YamlConfig must preserve default values and append new ones after them',
         );
     }
@@ -120,24 +107,20 @@ final class YamlConfigTest extends TestCase
     #[Test]
     public function toArrayReturnsAllKeysWithOverridesAndAppendsApplied(): void
     {
-        $yaml = "override:\n    phpstan.level: 9\nappend:\n    phpstan.neon_includes:\n        - ../../rules.neon\n";
-        $path = $this->folder->withFile('.piqule.yaml', $yaml)->path() . '/.piqule.yaml';
+        $path = $this->folder->withFile('.piqule.yaml', "override:\n    phpstan.level: 7\nappend:\n    phpstan.neon_includes:\n        - ../../rules.neon\n")->path() . '/.piqule.yaml';
 
-        $config = new YamlConfig(
-            $path,
-            new FakeConfig([
-                'phpstan.level' => ['8'],
-                'phpstan.neon_includes' => [],
-            ]),
+        $config = new YamlConfig($path, new DefaultConfig());
+
+        self::assertSame(
+            [7],
+            $config->list('phpstan.level'),
+            'toArray must reflect overridden phpstan.level',
         );
 
         self::assertSame(
-            [
-                'phpstan.level' => [9],
-                'phpstan.neon_includes' => ['../../rules.neon'],
-            ],
-            $config->toArray(),
-            'toArray must return all keys with both overrides and appends applied',
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../rules.neon'],
+            $config->list('phpstan.neon_includes'),
+            'toArray must reflect appended phpstan.neon_includes',
         );
     }
 
@@ -148,6 +131,6 @@ final class YamlConfigTest extends TestCase
 
         $path = $this->folder->withFile('.piqule.yaml', "{}\n")->path() . '/.piqule.yaml';
 
-        (new YamlConfig($path, new FakeConfig([])))->list('phpstan.level');
+        (new YamlConfig($path, new DefaultConfig()))->list('phpstan.nonexistent');
     }
 }

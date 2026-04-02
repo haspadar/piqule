@@ -37,7 +37,7 @@ try {
     $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
 
     $config = match (true) {
-        file_exists($yamlPath)                     => new YamlConfig($yamlPath, $defaults->withYaml($yamlPath)),
+        file_exists($yamlPath)                     => new YamlConfig($yamlPath, $defaults),
         file_exists($projectRoot . '/.piqule.php') => require $projectRoot . '/.piqule.php',
         default                                    => $defaults,
     };

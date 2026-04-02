@@ -31,7 +31,7 @@ final readonly class YamlConfig implements Config
     private Config $config;
 
     /** @throws PiquleException */
-    public function __construct(string $path, Config $defaults)
+    public function __construct(string $path, DefaultConfig $defaults)
     {
         try {
             $data = Yaml::parseFile($path);
@@ -58,10 +58,35 @@ final readonly class YamlConfig implements Config
             ? $data['append']
             : [];
 
+        /** @var list<string> $include */
+        $include = isset($overrides['php.src']) && is_array($overrides['php.src'])
+            ? $overrides['php.src']
+            : $defaults->list('php.src');
+
+        /** @var list<string> $exclude */
+        $exclude = isset($overrides['exclude']) && is_array($overrides['exclude'])
+            ? $overrides['exclude']
+            : $defaults->list('exclude');
+
+        if (isset($appends['exclude']) && is_array($appends['exclude'])) {
+            /** @var list<string> $extra */
+            $extra = $appends['exclude'];
+            $exclude = array_values(array_unique(array_merge($exclude, $extra)));
+        }
+
+        if (isset($appends['php.src']) && is_array($appends['php.src'])) {
+            /** @var list<string> $extra */
+            $extra = $appends['php.src'];
+            $include = array_values(array_unique(array_merge($include, $extra)));
+        }
+
         $pathKeys = ['exclude', 'php.src'];
 
         $this->config = new AppendConfig(
-            new OverrideConfig($defaults, array_diff_key($overrides, array_flip($pathKeys))),
+            new OverrideConfig(
+                new DefaultConfig($include, $exclude, $defaults->composerJson()),
+                array_diff_key($overrides, array_flip($pathKeys)),
+            ),
             array_diff_key($appends, array_flip($pathKeys)),
         );
     }
