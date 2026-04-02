@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
 
@@ -38,7 +38,7 @@ final class DefaultConfig implements Config
         private readonly string $composerJson = '',
     ) {
         /** @var array<string, mixed> $yaml */
-        $yaml = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml');
+        $yaml = Yaml::parseFile(__DIR__ . '/../../templates/always/.piqule/config.yaml');
 
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];

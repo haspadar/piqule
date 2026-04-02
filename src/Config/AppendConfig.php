@@ -63,7 +63,6 @@ final readonly class AppendConfig implements Config
             }
         }
 
-        /** @var list<scalar> $appends */
         return [...$this->defaults->list($name), ...$appends];
     }
 
