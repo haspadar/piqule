@@ -50,9 +50,13 @@ final readonly class YamlConfig implements Config
         }
 
         /** @var array<string, mixed> $overrides */
-        $overrides = isset($data['override']) && is_array($data['override']) ? $data['override'] : [];
+        $overrides = isset($data['override']) && is_array($data['override'])
+            ? $data['override']
+            : [];
         /** @var array<string, list<scalar>> $appends */
-        $appends = isset($data['append']) && is_array($data['append']) ? $data['append'] : [];
+        $appends = isset($data['append']) && is_array($data['append'])
+            ? $data['append']
+            : [];
 
         $this->config = new AppendConfig(
             new OverrideConfig($defaults, $overrides),
@@ -76,9 +80,7 @@ final readonly class YamlConfig implements Config
         return $this->config->list($name);
     }
 
-    /**
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function toArray(): array
     {
