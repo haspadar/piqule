@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Config;
 
 use Haspadar\Piqule\PiquleException;
 use Override;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -30,12 +30,15 @@ final readonly class YamlConfig implements Config
 {
     private Config $config;
 
-    /** @throws PiquleException */
+    /**
+     * @throws PiquleException
+     * @throws YamlParseException
+     */
     public function __construct(string $path, DefaultConfig $defaults)
     {
         try {
             $data = Yaml::parseFile($path);
-        } catch (ParseException $e) {
+        } catch (YamlParseException $e) {
             throw new PiquleException(
                 sprintf('Failed to parse "%s": %s', $path, $e->getMessage()),
                 0,

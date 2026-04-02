@@ -10,6 +10,7 @@ use Haspadar\Piqule\Config\Dirs\ProjectDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingGlobDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingSlashDirs;
 use Override;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -29,7 +30,7 @@ final class DefaultConfig implements Config
     /**
      * @param list<string> $include
      * @param list<string> $exclude
-     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     * @throws ParseException
      */
     public function __construct(
         array $include = [],
@@ -40,47 +41,30 @@ final class DefaultConfig implements Config
         $yaml = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml');
 
         /** @var array<string, mixed> $base */
-        $base = isset($yaml['defaults']) && is_array($yaml['defaults']) ? $yaml['defaults'] : [];
+        $base = isset($yaml['defaults']) && is_array($yaml['defaults'])
+            ? $yaml['defaults']
+            : [];
 
+        /** @var list<string> $yamlInclude */
+        $yamlInclude = isset($base['php.src']) && is_array($base['php.src'])
+            ? $base['php.src']
+            : [];
         /** @var list<string> $resolvedInclude */
-        $resolvedInclude = $include !== [] ? $include : (isset($base['php.src']) && is_array($base['php.src']) ? $base['php.src'] : []);
+        $resolvedInclude = $include !== []
+            ? $include
+            : $yamlInclude;
+
+        /** @var list<string> $yamlExclude */
+        $yamlExclude = isset($base['exclude']) && is_array($base['exclude'])
+            ? $base['exclude']
+            : [];
         /** @var list<string> $resolvedExclude */
-        $resolvedExclude = $exclude !== [] ? $exclude : (isset($base['exclude']) && is_array($base['exclude']) ? $base['exclude'] : []);
-
-        $projectIncludes = (new ProjectDirs($resolvedInclude))->toList();
-
-        $dynamic = [
-            'php.src' => $resolvedInclude,
-            'exclude' => $resolvedExclude,
-            'hadolint.ignore' => $resolvedExclude,
-            'jsonlint.patterns' => array_merge(
-                ['**/*.json', '**/*.json5', '**/*.jsonc'],
-                (new NegatedGlobDirs($resolvedExclude))->toList(),
-            ),
-            'markdownlint.ignores' => (new TrailingGlobDirs($resolvedExclude))->toList(),
-            'php_cs_fixer.exclude' => $resolvedExclude,
-            'phpcs.excludes' => (new GlobDirs($resolvedExclude))->toList(),
-            'phpcs.files' => $projectIncludes,
-            'phpcs.root_namespace' => (new ComposerRootNamespace($composerJson))->toString(),
-            'phpmd.paths' => $resolvedInclude,
-            'phpmetrics.includes' => $projectIncludes,
-            'phpmetrics.excludes' => $resolvedExclude,
-            'phpstan.paths' => $projectIncludes,
-            'phpunit.source.include' => $projectIncludes,
-            'psalm.project.directories' => $projectIncludes,
-            'psalm.project.ignore' => (new ProjectDirs($resolvedExclude))->toList(),
-            'infection.source.directories' => $projectIncludes,
-            'shellcheck.ignore_dirs' => $resolvedExclude,
-            'sonar.sources' => $resolvedInclude,
-            'typos.exclude' => (new TrailingSlashDirs($resolvedExclude))->toList(),
-            'yamllint.ignore' => array_merge(
-                (new TrailingGlobDirs($resolvedExclude))->toList(),
-                ['.piqule/**/html/**', '.piqule/**/coverage-report/**'],
-            ),
-        ];
+        $resolvedExclude = $exclude !== []
+            ? $exclude
+            : $yamlExclude;
 
         /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $dynamic);
+        $defaults = array_merge($base, $this->dynamic($resolvedInclude, $resolvedExclude));
         $this->defaults = $defaults;
     }
 
@@ -121,5 +105,45 @@ final class DefaultConfig implements Config
     public function composerJson(): string
     {
         return $this->composerJson;
+    }
+
+    /**
+     * @param list<string> $include
+     * @param list<string> $exclude
+     * @return array<string, scalar|list<scalar>>
+     */
+    private function dynamic(array $include, array $exclude): array
+    {
+        $projectIncludes = (new ProjectDirs($include))->toList();
+
+        return [
+            'php.src' => $include,
+            'exclude' => $exclude,
+            'hadolint.ignore' => $exclude,
+            'jsonlint.patterns' => array_merge(
+                ['**/*.json', '**/*.json5', '**/*.jsonc'],
+                (new NegatedGlobDirs($exclude))->toList(),
+            ),
+            'markdownlint.ignores' => (new TrailingGlobDirs($exclude))->toList(),
+            'php_cs_fixer.exclude' => $exclude,
+            'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
+            'phpcs.files' => $projectIncludes,
+            'phpcs.root_namespace' => (new ComposerRootNamespace($this->composerJson))->toString(),
+            'phpmd.paths' => $include,
+            'phpmetrics.includes' => $projectIncludes,
+            'phpmetrics.excludes' => $exclude,
+            'phpstan.paths' => $projectIncludes,
+            'phpunit.source.include' => $projectIncludes,
+            'psalm.project.directories' => $projectIncludes,
+            'psalm.project.ignore' => (new ProjectDirs($exclude))->toList(),
+            'infection.source.directories' => $projectIncludes,
+            'shellcheck.ignore_dirs' => $exclude,
+            'sonar.sources' => $include,
+            'typos.exclude' => (new TrailingSlashDirs($exclude))->toList(),
+            'yamllint.ignore' => array_merge(
+                (new TrailingGlobDirs($exclude))->toList(),
+                ['.piqule/**/html/**', '.piqule/**/coverage-report/**'],
+            ),
+        ];
     }
 }

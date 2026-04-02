@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Config;
 
+use Haspadar\Piqule\PiquleException;
+
 /**
  * Resolves include and exclude lists from .piqule.yaml override/append sections,
  * cascading into DefaultConfig so all derived path keys reflect the project layout.
@@ -19,6 +21,7 @@ final readonly class YamlPathKeys
     /**
      * @param array<string, mixed> $overrides
      * @param array<string, mixed> $appends
+     * @throws PiquleException
      */
     public function __construct(array $overrides, array $appends, DefaultConfig $defaults)
     {
