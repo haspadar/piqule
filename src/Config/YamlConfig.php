@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Config;
 
 use Haspadar\Piqule\PiquleException;
 use Override;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -32,8 +33,15 @@ final readonly class YamlConfig implements Config
     /** @throws PiquleException */
     public function __construct(string $path, Config $defaults)
     {
-        /** @var array{override?: array<string, scalar>, append?: array<string, list<scalar>>}|null $data */
-        $data = Yaml::parseFile($path);
+        try {
+            $data = Yaml::parseFile($path);
+        } catch (ParseException $e) {
+            throw new PiquleException(
+                sprintf('Failed to parse "%s": %s', $path, $e->getMessage()),
+                0,
+                $e,
+            );
+        }
 
         if (!is_array($data)) {
             throw new PiquleException(
@@ -41,10 +49,10 @@ final readonly class YamlConfig implements Config
             );
         }
 
-        /** @var array<string, scalar|list<scalar>> $overrides */
-        $overrides = $data['override'] ?? [];
+        /** @var array<string, mixed> $overrides */
+        $overrides = isset($data['override']) && is_array($data['override']) ? $data['override'] : [];
         /** @var array<string, list<scalar>> $appends */
-        $appends = $data['append'] ?? [];
+        $appends = isset($data['append']) && is_array($data['append']) ? $data['append'] : [];
 
         $this->config = new AppendConfig(
             new OverrideConfig($defaults, $overrides),

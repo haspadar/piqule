@@ -50,6 +50,9 @@ final readonly class AppendConfig implements Config
         return [...$this->defaults->list($name), ...$this->appends[$name]];
     }
 
+    /**
+     * @throws PiquleException
+     */
     #[Override]
     public function toArray(): array
     {
