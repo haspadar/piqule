@@ -58,10 +58,16 @@ final class HasConfigYamlKey extends Constraint
     }
 
     /** @return array<string, mixed> */
-    private function render(Config $config): mixed
+    private function render(Config $config): array
     {
-        return Yaml::parse(
+        $data = Yaml::parse(
             (new ConfiguredFile(new TextFile('.piqule/config.yaml', $this->template), $config))->contents(),
         );
+
+        if (!is_array($data)) {
+            throw new \UnexpectedValueException('Rendered config.yaml did not parse to an array');
+        }
+
+        return $data;
     }
 }
