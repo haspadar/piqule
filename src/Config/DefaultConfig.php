@@ -42,10 +42,13 @@ final class DefaultConfig implements Config
     public function __construct(
         array $include = ['src'],
         array $exclude = ['vendor', 'tests', '.git'],
+        string $composerJson = '',
     ) {
         $phpVersion = ['8.3'];
         $projectIncludes = (new ProjectDirs($include))->toList();
         $globExcludes = (new GlobDirs($exclude))->toList();
+
+        $rootNamespace = (new ComposerRootNamespace($composerJson))->toString();
 
         $sections = [
             new CiSection($phpVersion, $phpVersion),
@@ -59,7 +62,7 @@ final class DefaultConfig implements Config
             new TyposSection($exclude),
             new YamllintSection($exclude),
             new PhpCsFixerSection($exclude),
-            new PhpCsSection($projectIncludes, $globExcludes),
+            new PhpCsSection($projectIncludes, $globExcludes, $rootNamespace),
             new PhpMdSection($include),
             new PhpMetricsSection($projectIncludes, $exclude),
             new PhpStanSection($projectIncludes),
@@ -103,5 +106,11 @@ final class DefaultConfig implements Config
         return is_scalar($value)
             ? [$value]
             : $value;
+    }
+
+    #[Override]
+    public function toArray(): array
+    {
+        return $this->defaults;
     }
 }
