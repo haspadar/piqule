@@ -13,7 +13,7 @@ use Haspadar\Piqule\PiquleException;
 final readonly class YamlPathKeys
 {
     /** @var list<string> */
-    private array $include;
+    private array $phpSrc;
 
     /** @var list<string> */
     private array $exclude;
@@ -25,7 +25,7 @@ final readonly class YamlPathKeys
      */
     public function __construct(array $overrides, array $appends, DefaultConfig $defaults)
     {
-        $include = isset($overrides['php.src']) && is_array($overrides['php.src'])
+        $phpSrc = isset($overrides['php.src']) && is_array($overrides['php.src'])
             ? $this->toStringList($overrides['php.src'], 'override.php.src')
             : $this->toStringList($defaults->list('php.src'), 'php.src');
 
@@ -41,11 +41,11 @@ final readonly class YamlPathKeys
 
         if (isset($appends['php.src']) && is_array($appends['php.src'])) {
             $extra = $this->toStringList($appends['php.src'], 'append.php.src');
-            /** @var list<string> $include */
-            $include = array_values(array_unique(array_merge($include, $extra)));
+            /** @var list<string> $phpSrc */
+            $phpSrc = array_values(array_unique(array_merge($phpSrc, $extra)));
         }
 
-        $this->include = $include;
+        $this->phpSrc = $phpSrc;
         $this->exclude = $exclude;
     }
 
@@ -72,9 +72,9 @@ final readonly class YamlPathKeys
     }
 
     /** @return list<string> */
-    public function include(): array
+    public function phpSrc(): array
     {
-        return $this->include;
+        return $this->phpSrc;
     }
 
     /** @return list<string> */
