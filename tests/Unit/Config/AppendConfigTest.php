@@ -106,6 +106,39 @@ final class AppendConfigTest extends TestCase
     }
 
     #[Test]
+    public function throwsWhenAppendValueIsAssociativeArray(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new AppendConfig(
+            new FakeConfig(['phpstan.neon_includes' => []]),
+            ['phpstan.neon_includes' => ['key' => 'value']],
+        ))->list('phpstan.neon_includes');
+    }
+
+    #[Test]
+    public function throwsWhenAppendValueIsScalar(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new AppendConfig(
+            new FakeConfig(['phpstan.neon_includes' => []]),
+            ['phpstan.neon_includes' => '../../rules.neon'],
+        ))->list('phpstan.neon_includes');
+    }
+
+    #[Test]
+    public function throwsWhenAppendListContainsNonScalar(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new AppendConfig(
+            new FakeConfig(['phpstan.neon_includes' => []]),
+            ['phpstan.neon_includes' => [['nested']]],
+        ))->list('phpstan.neon_includes');
+    }
+
+    #[Test]
     public function toArrayReturnsAllKeysUnchangedWhenNoAppends(): void
     {
         self::assertSame(

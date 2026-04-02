@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
 use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -133,17 +134,14 @@ final class DefaultConfigTest extends TestCase
     #[Test]
     public function usesRootNamespaceFromComposerJson(): void
     {
-        $folder = sys_get_temp_dir() . '/piqule-test-' . uniqid('', true);
-        mkdir($folder, 0o755);
-        file_put_contents(
-            $folder . '/composer.json',
+        $folder = (new TempFolder())->withFile(
+            'composer.json',
             '{"autoload":{"psr-4":{"Acme\\\\":"src/"}}}',
         );
 
-        $namespace = (new DefaultConfig(composerJson: $folder . '/composer.json'))->list('phpcs.root_namespace');
+        $namespace = (new DefaultConfig(composerJson: $folder->path() . '/composer.json'))->list('phpcs.root_namespace');
 
-        array_map('unlink', glob($folder . '/*') ?: []);
-        rmdir($folder);
+        $folder->close();
 
         self::assertSame(
             ['Acme'],
