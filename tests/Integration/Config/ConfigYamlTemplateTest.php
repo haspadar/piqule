@@ -56,25 +56,28 @@ final class ConfigYamlTemplateTest extends TestCase
             "override:\n    phpstan.level: 7\nappend:\n    exclude:\n        - legacy\n",
         );
 
-        $config = new YamlConfig(
-            $folder->path() . '/.piqule.yaml',
-            new DefaultConfig(),
-        );
+        try {
+            $config = new YamlConfig(
+                $folder->path() . '/.piqule.yaml',
+                new DefaultConfig(),
+            );
 
-        $rendered = (new ConfiguredFile(
-            new TextFile('.piqule/config.yaml', $template),
-            $config,
-        ))->contents();
+            $rendered = (new ConfiguredFile(
+                new TextFile('.piqule/config.yaml', $template),
+                $config,
+            ))->contents();
 
-        $parsed = Yaml::parse($rendered);
+            $parsed = Yaml::parse($rendered);
 
-        self::assertIsArray($parsed);
+            self::assertIsArray($parsed);
 
-        $defaults = $parsed['defaults'];
+            $defaults = $parsed['defaults'];
 
-        self::assertSame(7, $defaults['phpstan.level'], 'Override must replace phpstan.level with 7');
-        self::assertContains('legacy', $defaults['exclude'], 'Append must add "legacy" to exclude list');
-
-        $folder->close();
+            self::assertSame(7, $defaults['phpstan.level'], 'Override must replace phpstan.level with 7');
+            self::assertContains('legacy', $defaults['exclude'], 'Append must add "legacy" to exclude list');
+            self::assertContains('vendor', $defaults['exclude'], 'Append must preserve existing default excludes');
+        } finally {
+            $folder->close();
+        }
     }
 }
