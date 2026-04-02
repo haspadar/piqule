@@ -29,19 +29,23 @@ final class DefaultConfig implements Config
     /**
      * @param list<string> $include
      * @param list<string> $exclude
+     * @throws \Symfony\Component\Yaml\Exception\ParseException
      */
     public function __construct(
         array $include = [],
         array $exclude = [],
         private readonly string $composerJson = '',
     ) {
+        /** @var array<string, mixed> $yaml */
+        $yaml = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml');
+
         /** @var array<string, mixed> $base */
-        $base = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml')['defaults'] ?? [];
+        $base = isset($yaml['defaults']) && is_array($yaml['defaults']) ? $yaml['defaults'] : [];
 
         /** @var list<string> $resolvedInclude */
-        $resolvedInclude = $include ?: (is_array($base['php.src'] ?? null) ? $base['php.src'] : []);
+        $resolvedInclude = $include !== [] ? $include : (isset($base['php.src']) && is_array($base['php.src']) ? $base['php.src'] : []);
         /** @var list<string> $resolvedExclude */
-        $resolvedExclude = $exclude ?: (is_array($base['exclude'] ?? null) ? $base['exclude'] : []);
+        $resolvedExclude = $exclude !== [] ? $exclude : (isset($base['exclude']) && is_array($base['exclude']) ? $base['exclude'] : []);
 
         $projectIncludes = (new ProjectDirs($resolvedInclude))->toList();
 
