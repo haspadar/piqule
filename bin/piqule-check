@@ -18,10 +18,21 @@ if ($cwd === false) {
 $projectRoot = $cwd;
 
 $yamlPath = $projectRoot . '/.piqule.yaml';
-$defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+
+try {
+    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+} catch (Throwable $e) {
+    fwrite(STDERR, "Failed to load default config: {$e->getMessage()}\n");
+    exit(1);
+}
 
 if (file_exists($yamlPath)) {
-    $config = new YamlConfig($yamlPath, $defaults);
+    try {
+        $config = new YamlConfig($yamlPath, $defaults);
+    } catch (Throwable $e) {
+        fwrite(STDERR, "Failed to load .piqule.yaml: {$e->getMessage()}\n");
+        exit(1);
+    }
 } elseif (file_exists($projectRoot . '/.piqule.php')) {
     $loaded = require $projectRoot . '/.piqule.php';
 
