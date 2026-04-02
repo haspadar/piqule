@@ -5,31 +5,17 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Constraint\Config;
 
 use Haspadar\Piqule\Config\Config;
-use Haspadar\Piqule\File\ConfiguredFile;
-use Haspadar\Piqule\File\TextFile;
 use PHPUnit\Framework\Constraint\Constraint;
-use Symfony\Component\Yaml\Yaml;
 
 /**
- * Asserts that a rendered config.yaml contains an expected value under defaults.<key>.
+ * Asserts that a Config instance returns an expected value for a given key.
  */
 final class HasConfigYamlKey extends Constraint
 {
-    private readonly string $template;
-
     public function __construct(
         private readonly string $key,
         private readonly mixed $expected,
-    ) {
-        $templatePath = dirname(__DIR__, 3) . '/templates/always/.piqule/config.yaml';
-        $contents = file_get_contents($templatePath);
-
-        if ($contents === false) {
-            throw new \RuntimeException("Cannot read template: {$templatePath}");
-        }
-
-        $this->template = $contents;
-    }
+    ) {}
 
     protected function matches(mixed $other): bool
     {
@@ -37,12 +23,12 @@ final class HasConfigYamlKey extends Constraint
             return false;
         }
 
-        return ($this->render($other)['defaults'][$this->key] ?? null) === $this->expected;
+        return $this->actual($other) === $this->expected;
     }
 
     public function toString(): string
     {
-        return 'has defaults.' . $this->key . ' === ' . var_export($this->expected, true);
+        return 'has ' . $this->key . ' === ' . var_export($this->expected, true);
     }
 
     protected function additionalFailureDescription(mixed $other): string
@@ -51,23 +37,19 @@ final class HasConfigYamlKey extends Constraint
             return "\nExpected a Config instance";
         }
 
-        $actual = $this->render($other)['defaults'][$this->key] ?? null;
-
         return "\nExpected: " . var_export($this->expected, true)
-            . "\nBut was:  " . var_export($actual, true);
+            . "\nBut was:  " . var_export($this->actual($other), true);
     }
 
-    /** @return array<string, mixed> */
-    private function render(Config $config): array
+    /** @return list<scalar>|scalar */
+    private function actual(Config $config): mixed
     {
-        $data = Yaml::parse(
-            (new ConfiguredFile(new TextFile('.piqule/config.yaml', $this->template), $config))->contents(),
-        );
+        $list = $config->list($this->key);
 
-        if (!is_array($data)) {
-            throw new \UnexpectedValueException('Rendered config.yaml did not parse to an array');
+        if (is_scalar($this->expected)) {
+            return count($list) === 1 ? $list[0] : $list;
         }
 
-        return $data;
+        return $list;
     }
 }

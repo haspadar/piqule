@@ -14,12 +14,12 @@ use PHPUnit\Framework\TestCase;
 final class ConfigYamlTemplateTest extends TestCase
 {
     #[Test]
-    public function rendersValidYaml(): void
+    public function defaultsAreAvailable(): void
     {
         self::assertThat(
             new DefaultConfig(),
             new HasConfigYamlKey('php.src', ['src']),
-            'Rendered config.yaml must be valid YAML with a defaults section',
+            'DefaultConfig must expose php.src default',
         );
     }
 
@@ -59,5 +59,72 @@ final class ConfigYamlTemplateTest extends TestCase
         } finally {
             $folder->close();
         }
+    }
+
+    #[Test]
+    public function overrideExcludeCascadesToDerivedKeys(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "override:\n    exclude:\n        - build\n",
+        );
+
+        try {
+            self::assertThat(
+                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new HasConfigYamlKey('shellcheck.ignore_dirs', ['build']),
+                'Override exclude must cascade to shellcheck.ignore_dirs',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
+
+    #[Test]
+    public function overridePhpSrcCascadesToDerivedKeys(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "override:\n    php.src:\n        - lib\n",
+        );
+
+        try {
+            self::assertThat(
+                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new HasConfigYamlKey('phpmd.paths', ['lib']),
+                'Override php.src must cascade to phpmd.paths',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
+
+    #[Test]
+    public function appendPhpSrcCascadesToDerivedKeys(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "append:\n    php.src:\n        - lib\n",
+        );
+
+        try {
+            self::assertThat(
+                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new HasConfigYamlKey('phpmd.paths', ['src', 'lib']),
+                'Append php.src must cascade to phpmd.paths',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
+
+    #[Test]
+    public function customIncludeCascadesToDerivedKeys(): void
+    {
+        self::assertThat(
+            new DefaultConfig(['lib', 'app']),
+            new HasConfigYamlKey('phpmd.paths', ['lib', 'app']),
+            'Custom include must cascade to phpmd.paths',
+        );
     }
 }

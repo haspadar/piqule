@@ -6,7 +6,7 @@ namespace Haspadar\Piqule\Config;
 
 use Haspadar\Piqule\PiquleException;
 use Override;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -30,12 +30,15 @@ final readonly class YamlConfig implements Config
 {
     private Config $config;
 
-    /** @throws PiquleException */
-    public function __construct(string $path, Config $defaults)
+    /**
+     * @throws PiquleException
+     * @throws YamlParseException
+     */
+    public function __construct(string $path, DefaultConfig $defaults)
     {
         try {
             $data = Yaml::parseFile($path);
-        } catch (ParseException $e) {
+        } catch (YamlParseException $e) {
             throw new PiquleException(
                 sprintf('Failed to parse "%s": %s', $path, $e->getMessage()),
                 0,
@@ -58,9 +61,15 @@ final readonly class YamlConfig implements Config
             ? $data['append']
             : [];
 
+        $pathKeys = new YamlPathKeys($overrides, $appends, $defaults);
+        $remaining = ['exclude', 'php.src'];
+
         $this->config = new AppendConfig(
-            new OverrideConfig($defaults, $overrides),
-            $appends,
+            new OverrideConfig(
+                new DefaultConfig($pathKeys->include(), $pathKeys->exclude(), $defaults->composerJson()),
+                array_diff_key($overrides, array_flip($remaining)),
+            ),
+            array_diff_key($appends, array_flip($remaining)),
         );
     }
 
