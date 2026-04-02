@@ -11,7 +11,7 @@ return new OverrideConfig(
     ),
     [
         'phpmetrics.coupling.max_efferent' => [25],
-        'ci.php.matrix' => ['8.3', '8.4', '8.5'],
+        'php.versions' => ['8.3', '8.4', '8.5'],
         'ci.pr.max_lines_changed' => 2000,
         'ci.piqule_bin' => 'bin/piqule',
         'sonar.organization' => ['haspadar-org'],

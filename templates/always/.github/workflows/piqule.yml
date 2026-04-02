@@ -55,7 +55,7 @@ jobs:
 
       - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
         with:
-          php-version: << config(ci.php.test_version)|join("") >>
+          php-version: << config(php.versions)|first() >>
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -76,7 +76,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [<< config(ci.php.matrix)|format_each('"%s"')|join(", ") >>]
+        php: [<< config(php.versions)|format_each('"%s"')|join(", ") >>]
         check:
           - phpcs
           - phpstan
@@ -103,7 +103,7 @@ jobs:
   # PHP TESTS + COVERAGE + MUTATION
   # ============================================================
   php-tests:
-    name: Tests / Coverage / Mutation (PHP 8.3)
+    name: Tests / Coverage / Mutation (PHP << config(php.versions)|first() >>)
     runs-on: ubuntu-latest
     needs: php-static
     permissions:
@@ -114,7 +114,7 @@ jobs:
 
       - uses: shivammathur/setup-php@690cb7c9d81dbfe51eba732cfca0a00ca42db777
         with:
-          php-version: << config(ci.php.test_version)|join("") >>
+          php-version: << config(php.versions)|first() >>
           coverage: xdebug
           extensions: mbstring, dom, json
 

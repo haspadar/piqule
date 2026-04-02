@@ -90,12 +90,12 @@ final class DefaultConfigTest extends TestCase
     }
 
     #[Test]
-    public function defaultsIncludeToSrc(): void
+    public function defaultsPhpSrcToSrc(): void
     {
         self::assertSame(
             ['src'],
-            (new DefaultConfig())->list('dirs.include'),
-            'dirs.include must default to src',
+            (new DefaultConfig())->list('php.src'),
+            'php.src must default to src',
         );
     }
 
@@ -104,18 +104,18 @@ final class DefaultConfigTest extends TestCase
     {
         self::assertSame(
             ['vendor', 'tests', '.git'],
-            (new DefaultConfig())->list('dirs.exclude'),
-            'dirs.exclude must default to vendor, tests, .git',
+            (new DefaultConfig())->list('exclude'),
+            'exclude must default to vendor, tests, .git',
         );
     }
 
     #[Test]
-    public function defaultsPhpVersionTo83(): void
+    public function defaultsPhpVersionsTo83(): void
     {
         self::assertSame(
             ['8.3'],
-            (new DefaultConfig())->list('php.version'),
-            'php.version must default to 8.3',
+            (new DefaultConfig())->list('php.versions'),
+            'php.versions must default to 8.3',
         );
     }
 

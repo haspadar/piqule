@@ -18,9 +18,9 @@ final class OverrideConfigTest extends TestCase
     {
         self::assertTrue(
             (new OverrideConfig(
-                new FakeConfig(['ci.php.matrix' => ['8.3']]),
-                ['ci.php.matrix' => '8.4'],
-            ))->has('ci.php.matrix'),
+                new FakeConfig(['php.versions' => ['8.3']]),
+                ['php.versions' => '8.4'],
+            ))->has('php.versions'),
             'OverrideConfig must report a declared key as present',
         );
     }

@@ -51,7 +51,7 @@ final class DefaultConfig implements Config
         $rootNamespace = (new ComposerRootNamespace($composerJson))->toString();
 
         $sections = [
-            new CiSection($phpVersion, $phpVersion),
+            new CiSection($phpVersion),
             new CoverageSection(),
             new DockerSection(),
             new ActionlintSection(),
@@ -74,7 +74,7 @@ final class DefaultConfig implements Config
 
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge(
-            ['dirs.include' => $include, 'dirs.exclude' => $exclude, 'php.version' => $phpVersion],
+            ['php.src' => $include, 'exclude' => $exclude],
             ...array_map(static fn($s) => $s->toArray(), $sections),
         );
         $this->defaults = $defaults;

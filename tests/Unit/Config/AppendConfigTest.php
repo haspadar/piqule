@@ -68,9 +68,9 @@ final class AppendConfigTest extends TestCase
         self::assertSame(
             ['legacy', 'generated'],
             (new AppendConfig(
-                new FakeConfig(['dirs.exclude' => []]),
-                ['dirs.exclude' => ['legacy', 'generated']],
-            ))->list('dirs.exclude'),
+                new FakeConfig(['exclude' => []]),
+                ['exclude' => ['legacy', 'generated']],
+            ))->list('exclude'),
             'AppendConfig must append to an empty default list',
         );
     }
@@ -92,12 +92,12 @@ final class AppendConfigTest extends TestCase
         self::assertSame(
             [
                 'phpstan.neon_includes' => ['../../rules.neon', '../../extra.neon'],
-                'dirs.exclude' => ['vendor', 'tests'],
+                'exclude' => ['vendor', 'tests'],
             ],
             (new AppendConfig(
                 new FakeConfig([
                     'phpstan.neon_includes' => ['../../rules.neon'],
-                    'dirs.exclude' => ['vendor', 'tests'],
+                    'exclude' => ['vendor', 'tests'],
                 ]),
                 ['phpstan.neon_includes' => ['../../extra.neon']],
             ))->toArray(),
