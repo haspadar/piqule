@@ -78,6 +78,7 @@ use Override;
  *   'phpunit.testsuites.unit'?: list<string>,
  *   'psalm.error_level'?: list<int|float>,
  *   'psalm.project.directories'?: list<string>,
+ *   'psalm.project.files'?: list<string>,
  *   'psalm.project.ignore'?: list<string>,
  *   'shellcheck.exclude'?: list<string>,
  *   'shellcheck.external_sources'?: bool,
