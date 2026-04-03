@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
 use Haspadar\Piqule\Config\DefaultConfig;
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Fixture\TempFolder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -148,5 +149,20 @@ final class DefaultConfigTest extends TestCase
             $namespace,
             'DefaultConfig must extract root namespace from composer.json psr-4 section',
         );
+    }
+
+    #[Test]
+    public function throwsWhenConfigYamlHasNoDefaultsSection(): void
+    {
+        $folder = (new TempFolder())->withFile('empty.yaml', 'root: true');
+
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Missing "defaults" section');
+
+        try {
+            new DefaultConfig(configPath: $folder->path() . '/empty.yaml');
+        } finally {
+            $folder->close();
+        }
     }
 }
