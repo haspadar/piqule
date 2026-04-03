@@ -17,9 +17,18 @@ $output = new Console();
 
 $projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
 
-$config = file_exists($projectRoot . '/.piqule.php')
-    ? require $projectRoot . '/.piqule.php'
-    : new OverrideConfig(new DefaultConfig(), []);
+if (file_exists($projectRoot . '/.piqule.php')) {
+    $loaded = require $projectRoot . '/.piqule.php';
+
+    if (!$loaded instanceof Config) {
+        $output->error('.piqule.php must return an instance of Config');
+        exit(1);
+    }
+
+    $config = $loaded;
+} else {
+    $config = new OverrideConfig(new DefaultConfig(), []);
+}
 
 $tokens = new Tokens([
     new CodecovToken(),
@@ -59,9 +68,11 @@ if ($secretsStatus !== 0) {
 $decoded = json_decode(implode('', $secretsJson), true) ?? [];
 $existing = array_column($decoded, 'name');
 
+$repoOut = [];
 exec('gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null', $repoOut, $repoStatus);
 
-$repo = $repoStatus === 0 ? trim($repoOut[0] ?? '') : '';
+$repoLines = array_values(array_filter($repoOut, 'is_string'));
+$repo = $repoStatus === 0 && $repoLines !== [] ? trim($repoLines[0]) : '';
 $org = $repo !== '' ? explode('/', $repo)[0] : '';
 
 foreach ($enabled as $token) {
