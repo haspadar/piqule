@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
-use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Config\YamlConfig;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Token\CodecovToken;
 use Haspadar\Piqule\Token\InfectionToken;
@@ -16,10 +16,34 @@ require_once __DIR__ . '/bootstrap-autoload.php';
 $output = new Console();
 
 $projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
+$yamlPath = $projectRoot . '/.piqule.yaml';
 
-$config = file_exists($projectRoot . '/.piqule.php')
-    ? require $projectRoot . '/.piqule.php'
-    : new OverrideConfig(new DefaultConfig(), []);
+try {
+    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+} catch (Throwable $e) {
+    $output->error("Failed to load default config: {$e->getMessage()}");
+    exit(1);
+}
+
+if (file_exists($yamlPath)) {
+    try {
+        $config = new YamlConfig($yamlPath, $defaults);
+    } catch (Throwable $e) {
+        $output->error("Failed to load .piqule.yaml: {$e->getMessage()}");
+        exit(1);
+    }
+} elseif (file_exists($projectRoot . '/.piqule.php')) {
+    $loaded = require $projectRoot . '/.piqule.php';
+
+    if (!$loaded instanceof Config) {
+        $output->error('.piqule.php must return an instance of Config');
+        exit(1);
+    }
+
+    $config = $loaded;
+} else {
+    $config = $defaults;
+}
 
 $tokens = new Tokens([
     new CodecovToken(),
@@ -59,9 +83,11 @@ if ($secretsStatus !== 0) {
 $decoded = json_decode(implode('', $secretsJson), true) ?? [];
 $existing = array_column($decoded, 'name');
 
+$repoOut = [];
 exec('gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null', $repoOut, $repoStatus);
 
-$repo = $repoStatus === 0 ? trim($repoOut[0] ?? '') : '';
+$repoLines = array_values(array_filter($repoOut, 'is_string'));
+$repo = $repoStatus === 0 && $repoLines !== [] ? trim($repoLines[0]) : '';
 $org = $repo !== '' ? explode('/', $repo)[0] : '';
 
 foreach ($enabled as $token) {

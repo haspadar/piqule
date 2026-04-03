@@ -9,6 +9,7 @@ use Haspadar\Piqule\Config\Dirs\NegatedGlobDirs;
 use Haspadar\Piqule\Config\Dirs\ProjectDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingGlobDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingSlashDirs;
+use Haspadar\Piqule\PiquleException;
 use Override;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
@@ -31,14 +32,20 @@ final class DefaultConfig implements Config
      * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @throws ParseException
+     * @throws PiquleException
      */
     public function __construct(
         array $phpSrc = [],
         array $exclude = [],
         private readonly string $composerJson = '',
+        string $configPath = __DIR__ . '/../../templates/always/.piqule/config.yaml',
     ) {
         /** @var array<string, mixed> $yaml */
-        $yaml = Yaml::parseFile(__DIR__ . '/../../templates/always/.piqule/config.yaml');
+        $yaml = Yaml::parseFile($configPath);
+
+        if (!array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
+            throw new PiquleException('Missing "defaults" section in config.yaml');
+        }
 
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];
@@ -46,12 +53,12 @@ final class DefaultConfig implements Config
         /** @var list<string> $resolvedPhpSrc */
         $resolvedPhpSrc = $phpSrc !== []
             ? $phpSrc
-            : $base['php.src'];
+            : ($base['php.src'] ?? []);
 
         /** @var list<string> $resolvedExclude */
         $resolvedExclude = $exclude !== []
             ? $exclude
-            : $base['exclude'];
+            : ($base['exclude'] ?? []);
 
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));

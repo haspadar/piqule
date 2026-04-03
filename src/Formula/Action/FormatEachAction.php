@@ -22,7 +22,7 @@ final readonly class FormatEachAction implements Action
     {
         $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
         $templateValues = $templateArgs->values();
-        $template = (string) $templateValues[0];
+        $template = (string) ($templateValues[0] ?? '');
 
         return new ListArgs(
             array_map(

@@ -2,15 +2,29 @@
 <psalm
         errorLevel="<< config(psalm.error_level)|join("") >>"
         xmlns="https://getpsalm.org/schema/config"
-        findUnusedCode="false"
+        findUnusedCode="true"
+        findUnusedBaselineEntry="true"
+        ensureArrayStringOffsetsExist="true"
+        reportMixedIssues="true"
 >
     <projectFiles>
 << config(psalm.project.directories)|format_each('        <directory name="%s" />')|join("\n") >>
+<< config(psalm.project.files)|format_each('        <file name="%s" />')|join("\n") >>
         <ignoreFiles>
 << config(psalm.project.ignore)|format_each('            <directory name="%s" />')|join("\n") >>
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
         <InvalidAttribute errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress">
+            <errorLevel type="suppress">
+<< config(psalm.project.directories)|format_each('                <directory name="%s" />')|join("\n") >>
+            </errorLevel>
+        </UnusedClass>
+        <UnresolvableInclude errorLevel="suppress">
+            <errorLevel type="suppress">
+<< config(psalm.project.files)|format_each('                <file name="%s" />')|join("\n") >>
+            </errorLevel>
+        </UnresolvableInclude>
     </issueHandlers>
 </psalm>

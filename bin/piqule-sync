@@ -30,17 +30,30 @@ try {
     $projectRoot = getcwd()
         ?: throw new PiquleException('Cannot determine current working directory');
 
-    $libraryRoot = Composer\InstalledVersions::getInstallPath('haspadar/piqule')
-        ?: throw new PiquleException('Cannot determine piqule install path');
+    $installPath = Composer\InstalledVersions::getInstallPath('haspadar/piqule');
+
+    if ($installPath === null || $installPath === '') {
+        throw new PiquleException('Cannot determine piqule install path');
+    }
+
+    $libraryRoot = $installPath;
 
     $yamlPath = $projectRoot . '/.piqule.yaml';
     $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
 
-    $config = match (true) {
-        file_exists($yamlPath)                     => new YamlConfig($yamlPath, $defaults),
-        file_exists($projectRoot . '/.piqule.php') => require $projectRoot . '/.piqule.php',
-        default                                    => $defaults,
-    };
+    if (file_exists($yamlPath)) {
+        $config = new YamlConfig($yamlPath, $defaults);
+    } elseif (file_exists($projectRoot . '/.piqule.php')) {
+        $loaded = require $projectRoot . '/.piqule.php';
+
+        if (!$loaded instanceof Config) {
+            throw new PiquleException('.piqule.php must return an instance of Config');
+        }
+
+        $config = $loaded;
+    } else {
+        $config = $defaults;
+    }
 
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);

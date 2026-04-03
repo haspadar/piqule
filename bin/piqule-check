@@ -77,9 +77,9 @@ $total = $requested !== ''
     : count(array_filter($checks, $isEnabled));
 $current = 0;
 
-$green = static fn(string $s) => "\033[32m{$s}\033[0m\n";
-$blue = static fn(string $s) => "\033[34m{$s}\033[0m\n";
-$red = static fn(string $s) => "\033[31m{$s}\033[0m\n";
+$green = static fn(string $s): string => "\033[32m{$s}\033[0m\n";
+$blue = static fn(string $s): string => "\033[34m{$s}\033[0m\n";
+$red = static fn(string $s): string => "\033[31m{$s}\033[0m\n";
 
 $runCheck = static function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current,): bool {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";

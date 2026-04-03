@@ -2,10 +2,18 @@
 <psalm
         errorLevel="1"
         xmlns="https://getpsalm.org/schema/config"
-        findUnusedCode="false"
+        findUnusedCode="true"
+        findUnusedBaselineEntry="true"
+        ensureArrayStringOffsetsExist="true"
+        reportMixedIssues="true"
 >
     <projectFiles>
         <directory name="../../src" />
+        <file name="../../bin/piqule" />
+        <file name="../../bin/piqule-check" />
+        <file name="../../bin/piqule-fix" />
+        <file name="../../bin/piqule-sync" />
+        <file name="../../bin/piqule-tokens-check" />
         <ignoreFiles>
             <directory name="../../vendor" />
             <directory name="../../tests" />
@@ -15,5 +23,19 @@
     </projectFiles>
     <issueHandlers>
         <InvalidAttribute errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress">
+            <errorLevel type="suppress">
+                <directory name="../../src" />
+            </errorLevel>
+        </UnusedClass>
+        <UnresolvableInclude errorLevel="suppress">
+            <errorLevel type="suppress">
+                <file name="../../bin/piqule" />
+                <file name="../../bin/piqule-check" />
+                <file name="../../bin/piqule-fix" />
+                <file name="../../bin/piqule-sync" />
+                <file name="../../bin/piqule-tokens-check" />
+            </errorLevel>
+        </UnresolvableInclude>
     </issueHandlers>
 </psalm>

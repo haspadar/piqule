@@ -35,13 +35,11 @@ final readonly class YamlPathKeys
 
         if (array_key_exists('exclude', $appends) && is_array($appends['exclude'])) {
             $extra = $this->toStringList(array_values($appends['exclude']), 'append.exclude');
-            /** @var list<string> $exclude */
             $exclude = array_values(array_unique(array_merge($exclude, $extra)));
         }
 
         if (array_key_exists('php.src', $appends) && is_array($appends['php.src'])) {
             $extra = $this->toStringList(array_values($appends['php.src']), 'append.php.src');
-            /** @var list<string> $phpSrc */
             $phpSrc = array_values(array_unique(array_merge($phpSrc, $extra)));
         }
 
