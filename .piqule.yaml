@@ -5,6 +5,12 @@ override:
   ci.piqule_bin: bin/piqule
   sonar.organization: haspadar-org
   sonar.projectKey: haspadar_piqule
+  psalm.project.files:
+    - "../../bin/piqule"
+    - "../../bin/piqule-check"
+    - "../../bin/piqule-fix"
+    - "../../bin/piqule-sync"
+    - "../../bin/piqule-tokens-check"
 
 append:
   exclude:
