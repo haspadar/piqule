@@ -42,7 +42,7 @@ final class DefaultConfig implements Config
         /** @var array<string, mixed> $yaml */
         $yaml = Yaml::parseFile(__DIR__ . '/../../templates/always/.piqule/config.yaml');
 
-        if (!isset($yaml['defaults']) || !is_array($yaml['defaults'])) {
+        if (!array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
             throw new PiquleException('Missing "defaults" section in config.yaml');
         }
 
