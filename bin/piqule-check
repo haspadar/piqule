@@ -5,21 +5,45 @@ declare(strict_types=1);
 
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
-use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Config\YamlConfig;
 
 require_once __DIR__ . '/bootstrap-autoload.php';
 
-$projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
+$cwd = getcwd();
 
-if (file_exists($projectRoot . '/.piqule.php')) {
+if ($cwd === false) {
+    throw new RuntimeException('Cannot determine cwd');
+}
+
+$projectRoot = $cwd;
+
+$yamlPath = $projectRoot . '/.piqule.yaml';
+
+try {
+    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+} catch (Throwable $e) {
+    fwrite(STDERR, "Failed to load default config: {$e->getMessage()}\n");
+    exit(1);
+}
+
+if (file_exists($yamlPath)) {
+    try {
+        $config = new YamlConfig($yamlPath, $defaults);
+    } catch (Throwable $e) {
+        fwrite(STDERR, "Failed to load .piqule.yaml: {$e->getMessage()}\n");
+        exit(1);
+    }
+} elseif (file_exists($projectRoot . '/.piqule.php')) {
     $loaded = require $projectRoot . '/.piqule.php';
+
     if (!$loaded instanceof Config) {
         fwrite(STDERR, ".piqule.php must return an instance of Config\n");
         exit(1);
     }
+
     $config = $loaded;
 } else {
-    $config = new OverrideConfig(new DefaultConfig(), []);
+    $config = $defaults;
 }
 
 $requested = $argv[1] ?? '';
@@ -42,34 +66,40 @@ $checks = [
     'infection',
 ];
 
-$isEnabled = function(string $key) use ($config): bool {
+$isEnabled = static function(string $key) use ($config): bool {
     $enabledKey = "{$key}.enabled";
+
     return !$config->has($enabledKey) || (bool)($config->list($enabledKey)[0] ?? true);
 };
 
-$total = $requested !== '' ? 1 : count(array_filter($checks, $isEnabled));
+$total = $requested !== ''
+    ? 1
+    : count(array_filter($checks, $isEnabled));
 $current = 0;
 
-$green = fn(string $s) => "\033[32m{$s}\033[0m\n";
-$blue  = fn(string $s) => "\033[34m{$s}\033[0m\n";
-$red   = fn(string $s) => "\033[31m{$s}\033[0m\n";
+$green = static fn(string $s) => "\033[32m{$s}\033[0m\n";
+$blue = static fn(string $s) => "\033[34m{$s}\033[0m\n";
+$red = static fn(string $s) => "\033[31m{$s}\033[0m\n";
 
-$runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current,): bool {
+$runCheck = static function(string $key) use ($projectRoot, $isEnabled, $green, $blue, $red, $total, &$current,): bool {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
         echo ($red)("Unknown check: {$key}");
+
         return false;
     }
 
     if (!$isEnabled($key)) {
         echo ($blue)("[SKIP] {$key}");
+
         return true;
     }
 
     $current++;
 
     $titleWidth = 18;
+
     if ($total > 1) {
         echo ($blue)(sprintf('[RUN]  %-' . $titleWidth . 's (%d/%d)', $key, $current, $total));
     } else {
@@ -80,11 +110,13 @@ $runCheck = function(string $key) use ($projectRoot, $isEnabled, $green, $blue, 
 
     if ($status !== 0) {
         echo ($red)("[FAIL] {$key}");
+
         return false;
     }
 
     echo ($green)("[OK]   {$key}");
     echo "\n";
+
     return true;
 };
 

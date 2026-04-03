@@ -19,7 +19,7 @@ final class YamlPathKeysTest extends TestCase
         $this->expectExceptionMessageMatches('/override\.php\.src/');
 
         $keys = new YamlPathKeys(['php.src' => [42]], [], new DefaultConfig());
-        $keys->include();
+        $keys->phpSrc();
     }
 
     #[Test]
@@ -49,6 +49,6 @@ final class YamlPathKeysTest extends TestCase
         $this->expectExceptionMessageMatches('/append\.php\.src/');
 
         $keys = new YamlPathKeys([], ['php.src' => [3.14]], new DefaultConfig());
-        $keys->include();
+        $keys->phpSrc();
     }
 }

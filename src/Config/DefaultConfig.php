@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Haspadar\Piqule\Config;
 
@@ -28,24 +28,24 @@ final class DefaultConfig implements Config
     private readonly array $defaults;
 
     /**
-     * @param list<string> $include
+     * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @throws ParseException
      */
     public function __construct(
-        array $include = [],
+        array $phpSrc = [],
         array $exclude = [],
         private readonly string $composerJson = '',
     ) {
         /** @var array<string, mixed> $yaml */
-        $yaml = Yaml::parseFile(dirname(__DIR__, 2) . '/templates/always/.piqule/config.yaml');
+        $yaml = Yaml::parseFile(__DIR__ . '/../../templates/always/.piqule/config.yaml');
 
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];
 
-        /** @var list<string> $resolvedInclude */
-        $resolvedInclude = $include !== []
-            ? $include
+        /** @var list<string> $resolvedPhpSrc */
+        $resolvedPhpSrc = $phpSrc !== []
+            ? $phpSrc
             : $base['php.src'];
 
         /** @var list<string> $resolvedExclude */
@@ -54,7 +54,7 @@ final class DefaultConfig implements Config
             : $base['exclude'];
 
         /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $this->dynamic($resolvedInclude, $resolvedExclude));
+        $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));
         $this->defaults = $defaults;
     }
 
@@ -98,16 +98,16 @@ final class DefaultConfig implements Config
     }
 
     /**
-     * @param list<string> $include
+     * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @return array<string, scalar|list<scalar>>
      */
-    private function dynamic(array $include, array $exclude): array
+    private function dynamic(array $phpSrc, array $exclude): array
     {
-        $projectIncludes = (new ProjectDirs($include))->toList();
+        $projectIncludes = (new ProjectDirs($phpSrc))->toList();
 
         return [
-            'php.src' => $include,
+            'php.src' => $phpSrc,
             'exclude' => $exclude,
             'hadolint.ignore' => $exclude,
             'jsonlint.patterns' => array_merge(
@@ -119,7 +119,7 @@ final class DefaultConfig implements Config
             'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
             'phpcs.files' => $projectIncludes,
             'phpcs.root_namespace' => (new ComposerRootNamespace($this->composerJson))->toString(),
-            'phpmd.paths' => $include,
+            'phpmd.paths' => $phpSrc,
             'phpmetrics.includes' => $projectIncludes,
             'phpmetrics.excludes' => $exclude,
             'phpstan.paths' => $projectIncludes,
@@ -128,7 +128,7 @@ final class DefaultConfig implements Config
             'psalm.project.ignore' => (new ProjectDirs($exclude))->toList(),
             'infection.source.directories' => $projectIncludes,
             'shellcheck.ignore_dirs' => $exclude,
-            'sonar.sources' => $include,
+            'sonar.sources' => $phpSrc,
             'typos.exclude' => (new TrailingSlashDirs($exclude))->toList(),
             'yamllint.ignore' => array_merge(
                 (new TrailingGlobDirs($exclude))->toList(),

@@ -53,11 +53,11 @@ final readonly class YamlConfig implements Config
         }
 
         /** @var array<string, mixed> $overrides */
-        $overrides = isset($data['override']) && is_array($data['override'])
+        $overrides = array_key_exists('override', $data) && is_array($data['override'])
             ? $data['override']
             : [];
         /** @var array<string, mixed> $appends */
-        $appends = isset($data['append']) && is_array($data['append'])
+        $appends = array_key_exists('append', $data) && is_array($data['append'])
             ? $data['append']
             : [];
 
@@ -66,7 +66,7 @@ final readonly class YamlConfig implements Config
 
         $this->config = new AppendConfig(
             new OverrideConfig(
-                new DefaultConfig($pathKeys->include(), $pathKeys->exclude(), $defaults->composerJson()),
+                new DefaultConfig($pathKeys->phpSrc(), $pathKeys->exclude(), $defaults->composerJson()),
                 array_diff_key($overrides, array_flip($remaining)),
             ),
             array_diff_key($appends, array_flip($remaining)),
