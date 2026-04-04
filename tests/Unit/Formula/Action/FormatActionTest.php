@@ -46,7 +46,7 @@ final class FormatActionTest extends TestCase
     }
 
     #[Test]
-    public function normalizesEscapeSequencesInTemplate(): void
+    public function normalizesNewlineInTemplate(): void
     {
         $result = (new FormatAction('a\\n%s'))
             ->transformed(new ListArgs(['b']));
@@ -55,6 +55,45 @@ final class FormatActionTest extends TestCase
             ["a\nb"],
             $result->values(),
             'FormatAction must normalize \\n to real newline in template',
+        );
+    }
+
+    #[Test]
+    public function normalizesCarriageReturnInTemplate(): void
+    {
+        $result = (new FormatAction('a\\r%s'))
+            ->transformed(new ListArgs(['b']));
+
+        self::assertSame(
+            ["a\rb"],
+            $result->values(),
+            'FormatAction must normalize \\r to real carriage return in template',
+        );
+    }
+
+    #[Test]
+    public function normalizesTabInTemplate(): void
+    {
+        $result = (new FormatAction('a\\t%s'))
+            ->transformed(new ListArgs(['b']));
+
+        self::assertSame(
+            ["a\tb"],
+            $result->values(),
+            'FormatAction must normalize \\t to real tab in template',
+        );
+    }
+
+    #[Test]
+    public function normalizesEscapedBackslashInTemplate(): void
+    {
+        $result = (new FormatAction('a\\\\%s'))
+            ->transformed(new ListArgs(['b']));
+
+        self::assertSame(
+            ['a\\b'],
+            $result->values(),
+            'FormatAction must normalize \\\\\\\\ to single backslash in template',
         );
     }
 
