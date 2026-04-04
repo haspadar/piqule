@@ -156,6 +156,120 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function rendersContentWhenIfNotEmptyReceivesNonEmptyInput(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php.versions' => ['8.3', '8.4']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(php.versions)|format_each("%s")|join(",")|if_not_empty()|format("[%s]") >>',
+                ),
+                $config,
+            ),
+            new HasFileContents('[8.3,8.4]'),
+            'if_not_empty must pass non-empty value through to format',
+        );
+    }
+
+    #[Test]
+    public function rendersEmptyWhenIfNotEmptyReceivesEmptyInput(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['psalm.project.files' => []],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    'before|<< config(psalm.project.files)|format_each("%s")|join(",")|if_not_empty() >>|after',
+                ),
+                $config,
+            ),
+            new HasFileContents('before||after'),
+            'if_not_empty must produce empty string for empty config list',
+        );
+    }
+
+    #[Test]
+    public function rendersContentWhenIfEmptyReceivesEmptyInput(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['psalm.project.files' => []],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(psalm.project.files)|join(",")|if_empty()|format("none") >>',
+                ),
+                $config,
+            ),
+            new HasFileContents('none'),
+            'if_empty must pass empty value through to format',
+        );
+    }
+
+    #[Test]
+    public function rendersEmptyWhenIfEmptyReceivesNonEmptyInput(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php.versions' => ['8.3']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    'x<< config(php.versions)|join(",")|if_empty() >>y',
+                ),
+                $config,
+            ),
+            new HasFileContents('xy'),
+            'if_empty must produce empty string for non-empty config list',
+        );
+    }
+
+    #[Test]
+    public function throwsWhenIfNotEmptyReceivesArguments(): void
+    {
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "if_not_empty" does not accept arguments');
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(shellcheck.shell)|if_not_empty(something) >>',
+            ),
+            new OverrideConfig(new DefaultConfig(), []),
+        ))->contents();
+    }
+
+    #[Test]
+    public function throwsWhenIfEmptyReceivesArguments(): void
+    {
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "if_empty" does not accept arguments');
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(shellcheck.shell)|if_empty(something) >>',
+            ),
+            new OverrideConfig(new DefaultConfig(), []),
+        ))->contents();
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
