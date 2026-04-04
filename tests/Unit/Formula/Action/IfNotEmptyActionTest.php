@@ -71,4 +71,14 @@ final class IfNotEmptyActionTest extends TestCase
             'IfNotEmptyAction must pass multiple values through unchanged',
         );
     }
+
+    #[Test]
+    public function passesMultipleEmptyStringsThrough(): void
+    {
+        self::assertThat(
+            (new IfNotEmptyAction())->transformed(new ListArgs(['', ''])),
+            new HasArgsValues(['', '']),
+            'IfNotEmptyAction must treat multiple empty strings as non-empty',
+        );
+    }
 }

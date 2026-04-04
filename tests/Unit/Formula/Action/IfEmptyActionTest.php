@@ -51,4 +51,24 @@ final class IfEmptyActionTest extends TestCase
             'IfEmptyAction must return empty list for numeric input',
         );
     }
+
+    #[Test]
+    public function returnsEmptyListWhenInputIsNumericZero(): void
+    {
+        self::assertThat(
+            (new IfEmptyAction())->transformed(new ListArgs([0])),
+            new HasArgsValues([]),
+            'IfEmptyAction must return empty list for numeric zero',
+        );
+    }
+
+    #[Test]
+    public function returnsEmptyListWhenInputIsBooleanFalse(): void
+    {
+        self::assertThat(
+            (new IfEmptyAction())->transformed(new ListArgs([false])),
+            new HasArgsValues([]),
+            'IfEmptyAction must return empty list for boolean false',
+        );
+    }
 }
