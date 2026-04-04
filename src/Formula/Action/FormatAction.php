@@ -26,9 +26,7 @@ final readonly class FormatAction implements Action
         $values = $args->values();
 
         if ($values === []) {
-            throw new PiquleException(
-                'Cannot format empty value',
-            );
+            return new ListArgs([]);
         }
 
         if (count($values) > 1) {
@@ -39,7 +37,7 @@ final readonly class FormatAction implements Action
 
         $templateArgs = new UnquotedArgs(new ListArgs([$this->raw]));
         $templateValues = $templateArgs->values();
-        $template = (string) ($templateValues[0] ?? '');
+        $template = $this->normalize((string) ($templateValues[0] ?? ''));
 
         $scalar = (new StringifiedArgs($args))->values()[0] ?? '';
 
@@ -54,5 +52,18 @@ final readonly class FormatAction implements Action
         }
 
         return new ListArgs([$result]);
+    }
+
+    private function normalize(string $value): string
+    {
+        return strtr(
+            $value,
+            [
+                '\\\\' => '\\',
+                '\\n' => "\n",
+                '\\r' => "\r",
+                '\\t' => "\t",
+            ],
+        );
     }
 }
