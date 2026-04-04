@@ -243,6 +243,7 @@ final class ConfiguredFileTest extends TestCase
     public function throwsWhenIfNotEmptyReceivesArguments(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "if_not_empty" does not accept arguments');
 
         (new ConfiguredFile(
             new TextFile(
@@ -257,6 +258,7 @@ final class ConfiguredFileTest extends TestCase
     public function throwsWhenIfEmptyReceivesArguments(): void
     {
         $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "if_empty" does not accept arguments');
 
         (new ConfiguredFile(
             new TextFile(
