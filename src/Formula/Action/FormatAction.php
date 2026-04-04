@@ -17,7 +17,6 @@ use Throwable;
  */
 final readonly class FormatAction implements Action
 {
-    /** @var array<string, string> */
     private const array ESCAPE_REPLACEMENTS = [
         '\\\\' => '\\',
         '\\n' => "\n",
