@@ -57,7 +57,7 @@ Location:
 
 Everything under `templates/once/` is copied relative to project root only if the target file does not exist yet. User edits survive subsequent `sync` runs.
 
-`.piqule.php` is generated from `templates/once/` on the first `sync`.
+`.piqule.yaml` is generated from `templates/once/` on the first `sync`.
 
 ---
 
@@ -69,7 +69,7 @@ Run:
 
 Flow:
 
-1. Load `.piqule.php` if it exists (optional)
+1. Load `.piqule.yaml` if it exists (optional)
 2. Scan `templates/always/`
 3. Scan `templates/git/`
 4. Scan `templates/once/`
@@ -82,7 +82,7 @@ Flow:
 
 Note:
 
-`.piqule.php` is generated from `templates/once/` on the first `sync`. Edit it freely — subsequent syncs will not overwrite it.
+`.piqule.yaml` is generated from `templates/once/` on the first `sync`. Edit it freely — subsequent syncs will not overwrite it.
 
 ---
 
@@ -107,9 +107,11 @@ Example:
 ### Supported actions
 
 - `config(key)` — loads a list of values from configuration
-- `format_each(template)` — formats each list item
-- `join(delimiter)` — reduces the list to a single scalar value
-- `format(template)` — formats the scalar value
+- `format_each(template)` — formats each list item via `sprintf`
+- `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
+- `if_not_empty()` — guard: empty input (`[]` or `['']`) becomes `[]`, non-empty passes through unchanged
+- `if_empty()` — inverse guard: non-empty input becomes `[]`, empty passes through unchanged
+- `format(template)` — formats a single value via `sprintf`; empty input (`[]`) passes through as `[]`; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
 
 ### Semantics
 
@@ -119,8 +121,13 @@ The DSL operates in stages:
 2. List-level actions:
    - `format_each`
 3. `join` reduces the list to a single value
-4. Scalar-level actions:
+4. Conditional guards (optional, placed after `join`):
+   - `if_not_empty` — drops empty values, enabling conditional block rendering
+   - `if_empty` — drops non-empty values
+5. Scalar-level actions:
    - `format`
+
+When a guard returns `[]`, downstream `format` passes it through as `[]`, which resolves to an empty string in the final output. This enables conditional template blocks without `if`/`endif` syntax.
 
 ### Examples
 
@@ -132,31 +139,33 @@ Final value formatting:
 
 `<< config(phpstan.level)|join(",")|format('level: %s') >>`
 
+Conditional block (rendered only when config key is non-empty):
+
+`<< config(psalm.project.files)|format_each('        <file name="%s" />')|join("\n")|if_not_empty()|format('<handler>\n%s\n</handler>') >>`
+
 ---
 
 ## Project Configuration
 
 Optional file:
 
-`.piqule.php`
+`.piqule.yaml`
 
 Example:
 
-```php
-<?php
+```yaml
+override:
+    phpstan.level: 8
+    psalm.suppress.possibly_unused: ["../../src"]
 
-declare(strict_types=1);
-
-use Haspadar\Piqule\Config\DefaultConfig;
-use Haspadar\Piqule\Config\OverrideConfig;
-
-return new OverrideConfig(new DefaultConfig(), [
-    'ci.php.matrix' => ['8.3', '8.4', '8.5'],
-    'docker.image' => 'ghcr.io/haspadar/piqule-infra:latest',
-]);
+append:
+    exclude:
+        - legacy
 ```
 
-Keys are flat and use dot-separated names. All valid keys are declared in `DefaultConfig`.
+Keys are flat and use dot-separated names. All valid keys are declared in `templates/always/.piqule/config.yaml`.
+
+`override` replaces the default value entirely. `append` adds to the default list.
 
 If the file does not exist, defaults are used.
 
@@ -166,7 +175,7 @@ If the file does not exist, defaults are used.
 
 Runtime image is selected via:
 
-- `.piqule.php` → `docker.image`
+- `.piqule.yaml` → `docker.image`
 - `PIQULE_INFRA_IMAGE` environment variable (highest priority)
 
 Execution is delegated to `.piqule/_docker.sh`.
@@ -241,3 +250,212 @@ For a full description of every class and the decorator pattern, see [docs/archi
 3. Use the key in a template placeholder: `<< config(my.new.key) >>`
 
 Keys are flat dot-separated names. Accessing an undeclared key throws `PiquleException`.
+
+---
+
+## Configuration Reference
+
+All keys below are declared in `templates/always/.piqule/config.yaml` with their defaults. Override any key in `.piqule.yaml` under `override` or extend lists under `append`.
+
+### Global
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `php.src` | `["src"]` | Source directories — cascades to PHPStan, Psalm, PHPUnit, Infection, PHPMD, PHPCS, PHP Metrics, SonarQube |
+| `exclude` | `["vendor", "tests", ".git"]` | Excluded directories — cascades to all tools |
+| `php.versions` | `["8.3"]` | PHP versions for CI matrix |
+
+### CI
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `ci.piqule_bin` | `"vendor/bin/piqule"` | Path to piqule binary in CI |
+| `ci.pr.max_lines_changed` | `250` | Maximum lines changed per PR |
+
+### Coverage
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `coverage.patch.target` | `80` | Minimum patch coverage % |
+| `coverage.patch.threshold` | `5` | Allowed drop below target |
+| `coverage.project.target` | `80` | Minimum project coverage % |
+| `coverage.project.threshold` | `2` | Allowed drop below target |
+
+### Docker
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `docker.image` | `"ghcr.io/haspadar/piqule-infra@sha256:..."` | Infra image for CI |
+
+### actionlint
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `actionlint.enabled` | `true` | Enable GitHub Actions linting |
+
+### hadolint
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `hadolint.enabled` | `true` | Enable Dockerfile linting |
+| `hadolint.failure_threshold` | `"error"` | Minimum severity to fail |
+| `hadolint.ignore` | `["vendor", "tests", ".git"]` | Ignored directories |
+| `hadolint.ignored_yaml` | `"[]"` | Ignored rules (YAML literal) |
+| `hadolint.override.error_yaml` | `"[]"` | Rules promoted to error (YAML literal) |
+| `hadolint.override.warning_yaml` | `"[]"` | Rules promoted to warning (YAML literal) |
+| `hadolint.patterns` | `["Dockerfile*"]` | File patterns to lint |
+
+### jsonlint
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `jsonlint.enabled` | `true` | Enable JSON linting |
+| `jsonlint.compact` | `true` | Compact output |
+| `jsonlint.continue` | `true` | Continue on error |
+| `jsonlint.duplicate_keys` | `false` | Allow duplicate keys |
+| `jsonlint.mode` | `["json5"]` | Parsing mode |
+| `jsonlint.patterns` | `["**/*.json", ...]` | File patterns to lint |
+
+### markdownlint
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `markdownlint.enabled` | `true` | Enable Markdown linting |
+| `markdownlint.ignores` | `["vendor/**", "tests/**", ".git/**"]` | Ignored patterns |
+
+### php-cs-fixer
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `php-cs-fixer.enabled` | `true` | Enable PHP CS Fixer |
+| `php_cs_fixer.allow_unsupported` | `["true"]` | Allow unsupported PHP versions |
+| `php_cs_fixer.exclude` | `["vendor", "tests", ".git"]` | Excluded directories |
+| `php_cs_fixer.paths` | `["../.."]` | Paths to fix |
+
+### phpcs
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `phpcs.enabled` | `true` | Enable PHP_CodeSniffer |
+| `phpcs.excludes` | `["vendor/*", "tests/*", ".git/*"]` | Excluded patterns |
+| `phpcs.files` | `["../../src"]` | Files/directories to check |
+| `phpcs.root_namespace` | `""` | Root namespace for PSR-4 check |
+
+### phpmd
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `phpmd.enabled` | `true` | Enable PHP Mess Detector |
+| `phpmd.paths` | `["src"]` | Source paths |
+| `phpmd.class_complexity` | `50` | Max class complexity |
+| `phpmd.class_length` | `200` | Max class length |
+| `phpmd.cyclomatic` | `10` | Max cyclomatic complexity |
+| `phpmd.max_fields` | `10` | Max fields per class |
+| `phpmd.max_methods` | `10` | Max methods per class |
+| `phpmd.max_parameters` | `5` | Max parameters per method |
+| `phpmd.method_length` | `50` | Max method length |
+| `phpmd.npath` | `200` | Max NPath complexity |
+
+### phpmetrics
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `phpmetrics.enabled` | `true` | Enable PHP Metrics |
+| `phpmetrics.includes` | `["../../src"]` | Included directories |
+| `phpmetrics.excludes` | `["vendor", "tests", ".git"]` | Excluded directories |
+| `phpmetrics.extensions` | `["php"]` | File extensions |
+| `phpmetrics.complexity.max_cyclomatic_per_method` | `10` | Max cyclomatic per method |
+| `phpmetrics.complexity.max_weighted_methods_per_class` | `20` | Max WMC per class |
+| `phpmetrics.coupling.max_afferent` | `12` | Max afferent coupling |
+| `phpmetrics.coupling.max_efferent` | `10` | Max efferent coupling |
+| `phpmetrics.halstead.max_bugs_per_method` | `0.5` | Max Halstead bugs per method |
+| `phpmetrics.halstead.max_difficulty_per_method` | `15` | Max Halstead difficulty |
+| `phpmetrics.halstead.max_effort_per_method` | `15000` | Max Halstead effort |
+| `phpmetrics.halstead.max_volume_per_method` | `1000` | Max Halstead volume |
+| `phpmetrics.inheritance.max_depth` | `3` | Max inheritance depth |
+| `phpmetrics.report.html` | `["html"]` | HTML report directory |
+| `phpmetrics.report.json` | `["phpmetrics.json"]` | JSON report file |
+| `phpmetrics.size.max_loc_per_class` | `1000` | Max LOC per class |
+| `phpmetrics.size.max_logical_loc_per_class` | `600` | Max logical LOC per class |
+| `phpmetrics.size.max_logical_loc_per_method` | `20` | Max logical LOC per method |
+| `phpmetrics.structure.max_methods_per_class` | `10` | Max methods per class |
+
+### phpstan
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `phpstan.enabled` | `true` | Enable PHPStan |
+| `phpstan.level` | `9` | Analysis level (0-9) |
+| `phpstan.memory` | `"1G"` | Memory limit |
+| `phpstan.paths` | `["../../src"]` | Paths to analyze |
+| `phpstan.checked_exceptions` | `['\Throwable']` | Checked exception classes |
+| `phpstan.neon_includes` | `["../../vendor/phpstan/phpstan-strict-rules/rules.neon"]` | Neon includes |
+
+### phpunit
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `phpunit.enabled` | `true` | Enable PHPUnit |
+| `phpunit.php_options` | `"-d memory_limit=1G"` | PHP CLI options |
+| `phpunit.source.include` | `["../../src"]` | Source directories for coverage |
+| `phpunit.testsuites.unit` | `["../../tests/Unit"]` | Unit test directories |
+| `phpunit.testsuites.integration` | `["../../tests/Integration"]` | Integration test directories |
+
+### psalm
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `psalm.enabled` | `true` | Enable Psalm |
+| `psalm.error_level` | `1` | Error level (1-8) |
+| `psalm.project.directories` | `["../../src"]` | Directories to analyze |
+| `psalm.project.files` | `[]` | Individual files to analyze |
+| `psalm.project.ignore` | `["../../vendor", "../../tests", "../../.git"]` | Ignored directories |
+| `psalm.suppress.possibly_unused` | `[]` | Directories to suppress PossiblyUnusedMethod (e.g. `["../../src"]` for DI-constructed classes) |
+
+### infection
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `infection.enabled` | `true` | Enable Infection mutation testing |
+| `infection.php_options` | `"-d memory_limit=1G"` | PHP CLI options |
+| `infection.source.directories` | `["../../src"]` | Source directories |
+| `infection.timeout` | `30` | Timeout per mutant (seconds) |
+
+### shellcheck
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `shellcheck.enabled` | `true` | Enable ShellCheck |
+| `shellcheck.exclude` | `[]` | Excluded rule codes |
+| `shellcheck.external_sources` | `true` | Follow sourced files |
+| `shellcheck.ignore_dirs` | `["vendor", "tests", ".git"]` | Ignored directories |
+| `shellcheck.severity` | `"warning"` | Minimum severity |
+| `shellcheck.shell` | `"bash"` | Shell dialect |
+| `shellcheck.source_path` | `"."` | Source path for includes |
+
+### sonar
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `sonar.enabled` | `true` | Enable SonarCloud |
+| `sonar.organization` | `[]` | SonarCloud organization |
+| `sonar.projectKey` | `[]` | SonarCloud project key |
+| `sonar.sources` | `["src"]` | Source directories |
+| `sonar.tests` | `["tests"]` | Test directories |
+| `sonar.exclusions` | `[]` | Excluded paths |
+| `sonar.php.coverage.reportPaths` | `[".piqule/codecov/coverage.xml"]` | Coverage report path |
+
+### typos
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `typos.enabled` | `true` | Enable typo checking |
+| `typos.exclude` | `["vendor/", "tests/", ".git/"]` | Excluded directories |
+
+### yamllint
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `yamllint.enabled` | `true` | Enable YAML linting |
+| `yamllint.ignore` | `["vendor/**", "tests/**", ...]` | Ignored patterns |
+| `yamllint.line_length.max` | `120` | Maximum line length |
