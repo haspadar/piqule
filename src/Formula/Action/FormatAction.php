@@ -17,6 +17,14 @@ use Throwable;
  */
 final readonly class FormatAction implements Action
 {
+    /** @var array<string, string> */
+    private const array ESCAPE_REPLACEMENTS = [
+        '\\\\' => '\\',
+        '\\n' => "\n",
+        '\\r' => "\r",
+        '\\t' => "\t",
+    ];
+
     public function __construct(private string $raw) {}
 
     /** @throws PiquleException */
@@ -56,14 +64,6 @@ final readonly class FormatAction implements Action
 
     private function normalize(string $value): string
     {
-        return strtr(
-            $value,
-            [
-                '\\\\' => '\\',
-                '\\n' => "\n",
-                '\\r' => "\r",
-                '\\t' => "\t",
-            ],
-        );
+        return strtr($value, self::ESCAPE_REPLACEMENTS);
     }
 }
