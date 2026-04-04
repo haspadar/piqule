@@ -28,6 +28,7 @@
                 <directory name="../../src" />
             </errorLevel>
         </UnusedClass>
+
         <UnresolvableInclude errorLevel="suppress">
             <errorLevel type="suppress">
                 <file name="../../bin/piqule" />
