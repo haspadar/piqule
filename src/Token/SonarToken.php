@@ -29,7 +29,13 @@ final readonly class SonarToken implements Token
     #[Override]
     public function enabled(Config $config): bool
     {
-        return !$config->has('sonar.enabled')
-            || (bool) ($config->list('sonar.enabled')[0] ?? true);
+        if (!$config->has('sonar.enabled')) {
+            return true;
+        }
+
+        return filter_var(
+            $config->list('sonar.enabled')[0] ?? true,
+            FILTER_VALIDATE_BOOLEAN,
+        );
     }
 }

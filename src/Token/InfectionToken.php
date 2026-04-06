@@ -30,7 +30,13 @@ final readonly class InfectionToken implements Token
     #[Override]
     public function enabled(Config $config): bool
     {
-        return !$config->has('infection.enabled')
-            || (bool) ($config->list('infection.enabled')[0] ?? true);
+        if (!$config->has('infection.enabled')) {
+            return true;
+        }
+
+        return filter_var(
+            $config->list('infection.enabled')[0] ?? true,
+            FILTER_VALIDATE_BOOLEAN,
+        );
     }
 }

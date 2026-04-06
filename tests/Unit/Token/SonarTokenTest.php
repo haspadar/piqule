@@ -42,6 +42,16 @@ final class SonarTokenTest extends TestCase
     }
 
     #[Test]
+    public function disabledWhenSonarDisabledAsString(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarToken())->enabled(new FakeConfig(['sonar.enabled' => ['false']])),
+            'SonarToken must be disabled when sonar.enabled is string "false"',
+        );
+    }
+
+    #[Test]
     public function returnsCorrectSecret(): void
     {
         self::assertSame(
