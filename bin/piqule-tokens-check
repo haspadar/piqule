@@ -9,6 +9,7 @@ use Haspadar\Piqule\Config\YamlConfig;
 use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\Token\CodecovToken;
 use Haspadar\Piqule\Token\InfectionToken;
+use Haspadar\Piqule\Token\SonarToken;
 use Haspadar\Piqule\Token\Tokens;
 
 require_once __DIR__ . '/bootstrap-autoload.php';
@@ -48,6 +49,7 @@ if (file_exists($yamlPath)) {
 $tokens = new Tokens([
     new CodecovToken(),
     new InfectionToken(),
+    new SonarToken(),
 ]);
 
 $enabled = array_filter(
