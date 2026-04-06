@@ -9,16 +9,24 @@ if [ ! -f "$PROPS" ]; then
 fi
 
 if [ -z "${SONAR_TOKEN:-}" ]; then
-  echo -e "\033[33m[TIP] Set SONAR_TOKEN to enable SonarCloud analysis\033[0m"
-  echo -e "\033[33m      Get token at: https://sonarcloud.io/account/security\033[0m"
-  echo -e "\033[33m      ● export SONAR_TOKEN=<your-token>     (bash/zsh)\033[0m"
-  echo -e "\033[33m      ● set -Ux SONAR_TOKEN <your-token>    (fish)\033[0m"
+  printf '\033[33m[TIP] Set SONAR_TOKEN to enable SonarCloud analysis\033[0m\n'
+  printf '\033[33m      Get token at: https://sonarcloud.io/account/security\033[0m\n'
+  printf '\033[33m      ● export SONAR_TOKEN=<your-token>     (bash/zsh)\033[0m\n'
+  printf '\033[33m      ● set -Ux SONAR_TOKEN <your-token>    (fish)\033[0m\n'
   exit 0
 fi
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "Error: docker is not installed or not in PATH" >&2
   exit 1
+fi
+
+COVERAGE_FILE=".piqule/codecov/coverage.xml"
+if [ -f "$COVERAGE_FILE" ]; then
+  sed "s|$(pwd)/||g" "$COVERAGE_FILE" > "${COVERAGE_FILE}.tmp" \
+    && mv "${COVERAGE_FILE}.tmp" "$COVERAGE_FILE"
+else
+  printf '\033[33m[TIP] Run piqule check phpunit first to include coverage in SonarCloud analysis\033[0m\n'
 fi
 
 PROJECT_ROOT="$(pwd)"
