@@ -107,6 +107,7 @@ Example:
 ### Supported actions
 
 - `config(key)` — loads a list of values from configuration
+- `first()` — extracts the first element from the list; empty input becomes `['']`
 - `format_each(template)` — formats each list item via `sprintf`
 - `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
 - `if_not_empty()` — guard: empty input (`[]` or `['']`) becomes `[]`, non-empty passes through unchanged
@@ -119,6 +120,7 @@ The DSL operates in stages:
 
 1. `config(...)` produces a list of values
 2. List-level actions:
+   - `first` — picks the first element
    - `format_each`
 3. `join` reduces the list to a single value
 4. Conditional guards (optional, placed after `join`):
@@ -250,6 +252,38 @@ For a full description of every class and the decorator pattern, see [docs/archi
 3. Use the key in a template placeholder: `<< config(my.new.key) >>`
 
 Keys are flat dot-separated names. Accessing an undeclared key throws `PiquleException`.
+
+---
+
+## Tokens
+
+External services (Codecov, Stryker, SonarCloud) require GitHub Secrets for CI integration.
+
+`bin/piqule-tokens-check` verifies that required secrets exist in the repository. It queries `gh secret list` and prints a tip for each missing secret with a link to obtain one. Runs automatically after `piqule sync`, `piqule check` and `piqule fix`.
+
+If `gh` is not installed or not authenticated, the check is silently skipped.
+
+### Token Interface
+
+Each token implements `Token` (`src/Token/Token.php`):
+
+- `secret()` — GitHub Secret name (e.g. `CODECOV_TOKEN`)
+- `url(string $org)` — URL where the user can obtain the token
+- `enabled(Config $config)` — whether the token is needed based on config
+
+### Existing Tokens
+
+| Class | Secret | Enabled when |
+|-------|--------|-------------|
+| `CodecovToken` | `CODECOV_TOKEN` | `phpunit.enabled` is true |
+| `InfectionToken` | `STRYKER_DASHBOARD_API_KEY` | `infection.enabled` is true |
+| `SonarToken` | `SONAR_TOKEN` | `sonar.enabled` is true |
+
+### Adding a Token
+
+1. Create a class in `src/Token/` implementing `Token`
+2. Register it in `bin/piqule-tokens-check` inside the `Tokens` array
+3. Write unit tests
 
 ---
 
