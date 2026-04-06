@@ -66,7 +66,9 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 ## Commands
 
 - `piqule sync` — generate configuration from templates
-- `piqule check` — run all checks
+- `piqule check` — run checks using default group (`check.default`, defaults to `fast`)
+- `piqule check fast` — run all checks except slow ones (`check.slow`: infection, sonar)
+- `piqule check full` — run all checks including slow ones
 - `piqule check <tool>` — run specific tool
 - `piqule fix` — run auto-fixable tools
 - `piqule fix <tool>` — run specific fixer
