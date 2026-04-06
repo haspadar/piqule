@@ -9,6 +9,7 @@ ARG MARKDOWNLINT_VERSION=0.22.0
 ARG TYPOS_VERSION=1.45.0
 ARG SHELLCHECK_VERSION=0.11.0
 ARG JSONLINT_VERSION=17.0.1
+ARG SONAR_SCANNER_VERSION=8.0.1.6346
 
 FROM ${DEBIAN_IMAGE}
 
@@ -19,6 +20,7 @@ ARG MARKDOWNLINT_VERSION
 ARG TYPOS_VERSION
 ARG SHELLCHECK_VERSION
 ARG JSONLINT_VERSION
+ARG SONAR_SCANNER_VERSION
 
 LABEL org.opencontainers.image.title="Piqule Infra"
 LABEL org.opencontainers.image.description="Infrastructure linters for Piqule"
@@ -108,6 +110,22 @@ RUN set -eux; \
       "markdownlint-cli2@${MARKDOWNLINT_VERSION}" \
       "@prantlf/jsonlint@${JSONLINT_VERSION}"; \
     npm cache clean --force; \
+    \
+    # --------------------------------------------------------\
+    # SonarScanner CLI \
+    # --------------------------------------------------------\
+    SONAR_ARCH="$(uname -m | sed 's/x86_64/linux-x64/' | sed 's/aarch64/linux-aarch64/')"; \
+    curl -sSfL \
+      "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-${SONAR_ARCH}.zip" \
+      -o /tmp/sonar-scanner.zip; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends unzip; \
+    unzip -q /tmp/sonar-scanner.zip -d /opt; \
+    ln -s "/opt/sonar-scanner-${SONAR_SCANNER_VERSION}-${SONAR_ARCH}/bin/sonar-scanner" /usr/local/bin/sonar-scanner; \
+    rm /tmp/sonar-scanner.zip; \
+    apt-get purge -y unzip; \
+    apt-get autoremove -y; \
+    rm -rf /var/lib/apt/lists/*; \
     \
     # --------------------------------------------------------\
     # Non-root runtime \

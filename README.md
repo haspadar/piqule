@@ -82,7 +82,7 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 - PHPMD
 - PHP Metrics
 - PHP_CodeSniffer — with [Slevomat Coding Standard](https://github.com/slevomat/coding-standard) rules (class structure, doc comments, attributes)
-- PHP-CS-Fixer
+- PHP-CS-Fixer — with [kubawerlos/php-cs-fixer-custom-fixers](https://github.com/kubawerlos/php-cs-fixer-custom-fixers)
 - actionlint
 - hadolint
 - shellcheck
@@ -90,7 +90,7 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 - jsonlint
 - yamllint
 - typos
-- SonarQube
+- SonarCloud — requires `SONAR_TOKEN` environment variable ([get token](https://sonarcloud.io/account/security))
 - Pull request size limit
 - Code coverage (Codecov)
 

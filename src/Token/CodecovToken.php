@@ -29,7 +29,14 @@ final readonly class CodecovToken implements Token
     #[Override]
     public function enabled(Config $config): bool
     {
-        return !$config->has('phpunit.enabled')
-            || (bool) ($config->list('phpunit.enabled')[0] ?? true);
+        if (!$config->has('phpunit.enabled')) {
+            return true;
+        }
+
+        return filter_var(
+            $config->list('phpunit.enabled')[0] ?? true,
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE,
+        ) ?? true;
     }
 }
