@@ -77,6 +77,11 @@ $groups = ['fast', 'full'];
 if ($requested === '' || in_array($requested, $groups, true)) {
     $group = $requested !== '' ? $requested : (string)($config->list('check.default')[0] ?? 'fast');
 
+    if (!in_array($group, $groups, true)) {
+        fwrite(STDERR, "Invalid check.default value: {$group}. Must be one of: " . implode(', ', $groups) . "\n");
+        exit(1);
+    }
+
     if ($group === 'fast') {
         $checks = array_values(
             array_filter(
