@@ -35,5 +35,16 @@ if [ -n "$SEED" ]; then
   ARGS+=(--random-order-seed="$SEED")
 fi
 
+COVERAGE_FILE=".piqule/codecov/coverage.xml"
+
+if php -m 2>/dev/null | grep -qi xdebug; then
+  mkdir -p "$(dirname "$COVERAGE_FILE")"
+  ARGS+=(--coverage-clover="$COVERAGE_FILE")
+  XDEBUG_MODE=coverage
+else
+  XDEBUG_MODE=off
+fi
+
 PHP_OPTIONS="<< config(phpunit.php_options) >>"
+export XDEBUG_MODE
 php "$PHP_OPTIONS" "$BIN" "${ARGS[@]}"
