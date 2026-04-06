@@ -37,7 +37,7 @@ fi
 
 COVERAGE_FILE=".piqule/codecov/coverage.xml"
 
-if php -m 2>/dev/null | grep -qi xdebug; then
+if php -r 'exit(extension_loaded("xdebug") ? 0 : 1);' 2>/dev/null; then
   mkdir -p "$(dirname "$COVERAGE_FILE")"
   ARGS+=(--coverage-clover="$COVERAGE_FILE")
   XDEBUG_MODE=coverage

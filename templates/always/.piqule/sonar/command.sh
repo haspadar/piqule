@@ -23,7 +23,8 @@ fi
 
 COVERAGE_FILE=".piqule/codecov/coverage.xml"
 if [ -f "$COVERAGE_FILE" ]; then
-  sed "s|$(pwd)/||g" "$COVERAGE_FILE" > "${COVERAGE_FILE}.tmp" \
+  ESCAPED_PWD=$(printf '%s' "$(pwd)" | sed 's/[&/\]/\\&/g')
+  sed "s|${ESCAPED_PWD}/||g" "$COVERAGE_FILE" > "${COVERAGE_FILE}.tmp" \
     && mv "${COVERAGE_FILE}.tmp" "$COVERAGE_FILE"
 else
   printf '\033[33m[TIP] Run piqule check phpunit first to include coverage in SonarCloud analysis\033[0m\n'
