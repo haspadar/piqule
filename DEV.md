@@ -299,6 +299,13 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | `exclude` | `["vendor", "tests", ".git"]` | Excluded directories — cascades to all tools |
 | `php.versions` | `["8.3"]` | PHP versions for CI matrix |
 
+### Check Groups
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `check.default` | `"fast"` | Default group for `piqule check` without arguments (`fast` or `full`) |
+| `check.slow` | `["infection", "sonar"]` | Checks excluded from `fast` group |
+
 ### CI
 
 | Key | Default | Description |
