@@ -52,6 +52,16 @@ final class SonarTokenTest extends TestCase
     }
 
     #[Test]
+    public function enabledWhenInvalidString(): void
+    {
+        self::assertSame(
+            true,
+            (new SonarToken())->enabled(new FakeConfig(['sonar.enabled' => ['tru']])),
+            'SonarToken must default to enabled when value is not a valid boolean string',
+        );
+    }
+
+    #[Test]
     public function returnsCorrectSecret(): void
     {
         self::assertSame(

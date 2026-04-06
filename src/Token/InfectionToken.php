@@ -37,6 +37,7 @@ final readonly class InfectionToken implements Token
         return filter_var(
             $config->list('infection.enabled')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
-        );
+            FILTER_NULL_ON_FAILURE,
+        ) ?? true;
     }
 }

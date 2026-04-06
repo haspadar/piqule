@@ -36,6 +36,7 @@ final readonly class CodecovToken implements Token
         return filter_var(
             $config->list('phpunit.enabled')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
-        );
+            FILTER_NULL_ON_FAILURE,
+        ) ?? true;
     }
 }

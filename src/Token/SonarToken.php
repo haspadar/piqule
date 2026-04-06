@@ -36,6 +36,7 @@ final readonly class SonarToken implements Token
         return filter_var(
             $config->list('sonar.enabled')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
-        );
+            FILTER_NULL_ON_FAILURE,
+        ) ?? true;
     }
 }
