@@ -67,10 +67,9 @@ $checks = [
     'sonar',
 ];
 
-/** @var list<string> $slowChecks */
 $slowChecks = array_map(
     'strval',
-    (array)($config->list('check.slow')),
+    $config->list('check.slow'),
 );
 
 $groups = ['fast', 'full'];
