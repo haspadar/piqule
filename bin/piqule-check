@@ -67,6 +67,29 @@ $checks = [
     'sonar',
 ];
 
+/** @var list<string> $slowChecks */
+$slowChecks = array_map(
+    'strval',
+    (array)($config->list('check.slow')),
+);
+
+$groups = ['fast', 'full'];
+
+if ($requested === '' || in_array($requested, $groups, true)) {
+    $group = $requested !== '' ? $requested : (string)($config->list('check.default')[0] ?? 'fast');
+
+    if ($group === 'fast') {
+        $checks = array_values(
+            array_filter(
+                $checks,
+                static fn(string $key): bool => !in_array($key, $slowChecks, true),
+            ),
+        );
+    }
+
+    $requested = '';
+}
+
 $isEnabled = static function(string $key) use ($config): bool {
     $enabledKey = "{$key}.enabled";
 
