@@ -185,6 +185,8 @@ if ($requested !== '') {
 if (!$parallel) {
     foreach ($checks as $key) {
         if (!$runCheck($key)) {
+            $totalElapsed = sprintf('%5s', $formatTime(microtime(true) - $totalStart));
+            echo "\n" . ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', 'Checks failed')) . ($red)($totalElapsed) . "\n";
             exit(1);
         }
     }
@@ -194,11 +196,14 @@ if (!$parallel) {
     exit(0);
 }
 
-$runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $red, $gray, &$current): ?array {
+$failed = false;
+
+$runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $red, $gray, &$current, &$failed): ?array {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
         echo ($red)("Unknown check: {$key}") . "\n";
+        $failed = true;
 
         return null;
     }
@@ -216,6 +221,7 @@ $runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $re
 
     if ($stdout === false || $stderr === false) {
         echo ($red)("Failed to create temp files for: {$key}") . "\n";
+        $failed = true;
 
         return null;
     }
@@ -228,6 +234,7 @@ $runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $re
 
     if (!is_resource($proc)) {
         echo ($red)("Failed to start: {$key}") . "\n";
+        $failed = true;
 
         return null;
     }
@@ -252,7 +259,6 @@ foreach ($checks as $key) {
 }
 
 $running = [];
-$failed = false;
 
 foreach ($independent as $key) {
     $handle = $runCheckAsync($key);
