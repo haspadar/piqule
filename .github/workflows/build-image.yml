@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -38,9 +38,27 @@ jobs:
       # Build and push infra image
       # ------------------------------------------------------------
       - uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294  # v7.0.0
+        id: build
         with:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ github.repository_owner }}/piqule-infra:latest
+
+      # ------------------------------------------------------------
+      # Update pinned digest in config template when image changes
+      # ------------------------------------------------------------
+      - name: Update image digest in config
+        run: |
+          NEW_DIGEST="${{ steps.build.outputs.digest }}"
+          CONFIG="templates/always/.piqule/config.yaml"
+          OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "$CONFIG")
+          if [ "$OLD_DIGEST" != "$NEW_DIGEST" ]; then
+            sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$CONFIG"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add "$CONFIG"
+            git commit -m "Update infra image digest to ${NEW_DIGEST:0:19} [skip ci]"
+            git push
+          fi
