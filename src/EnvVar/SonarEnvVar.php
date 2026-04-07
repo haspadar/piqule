@@ -29,12 +29,30 @@ final readonly class SonarEnvVar implements EnvVar
     #[Override]
     public function enabled(Config $config): bool
     {
+        if ($this->cloud($config)) {
+            return false;
+        }
+
         if (!$config->has('sonar.enabled')) {
             return true;
         }
 
         return filter_var(
             $config->list('sonar.enabled')[0] ?? true,
+            FILTER_VALIDATE_BOOLEAN,
+            FILTER_NULL_ON_FAILURE,
+        ) ?? true;
+    }
+
+    /** @throws PiquleException */
+    private function cloud(Config $config): bool
+    {
+        if (!$config->has('sonar.cloud')) {
+            return true;
+        }
+
+        return filter_var(
+            $config->list('sonar.cloud')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE,
         ) ?? true;

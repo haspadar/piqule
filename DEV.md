@@ -288,7 +288,7 @@ Each env var implements `EnvVar` (`src/EnvVar/EnvVar.php`):
 |-------|------|------|-------------|
 | `CodecovSecret` | `CODECOV_TOKEN` | Secret | `phpunit.enabled` is true |
 | `InfectionSecret` | `STRYKER_DASHBOARD_API_KEY` | Secret | `infection.enabled` is true |
-| `SonarEnvVar` | `SONAR_TOKEN` | EnvVar | `sonar.enabled` is true |
+| `SonarEnvVar` | `SONAR_TOKEN` | EnvVar | `sonar.cloud` is false and `sonar.enabled` is true |
 
 ### Adding a Secret
 
@@ -496,6 +496,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
+| `sonar.cloud` | `true` | Use SonarCloud automatic analysis (skip local scanner and SONAR_TOKEN) |
 | `sonar.enabled` | `true` | Enable SonarCloud |
 | `sonar.organization` | `[]` | SonarCloud organization |
 | `sonar.projectKey` | `[]` | SonarCloud project key |
