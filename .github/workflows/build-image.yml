@@ -3,6 +3,7 @@ name: Build Piqule Infra Image
 on:
   push:
     branches: [main]
+    paths: [Dockerfile]
   workflow_dispatch:
 
 concurrency:
