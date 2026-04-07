@@ -62,6 +62,14 @@ jobs:
             ".piqule/_docker.sh"
           )
           OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "${FILES[0]}" | head -1)
+          if [ -z "$OLD_DIGEST" ]; then
+            echo "::error::Could not extract existing digest from ${FILES[0]}"
+            exit 1
+          fi
+          if [ -z "$NEW_DIGEST" ]; then
+            echo "::error::Build step did not produce a digest"
+            exit 1
+          fi
           if [ "$OLD_DIGEST" != "$NEW_DIGEST" ]; then
             for file in "${FILES[@]}"; do
               sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$file"
