@@ -53,7 +53,7 @@ jobs:
         run: |
           NEW_DIGEST="${{ steps.build.outputs.digest }}"
           CONFIG="templates/always/.piqule/config.yaml"
-          OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "$CONFIG")
+          OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "$CONFIG" | head -1)
           if [ "$OLD_DIGEST" != "$NEW_DIGEST" ]; then
             sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$CONFIG"
             git config user.name "github-actions[bot]"
