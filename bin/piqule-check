@@ -199,10 +199,12 @@ if (!$parallel) {
     exit(0);
 }
 
-$runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $gray, &$current): ?array {
+$runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $red, $gray, &$current): ?array {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
+        echo ($red)("Unknown check: {$key}") . "\n";
+
         return null;
     }
 
@@ -218,6 +220,8 @@ $runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $gr
     $stderr = tmpfile();
 
     if ($stdout === false || $stderr === false) {
+        echo ($red)("Failed to create temp files for: {$key}") . "\n";
+
         return null;
     }
 
@@ -228,15 +232,34 @@ $runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $gr
     );
 
     if (!is_resource($proc)) {
+        echo ($red)("Failed to start: {$key}") . "\n";
+
         return null;
     }
 
     return ['proc' => $proc, 'stdout' => $stdout, 'stderr' => $stderr, 'key' => $key, 'start' => microtime(true), 'num' => $current];
 };
 
-$running = [];
+$dependsOn = [
+    'sonar' => ['phpunit'],
+    'infection' => ['phpunit'],
+];
+
+$independent = [];
+$dependent = [];
 
 foreach ($checks as $key) {
+    if (array_key_exists($key, $dependsOn)) {
+        $dependent[$key] = $dependsOn[$key];
+    } else {
+        $independent[] = $key;
+    }
+}
+
+$running = [];
+$failed = false;
+
+foreach ($independent as $key) {
     $handle = $runCheckAsync($key);
 
     if ($handle !== null) {
@@ -245,57 +268,76 @@ foreach ($checks as $key) {
     }
 }
 
-$failed = false;
-$pending = $running;
+$awaitAll = static function(array $handles) use ($green, $red, $formatTime, $titleWidth, $verbose, &$failed): void {
+    /** @var array<int, array{proc: resource, stdout: resource, stderr: resource, key: string, start: float, num: int}> $pending */
+    $pending = $handles;
 
-while ($pending !== []) {
-    foreach ($pending as $i => $handle) {
-        $info = proc_get_status($handle['proc']);
+    while ($pending !== []) {
+        foreach ($pending as $i => $handle) {
+            $info = proc_get_status($handle['proc']);
 
-        if ($info['running']) {
-            continue;
-        }
-
-        $elapsed = sprintf('%5s', $formatTime(microtime(true) - $handle['start']));
-        $status = $info['exitcode'];
-
-        if ($status === -1) {
-            $status = proc_close($handle['proc']);
-        } else {
-            proc_close($handle['proc']);
-        }
-
-        rewind($handle['stdout']);
-        $out = stream_get_contents($handle['stdout']);
-        fclose($handle['stdout']);
-
-        rewind($handle['stderr']);
-        $err = stream_get_contents($handle['stderr']);
-        fclose($handle['stderr']);
-
-        if ($status !== 0 || $verbose) {
-            if ($out !== '' && $out !== false) {
-                echo $out;
+            if ($info['running']) {
+                continue;
             }
 
-            if ($err !== '' && $err !== false) {
-                fwrite(STDERR, $err);
+            $elapsed = sprintf('%5s', $formatTime(microtime(true) - $handle['start']));
+            $status = $info['exitcode'];
+
+            if ($status === -1) {
+                $status = proc_close($handle['proc']);
+            } else {
+                proc_close($handle['proc']);
             }
+
+            rewind($handle['stdout']);
+            $out = stream_get_contents($handle['stdout']);
+            fclose($handle['stdout']);
+
+            rewind($handle['stderr']);
+            $err = stream_get_contents($handle['stderr']);
+            fclose($handle['stderr']);
+
+            if ($status !== 0 || $verbose) {
+                if ($out !== '' && $out !== false) {
+                    echo $out;
+                }
+
+                if ($err !== '' && $err !== false) {
+                    fwrite(STDERR, $err);
+                }
+            }
+
+            if ($status !== 0) {
+                echo ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', $handle['key'])) . ($red)($elapsed) . "\n";
+                $failed = true;
+            } else {
+                echo ($green)(sprintf('[OK]   %-' . $titleWidth . 's', $handle['key'])) . ($green)($elapsed) . "\n";
+            }
+
+            unset($pending[$i]);
         }
 
-        if ($status !== 0) {
-            echo ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', $handle['key'])) . ($red)($elapsed) . "\n";
-            $failed = true;
-        } else {
-            echo ($green)(sprintf('[OK]   %-' . $titleWidth . 's', $handle['key'])) . ($green)($elapsed) . "\n";
+        if ($pending !== []) {
+            usleep(50000);
         }
+    }
+};
 
-        unset($pending[$i]);
+$awaitAll($running);
+
+if (!$failed && $dependent !== []) {
+    $depRunning = [];
+
+    foreach (array_keys($dependent) as $key) {
+        $handle = $runCheckAsync($key);
+
+        if ($handle !== null) {
+            echo ($gray)(sprintf('[RUN]  %-' . $titleWidth . 's', $key)) . ($gray)(sprintf('%5s', "{$handle['num']}/{$total}")) . "\n";
+            $depRunning[] = $handle;
+        }
     }
 
-    if ($pending !== []) {
-        usleep(50000);
-    }
+    $awaitAll($depRunning);
 }
 
 $totalElapsed = sprintf('%5s', $formatTime(microtime(true) - $totalStart));
