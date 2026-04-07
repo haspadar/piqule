@@ -70,6 +70,9 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 - `piqule check fast` — run all checks except slow ones (`check.slow`: infection, sonar)
 - `piqule check full` — run all checks including slow ones
 - `piqule check <tool>` — run specific tool
+- `-p`, `--parallel` — run checks concurrently (default: `check.parallel`)
+- `-P`, `--no-parallel` — force sequential execution
+- `-v`, `--verbose` — show full output from each check
 - `piqule fix` — run auto-fixable tools
 - `piqule fix <tool>` — run specific fixer
 

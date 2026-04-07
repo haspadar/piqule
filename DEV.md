@@ -259,7 +259,7 @@ Keys are flat dot-separated names. Accessing an undeclared key throws `PiquleExc
 
 External services (Codecov, Stryker, SonarCloud) require GitHub Secrets for CI integration.
 
-`bin/piqule-tokens-check` verifies that required secrets exist in the repository. It queries `gh secret list` and prints a tip for each missing secret with a link to obtain one. Runs automatically after `piqule sync`, `piqule check` and `piqule fix`.
+`bin/piqule-tokens-check` verifies that required secrets exist in the repository. It queries `gh secret list` and prints a tip for each missing secret with a link to obtain one. Tokens available as local environment variables are not reported as missing. Runs automatically after `piqule sync`, `piqule check` and `piqule fix`.
 
 If `gh` is not installed or not authenticated, the check is silently skipped.
 
@@ -304,6 +304,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `check.default` | `"fast"` | Default group for `piqule check` without arguments (`fast` or `full`) |
+| `check.parallel` | `true` | Run checks concurrently by default (`-p`/`--parallel` to force, `-P`/`--no-parallel` to disable) |
 | `check.slow` | `["infection", "sonar"]` | Checks excluded from `fast` group |
 
 ### CI
