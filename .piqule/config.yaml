@@ -122,6 +122,7 @@ defaults:
   shellcheck.shell: "bash"
   shellcheck.source_path: "."
 
+  sonar.cloud: true
   sonar.enabled: true
   sonar.organization: []
   sonar.projectKey: []
