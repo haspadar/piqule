@@ -12,52 +12,71 @@ use PHPUnit\Framework\TestCase;
 final class SonarEnvVarTest extends TestCase
 {
     #[Test]
-    public function enabledWhenSonarEnabled(): void
+    public function disabledWhenCloudTrue(): void
     {
         self::assertSame(
-            true,
-            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.enabled' => [true]])),
-            'SonarEnvVar must be enabled when sonar.enabled is true',
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.cloud' => [true]])),
+            'SonarEnvVar must be disabled when sonar.cloud is true',
         );
     }
 
     #[Test]
-    public function enabledWhenKeyAbsent(): void
+    public function disabledWhenCloudAbsent(): void
     {
         self::assertSame(
-            true,
+            false,
             (new SonarEnvVar())->enabled(new FakeConfig([])),
-            'SonarEnvVar must be enabled when sonar.enabled key is absent',
+            'SonarEnvVar must be disabled when sonar.cloud key is absent (default is cloud mode)',
         );
     }
 
     #[Test]
-    public function disabledWhenSonarDisabled(): void
-    {
-        self::assertSame(
-            false,
-            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.enabled' => [false]])),
-            'SonarEnvVar must be disabled when sonar.enabled is false',
-        );
-    }
-
-    #[Test]
-    public function disabledWhenSonarDisabledAsString(): void
-    {
-        self::assertSame(
-            false,
-            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.enabled' => ['false']])),
-            'SonarEnvVar must be disabled when sonar.enabled is string "false"',
-        );
-    }
-
-    #[Test]
-    public function enabledWhenInvalidString(): void
+    public function enabledWhenCloudFalse(): void
     {
         self::assertSame(
             true,
-            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.enabled' => ['tru']])),
-            'SonarEnvVar must default to enabled when value is not a valid boolean string',
+            (new SonarEnvVar())->enabled(new FakeConfig(['sonar.cloud' => [false]])),
+            'SonarEnvVar must be enabled when sonar.cloud is false (local scanner mode)',
+        );
+    }
+
+    #[Test]
+    public function disabledWhenCloudFalseAndSonarDisabled(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [false],
+                'sonar.enabled' => [false],
+            ])),
+            'SonarEnvVar must be disabled when sonar.enabled is false even in scanner mode',
+        );
+    }
+
+    #[Test]
+    public function enabledWhenCloudFalseAndSonarEnabled(): void
+    {
+        self::assertSame(
+            true,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [false],
+                'sonar.enabled' => [true],
+            ])),
+            'SonarEnvVar must be enabled when sonar.cloud is false and sonar.enabled is true',
+        );
+    }
+
+    #[Test]
+    public function disabledWhenCloudFalseStringAndSonarDisabledString(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => ['false'],
+                'sonar.enabled' => ['false'],
+            ])),
+            'SonarEnvVar must handle string "false" for both keys',
         );
     }
 
