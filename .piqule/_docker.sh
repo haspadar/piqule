@@ -8,7 +8,7 @@ fi
 
 PROJECT_ROOT="$(pwd)"
 
-IMAGE="${PIQULE_INFRA_IMAGE:-ghcr.io/haspadar/piqule-infra@sha256:b62b14e57bf700258aa73705fdeefb55a9d5caebaa10fb1558527828ab8b2b2a}"
+IMAGE="${PIQULE_INFRA_IMAGE:-ghcr.io/haspadar/piqule-infra@sha256:f878eead886ebb78ec0dd1ff89afa2234aad4328baaa9fbadb0d9617b467f45e}"
 
 docker run --rm \
   --user "$(id -u):$(id -g)" \
