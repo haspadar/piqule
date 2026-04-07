@@ -97,6 +97,10 @@ foreach ($enabled as $token) {
         continue;
     }
 
+    if (getenv($token->secret()) !== false) {
+        continue;
+    }
+
     $output->info(sprintf('[TOKEN] %s is missing. Get it at: %s', $token->secret(), $token->url($org)));
     if ($repo !== '') {
         $output->info(sprintf('[TOKEN] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
