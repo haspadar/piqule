@@ -68,6 +68,19 @@ final class SonarEnvVarTest extends TestCase
     }
 
     #[Test]
+    public function disabledWhenCloudTrueAndSonarDisabled(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [true],
+                'sonar.enabled' => [false],
+            ])),
+            'SonarEnvVar must be disabled when sonar.cloud is true regardless of sonar.enabled',
+        );
+    }
+
+    #[Test]
     public function disabledWhenCloudFalseStringAndSonarDisabledString(): void
     {
         self::assertSame(
