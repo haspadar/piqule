@@ -83,6 +83,16 @@ jobs:
             git add "${FILES[@]}"
             git commit -m "Update infra image digest to ${NEW_DIGEST:0:19}"
             git push -u origin "$BRANCH"
+            # Close stale digest PRs before creating a new one
+            gh pr list \
+              --author "app/github-actions" \
+              --label "dependencies" \
+              --search "Update infra image digest" \
+              --json number \
+              --jq '.[].number' | while read -r old_pr; do
+              gh pr close "$old_pr" --delete-branch \
+                --comment "Superseded by a newer digest update" || true
+            done
             PR_URL=$(gh pr create \
               --base main \
               --head "$BRANCH" \
@@ -100,4 +110,4 @@ jobs:
             gh pr merge "$PR_NUMBER" --auto --merge --delete-branch
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PUSH_TOKEN }}
