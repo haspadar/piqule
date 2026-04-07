@@ -2,12 +2,12 @@
 set -e
 
 if [ -x "vendor/bin/piqule" ]; then
-  vendor/bin/piqule check full
+  vendor/bin/piqule check
   exit $?
 fi
 
 if command -v composer >/dev/null 2>&1; then
-  composer exec -- piqule check full
+  composer exec -- piqule check
   exit $?
 fi
 

@@ -25,7 +25,7 @@ CURRENT="$(find "$TEMPLATES_DIR/always" "$TEMPLATES_DIR/git" -type f \
   | awk '{print $1}')"
 
 if [ "$CURRENT" != "$(cat "$PINNED")" ]; then
-  echo -e "\033[31mTemplates have changed. Run: piqule sync\033[0m"
+  printf "\033[31mTemplates have changed. Run: piqule sync\033[0m\n\n"
 else
-  echo -e "\033[32mTemplates are up to date\033[0m"
+  printf "\033[90mTemplates are up to date\033[0m\n\n"
 fi

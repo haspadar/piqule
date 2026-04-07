@@ -66,10 +66,13 @@ Do not edit `.piqule/` or the GitHub workflow file `.github/workflows/piqule.yml
 ## Commands
 
 - `piqule sync` — generate configuration from templates
-- `piqule check` — run checks using default group (`check.default`, defaults to `fast`)
-- `piqule check fast` — run all checks except slow ones (`check.slow`: infection, sonar)
-- `piqule check full` — run all checks including slow ones
+- `piqule check` — run checks, excluding slow ones by default (`check.slow`: infection, sonar)
 - `piqule check <tool>` — run specific tool
+- `-f`, `--full` — include slow checks (default: `check.full`)
+- `-F`, `--no-full` — exclude slow checks
+- `-p`, `--parallel` — run checks concurrently (default: `check.parallel`)
+- `-P`, `--no-parallel` — force sequential execution
+- `-v`, `--verbose` — show full output from each check
 - `piqule fix` — run auto-fixable tools
 - `piqule fix <tool>` — run specific fixer
 
