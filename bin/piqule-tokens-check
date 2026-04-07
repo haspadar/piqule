@@ -97,7 +97,9 @@ foreach ($enabled as $token) {
         continue;
     }
 
-    if (getenv($token->secret()) !== false) {
+    $env = getenv($token->secret());
+
+    if ($env !== false && $env !== '') {
         continue;
     }
 
