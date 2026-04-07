@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLOUD="<< config(sonar.cloud)|first()|join("") >>"
+CLOUD="true"
 if [ "$CLOUD" = "1" ] || [ "$CLOUD" = "true" ]; then
   printf '\033[33m[SKIP] SonarCloud automatic analysis — no local scanner needed\033[0m\n'
   exit 0
@@ -37,7 +37,7 @@ else
 fi
 
 PROJECT_ROOT="$(pwd)"
-IMAGE="${PIQULE_INFRA_IMAGE:-<< config(docker.image) >>}"
+IMAGE="${PIQULE_INFRA_IMAGE:-ghcr.io/haspadar/piqule-infra@sha256:a8efe1ce4921b5faebe7f9f0dcc8465151f5a2db5637aa0b4cd27c9e44cdfcef}"
 
 docker run --rm \
   --user "$(id -u):$(id -g)" \
