@@ -26,7 +26,7 @@ defaults:
   coverage.project.target: 80
   coverage.project.threshold: 2
 
-  docker.image: "ghcr.io/haspadar/piqule-infra@sha256:a12b741ec6e8c9410b9f54bde9ae5c4d873deb944e724ee6016c9c1daf7e5c09"
+  docker.image: "ghcr.io/haspadar/piqule-infra@sha256:5e9e8dc27e7e68d5284c0c04753fd023a777e6a1b6a130785e08c78a7c3855f0"
 
   actionlint.enabled: true
 
