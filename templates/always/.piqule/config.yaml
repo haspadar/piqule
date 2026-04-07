@@ -15,6 +15,7 @@ defaults:
   php.versions: ["8.3"]
 
   check.default: "fast"
+  check.parallel: true
   check.slow: ["infection", "sonar"]
 
   ci.piqule_bin: "vendor/bin/piqule"
