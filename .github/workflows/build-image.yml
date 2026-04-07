@@ -110,4 +110,4 @@ jobs:
             gh pr merge "$PR_NUMBER" --auto --merge --delete-branch
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PUSH_TOKEN }}
