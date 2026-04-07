@@ -349,3 +349,4 @@ if ($failed) {
 }
 
 echo "\n" . ($green)(sprintf('[OK]   %-' . $titleWidth . 's', 'All checks passed')) . ($green)($totalElapsed) . "\n";
+exit(0);
