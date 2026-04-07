@@ -6,11 +6,12 @@ declare(strict_types=1);
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
+use Haspadar\Piqule\EnvVar\EnvVars;
+use Haspadar\Piqule\EnvVar\SonarEnvVar;
 use Haspadar\Piqule\Output\Console;
-use Haspadar\Piqule\Token\CodecovToken;
-use Haspadar\Piqule\Token\InfectionToken;
-use Haspadar\Piqule\Token\SonarToken;
-use Haspadar\Piqule\Token\Tokens;
+use Haspadar\Piqule\Secret\CodecovSecret;
+use Haspadar\Piqule\Secret\InfectionSecret;
+use Haspadar\Piqule\Secret\Secrets;
 
 require_once __DIR__ . '/bootstrap-autoload.php';
 
@@ -46,32 +47,52 @@ if (file_exists($yamlPath)) {
     $config = $defaults;
 }
 
-$tokens = new Tokens([
-    new CodecovToken(),
-    new InfectionToken(),
-    new SonarToken(),
+$envVars = new EnvVars([
+    new SonarEnvVar(),
 ]);
 
-$enabled = array_filter(
-    $tokens->items(),
-    fn($token) => $token->enabled($config),
+$secrets = new Secrets([
+    new CodecovSecret(),
+    new InfectionSecret(),
+]);
+
+$enabledEnvVars = array_filter(
+    $envVars->items(),
+    fn($var) => $var->enabled($config),
 );
 
-if ($enabled === []) {
+foreach ($enabledEnvVars as $var) {
+    $env = getenv($var->name());
+
+    if ($env !== false && $env !== '') {
+        continue;
+    }
+
+    $output->info(sprintf('[ENV] %s is missing. Get it at: %s', $var->name(), $var->url()));
+    $output->info(sprintf('[ENV] export %s=<your-token>  (bash/zsh)', $var->name()));
+    $output->info(sprintf('[ENV] set -Ux %s <your-token>  (fish)', $var->name()));
+}
+
+$enabledSecrets = array_filter(
+    $secrets->items(),
+    fn($secret) => $secret->enabled($config),
+);
+
+if ($enabledSecrets === []) {
     exit(0);
 }
 
 exec('command -v gh', $ghOut, $ghExists);
 
 if ($ghExists !== 0) {
-    $output->info('[TOKEN] Install GitHub CLI to verify secrets: https://cli.github.com');
+    $output->info('[SECRET] Install GitHub CLI to verify secrets: https://cli.github.com');
     exit(0);
 }
 
 exec('gh auth status 2>/dev/null', $authOut, $authStatus);
 
 if ($authStatus !== 0) {
-    $output->info('[TOKEN] Run: gh auth login — to enable secret verification');
+    $output->info('[SECRET] Run: gh auth login — to enable secret verification');
     exit(0);
 }
 
@@ -92,19 +113,13 @@ $repoLines = array_values(array_filter($repoOut, 'is_string'));
 $repo = $repoStatus === 0 && $repoLines !== [] ? trim($repoLines[0]) : '';
 $org = $repo !== '' ? explode('/', $repo)[0] : '';
 
-foreach ($enabled as $token) {
-    if (in_array($token->secret(), $existing, true)) {
+foreach ($enabledSecrets as $secret) {
+    if (in_array($secret->name(), $existing, true)) {
         continue;
     }
 
-    $env = getenv($token->secret());
-
-    if ($env !== false && $env !== '') {
-        continue;
-    }
-
-    $output->info(sprintf('[TOKEN] %s is missing. Get it at: %s', $token->secret(), $token->url($org)));
+    $output->info(sprintf('[SECRET] %s is missing. Get it at: %s', $secret->name(), $secret->url($org)));
     if ($repo !== '') {
-        $output->info(sprintf('[TOKEN] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
+        $output->info(sprintf('[SECRET] Add it at: https://github.com/%s/settings/secrets/actions/new', $repo));
     }
 }

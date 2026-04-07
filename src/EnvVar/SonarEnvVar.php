@@ -2,39 +2,39 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Token;
+namespace Haspadar\Piqule\EnvVar;
 
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Codecov coverage upload token
+ * SonarCloud scanner token for local analysis
  */
-final readonly class CodecovToken implements Token
+final readonly class SonarEnvVar implements EnvVar
 {
     #[Override]
-    public function secret(): string
+    public function name(): string
     {
-        return 'CODECOV_TOKEN';
+        return 'SONAR_TOKEN';
     }
 
     #[Override]
-    public function url(string $org): string
+    public function url(): string
     {
-        return "https://app.codecov.io/account/gh/{$org}/repositories";
+        return 'https://sonarcloud.io/account/security';
     }
 
     /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {
-        if (!$config->has('phpunit.enabled')) {
+        if (!$config->has('sonar.enabled')) {
             return true;
         }
 
         return filter_var(
-            $config->list('phpunit.enabled')[0] ?? true,
+            $config->list('sonar.enabled')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE,
         ) ?? true;

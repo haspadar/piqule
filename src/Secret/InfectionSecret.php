@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Token;
+namespace Haspadar\Piqule\Secret;
 
 use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\PiquleException;
@@ -11,10 +11,10 @@ use Override;
 /**
  * Stryker mutation testing dashboard token
  */
-final readonly class InfectionToken implements Token
+final readonly class InfectionSecret implements Secret
 {
     #[Override]
-    public function secret(): string
+    public function name(): string
     {
         return 'STRYKER_DASHBOARD_API_KEY';
     }
@@ -22,7 +22,6 @@ final readonly class InfectionToken implements Token
     #[Override]
     public function url(string $org): string
     {
-        // Stryker dashboard is org-agnostic
         return 'https://dashboard.stryker-mutator.io';
     }
 

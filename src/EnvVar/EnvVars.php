@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Haspadar\Piqule\Token;
+namespace Haspadar\Piqule\EnvVar;
 
 /**
- * Collection of external service tokens
+ * Collection of local environment variables
  */
-final readonly class Tokens
+final readonly class EnvVars
 {
-    /** @param list<Token> $items */
+    /** @param list<EnvVar> $items */
     public function __construct(private array $items) {}
 
-    /** @return list<Token> */
+    /** @return list<EnvVar> */
     public function items(): array
     {
         return $this->items;

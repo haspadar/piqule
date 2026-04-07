@@ -255,34 +255,51 @@ Keys are flat dot-separated names. Accessing an undeclared key throws `PiquleExc
 
 ---
 
-## Tokens
+## Secrets and Environment Variables
 
-External services (Codecov, Stryker, SonarCloud) require GitHub Secrets for CI integration.
+External services require credentials. They are split into two categories:
 
-`bin/piqule-tokens-check` verifies that required secrets exist in the repository. It queries `gh secret list` and prints a tip for each missing secret with a link to obtain one. Tokens available as non-empty local environment variables are not reported as missing (empty values like `SONAR_TOKEN=` are still flagged). Runs automatically after `piqule sync`, `piqule check` and `piqule fix`.
+- **Secrets** (`src/Secret/Secret.php`) — GitHub Secrets for CI. Verified via `gh secret list`. Output prefixed with `[SECRET]`.
+- **Environment variables** (`src/EnvVar/EnvVar.php`) — local env vars on the developer machine. Verified via `getenv()`. Output prefixed with `[ENV]`.
 
-If `gh` is not installed or not authenticated, the check is silently skipped.
+`bin/piqule-tokens-check` verifies both. Runs automatically after `piqule sync`, `piqule check` and `piqule fix`.
 
-### Token Interface
+If `gh` is not installed or not authenticated, only secret verification is skipped; env var checks still run.
 
-Each token implements `Token` (`src/Token/Token.php`):
+### Secret Interface
 
-- `secret()` — GitHub Secret name (e.g. `CODECOV_TOKEN`)
-- `url(string $org)` — URL where the user can obtain the token
-- `enabled(Config $config)` — whether the token is needed based on config
+Each secret implements `Secret` (`src/Secret/Secret.php`):
 
-### Existing Tokens
+- `name()` — GitHub Secret name (e.g. `CODECOV_TOKEN`)
+- `url(string $org)` — URL where the user can obtain the secret
+- `enabled(Config $config)` — whether the secret is needed based on config
 
-| Class | Secret | Enabled when |
-|-------|--------|-------------|
-| `CodecovToken` | `CODECOV_TOKEN` | `phpunit.enabled` is true |
-| `InfectionToken` | `STRYKER_DASHBOARD_API_KEY` | `infection.enabled` is true |
-| `SonarToken` | `SONAR_TOKEN` | `sonar.enabled` is true |
+### EnvVar Interface
 
-### Adding a Token
+Each env var implements `EnvVar` (`src/EnvVar/EnvVar.php`):
 
-1. Create a class in `src/Token/` implementing `Token`
-2. Register it in `bin/piqule-tokens-check` inside the `Tokens` array
+- `name()` — environment variable name (e.g. `SONAR_TOKEN`)
+- `url()` — URL where the user can obtain the value
+- `enabled(Config $config)` — whether the env var is needed based on config
+
+### Existing Credentials
+
+| Class | Name | Type | Enabled when |
+|-------|------|------|-------------|
+| `CodecovSecret` | `CODECOV_TOKEN` | Secret | `phpunit.enabled` is true |
+| `InfectionSecret` | `STRYKER_DASHBOARD_API_KEY` | Secret | `infection.enabled` is true |
+| `SonarEnvVar` | `SONAR_TOKEN` | EnvVar | `sonar.enabled` is true |
+
+### Adding a Secret
+
+1. Create a class in `src/Secret/` implementing `Secret`
+2. Register it in `bin/piqule-tokens-check` inside the `Secrets` array
+3. Write unit tests
+
+### Adding an Environment Variable
+
+1. Create a class in `src/EnvVar/` implementing `EnvVar`
+2. Register it in `bin/piqule-tokens-check` inside the `EnvVars` array
 3. Write unit tests
 
 ---
