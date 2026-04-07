@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CLOUD="<< config(sonar.cloud)|first()|join("") >>"
-if [ "$CLOUD" = "1" ] || [ "$CLOUD" = "true" ]; then
+if [ "$CLOUD" = "1" ] || [ "$CLOUD" = "true" ] || [ "$CLOUD" = "yes" ] || [ "$CLOUD" = "on" ]; then
   printf '\033[33m[SKIP] SonarCloud automatic analysis — no local scanner needed\033[0m\n'
   exit 0
 fi
