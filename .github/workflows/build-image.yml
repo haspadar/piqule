@@ -83,6 +83,7 @@ jobs:
             git add "${FILES[@]}"
             git commit -m "Update infra image digest to ${NEW_DIGEST:0:19}"
             git push -u origin "$BRANCH"
+            gh label create "dependencies" --color 0075ca 2>/dev/null || true
             PR_URL=$(gh pr create \
               --base main \
               --head "$BRANCH" \
