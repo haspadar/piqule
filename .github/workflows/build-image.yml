@@ -5,6 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   packages: write
@@ -52,13 +56,19 @@ jobs:
       - name: Update image digest in config
         run: |
           NEW_DIGEST="${{ steps.build.outputs.digest }}"
-          CONFIG="templates/always/.piqule/config.yaml"
-          OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "$CONFIG" | head -1)
+          FILES=(
+            "templates/always/.piqule/config.yaml"
+            ".piqule/config.yaml"
+            ".piqule/_docker.sh"
+          )
+          OLD_DIGEST=$(grep -o 'sha256:[a-f0-9]*' "${FILES[0]}" | head -1)
           if [ "$OLD_DIGEST" != "$NEW_DIGEST" ]; then
-            sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$CONFIG"
+            for file in "${FILES[@]}"; do
+              sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$file"
+            done
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add "$CONFIG"
+            git add "${FILES[@]}"
             git commit -m "Update infra image digest to ${NEW_DIGEST:0:19} [skip ci]"
             git push
           fi
