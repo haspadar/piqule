@@ -12,6 +12,7 @@ concurrency:
 permissions:
   contents: write
   packages: write
+  pull-requests: write
 
 jobs:
   build:
@@ -71,12 +72,32 @@ jobs:
             exit 1
           fi
           if [ "$OLD_DIGEST" != "$NEW_DIGEST" ]; then
+            BRANCH="auto-digest-${NEW_DIGEST:7:12}"
+            git push origin --delete "$BRANCH" 2>/dev/null || true
             for file in "${FILES[@]}"; do
               sed -i "s|$OLD_DIGEST|$NEW_DIGEST|" "$file"
             done
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+            git checkout -b "$BRANCH"
             git add "${FILES[@]}"
-            git commit -m "Update infra image digest to ${NEW_DIGEST:0:19} [skip ci]"
-            git push
+            git commit -m "Update infra image digest to ${NEW_DIGEST:0:19}"
+            git push -u origin "$BRANCH"
+            PR_URL=$(gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "Update infra image digest" \
+              --body "Auto-generated: pin digest to ${NEW_DIGEST:0:19}" \
+              --label "dependencies") || {
+              echo "::error::Failed to create PR"
+              exit 1
+            }
+            PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
+            if [ -z "$PR_NUMBER" ]; then
+              echo "::error::Could not parse PR number from: $PR_URL"
+              exit 1
+            fi
+            gh pr merge "$PR_NUMBER" --auto --merge --delete-branch
           fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
