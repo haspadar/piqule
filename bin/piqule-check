@@ -46,16 +46,24 @@ if (file_exists($yamlPath)) {
     $config = $defaults;
 }
 
-$flags = ['-v', '--verbose', '-p', '--parallel', '-P', '--no-parallel'];
+$flags = ['-v', '--verbose', '-p', '--parallel', '-P', '--no-parallel', '-f', '--full', '-F', '--no-full'];
 $verbose = in_array('-v', $argv, true) || in_array('--verbose', $argv, true);
 $parallelFlag = in_array('-p', $argv, true) || in_array('--parallel', $argv, true);
 $noParallelFlag = in_array('-P', $argv, true) || in_array('--no-parallel', $argv, true);
+$fullFlag = in_array('-f', $argv, true) || in_array('--full', $argv, true);
+$noFullFlag = in_array('-F', $argv, true) || in_array('--no-full', $argv, true);
 $parallelDefault = filter_var(
     $config->list('check.parallel')[0] ?? false,
     FILTER_VALIDATE_BOOLEAN,
     FILTER_NULL_ON_FAILURE,
 ) ?? false;
+$fullDefault = filter_var(
+    $config->list('check.full')[0] ?? false,
+    FILTER_VALIDATE_BOOLEAN,
+    FILTER_NULL_ON_FAILURE,
+) ?? false;
 $parallel = $noParallelFlag ? false : ($parallelFlag || $parallelDefault);
+$full = $noFullFlag ? false : ($fullFlag || $fullDefault);
 $args = array_values(array_filter($argv, static fn(string $a): bool => !in_array($a, $flags, true)));
 $requested = $args[1] ?? '';
 
@@ -83,26 +91,13 @@ $slowChecks = array_map(
     $config->list('check.slow'),
 );
 
-$groups = ['fast', 'full'];
-
-if ($requested === '' || in_array($requested, $groups, true)) {
-    $group = $requested !== '' ? $requested : (string)($config->list('check.default')[0] ?? 'fast');
-
-    if (!in_array($group, $groups, true)) {
-        fwrite(STDERR, "Invalid check.default value: {$group}. Must be one of: " . implode(', ', $groups) . "\n");
-        exit(1);
-    }
-
-    if ($group === 'fast') {
-        $checks = array_values(
-            array_filter(
-                $checks,
-                static fn(string $key): bool => !in_array($key, $slowChecks, true),
-            ),
-        );
-    }
-
-    $requested = '';
+if ($requested === '' && !$full) {
+    $checks = array_values(
+        array_filter(
+            $checks,
+            static fn(string $key): bool => !in_array($key, $slowChecks, true),
+        ),
+    );
 }
 
 $isEnabled = static function(string $key) use ($config): bool {

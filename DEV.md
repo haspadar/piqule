@@ -303,9 +303,9 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `check.default` | `"fast"` | Default group for `piqule check` without arguments (`fast` or `full`) |
+| `check.full` | `false` | Include slow checks by default (`-f`/`--full` to force, `-F`/`--no-full` to disable) |
 | `check.parallel` | `true` | Run checks concurrently by default (`-p`/`--parallel` to force, `-P`/`--no-parallel` to disable) |
-| `check.slow` | `["infection", "sonar"]` | Checks excluded from `fast` group |
+| `check.slow` | `["infection", "sonar"]` | Checks excluded unless `--full` is passed or `check.full` is `true` |
 
 ### CI
 
