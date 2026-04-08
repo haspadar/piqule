@@ -33,12 +33,12 @@ final readonly class SonarEnvVar implements EnvVar
             return false;
         }
 
-        if (!$config->has('sonar.enabled')) {
+        if (!$config->has('sonar.cli')) {
             return true;
         }
 
         return filter_var(
-            $config->list('sonar.enabled')[0] ?? true,
+            $config->list('sonar.cli')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE,
         ) ?? true;

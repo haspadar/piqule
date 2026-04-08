@@ -237,7 +237,7 @@ For a full description of every class and the decorator pattern, see [docs/archi
 2. Add any config keys the tool needs to `src/Config/DefaultConfig.php` (`DEFAULTS` array)
 3. Register the new key type in `src/Config/OverrideConfig.php` (`OverrideMap` PHPDoc)
 4. Add the tool name to `$checks` in `bin/piqule-check`
-5. Add `'<tool>.enabled' => true` to `DefaultConfig` and `'<tool>.enabled'?: bool` to `OverrideMap` in `OverrideConfig`
+5. Add `'<tool>.cli' => true` to `DefaultConfig` and `'<tool>.cli'?: bool` to `OverrideMap` in `OverrideConfig`
 6. Run `vendor/bin/piqule sync` to verify template rendering
 7. Write unit and integration tests
 
@@ -286,9 +286,9 @@ Each env var implements `EnvVar` (`src/EnvVar/EnvVar.php`):
 
 | Class | Name | Type | Enabled when |
 |-------|------|------|-------------|
-| `CodecovSecret` | `CODECOV_TOKEN` | Secret | `phpunit.enabled` is true |
-| `InfectionSecret` | `STRYKER_DASHBOARD_API_KEY` | Secret | `infection.enabled` is true |
-| `SonarEnvVar` | `SONAR_TOKEN` | EnvVar | `sonar.cloud` is false and `sonar.enabled` is true |
+| `CodecovSecret` | `CODECOV_TOKEN` | Secret | `phpunit.cli` is true |
+| `InfectionSecret` | `STRYKER_DASHBOARD_API_KEY` | Secret | `infection.cli` is true |
+| `SonarEnvVar` | `SONAR_TOKEN` | EnvVar | `sonar.cloud` is false and `sonar.cli` is true |
 
 ### Adding a Secret
 
@@ -350,13 +350,13 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `actionlint.enabled` | `true` | Enable GitHub Actions linting |
+| `actionlint.cli` | `true` | Enable GitHub Actions linting |
 
 ### hadolint
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `hadolint.enabled` | `true` | Enable Dockerfile linting |
+| `hadolint.cli` | `true` | Enable Dockerfile linting |
 | `hadolint.failure_threshold` | `"error"` | Minimum severity to fail |
 | `hadolint.ignore` | `["vendor", "tests", ".git"]` | Ignored directories |
 | `hadolint.ignored_yaml` | `"[]"` | Ignored rules (YAML literal) |
@@ -368,7 +368,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `jsonlint.enabled` | `true` | Enable JSON linting |
+| `jsonlint.cli` | `true` | Enable JSON linting |
 | `jsonlint.compact` | `true` | Compact output |
 | `jsonlint.continue` | `true` | Continue on error |
 | `jsonlint.duplicate_keys` | `false` | Allow duplicate keys |
@@ -379,14 +379,14 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `markdownlint.enabled` | `true` | Enable Markdown linting |
+| `markdownlint.cli` | `true` | Enable Markdown linting |
 | `markdownlint.ignores` | `["vendor/**", "tests/**", ".git/**"]` | Ignored patterns |
 
 ### php-cs-fixer
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `php-cs-fixer.enabled` | `true` | Enable PHP CS Fixer |
+| `php-cs-fixer.cli` | `true` | Enable PHP CS Fixer |
 | `php_cs_fixer.allow_unsupported` | `["true"]` | Allow unsupported PHP versions |
 | `php_cs_fixer.exclude` | `["vendor", "tests", ".git"]` | Excluded directories |
 | `php_cs_fixer.paths` | `["../.."]` | Paths to fix |
@@ -395,7 +395,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `phpcs.enabled` | `true` | Enable PHP_CodeSniffer |
+| `phpcs.cli` | `true` | Enable PHP_CodeSniffer |
 | `phpcs.excludes` | `["vendor/*", "tests/*", ".git/*"]` | Excluded patterns |
 | `phpcs.files` | `["../../src"]` | Files/directories to check |
 | `phpcs.root_namespace` | `""` | Root namespace for PSR-4 check |
@@ -404,7 +404,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `phpmd.enabled` | `true` | Enable PHP Mess Detector |
+| `phpmd.cli` | `true` | Enable PHP Mess Detector |
 | `phpmd.paths` | `["src"]` | Source paths |
 | `phpmd.class_complexity` | `50` | Max class complexity |
 | `phpmd.class_length` | `200` | Max class length |
@@ -419,7 +419,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `phpmetrics.enabled` | `true` | Enable PHP Metrics |
+| `phpmetrics.cli` | `true` | Enable PHP Metrics |
 | `phpmetrics.includes` | `["../../src"]` | Included directories |
 | `phpmetrics.excludes` | `["vendor", "tests", ".git"]` | Excluded directories |
 | `phpmetrics.extensions` | `["php"]` | File extensions |
@@ -443,7 +443,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `phpstan.enabled` | `true` | Enable PHPStan |
+| `phpstan.cli` | `true` | Enable PHPStan |
 | `phpstan.level` | `9` | Analysis level (0-9) |
 | `phpstan.memory` | `"1G"` | Memory limit |
 | `phpstan.paths` | `["../../src"]` | Paths to analyze |
@@ -454,7 +454,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `phpunit.enabled` | `true` | Enable PHPUnit |
+| `phpunit.cli` | `true` | Enable PHPUnit |
 | `phpunit.php_options` | `"-d memory_limit=1G"` | PHP CLI options |
 | `phpunit.source.include` | `["../../src"]` | Source directories for coverage |
 | `phpunit.testsuites.unit` | `["../../tests/Unit"]` | Unit test directories |
@@ -464,7 +464,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `psalm.enabled` | `true` | Enable Psalm |
+| `psalm.cli` | `true` | Enable Psalm |
 | `psalm.error_level` | `1` | Error level (1-8) |
 | `psalm.project.directories` | `["../../src"]` | Directories to analyze |
 | `psalm.project.files` | `[]` | Individual files to analyze |
@@ -475,7 +475,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `infection.enabled` | `true` | Enable Infection mutation testing |
+| `infection.cli` | `true` | Enable Infection mutation testing |
 | `infection.php_options` | `"-d memory_limit=1G"` | PHP CLI options |
 | `infection.source.directories` | `["../../src"]` | Source directories |
 | `infection.timeout` | `30` | Timeout per mutant (seconds) |
@@ -484,7 +484,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `shellcheck.enabled` | `true` | Enable ShellCheck |
+| `shellcheck.cli` | `true` | Enable ShellCheck |
 | `shellcheck.exclude` | `[]` | Excluded rule codes |
 | `shellcheck.external_sources` | `true` | Follow sourced files |
 | `shellcheck.ignore_dirs` | `["vendor", "tests", ".git"]` | Ignored directories |
@@ -497,7 +497,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `sonar.cloud` | `true` | Use SonarCloud automatic analysis (skip local scanner and SONAR_TOKEN) |
-| `sonar.enabled` | `true` | Enable SonarCloud |
+| `sonar.cli` | `true` | Enable local sonar-scanner |
 | `sonar.organization` | `[]` | SonarCloud organization |
 | `sonar.projectKey` | `[]` | SonarCloud project key |
 | `sonar.sources` | `["src"]` | Source directories |
@@ -509,13 +509,13 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `typos.enabled` | `true` | Enable typo checking |
+| `typos.cli` | `true` | Enable typo checking |
 | `typos.exclude` | `["vendor/", "tests/", ".git/"]` | Excluded directories |
 
 ### yamllint
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `yamllint.enabled` | `true` | Enable YAML linting |
+| `yamllint.cli` | `true` | Enable YAML linting |
 | `yamllint.ignore` | `["vendor/**", "tests/**", ...]` | Ignored patterns |
 | `yamllint.line_length.max` | `120` | Maximum line length |

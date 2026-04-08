@@ -16,8 +16,8 @@ final class InfectionSecretTest extends TestCase
     {
         self::assertSame(
             true,
-            (new InfectionSecret())->enabled(new FakeConfig(['infection.enabled' => [true]])),
-            'InfectionSecret must be enabled when infection.enabled is true',
+            (new InfectionSecret())->enabled(new FakeConfig(['infection.cli' => [true]])),
+            'InfectionSecret must be enabled when infection.cli is true',
         );
     }
 
@@ -27,7 +27,7 @@ final class InfectionSecretTest extends TestCase
         self::assertSame(
             true,
             (new InfectionSecret())->enabled(new FakeConfig([])),
-            'InfectionSecret must be enabled when infection.enabled key is absent',
+            'InfectionSecret must be enabled when infection.cli key is absent',
         );
     }
 
@@ -36,8 +36,8 @@ final class InfectionSecretTest extends TestCase
     {
         self::assertSame(
             false,
-            (new InfectionSecret())->enabled(new FakeConfig(['infection.enabled' => [false]])),
-            'InfectionSecret must be disabled when infection.enabled is false',
+            (new InfectionSecret())->enabled(new FakeConfig(['infection.cli' => [false]])),
+            'InfectionSecret must be disabled when infection.cli is false',
         );
     }
 

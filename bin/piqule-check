@@ -102,9 +102,9 @@ if ($requested === '' && !$full) {
 }
 
 $isEnabled = static function(string $key) use ($config): bool {
-    $enabledKey = "{$key}.enabled";
+    $cliKey = "{$key}.cli";
 
-    return !$config->has($enabledKey) || (bool)($config->list($enabledKey)[0] ?? true);
+    return !$config->has($cliKey) || (bool)($config->list($cliKey)[0] ?? true);
 };
 
 $total = $requested !== ''
