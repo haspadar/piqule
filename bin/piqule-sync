@@ -7,9 +7,20 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\ConfigPaths;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
+use Haspadar\Piqule\Envs\EmptyEnvs;
+use Haspadar\Piqule\Envs\YamlEnvs;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
+use Haspadar\Piqule\Formula\Action\Action;
+use Haspadar\Piqule\Formula\Action\ConfigAction;
+use Haspadar\Piqule\Formula\Action\EnvsAction;
+use Haspadar\Piqule\Formula\Action\FirstAction;
+use Haspadar\Piqule\Formula\Action\FormatAction;
+use Haspadar\Piqule\Formula\Action\FormatEachAction;
+use Haspadar\Piqule\Formula\Action\IfEmptyAction;
+use Haspadar\Piqule\Formula\Action\IfNotEmptyAction;
+use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Files\EachFile;
 use Haspadar\Piqule\Files\FilteredFiles;
 use Haspadar\Piqule\Files\FolderFiles;
@@ -56,6 +67,30 @@ try {
         $config = $defaults;
     }
 
+    $envs = file_exists($yamlPath)
+        ? new YamlEnvs($yamlPath)
+        : new EmptyEnvs();
+
+    $actions = [
+        'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
+        'envs' => fn(string $raw): Action => new EnvsAction($envs, $raw),
+        'first' => static fn(string $raw): Action => match (trim($raw)) {
+            '' => new FirstAction(),
+            default => throw new PiquleException('Action "first" does not accept arguments'),
+        },
+        'format' => static fn(string $raw): Action => new FormatAction($raw),
+        'format_each' => static fn(string $raw): Action => new FormatEachAction($raw),
+        'if_empty' => static fn(string $raw): Action => match (trim($raw)) {
+            '' => new IfEmptyAction(),
+            default => throw new PiquleException('Action "if_empty" does not accept arguments'),
+        },
+        'if_not_empty' => static fn(string $raw): Action => match (trim($raw)) {
+            '' => new IfNotEmptyAction(),
+            default => throw new PiquleException('Action "if_not_empty" does not accept arguments'),
+        },
+        'join' => static fn(string $raw): Action => new JoinAction($raw),
+    ];
+
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);
 
@@ -64,7 +99,7 @@ try {
             new DiskStorage($libraryRoot . '/templates/always'),
             '',
         ),
-        fn(File $file): File => new ConfiguredFile($file, $config),
+        fn(File $file): File => new ConfiguredFile($file, $actions),
     );
 
     $gitFiles = new MappedFiles(
@@ -80,7 +115,7 @@ try {
             new DiskStorage($libraryRoot . '/templates/once'),
             '',
         ),
-        fn(File $file): File => new ConfiguredFile($file, $config),
+        fn(File $file): File => new ConfiguredFile($file, $actions),
     );
 
     $gitDiffFiles = new FilteredFiles(
