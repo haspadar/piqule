@@ -48,9 +48,9 @@ final class SonarEnvVarTest extends TestCase
             false,
             (new SonarEnvVar())->enabled(new FakeConfig([
                 'sonar.cloud' => [false],
-                'sonar.enabled' => [false],
+                'sonar.cli' => [false],
             ])),
-            'SonarEnvVar must be disabled when sonar.enabled is false even in scanner mode',
+            'SonarEnvVar must be disabled when sonar.cli is false even in scanner mode',
         );
     }
 
@@ -61,9 +61,9 @@ final class SonarEnvVarTest extends TestCase
             true,
             (new SonarEnvVar())->enabled(new FakeConfig([
                 'sonar.cloud' => [false],
-                'sonar.enabled' => [true],
+                'sonar.cli' => [true],
             ])),
-            'SonarEnvVar must be enabled when sonar.cloud is false and sonar.enabled is true',
+            'SonarEnvVar must be enabled when sonar.cloud is false and sonar.cli is true',
         );
     }
 
@@ -74,9 +74,9 @@ final class SonarEnvVarTest extends TestCase
             false,
             (new SonarEnvVar())->enabled(new FakeConfig([
                 'sonar.cloud' => [true],
-                'sonar.enabled' => [false],
+                'sonar.cli' => [false],
             ])),
-            'SonarEnvVar must be disabled when sonar.cloud is true regardless of sonar.enabled',
+            'SonarEnvVar must be disabled when sonar.cloud is true regardless of sonar.cli',
         );
     }
 
@@ -87,7 +87,7 @@ final class SonarEnvVarTest extends TestCase
             false,
             (new SonarEnvVar())->enabled(new FakeConfig([
                 'sonar.cloud' => ['false'],
-                'sonar.enabled' => ['false'],
+                'sonar.cli' => ['false'],
             ])),
             'SonarEnvVar must handle string "false" for both keys',
         );

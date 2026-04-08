@@ -86,7 +86,7 @@ final class DefaultConfigTest extends TestCase
     {
         self::assertSame(
             [true],
-            (new DefaultConfig())->list('hadolint.enabled'),
+            (new DefaultConfig())->list('hadolint.cli'),
             'hadolint must be enabled by default',
         );
     }

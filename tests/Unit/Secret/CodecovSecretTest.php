@@ -16,8 +16,8 @@ final class CodecovSecretTest extends TestCase
     {
         self::assertSame(
             true,
-            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.enabled' => [true]])),
-            'CodecovSecret must be enabled when phpunit.enabled is true',
+            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.cli' => [true]])),
+            'CodecovSecret must be enabled when phpunit.cli is true',
         );
     }
 
@@ -27,7 +27,7 @@ final class CodecovSecretTest extends TestCase
         self::assertSame(
             true,
             (new CodecovSecret())->enabled(new FakeConfig([])),
-            'CodecovSecret must be enabled when phpunit.enabled key is absent',
+            'CodecovSecret must be enabled when phpunit.cli key is absent',
         );
     }
 
@@ -36,8 +36,8 @@ final class CodecovSecretTest extends TestCase
     {
         self::assertSame(
             false,
-            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.enabled' => [false]])),
-            'CodecovSecret must be disabled when phpunit.enabled is false',
+            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.cli' => [false]])),
+            'CodecovSecret must be disabled when phpunit.cli is false',
         );
     }
 
