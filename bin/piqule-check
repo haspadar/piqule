@@ -68,24 +68,20 @@ $full = $noFullFlag ? false : ($fullFlag || $fullDefault);
 $args = array_values(array_filter($argv, static fn(string $a): bool => !in_array($a, $flags, true)));
 $requested = $args[1] ?? '';
 
-$checks = [
-    'actionlint',
-    'hadolint',
-    'markdownlint',
-    'yamllint',
-    'typos',
-    'shellcheck',
-    'jsonlint',
-    'phpstan',
-    'psalm',
-    'phpmd',
-    'phpmetrics',
-    'phpcs',
-    'php-cs-fixer',
-    'phpunit',
-    'infection',
-    'sonar',
-];
+$checks = array_values(
+    array_filter(
+        array_map(
+            static fn(string $key): string => substr($key, 0, -4),
+            array_filter(
+                array_keys($config->toArray()),
+                static fn(string $key): bool => str_ends_with($key, '.cli'),
+            ),
+        ),
+        static fn(string $name): bool => file_exists(
+            "{$projectRoot}/.piqule/{$name}/command.sh"
+        ),
+    ),
+);
 
 $slowChecks = array_map(
     'strval',
