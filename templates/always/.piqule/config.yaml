@@ -26,6 +26,12 @@ defaults:
   coverage.project.target: 80
   coverage.project.threshold: 2
 
+  codecov.cloud: true
+  codecov.cli: false
+
+  coderabbit.cloud: true
+  coderabbit.cli: false
+
   docker.image: "ghcr.io/haspadar/piqule-infra@sha256:e88f74183c5daf1c422006307b04222db8cd524f250330e83aa667c5ce919c23"
 
   actionlint.cli: true
@@ -123,7 +129,7 @@ defaults:
   shellcheck.source_path: "."
 
   sonar.cloud: true
-  sonar.cli: true
+  sonar.cli: false
   sonar.organization: []
   sonar.projectKey: []
   sonar.sources: ["src"]
