@@ -21,7 +21,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  *     new DefaultConfig();
  *
- *     new DefaultConfig(composerJson: '/path/to/composer.json');
+ *     new DefaultConfig(paths: new ConfigPaths(composerJson: '/path/to/composer.json'));
  */
 final class DefaultConfig implements Config
 {
@@ -37,11 +37,10 @@ final class DefaultConfig implements Config
     public function __construct(
         array $phpSrc = [],
         array $exclude = [],
-        private readonly string $composerJson = '',
-        string $configPath = __DIR__ . '/../../templates/always/.piqule/config.yaml',
+        private readonly ConfigPaths $paths = new ConfigPaths(),
     ) {
         /** @var array<string, mixed> $yaml */
-        $yaml = Yaml::parseFile($configPath);
+        $yaml = Yaml::parseFile($this->paths->configYaml());
 
         if (!array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
             throw new PiquleException('Missing "defaults" section in config.yaml');
@@ -99,9 +98,10 @@ final class DefaultConfig implements Config
         return $this->defaults;
     }
 
+    /** Returns the composer.json file path */
     public function composerJson(): string
     {
-        return $this->composerJson;
+        return $this->paths->composerJson();
     }
 
     /**
@@ -125,7 +125,7 @@ final class DefaultConfig implements Config
             'php_cs_fixer.exclude' => $exclude,
             'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
             'phpcs.files' => $projectIncludes,
-            'phpcs.root_namespace' => (new ComposerRootNamespace($this->composerJson))->toString(),
+            'phpcs.root_namespace' => (new ComposerRootNamespace($this->paths->composerJson()))->toString(),
             'phpmd.paths' => $phpSrc,
             'phpmetrics.includes' => $projectIncludes,
             'phpmetrics.excludes' => $exclude,
