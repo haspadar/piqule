@@ -57,6 +57,7 @@ jobs:
         with:
           php-version: << config(php.versions)|first() >>
 
+<< envs("      ") >>
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
@@ -92,6 +93,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, json
 
+<< envs("      ") >>
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
@@ -118,6 +120,7 @@ jobs:
           coverage: xdebug
           extensions: mbstring, dom, json
 
+<< envs("      ") >>
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 

@@ -57,6 +57,7 @@ jobs:
         with:
           php-version: 8.3
 
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
@@ -92,6 +93,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, json
 
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
@@ -117,6 +119,7 @@ jobs:
           php-version: 8.3
           coverage: xdebug
           extensions: mbstring, dom, json
+
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
