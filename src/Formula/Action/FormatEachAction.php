@@ -27,7 +27,7 @@ final readonly class FormatEachAction implements Action
 
         return new ListArgs(
             array_map(
-                static fn(int|float|string|bool $item): string => sprintf($template, $item),
+                static fn(int|float|string|bool $item): string => sprintf($template, (string) $item),
                 (new StringifiedArgs($args))->values(),
             ),
         );

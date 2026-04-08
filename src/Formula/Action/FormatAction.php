@@ -47,7 +47,7 @@ final readonly class FormatAction implements Action
         $templateValues = $templateArgs->values();
         $template = $this->normalize((string) ($templateValues[0] ?? ''));
 
-        $scalar = (new StringifiedArgs($args))->values()[0] ?? '';
+        $scalar = (string) ((new StringifiedArgs($args))->values()[0] ?? '');
 
         try {
             $result = sprintf($template, $scalar);
