@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\File\File;
-use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
@@ -17,7 +16,6 @@ final readonly class DiffingStorage implements Storage
     /** Initializes with underlying storage and a change reaction. */
     public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
-    /** @throws PiquleException */
     #[Override]
     public function write(File $file): self
     {

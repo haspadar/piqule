@@ -16,10 +16,6 @@ final readonly class ParsedArgs implements Args
     /** Initializes with the args containing a JSON list literal. */
     public function __construct(private Args $origin) {}
 
-    /**
-     * @throws InvalidArgumentException
-     * @return list<int|float|string|bool>
-     */
     #[Override]
     public function values(): array
     {

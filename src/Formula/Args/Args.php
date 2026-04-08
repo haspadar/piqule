@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Formula\Args;
 
+use InvalidArgumentException;
+
 /**
  * Represents a sequence of runtime values flowing through a DSL action pipeline
  *
@@ -16,6 +18,7 @@ interface Args
     /**
      * Returns ordered values produced by the previous action
      *
+     * @throws InvalidArgumentException
      * @return list<int|float|string|bool>
      */
     public function values(): array;

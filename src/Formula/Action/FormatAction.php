@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Formula\Action;
 
+use ArgumentCountError;
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
 use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Haspadar\Piqule\PiquleException;
 use Override;
-use Throwable;
+use ValueError;
 
 /**
  * Applies a sprintf template to a single incoming value
@@ -26,7 +27,6 @@ final readonly class FormatAction implements Action
 
     public function __construct(private string $raw) {}
 
-    /** @throws PiquleException */
     #[Override]
     public function transformed(Args $args): Args
     {
@@ -50,7 +50,7 @@ final readonly class FormatAction implements Action
 
         try {
             $result = sprintf($template, $scalar);
-        } catch (Throwable $e) {
+        } catch (ArgumentCountError | ValueError $e) {
             throw new PiquleException(
                 sprintf('format() failed: %s', $e->getMessage()),
                 0,
