@@ -168,4 +168,21 @@ final class DefaultConfigTest extends TestCase
             $folder->close();
         }
     }
+
+    #[Test]
+    public function throwsWhenConfigYamlContainsInvalidSyntax(): void
+    {
+        $folder = (new TempFolder())->withFile('broken.yaml', ": invalid: yaml: :");
+
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Failed to parse config');
+
+        $config = new DefaultConfig(paths: new ConfigPaths(configYaml: $folder->path() . '/broken.yaml'));
+
+        try {
+            $config->has('any');
+        } finally {
+            $folder->close();
+        }
+    }
 }

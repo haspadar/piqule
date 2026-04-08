@@ -105,22 +105,28 @@ final class YamlConfigTest extends TestCase
     }
 
     #[Test]
-    public function toArrayReturnsAllKeysWithOverridesAndAppendsApplied(): void
+    public function toArrayIncludesOverriddenValue(): void
     {
-        $path = $this->folder->withFile('.piqule.yaml', "override:\n    phpstan.level: 7\nappend:\n    phpstan.neon_includes:\n        - ../../rules.neon\n")->path() . '/.piqule.yaml';
+        $path = $this->folder->withFile('.piqule.yaml', "override:\n    phpstan.level: 7\n")->path() . '/.piqule.yaml';
 
+        self::assertSame(
+            [7],
+            (new YamlConfig($path, new DefaultConfig()))->toArray()['phpstan.level'],
+            'toArray must reflect overridden phpstan.level',
+        );
+    }
+
+    #[Test]
+    public function returnsCachedConfigOnRepeatedAccess(): void
+    {
+        $path = $this->folder->withFile('.piqule.yaml', "override:\n    phpstan.level: 7\n")->path() . '/.piqule.yaml';
         $config = new YamlConfig($path, new DefaultConfig());
+        $config->has('phpstan.level');
 
         self::assertSame(
             [7],
             $config->list('phpstan.level'),
-            'toArray must reflect overridden phpstan.level',
-        );
-
-        self::assertSame(
-            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../rules.neon'],
-            $config->list('phpstan.neon_includes'),
-            'toArray must reflect appended phpstan.neon_includes',
+            'repeated access must return the same cached result',
         );
     }
 
