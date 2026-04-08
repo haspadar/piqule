@@ -39,10 +39,9 @@ final class DefaultConfig implements Config
         array $exclude = [],
         private readonly ConfigPaths $paths = new ConfigPaths(),
     ) {
-        /** @var array<string, mixed> $yaml */
         $yaml = Yaml::parseFile($this->paths->configYaml());
 
-        if (!array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
+        if (!is_array($yaml) || !array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
             throw new PiquleException('Missing "defaults" section in config.yaml');
         }
 
