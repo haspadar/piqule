@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Config;
 
+use Haspadar\Piqule\Config\ConfigPaths;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Fixture\TempFolder;
@@ -140,7 +141,7 @@ final class DefaultConfigTest extends TestCase
             '{"autoload":{"psr-4":{"Acme\\\\":"src/"}}}',
         );
 
-        $namespace = (new DefaultConfig(composerJson: $folder->path() . '/composer.json'))->list('phpcs.root_namespace');
+        $namespace = (new DefaultConfig(paths: new ConfigPaths($folder->path() . '/composer.json')))->list('phpcs.root_namespace');
 
         $folder->close();
 
@@ -160,7 +161,7 @@ final class DefaultConfigTest extends TestCase
         $this->expectExceptionMessage('Missing "defaults" section');
 
         try {
-            new DefaultConfig(configPath: $folder->path() . '/empty.yaml');
+            new DefaultConfig(paths: new ConfigPaths(configYaml: $folder->path() . '/empty.yaml'));
         } finally {
             $folder->close();
         }
