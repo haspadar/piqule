@@ -12,39 +12,50 @@ use Haspadar\Piqule\PiquleException;
  */
 final readonly class YamlPathKeys
 {
-    /** @var list<string> */
-    private array $phpSrc;
-
-    /** @var list<string> */
-    private array $exclude;
-
     /**
      * @param array<string, mixed> $overrides
      * @param array<string, mixed> $appends
-     * @throws PiquleException
      */
-    public function __construct(array $overrides, array $appends, DefaultConfig $defaults)
+    public function __construct(
+        private array $overrides,
+        private array $appends,
+        private DefaultConfig $defaults,
+    ) {}
+
+    /**
+     * @throws PiquleException
+     * @return list<string>
+     */
+    public function phpSrc(): array
     {
-        $phpSrc = array_key_exists('php.src', $overrides) && is_array($overrides['php.src'])
-            ? $this->toStringList(array_values($overrides['php.src']), 'override.php.src')
-            : $this->toStringList($defaults->list('php.src'), 'php.src');
+        $result = array_key_exists('php.src', $this->overrides) && is_array($this->overrides['php.src'])
+            ? $this->toStringList(array_values($this->overrides['php.src']), 'override.php.src')
+            : $this->toStringList($this->defaults->list('php.src'), 'php.src');
 
-        $exclude = array_key_exists('exclude', $overrides) && is_array($overrides['exclude'])
-            ? $this->toStringList(array_values($overrides['exclude']), 'override.exclude')
-            : $this->toStringList($defaults->list('exclude'), 'exclude');
-
-        if (array_key_exists('exclude', $appends) && is_array($appends['exclude'])) {
-            $extra = $this->toStringList(array_values($appends['exclude']), 'append.exclude');
-            $exclude = array_values(array_unique(array_merge($exclude, $extra)));
+        if (array_key_exists('php.src', $this->appends) && is_array($this->appends['php.src'])) {
+            $extra = $this->toStringList(array_values($this->appends['php.src']), 'append.php.src');
+            $result = array_values(array_unique(array_merge($result, $extra)));
         }
 
-        if (array_key_exists('php.src', $appends) && is_array($appends['php.src'])) {
-            $extra = $this->toStringList(array_values($appends['php.src']), 'append.php.src');
-            $phpSrc = array_values(array_unique(array_merge($phpSrc, $extra)));
+        return $result;
+    }
+
+    /**
+     * @throws PiquleException
+     * @return list<string>
+     */
+    public function exclude(): array
+    {
+        $result = array_key_exists('exclude', $this->overrides) && is_array($this->overrides['exclude'])
+            ? $this->toStringList(array_values($this->overrides['exclude']), 'override.exclude')
+            : $this->toStringList($this->defaults->list('exclude'), 'exclude');
+
+        if (array_key_exists('exclude', $this->appends) && is_array($this->appends['exclude'])) {
+            $extra = $this->toStringList(array_values($this->appends['exclude']), 'append.exclude');
+            $result = array_values(array_unique(array_merge($result, $extra)));
         }
 
-        $this->phpSrc = $phpSrc;
-        $this->exclude = $exclude;
+        return $result;
     }
 
     /**
@@ -67,17 +78,5 @@ final readonly class YamlPathKeys
         }
 
         return $result;
-    }
-
-    /** @return list<string> */
-    public function phpSrc(): array
-    {
-        return $this->phpSrc;
-    }
-
-    /** @return list<string> */
-    public function exclude(): array
-    {
-        return $this->exclude;
     }
 }

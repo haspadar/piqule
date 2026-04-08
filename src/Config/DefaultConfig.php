@@ -25,58 +25,30 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class DefaultConfig implements Config
 {
-    /** @var array<string, scalar|list<scalar>> */
-    private readonly array $defaults;
+    /** @var array<string, scalar|list<scalar>>|null */
+    private ?array $cache;
 
     /**
+     * Initializes with source directories, exclusions, and config paths
+     *
      * @param list<string> $phpSrc
      * @param list<string> $exclude
-     * @throws ParseException
-     * @throws PiquleException
      */
     public function __construct(
-        array $phpSrc = [],
-        array $exclude = [],
+        private readonly array $phpSrc = [],
+        private readonly array $exclude = [],
         private readonly ConfigPaths $paths = new ConfigPaths(),
     ) {
-        $yaml = Yaml::parseFile($this->paths->configYaml());
-
-        if (!is_array($yaml) || !array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
-            throw new PiquleException('Missing "defaults" section in config.yaml');
-        }
-
-        /** @var array<string, mixed> $base */
-        $base = $yaml['defaults'];
-
-        /** @var list<string> $resolvedPhpSrc */
-        $resolvedPhpSrc = $phpSrc !== []
-            ? $phpSrc
-            : ($base['php.src'] ?? []);
-
-        /** @var list<string> $resolvedExclude */
-        $resolvedExclude = $exclude !== []
-            ? $exclude
-            : ($base['exclude'] ?? []);
-
-        /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));
-        $this->defaults = $defaults;
+        $this->cache = null;
     }
 
-    /**
-     * Checks whether a configuration key exists in built-in defaults
-     */
     #[Override]
     public function has(string $name): bool
     {
-        return array_key_exists($name, $this->defaults);
+        return array_key_exists($name, $this->defaults());
     }
 
-    /**
-     * Returns the configuration value as a list
-     *
-     * @return list<int|float|string|bool>
-     */
+    /** @return list<int|float|string|bool> */
     #[Override]
     public function list(string $name): array
     {
@@ -84,7 +56,7 @@ final class DefaultConfig implements Config
             return [];
         }
 
-        $value = $this->defaults[$name];
+        $value = $this->defaults()[$name];
 
         return is_scalar($value)
             ? [$value]
@@ -94,13 +66,59 @@ final class DefaultConfig implements Config
     #[Override]
     public function toArray(): array
     {
-        return $this->defaults;
+        return $this->defaults();
     }
 
     /** Returns the configuration paths */
     public function configPaths(): ConfigPaths
     {
         return $this->paths;
+    }
+
+    /**
+     * Parses YAML and computes all defaults with dynamic path derivations
+     *
+     * @throws PiquleException
+     * @return array<string, scalar|list<scalar>>
+     */
+    private function defaults(): array
+    {
+        if ($this->cache !== null) {
+            return $this->cache;
+        }
+
+        try {
+            $yaml = Yaml::parseFile($this->paths->configYaml());
+        } catch (ParseException $e) {
+            throw new PiquleException(
+                sprintf('Failed to parse config "%s": %s', $this->paths->configYaml(), $e->getMessage()),
+                0,
+                $e,
+            );
+        }
+
+        if (!is_array($yaml) || !array_key_exists('defaults', $yaml) || !is_array($yaml['defaults'])) {
+            throw new PiquleException('Missing "defaults" section in config.yaml');
+        }
+
+        /** @var array<string, mixed> $base */
+        $base = $yaml['defaults'];
+
+        /** @var list<string> $resolvedPhpSrc */
+        $resolvedPhpSrc = $this->phpSrc !== []
+            ? $this->phpSrc
+            : ($base['php.src'] ?? []);
+
+        /** @var list<string> $resolvedExclude */
+        $resolvedExclude = $this->exclude !== []
+            ? $this->exclude
+            : ($base['exclude'] ?? []);
+
+        /** @var array<string, scalar|list<scalar>> $defaults */
+        $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));
+        $this->cache = $defaults;
+
+        return $defaults;
     }
 
     /**
