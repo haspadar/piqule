@@ -52,6 +52,12 @@ final readonly class YamlEnvs implements Envs
                 );
             }
 
+            if (preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $name) !== 1) {
+                throw new PiquleException(
+                    sprintf('Invalid environment variable name "%s" in "%s"', $name, $this->path),
+                );
+            }
+
             $vars[$name] = $command;
         }
 

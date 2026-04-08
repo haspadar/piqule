@@ -107,4 +107,17 @@ final class YamlEnvsTest extends TestCase
 
         (new YamlEnvs($path))->vars();
     }
+
+    #[Test]
+    public function throwsWhenEnvsNameIsInvalid(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        $path = $this->folder->withFile(
+            '.piqule.yaml',
+            "envs:\n  1INVALID: \"echo hello\"\n",
+        )->path() . '/.piqule.yaml';
+
+        (new YamlEnvs($path))->vars();
+    }
 }
