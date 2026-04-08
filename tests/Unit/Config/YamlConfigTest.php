@@ -86,7 +86,7 @@ final class YamlConfigTest extends TestCase
         $path = $this->folder->withFile('.piqule.yaml', "append:\n    phpstan.neon_includes:\n        - ../../rules.neon\n")->path() . '/.piqule.yaml';
 
         self::assertSame(
-            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../rules.neon'],
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../vendor/haspadar/phpstan-rules/rules.neon', '../../rules.neon'],
             (new YamlConfig($path, new DefaultConfig()))->list('phpstan.neon_includes'),
             'YamlConfig must append values from the append section to the default list',
         );
@@ -98,7 +98,7 @@ final class YamlConfigTest extends TestCase
         $path = $this->folder->withFile('.piqule.yaml', "append:\n    phpstan.neon_includes:\n        - ../../extra.neon\n")->path() . '/.piqule.yaml';
 
         self::assertSame(
-            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../extra.neon'],
+            ['../../vendor/phpstan/phpstan-strict-rules/rules.neon', '../../vendor/haspadar/phpstan-rules/rules.neon', '../../extra.neon'],
             (new YamlConfig($path, new DefaultConfig()))->list('phpstan.neon_includes'),
             'YamlConfig must preserve default values and append new ones after them',
         );

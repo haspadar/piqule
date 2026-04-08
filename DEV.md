@@ -462,7 +462,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | `phpstan.memory` | `"1G"` | Memory limit |
 | `phpstan.paths` | `["../../src"]` | Paths to analyze |
 | `phpstan.checked_exceptions` | `['\Throwable']` | Checked exception classes |
-| `phpstan.neon_includes` | `["../../vendor/phpstan/phpstan-strict-rules/rules.neon"]` | Neon includes |
+| `phpstan.neon_includes` | `["../../vendor/phpstan/phpstan-strict-rules/rules.neon", "../../vendor/haspadar/phpstan-rules/rules.neon"]` | Neon includes |
 
 ### phpunit
 
