@@ -128,7 +128,9 @@ $formatTime = static function(float $seconds): string {
 
 $totalStart = microtime(true);
 
-$runCheck = static function(string $key) use ($projectRoot, $isEnabled, $green, $red, $gray, $formatTime, $titleWidth, $total, &$current, $verbose): bool {
+$yellow = static fn(string $s): string => "\033[33m{$s}\033[0m";
+
+$runCheck = static function(string $key, bool $force = false) use ($projectRoot, $isEnabled, $green, $red, $gray, $yellow, $formatTime, $titleWidth, $total, &$current, $verbose): bool {
     $command = "{$projectRoot}/.piqule/{$key}/command.sh";
 
     if (!file_exists($command)) {
@@ -138,9 +140,13 @@ $runCheck = static function(string $key) use ($projectRoot, $isEnabled, $green, 
     }
 
     if (!$isEnabled($key)) {
-        echo ($gray)("[SKIP] {$key}") . "\n";
+        if (!$force) {
+            echo ($gray)("[SKIP] {$key}") . "\n";
 
-        return true;
+            return true;
+        }
+
+        echo ($yellow)("[TIP]  {$key}.cli is false — running because explicitly requested") . "\n";
     }
 
     $current++;
@@ -180,7 +186,7 @@ $runCheck = static function(string $key) use ($projectRoot, $isEnabled, $green, 
 };
 
 if ($requested !== '') {
-    exit($runCheck($requested) ? 0 : 1);
+    exit($runCheck($requested, force: true) ? 0 : 1);
 }
 
 if (!$parallel) {
