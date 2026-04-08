@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Loads project configuration from a .piqule.yaml file
+ * Loads project configuration from a .piqule.yaml file.
  *
  * Supports two sections:
  * - override: replaces default values
@@ -31,7 +31,7 @@ final class YamlConfig implements Config
     private ?Config $cache;
 
     /**
-     * Initializes with a YAML file path and default configuration
+     * Initializes with a YAML file path and default configuration.
      */
     public function __construct(
         private readonly string $path,
@@ -59,7 +59,7 @@ final class YamlConfig implements Config
     }
 
     /**
-     * Parses the YAML file and builds the layered configuration
+     * Parses the YAML file and builds the layered configuration.
      *
      * @throws PiquleException
      */

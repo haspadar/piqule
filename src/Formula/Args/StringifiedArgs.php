@@ -14,7 +14,6 @@ final readonly class StringifiedArgs implements Args
     /** Initializes with the args to stringify. */
     public function __construct(private Args $origin) {}
 
-    /** @return list<string> */
     #[Override]
     public function values(): array
     {

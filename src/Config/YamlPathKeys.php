@@ -7,12 +7,15 @@ namespace Haspadar\Piqule\Config;
 use Haspadar\Piqule\PiquleException;
 
 /**
- * Resolves include and exclude lists from .piqule.yaml override/append sections,
- * cascading into DefaultConfig so all derived path keys reflect the project layout.
+ * Resolves include and exclude lists from .piqule.yaml override/append sections.
+ *
+ * Cascades into DefaultConfig so all derived path keys reflect the project layout.
  */
 final readonly class YamlPathKeys
 {
     /**
+     * Initializes with override and append maps alongside the base defaults.
+     *
      * @param array<string, mixed> $overrides
      * @param array<string, mixed> $appends
      */
@@ -23,6 +26,8 @@ final readonly class YamlPathKeys
     ) {}
 
     /**
+     * Resolves the effective PHP source directories after overrides and appends.
+     *
      * @throws PiquleException
      * @return list<string>
      */
@@ -41,6 +46,8 @@ final readonly class YamlPathKeys
     }
 
     /**
+     * Resolves the effective exclude patterns after overrides and appends.
+     *
      * @throws PiquleException
      * @return list<string>
      */
@@ -59,6 +66,8 @@ final readonly class YamlPathKeys
     }
 
     /**
+     * Converts a mixed list to a validated list of strings.
+     *
      * @param list<mixed> $value
      * @throws PiquleException
      * @return list<string>

@@ -14,7 +14,6 @@ final readonly class TrimmedArgs implements Args
     /** Initializes with the args to trim. */
     public function __construct(private Args $origin) {}
 
-    /** @return list<int|float|string|bool> */
     #[Override]
     public function values(): array
     {

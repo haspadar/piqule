@@ -11,10 +11,11 @@ use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
 /**
- * Applies a sprintf template to each incoming value individually
+ * Applies a sprintf template to each incoming value individually.
  */
 final readonly class FormatEachAction implements Action
 {
+    /** Initializes with the raw sprintf template string. */
     public function __construct(private string $raw) {}
 
     #[Override]
@@ -26,7 +27,7 @@ final readonly class FormatEachAction implements Action
 
         return new ListArgs(
             array_map(
-                static fn(string $item): string => sprintf($template, $item),
+                static fn(int|float|string|bool $item): string => sprintf($template, (string) $item),
                 (new StringifiedArgs($args))->values(),
             ),
         );

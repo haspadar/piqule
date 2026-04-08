@@ -18,7 +18,6 @@ final readonly class TrailingSlashDirs implements Dirs
      */
     public function __construct(private array $dirs) {}
 
-    /** @return list<string> */
     #[Override]
     public function toList(): array
     {

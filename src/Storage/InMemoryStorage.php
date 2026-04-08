@@ -9,11 +9,15 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Immutable in-memory storage backed by a location-to-File map
+ * Immutable in-memory storage backed by a location-to-File map.
  */
 final readonly class InMemoryStorage implements Storage
 {
-    /** @param array<string, File> $entries location => File */
+    /**
+     * Initializes with pre-loaded file entries.
+     *
+     * @param array<string, File> $entries Location-to-File map.
+     */
     public function __construct(private array $entries = []) {}
 
     #[Override]
@@ -51,7 +55,6 @@ final readonly class InMemoryStorage implements Storage
         ]);
     }
 
-    /** @return iterable<string> */
     #[Override]
     public function entries(string $location): iterable
     {
