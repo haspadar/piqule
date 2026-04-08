@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use Haspadar\Piqule\Config\Config;
+use Haspadar\Piqule\Config\ConfigPaths;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
 use Haspadar\Piqule\EnvVar\EnvVars;
@@ -21,7 +22,7 @@ $projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
 $yamlPath = $projectRoot . '/.piqule.yaml';
 
 try {
-    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+    $defaults = new DefaultConfig(paths: new ConfigPaths($projectRoot . '/composer.json'));
 } catch (Throwable $e) {
     $output->error("Failed to load default config: {$e->getMessage()}");
     exit(1);
