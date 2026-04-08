@@ -88,7 +88,6 @@ final class DefaultConfig implements Config
         }
 
         try {
-            /** @var array<string, mixed> $yaml */
             $yaml = Yaml::parseFile($this->paths->configYaml());
         } catch (ParseException $e) {
             throw new PiquleException(
