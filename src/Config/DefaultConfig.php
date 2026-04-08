@@ -29,7 +29,7 @@ final class DefaultConfig implements Config
     private ?array $cache;
 
     /**
-     * Initializes with source directories, exclusions, and config paths
+     * Initializes with source directories, exclusions, and config paths.
      *
      * @param list<string> $phpSrc
      * @param list<string> $exclude
@@ -48,7 +48,6 @@ final class DefaultConfig implements Config
         return array_key_exists($name, $this->defaults());
     }
 
-    /** @return list<int|float|string|bool> */
     #[Override]
     public function list(string $name): array
     {
@@ -69,14 +68,14 @@ final class DefaultConfig implements Config
         return $this->defaults();
     }
 
-    /** Returns the configuration paths */
+    /** Returns the configuration paths. */
     public function configPaths(): ConfigPaths
     {
         return $this->paths;
     }
 
     /**
-     * Parses YAML and computes all defaults with dynamic path derivations
+     * Parses YAML and computes all defaults with dynamic path derivations.
      *
      * @throws PiquleException
      * @return array<string, scalar|list<scalar>>
@@ -122,6 +121,8 @@ final class DefaultConfig implements Config
     }
 
     /**
+     * Reads dynamic defaults derived from composer.json paths and directory lists.
+     *
      * @param list<string> $phpSrc
      * @param list<string> $exclude
      * @return array<string, scalar|list<scalar>>

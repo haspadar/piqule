@@ -25,7 +25,6 @@ final readonly class SonarEnvVar implements EnvVar
         return 'https://sonarcloud.io/account/security';
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {

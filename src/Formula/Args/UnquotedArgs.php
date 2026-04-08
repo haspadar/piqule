@@ -16,7 +16,6 @@ final readonly class UnquotedArgs implements Args
     /** Initializes with the args to unquote. */
     public function __construct(private Args $origin) {}
 
-    /** @return list<int|float|string|bool> */
     #[Override]
     public function values(): array
     {

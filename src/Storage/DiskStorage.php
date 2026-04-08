@@ -13,10 +13,11 @@ use SplFileInfo;
 use function assert;
 
 /**
- * Filesystem-backed storage rooted at a given directory
+ * Filesystem-backed storage rooted at a given directory.
  */
 final readonly class DiskStorage implements Storage
 {
+    /** Initializes storage rooted at the given directory path. */
     public function __construct(private string $root) {}
 
     #[Override]
@@ -118,7 +119,11 @@ final readonly class DiskStorage implements Storage
         return $perms & 0o777;
     }
 
-    /** @throws PiquleException */
+    /**
+     * Resolves the absolute filesystem path for a given storage location.
+     *
+     * @throws PiquleException
+     */
     private function pathOf(string $location): string
     {
         return (new SafePath($this->root))->resolve($location);

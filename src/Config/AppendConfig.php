@@ -32,12 +32,6 @@ final readonly class AppendConfig implements Config
         return $this->defaults->has($name);
     }
 
-    /**
-     * Returns the default list with appended values merged in
-     *
-     * @throws PiquleException
-     * @return list<scalar>
-     */
     #[Override]
     public function list(string $name): array
     {
@@ -74,7 +68,6 @@ final readonly class AppendConfig implements Config
         return [...$this->defaults->list($name), ...$scalars];
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function toArray(): array
     {

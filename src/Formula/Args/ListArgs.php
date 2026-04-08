@@ -18,7 +18,6 @@ final readonly class ListArgs implements Args
      */
     public function __construct(private array $values) {}
 
-    /** @return list<int|float|string|bool> */
     #[Override]
     public function values(): array
     {

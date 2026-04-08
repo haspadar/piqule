@@ -21,10 +21,11 @@ use InvalidArgumentException;
 use Override;
 
 /**
- * Replaces DSL placeholders in a file's contents using configuration values
+ * Replaces DSL placeholders in a file's contents using configuration values.
  */
 final readonly class ConfiguredFile implements File
 {
+    /** Wraps a file and a configuration source for placeholder resolution. */
     public function __construct(private File $origin, private Config $config) {}
 
     #[Override]
@@ -49,7 +50,11 @@ final readonly class ConfiguredFile implements File
         return $this->origin->mode();
     }
 
-    /** @throws PiquleException */
+    /**
+     * Returns the result of evaluating a single DSL expression against the config.
+     *
+     * @throws PiquleException
+     */
     private function replaced(string $expression): string
     {
         try {
@@ -73,7 +78,11 @@ final readonly class ConfiguredFile implements File
         }
     }
 
-    /** @return array<string, callable(string): Action> */
+    /**
+     * Returns the map of supported action names to their factory callables.
+     *
+     * @return array<string, callable(string): Action>
+     */
     private function actions(): array
     {
         return [

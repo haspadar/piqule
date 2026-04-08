@@ -25,7 +25,6 @@ final readonly class OverrideConfig implements Config
         return $this->defaults->has($name);
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function list(string $name): array
     {
@@ -71,7 +70,6 @@ final readonly class OverrideConfig implements Config
         return array_values(array_filter($value, static fn($item) => is_scalar($item)));
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function toArray(): array
     {

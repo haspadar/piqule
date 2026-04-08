@@ -14,7 +14,7 @@ use Override;
 use ValueError;
 
 /**
- * Applies a sprintf template to a single incoming value
+ * Applies a sprintf template to a single incoming value.
  */
 final readonly class FormatAction implements Action
 {
@@ -25,6 +25,7 @@ final readonly class FormatAction implements Action
         '\\t' => "\t",
     ];
 
+    /** Initializes with the raw sprintf template string. */
     public function __construct(private string $raw) {}
 
     #[Override]
