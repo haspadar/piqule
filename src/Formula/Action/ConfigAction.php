@@ -8,7 +8,6 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Formula\Args\Args;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Formula\Args\StringifiedArgs;
-use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
@@ -19,7 +18,6 @@ final readonly class ConfigAction implements Action
     /** Initializes with a configuration source and a key to look up. */
     public function __construct(private Config $config, private string $key) {}
 
-    /** @throws PiquleException */
     #[Override]
     public function transformed(Args $args): Args
     {

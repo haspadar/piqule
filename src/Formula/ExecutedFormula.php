@@ -17,7 +17,6 @@ final readonly class ExecutedFormula implements Formula
     /** Initializes with a sequence of actions to evaluate. */
     public function __construct(private Actions $actions) {}
 
-    /** @throws PiquleException */
     #[Override]
     public function result(): string
     {

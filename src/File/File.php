@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\File;
 
+use Haspadar\Piqule\PiquleException;
+
 /**
  * A named file with content and POSIX permissions
  */
@@ -16,6 +18,8 @@ interface File
 
     /**
      * Raw file content
+     *
+     * @throws PiquleException
      */
     public function contents(): string;
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Secret;
 
 use Haspadar\Piqule\Config\Config;
-use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
@@ -25,7 +24,6 @@ final readonly class InfectionSecret implements Secret
         return 'https://dashboard.stryker-mutator.io';
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {

@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\PiquleException;
+use UnexpectedValueException;
 
 /**
  * Persistent key-value store for named files
@@ -28,12 +29,16 @@ interface Storage
 
     /**
      * Checks whether a projection exists at the given location
+     *
+     * @throws PiquleException
      */
     public function exists(string $location): bool;
 
     /**
      * Lists entries under the given location
      *
+     * @throws PiquleException
+     * @throws UnexpectedValueException
      * @return iterable<string> relative entry paths
      */
     public function entries(string $location): iterable;

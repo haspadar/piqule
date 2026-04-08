@@ -6,7 +6,6 @@ namespace Haspadar\Piqule\Storage;
 
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\TextFile;
-use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
@@ -22,7 +21,6 @@ final readonly class AppendingStorage implements Storage
         private string $marker,
     ) {}
 
-    /** @throws PiquleException */
     #[Override]
     public function write(File $file): self
     {

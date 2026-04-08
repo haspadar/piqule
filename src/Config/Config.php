@@ -13,6 +13,8 @@ interface Config
 {
     /**
      * Returns true if the key is declared in this configuration
+     *
+     * @throws PiquleException
      */
     public function has(string $name): bool;
 

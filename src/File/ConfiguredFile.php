@@ -17,8 +17,8 @@ use Haspadar\Piqule\Formula\Actions\ParsedActions;
 use Haspadar\Piqule\Formula\ExecutedFormula;
 use Haspadar\Piqule\Formula\NormalizedFormula;
 use Haspadar\Piqule\PiquleException;
+use InvalidArgumentException;
 use Override;
-use Throwable;
 
 /**
  * Replaces DSL placeholders in a file's contents using configuration values
@@ -33,7 +33,6 @@ final readonly class ConfiguredFile implements File
         return $this->origin->name();
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function contents(): string
     {
@@ -60,7 +59,7 @@ final readonly class ConfiguredFile implements File
                     $this->actions(),
                 ),
             ))->result();
-        } catch (Throwable $e) {
+        } catch (InvalidArgumentException | PiquleException $e) {
             throw new PiquleException(
                 sprintf(
                     'File "%s", formula "%s": %s',

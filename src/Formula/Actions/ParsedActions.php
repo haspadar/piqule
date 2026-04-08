@@ -20,10 +20,6 @@ final readonly class ParsedActions implements Actions
      */
     public function __construct(private string $expression, private array $actions) {}
 
-    /**
-     * @throws PiquleException
-     * @return list<Action>
-     */
     #[Override]
     public function all(): array
     {

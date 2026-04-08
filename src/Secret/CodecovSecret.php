@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Secret;
 
 use Haspadar\Piqule\Config\Config;
-use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
@@ -25,7 +24,6 @@ final readonly class CodecovSecret implements Secret
         return "https://app.codecov.io/account/gh/{$org}/repositories";
     }
 
-    /** @throws PiquleException */
     #[Override]
     public function enabled(Config $config): bool
     {
