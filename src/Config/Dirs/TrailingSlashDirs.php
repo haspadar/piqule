@@ -7,11 +7,15 @@ namespace Haspadar\Piqule\Config\Dirs;
 use Override;
 
 /**
- * Directories suffixed with / to match directory entries explicitly
+ * Directories suffixed with / to match directory entries explicitly.
  */
 final readonly class TrailingSlashDirs implements Dirs
 {
-    /** @param list<string> $dirs */
+    /**
+     * Initializes with directory paths to transform.
+     *
+     * @param list<string> $dirs
+     */
     public function __construct(private array $dirs) {}
 
     /** @return list<string> */

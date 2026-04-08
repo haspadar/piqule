@@ -7,11 +7,15 @@ namespace Haspadar\Piqule\Config\Dirs;
 use Override;
 
 /**
- * Directories as negated glob patterns for exclusion (e.g. !vendor/**)
+ * Directories as negated glob patterns for exclusion (e.g. !vendor/**).
  */
 final readonly class NegatedGlobDirs implements Dirs
 {
-    /** @param list<string> $dirs */
+    /**
+     * Initializes with directory paths to negate.
+     *
+     * @param list<string> $dirs
+     */
     public function __construct(private array $dirs) {}
 
     /** @return list<string> */

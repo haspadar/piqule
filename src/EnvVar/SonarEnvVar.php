@@ -9,7 +9,7 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * SonarCloud scanner token for local analysis
+ * SonarCloud scanner token for local analysis.
  */
 final readonly class SonarEnvVar implements EnvVar
 {
@@ -44,7 +44,11 @@ final readonly class SonarEnvVar implements EnvVar
         ) ?? true;
     }
 
-    /** @throws PiquleException */
+    /**
+     * Checks whether SonarCloud mode is active.
+     *
+     * @throws PiquleException
+     */
     private function cloud(Config $config): bool
     {
         if (!$config->has('sonar.cloud')) {

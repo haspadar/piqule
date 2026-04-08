@@ -7,11 +7,15 @@ namespace Haspadar\Piqule\Storage\Reaction;
 use Override;
 
 /**
- * Composite StorageReaction that broadcasts events to a list of reactions
+ * Composite StorageReaction that broadcasts events to a list of reactions.
  */
 final readonly class StorageReactions implements StorageReaction
 {
-    /** @param list<StorageReaction> $reactions */
+    /**
+     * Initializes with a list of reactions to broadcast to.
+     *
+     * @param list<StorageReaction> $reactions
+     */
     public function __construct(private array $reactions) {}
 
     #[Override]

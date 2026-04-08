@@ -7,12 +7,13 @@ namespace Haspadar\Piqule\Formula\Args;
 use Override;
 
 /**
- * Removes matching outer single or double quotes
+ * Removes matching outer single or double quotes.
  *
  * Escape sequences inside the string are not processed
  */
 final readonly class UnquotedArgs implements Args
 {
+    /** Initializes with the args to unquote. */
     public function __construct(private Args $origin) {}
 
     /** @return list<int|float|string|bool> */

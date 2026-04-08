@@ -10,10 +10,11 @@ use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
 /**
- * Writes a file only when its contents or mode differ from what is already stored
+ * Writes a file only when its contents or mode differ from what is already stored.
  */
 final readonly class DiffingStorage implements Storage
 {
+    /** Initializes with underlying storage and a change reaction. */
     public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
     /** @throws PiquleException */

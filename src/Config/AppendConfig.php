@@ -8,7 +8,7 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Appends values to existing configuration lists without replacing them
+ * Appends values to existing configuration lists without replacing them.
  *
  * Example:
  *
@@ -19,7 +19,11 @@ use Override;
  */
 final readonly class AppendConfig implements Config
 {
-    /** @param array<string, mixed> $appends */
+    /**
+     * Initializes with a base config and values to append.
+     *
+     * @param array<string, mixed> $appends
+     */
     public function __construct(private Config $defaults, private array $appends) {}
 
     #[Override]

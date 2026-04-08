@@ -9,7 +9,7 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Stryker mutation testing dashboard token
+ * Stryker mutation testing dashboard token.
  */
 final readonly class InfectionSecret implements Secret
 {

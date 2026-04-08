@@ -9,7 +9,7 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Codecov coverage upload token
+ * Codecov coverage upload token.
  */
 final readonly class CodecovSecret implements Secret
 {

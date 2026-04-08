@@ -12,19 +12,14 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Loads values from configuration by key, ignoring any incoming args
+ * Loads values from configuration by key, ignoring any incoming args.
  */
 final readonly class ConfigAction implements Action
 {
+    /** Initializes with a configuration source and a key to look up. */
     public function __construct(private Config $config, private string $key) {}
 
-    /**
-     * Returns configuration values for the given key
-     *
-     * Input arguments are ignored because this action acts as a value source
-     *
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function transformed(Args $args): Args
     {

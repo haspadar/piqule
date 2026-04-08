@@ -7,10 +7,11 @@ namespace Haspadar\Piqule\Formula\Args;
 use Override;
 
 /**
- * Converts all scalar values to strings, mapping true/false to "true"/"false"
+ * Converts all scalar values to strings, mapping true/false to "true"/"false".
  */
 final readonly class StringifiedArgs implements Args
 {
+    /** Initializes with the args to stringify. */
     public function __construct(private Args $origin) {}
 
     /** @return list<string> */

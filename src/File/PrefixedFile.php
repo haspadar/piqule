@@ -7,21 +7,13 @@ namespace Haspadar\Piqule\File;
 use Override;
 
 /**
- * Prepends a path prefix to the wrapped file's name
+ * Prepends a path prefix to the wrapped file's name.
  */
 final readonly class PrefixedFile implements File
 {
+    /** Initializes with a path prefix and the file to decorate. */
     public function __construct(private string $prefix, private File $origin) {}
 
-    /**
-     * Builds the target file path by prefixing the original name
-     *
-     * Examples:
-     * - prefix ".git" + name "hooks/pre-push" → ".git/hooks/pre-push"
-     * - prefix "" + name "config/app.yaml" → "config/app.yaml"
-     *
-     * Leading and trailing slashes are normalized
-     */
     #[Override]
     public function name(): string
     {

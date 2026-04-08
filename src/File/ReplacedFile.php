@@ -7,10 +7,11 @@ namespace Haspadar\Piqule\File;
 use Override;
 
 /**
- * Performs a literal string replacement in the wrapped file's contents
+ * Performs a literal string replacement in the wrapped file's contents.
  */
 final readonly class ReplacedFile implements File
 {
+    /** Initializes with the original file and replacement pair. */
     public function __construct(
         private File $origin,
         private string $search,

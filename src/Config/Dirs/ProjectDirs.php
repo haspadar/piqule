@@ -7,11 +7,15 @@ namespace Haspadar\Piqule\Config\Dirs;
 use Override;
 
 /**
- * Directories prefixed with ../../ for tools that run inside .piqule/<tool>/
+ * Directories prefixed with ../../ for tools that run inside .piqule/<tool>/.
  */
 final readonly class ProjectDirs implements Dirs
 {
-    /** @param list<string> $dirs */
+    /**
+     * Initializes with directory paths to prefix.
+     *
+     * @param list<string> $dirs
+     */
     public function __construct(private array $dirs) {}
 
     /** @return list<string> */

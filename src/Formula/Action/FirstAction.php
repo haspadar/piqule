@@ -9,7 +9,7 @@ use Haspadar\Piqule\Formula\Args\ListArgs;
 use Override;
 
 /**
- * Returns only the first value from the incoming list
+ * Returns only the first value from the incoming list.
  */
 final readonly class FirstAction implements Action
 {

@@ -9,10 +9,11 @@ use JsonException;
 use Override;
 
 /**
- * Decodes a single JSON list literal from the wrapped Args into a typed scalar list
+ * Decodes a single JSON list literal from the wrapped Args into a typed scalar list.
  */
 final readonly class ParsedArgs implements Args
 {
+    /** Initializes with the args containing a JSON list literal. */
     public function __construct(private Args $origin) {}
 
     /**
@@ -29,7 +30,11 @@ final readonly class ParsedArgs implements Args
         return array_values(array_filter($decoded, static fn($item) => is_scalar($item)));
     }
 
-    /** @throws InvalidArgumentException */
+    /**
+     * Extracts the single raw string value from the wrapped args.
+     *
+     * @throws InvalidArgumentException
+     */
     private function singleRawValue(): string
     {
         $values = $this->origin->values();
@@ -64,6 +69,8 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
+     * Decodes a JSON string into an array.
+     *
      * @throws InvalidArgumentException
      * @return array<array-key, mixed>
      */
@@ -92,6 +99,8 @@ final readonly class ParsedArgs implements Args
     }
 
     /**
+     * Validates that the decoded array is a flat list of scalars.
+     *
      * @param array<array-key, mixed> $decoded
      * @throws InvalidArgumentException
      */

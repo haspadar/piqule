@@ -7,10 +7,11 @@ namespace Haspadar\Piqule\Formula\Args;
 use Override;
 
 /**
- * Trims leading and trailing whitespace from string values; non-strings are passed through unchanged
+ * Trims leading and trailing whitespace from string values; non-strings are passed through unchanged.
  */
 final readonly class TrimmedArgs implements Args
 {
+    /** Initializes with the args to trim. */
     public function __construct(private Args $origin) {}
 
     /** @return list<int|float|string|bool> */

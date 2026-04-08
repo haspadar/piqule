@@ -7,11 +7,15 @@ namespace Haspadar\Piqule\Files;
 use Override;
 
 /**
- * Merges multiple Files sources into a single sequential collection
+ * Merges multiple Files sources into a single sequential collection.
  */
 final readonly class CombinedFiles implements Files
 {
-    /** @param list<Files> $sources */
+    /**
+     * Initializes with multiple file sources to merge.
+     *
+     * @param list<Files> $sources
+     */
     public function __construct(private array $sources) {}
 
     #[Override]
