@@ -8,11 +8,15 @@ use Haspadar\Piqule\File\TextFile;
 use Override;
 
 /**
- * A Files collection built from a map of path => content strings
+ * A Files collection built from a map of path => content strings.
  */
 final readonly class TextFiles implements Files
 {
-    /** @param array<string, string> $files */
+    /**
+     * Initializes with a map of file paths to their contents.
+     *
+     * @param array<string, string> $files
+     */
     public function __construct(private array $files) {}
 
     #[Override]

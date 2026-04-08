@@ -9,7 +9,7 @@ use Haspadar\Piqule\Formula\Args\ListArgs;
 use Override;
 
 /**
- * Passes empty input through, clears non-empty input
+ * Passes empty input through, clears non-empty input.
  */
 final readonly class IfEmptyAction implements Action
 {

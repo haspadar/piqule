@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Haspadar\Piqule\Config;
 
 /**
- * Root namespace from the PSR-4 autoload section of composer.json
+ * Root namespace from the PSR-4 autoload section of composer.json.
  */
 final readonly class ComposerRootNamespace
 {
+    /** Initializes with the composer.json file path. */
     public function __construct(private string $path) {}
 
+    /** Returns the first PSR-4 root namespace as a string. */
     public function toString(): string
     {
         if (!is_file($this->path)) {

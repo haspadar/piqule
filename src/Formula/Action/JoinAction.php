@@ -10,10 +10,11 @@ use Haspadar\Piqule\Formula\Args\UnquotedArgs;
 use Override;
 
 /**
- * Joins all incoming values into a single string using a delimiter
+ * Joins all incoming values into a single string using a delimiter.
  */
 final readonly class JoinAction implements Action
 {
+    /** Initializes with a raw delimiter string. */
     public function __construct(private string $raw) {}
 
     #[Override]

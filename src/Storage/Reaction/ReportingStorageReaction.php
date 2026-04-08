@@ -8,10 +8,11 @@ use Haspadar\Piqule\Output\Output;
 use Override;
 
 /**
- * Reports created and updated storage events to an Output channel
+ * Reports created and updated storage events to an Output channel.
  */
 final readonly class ReportingStorageReaction implements StorageReaction
 {
+    /** Initializes with the output channel for reporting. */
     public function __construct(private Output $output) {}
 
     #[Override]

@@ -10,11 +10,13 @@ use Haspadar\Piqule\Storage\Storage;
 use Override;
 
 /**
- * Reads all files from a given storage folder as a Files collection
+ * Reads all files from a given storage folder as a Files collection.
  */
 final readonly class FolderFiles implements Files
 {
     /**
+     * Initializes with a storage backend and a folder path to read from.
+     *
      * @param Storage $storage Source storage to read files from
      * @param string $folder Folder path relative to storage root
      */

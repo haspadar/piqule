@@ -10,10 +10,11 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Evaluates a pipeline of actions and returns the resulting scalar string
+ * Evaluates a pipeline of actions and returns the resulting scalar string.
  */
 final readonly class ExecutedFormula implements Formula
 {
+    /** Initializes with a sequence of actions to evaluate. */
     public function __construct(private Actions $actions) {}
 
     /** @throws PiquleException */

@@ -7,9 +7,16 @@ namespace Haspadar\Piqule\Config;
 use Haspadar\Piqule\PiquleException;
 use Override;
 
+/**
+ * Replaces specific configuration values while preserving all other defaults.
+ */
 final readonly class OverrideConfig implements Config
 {
-    /** @param array<string, mixed> $overrides */
+    /**
+     * Initializes with a base config and override values.
+     *
+     * @param array<string, mixed> $overrides
+     */
     public function __construct(private Config $defaults, private array $overrides) {}
 
     #[Override]
@@ -36,6 +43,8 @@ final readonly class OverrideConfig implements Config
     }
 
     /**
+     * Converts a raw override value to a validated scalar list.
+     *
      * @throws PiquleException
      * @return list<scalar>
      */

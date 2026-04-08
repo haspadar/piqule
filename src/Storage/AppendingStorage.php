@@ -11,24 +11,18 @@ use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
 /**
- * Appends file contents to an existing file unless the marker string is already present
+ * Appends file contents to an existing file unless the marker string is already present.
  */
 final readonly class AppendingStorage implements Storage
 {
+    /** Initializes with underlying storage, a reaction, and a duplicate marker. */
     public function __construct(
         private Storage $origin,
         private StorageReaction $reaction,
         private string $marker,
     ) {}
 
-    /**
-     * Writes the file to storage with append semantics:
-     * - Creates a new file and emits created() if the file does not exist yet.
-     * - Appends contents to an existing file and emits updated() if the marker is absent.
-     * - No-ops if the marker is already present in the existing file.
-     *
-     * @throws PiquleException
-     */
+    /** @throws PiquleException */
     #[Override]
     public function write(File $file): self
     {

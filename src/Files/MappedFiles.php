@@ -9,11 +9,15 @@ use Haspadar\Piqule\File\File;
 use Override;
 
 /**
- * Applies a transformation closure to each file in the wrapped collection
+ * Applies a transformation closure to each file in the wrapped collection.
  */
 final readonly class MappedFiles implements Files
 {
-    /** @param Closure(File): File $map */
+    /**
+     * Initializes with a file collection and a transformation closure.
+     *
+     * @param Closure(File): File $map
+     */
     public function __construct(private Files $origin, private Closure $map) {}
 
     #[Override]

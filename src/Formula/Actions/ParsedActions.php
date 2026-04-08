@@ -9,19 +9,18 @@ use Haspadar\Piqule\PiquleException;
 use Override;
 
 /**
- * Parses a DSL expression string into an ordered list of Action instances
+ * Parses a DSL expression string into an ordered list of Action instances.
  */
 final readonly class ParsedActions implements Actions
 {
-    /** @param array<string, callable(string): Action> $actions */
+    /**
+     * Initializes with a DSL expression and available action factories.
+     *
+     * @param array<string, callable(string): Action> $actions
+     */
     public function __construct(private string $expression, private array $actions) {}
 
     /**
-     * Parses DSL expression into a sequence of actions
-     *
-     * DSL intentionally does not support nested parentheses
-     * in action arguments. Arguments are treated as flat strings.
-     *
      * @throws PiquleException
      * @return list<Action>
      */

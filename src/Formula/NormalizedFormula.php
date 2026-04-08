@@ -7,10 +7,11 @@ namespace Haspadar\Piqule\Formula;
 use Override;
 
 /**
- * Normalizes whitespace around pipe separators in a DSL expression
+ * Normalizes whitespace around pipe separators in a DSL expression.
  */
 final readonly class NormalizedFormula implements Formula
 {
+    /** Initializes with a raw DSL expression string. */
     public function __construct(private string $expression) {}
 
     #[Override]

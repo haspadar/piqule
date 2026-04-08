@@ -10,10 +10,11 @@ use Haspadar\Piqule\Storage\Reaction\StorageReaction;
 use Override;
 
 /**
- * Writes a file only if it does not already exist in the underlying storage
+ * Writes a file only if it does not already exist in the underlying storage.
  */
 final readonly class OnceStorage implements Storage
 {
+    /** Initializes with underlying storage and a creation reaction. */
     public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
     /** @throws PiquleException */

@@ -9,11 +9,15 @@ use Haspadar\Piqule\File\File;
 use Override;
 
 /**
- * Yields only the files from the wrapped collection that satisfy a predicate
+ * Yields only the files from the wrapped collection that satisfy a predicate.
  */
 final readonly class FilteredFiles implements Files
 {
-    /** @param Closure(File): bool $predicate */
+    /**
+     * Initializes with a file collection and a filtering predicate.
+     *
+     * @param Closure(File): bool $predicate
+     */
     public function __construct(private Files $origin, private Closure $predicate) {}
 
     #[Override]
