@@ -26,21 +26,54 @@ use Symfony\Component\Yaml\Yaml;
  *         exclude:
  *             - legacy
  */
-final readonly class YamlConfig implements Config
+final class YamlConfig implements Config
 {
-    private Config $config;
+    private ?Config $cache;
 
     /**
-     * @throws PiquleException
-     * @throws YamlParseException
+     * Initializes with a YAML file path and default configuration
      */
-    public function __construct(string $path, DefaultConfig $defaults)
+    public function __construct(
+        private readonly string $path,
+        private readonly DefaultConfig $defaults,
+    ) {
+        $this->cache = null;
+    }
+
+    #[Override]
+    public function has(string $name): bool
     {
+        return $this->config()->has($name);
+    }
+
+    #[Override]
+    public function list(string $name): array
+    {
+        return $this->config()->list($name);
+    }
+
+    #[Override]
+    public function toArray(): array
+    {
+        return $this->config()->toArray();
+    }
+
+    /**
+     * Parses the YAML file and builds the layered configuration
+     *
+     * @throws PiquleException
+     */
+    private function config(): Config
+    {
+        if ($this->cache !== null) {
+            return $this->cache;
+        }
+
         try {
-            $data = Yaml::parseFile($path);
+            $data = Yaml::parseFile($this->path);
         } catch (YamlParseException $e) {
             throw new PiquleException(
-                sprintf('Failed to parse "%s": %s', $path, $e->getMessage()),
+                sprintf('Failed to parse "%s": %s', $this->path, $e->getMessage()),
                 0,
                 $e,
             );
@@ -48,7 +81,7 @@ final readonly class YamlConfig implements Config
 
         if (!is_array($data)) {
             throw new PiquleException(
-                sprintf('Invalid configuration file "%s": expected a mapping', $path),
+                sprintf('Invalid configuration file "%s": expected a mapping', $this->path),
             );
         }
 
@@ -61,42 +94,21 @@ final readonly class YamlConfig implements Config
             ? $data['append']
             : [];
 
-        $pathKeys = new YamlPathKeys($overrides, $appends, $defaults);
+        $pathKeys = new YamlPathKeys($overrides, $appends, $this->defaults);
         $remaining = ['exclude', 'php.src'];
 
-        $this->config = new AppendConfig(
+        $this->cache = new AppendConfig(
             new OverrideConfig(
                 new DefaultConfig(
                     $pathKeys->phpSrc(),
                     $pathKeys->exclude(),
-                    $defaults->configPaths(),
+                    $this->defaults->configPaths(),
                 ),
                 array_diff_key($overrides, array_flip($remaining)),
             ),
             array_diff_key($appends, array_flip($remaining)),
         );
-    }
 
-    #[Override]
-    public function has(string $name): bool
-    {
-        return $this->config->has($name);
-    }
-
-    /**
-     * @throws PiquleException
-     * @return list<scalar>
-     */
-    #[Override]
-    public function list(string $name): array
-    {
-        return $this->config->list($name);
-    }
-
-    /** @throws PiquleException */
-    #[Override]
-    public function toArray(): array
-    {
-        return $this->config->toArray();
+        return $this->cache;
     }
 }
