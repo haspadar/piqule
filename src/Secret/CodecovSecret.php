@@ -27,12 +27,12 @@ final readonly class CodecovSecret implements Secret
     #[Override]
     public function enabled(Config $config): bool
     {
-        if (!$config->has('phpunit.enabled')) {
+        if (!$config->has('phpunit.cli')) {
             return true;
         }
 
         return filter_var(
-            $config->list('phpunit.enabled')[0] ?? true,
+            $config->list('phpunit.cli')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE,
         ) ?? true;

@@ -27,12 +27,12 @@ final readonly class InfectionSecret implements Secret
     #[Override]
     public function enabled(Config $config): bool
     {
-        if (!$config->has('infection.enabled')) {
+        if (!$config->has('infection.cli')) {
             return true;
         }
 
         return filter_var(
-            $config->list('infection.enabled')[0] ?? true,
+            $config->list('infection.cli')[0] ?? true,
             FILTER_VALIDATE_BOOLEAN,
             FILTER_NULL_ON_FAILURE,
         ) ?? true;
