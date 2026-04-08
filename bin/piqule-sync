@@ -3,9 +3,10 @@
 
 declare(strict_types=1);
 
+use Haspadar\Piqule\Config\Config;
+use Haspadar\Piqule\Config\ConfigPaths;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
-use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
@@ -39,7 +40,7 @@ try {
     $libraryRoot = $installPath;
 
     $yamlPath = $projectRoot . '/.piqule.yaml';
-    $defaults = new DefaultConfig(composerJson: $projectRoot . '/composer.json');
+    $defaults = new DefaultConfig(paths: new ConfigPaths($projectRoot . '/composer.json'));
 
     if (file_exists($yamlPath)) {
         $config = new YamlConfig($yamlPath, $defaults);
