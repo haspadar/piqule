@@ -340,6 +340,20 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | `coverage.project.target` | `80` | Minimum project coverage % |
 | `coverage.project.threshold` | `2` | Allowed drop below target |
 
+### codecov
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `codecov.cloud` | `true` | Upload coverage to Codecov in CI |
+| `codecov.cli` | `false` | Enable codecov-cli locally |
+
+### coderabbit
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `coderabbit.cloud` | `true` | Enable CodeRabbit GitHub App reviews |
+| `coderabbit.cli` | `false` | Enable coderabbit-cli locally |
+
 ### Docker
 
 | Key | Default | Description |
@@ -497,7 +511,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `sonar.cloud` | `true` | Use SonarCloud automatic analysis (skip local scanner and SONAR_TOKEN) |
-| `sonar.cli` | `true` | Enable local sonar-scanner |
+| `sonar.cli` | `false` | Enable local sonar-scanner |
 | `sonar.organization` | `[]` | SonarCloud organization |
 | `sonar.projectKey` | `[]` | SonarCloud project key |
 | `sonar.sources` | `["src"]` | Source directories |
