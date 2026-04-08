@@ -69,7 +69,7 @@ final readonly class YamlConfig implements Config
                 new DefaultConfig(
                     $pathKeys->phpSrc(),
                     $pathKeys->exclude(),
-                    new ConfigPaths($defaults->composerJson()),
+                    $defaults->configPaths(),
                 ),
                 array_diff_key($overrides, array_flip($remaining)),
             ),

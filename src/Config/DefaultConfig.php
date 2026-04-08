@@ -98,10 +98,10 @@ final class DefaultConfig implements Config
         return $this->defaults;
     }
 
-    /** Returns the composer.json file path */
-    public function composerJson(): string
+    /** Returns the configuration paths */
+    public function configPaths(): ConfigPaths
     {
-        return $this->paths->composerJson();
+        return $this->paths;
     }
 
     /**
