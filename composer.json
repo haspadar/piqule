@@ -33,6 +33,7 @@
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^12.0",
+        "slevomat/coding-standard": "^8.28",
         "squizlabs/php_codesniffer": "^4.0",
         "symfony/process": "^7.0",
         "symfony/yaml": "^7.4",
@@ -50,7 +51,6 @@
     },
     "prefer-stable": true,
     "require-dev": {
-        "kubawerlos/php-cs-fixer-custom-fixers": "^3.36",
-        "slevomat/coding-standard": "^8.28"
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.36"
     }
 }
