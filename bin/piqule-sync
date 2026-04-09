@@ -45,7 +45,9 @@ try {
     $yamlPath = $projectRoot . '/.piqule.yaml';
     $defaults = new DefaultConfig(paths: new ConfigPaths($projectRoot . '/composer.json'));
 
-    if (file_exists($yamlPath)) {
+    $hasYaml = file_exists($yamlPath);
+
+    if ($hasYaml) {
         $config = new YamlConfig($yamlPath, $defaults);
     } elseif (file_exists($projectRoot . '/.piqule.php')) {
         $loaded = require $projectRoot . '/.piqule.php';
@@ -59,7 +61,7 @@ try {
         $config = $defaults;
     }
 
-    $envs = file_exists($yamlPath)
+    $envs = $hasYaml
         ? new YamlEnvs($yamlPath)
         : new EmptyEnvs();
 
