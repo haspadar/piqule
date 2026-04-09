@@ -30,4 +30,12 @@ final readonly class ReportingStorageReaction implements StorageReaction
             sprintf('Updated: %s', $path),
         );
     }
+
+    #[Override]
+    public function skipped(string $path): void
+    {
+        $this->output->muted(
+            sprintf('Skipped: %s', $path),
+        );
+    }
 }

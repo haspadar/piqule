@@ -23,4 +23,9 @@ interface Output
      * Emits an error message
      */
     public function error(string $text): void;
+
+    /**
+     * Emits a muted (secondary) message
+     */
+    public function muted(string $text): void;
 }

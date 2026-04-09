@@ -15,6 +15,9 @@ final class FakeStorageReaction implements StorageReaction
     /** @var list<string> */
     private array $updated = [];
 
+    /** @var list<string> */
+    private array $skipped = [];
+
     #[Override]
     public function created(string $path): void
     {
@@ -27,6 +30,12 @@ final class FakeStorageReaction implements StorageReaction
         $this->updated[] = $path;
     }
 
+    #[Override]
+    public function skipped(string $path): void
+    {
+        $this->skipped[] = $path;
+    }
+
     /** @return list<string> */
     public function createdPaths(): array
     {
@@ -37,5 +46,11 @@ final class FakeStorageReaction implements StorageReaction
     public function updatedPaths(): array
     {
         return $this->updated;
+    }
+
+    /** @return list<string> */
+    public function skippedPaths(): array
+    {
+        return $this->skipped;
     }
 }

@@ -32,6 +32,8 @@ final readonly class DiffingStorage implements Storage
             || $this->origin->mode($path) !== $file->mode();
 
         if (!$changed) {
+            $this->reaction->skipped($path);
+
             return $this;
         }
 
