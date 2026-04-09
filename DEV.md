@@ -184,6 +184,7 @@ This generates a workflow step:
 ```yaml
       - name: Set environment variables
         run: |
+          git fetch --tags --unshallow 2>/dev/null || git fetch --tags
           echo "COMPOSER_ROOT_VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')" >> "$GITHUB_ENV"
 ```
 
