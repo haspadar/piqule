@@ -19,9 +19,8 @@ final class ProjectConfig implements Config
     private ?Config $cache;
 
     /** Initializes with the project root directory path. */
-    public function __construct(
-        private readonly string $projectRoot,
-    ) {
+    public function __construct(private readonly string $projectRoot)
+    {
         $this->cache = null;
     }
 
@@ -55,7 +54,9 @@ final class ProjectConfig implements Config
         }
 
         $defaults = new DefaultConfig(
-            paths: new ConfigPaths($this->projectRoot . '/composer.json'),
+            [],
+            [],
+            new ConfigPaths($this->projectRoot . '/composer.json'),
         );
 
         $yamlPath = $this->projectRoot . '/.piqule.yaml';
