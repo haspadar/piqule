@@ -3,7 +3,18 @@
 
 declare(strict_types=1);
 
+use Haspadar\Piqule\Check\ConfigChecks;
+use Haspadar\Piqule\Check\ConfigDefault;
+use Haspadar\Piqule\Check\ConfigOption;
+use Haspadar\Piqule\Check\EnabledChecks;
+use Haspadar\Piqule\Check\FastChecks;
+use Haspadar\Piqule\Check\ParallelRun;
+use Haspadar\Piqule\Check\RequestedCheck;
+use Haspadar\Piqule\Check\SequentialRun;
+use Haspadar\Piqule\Check\SingleCheck;
+use Haspadar\Piqule\Check\ToggleOption;
 use Haspadar\Piqule\Config\ProjectConfig;
+use Haspadar\Piqule\Output\Console;
 use Haspadar\Piqule\PiquleException;
 
 require_once __DIR__ . '/bootstrap-autoload.php';
@@ -13,314 +24,35 @@ $projectRoot = getcwd()
 
 try {
     $config = new ProjectConfig($projectRoot);
+    $output = new Console();
+
+    $requested = new RequestedCheck($argv);
+    $verbose = new ToggleOption($argv, ['-v', '--verbose']);
+    $parallel = new ConfigOption(
+        new ToggleOption($argv, ['-p', '--parallel']),
+        new ToggleOption($argv, ['-P', '--no-parallel']),
+        new ConfigDefault($config, 'check.parallel'),
+    );
+    $full = new ConfigOption(
+        new ToggleOption($argv, ['-f', '--full']),
+        new ToggleOption($argv, ['-F', '--no-full']),
+        new ConfigDefault($config, 'check.full'),
+    );
+
+    $checks = $requested->name() !== ''
+        ? new SingleCheck($requested->name(), $projectRoot)
+        : new EnabledChecks(
+            $full->enabled()
+                ? new ConfigChecks($config, $projectRoot)
+                : new FastChecks(new ConfigChecks($config, $projectRoot), $config),
+            $config,
+        );
+
+    ($parallel->enabled() && $requested->name() === ''
+        ? new ParallelRun($checks, $output, $verbose)
+        : new SequentialRun($checks, $output, $verbose)
+    )->run();
 } catch (PiquleException $e) {
     fwrite(STDERR, $e->getMessage() . "\n");
     exit(1);
 }
-
-$flags = ['-v', '--verbose', '-p', '--parallel', '-P', '--no-parallel', '-f', '--full', '-F', '--no-full'];
-$verbose = in_array('-v', $argv, true) || in_array('--verbose', $argv, true);
-$parallelFlag = in_array('-p', $argv, true) || in_array('--parallel', $argv, true);
-$noParallelFlag = in_array('-P', $argv, true) || in_array('--no-parallel', $argv, true);
-$fullFlag = in_array('-f', $argv, true) || in_array('--full', $argv, true);
-$noFullFlag = in_array('-F', $argv, true) || in_array('--no-full', $argv, true);
-$parallelDefault = filter_var(
-    $config->list('check.parallel')[0] ?? false,
-    FILTER_VALIDATE_BOOLEAN,
-    FILTER_NULL_ON_FAILURE,
-) ?? false;
-$fullDefault = filter_var(
-    $config->list('check.full')[0] ?? false,
-    FILTER_VALIDATE_BOOLEAN,
-    FILTER_NULL_ON_FAILURE,
-) ?? false;
-$parallel = $noParallelFlag ? false : ($parallelFlag || $parallelDefault);
-$full = $noFullFlag ? false : ($fullFlag || $fullDefault);
-$args = array_values(array_filter($argv, static fn(string $a): bool => !in_array($a, $flags, true)));
-$requested = $args[1] ?? '';
-
-$checks = array_values(
-    array_filter(
-        array_map(
-            static fn(string $key): string => substr($key, 0, -4),
-            array_filter(
-                array_keys($config->toArray()),
-                static fn(string $key): bool => str_ends_with($key, '.cli'),
-            ),
-        ),
-        static fn(string $name): bool => file_exists(
-            "{$projectRoot}/.piqule/{$name}/command.sh"
-        ),
-    ),
-);
-
-$slowChecks = array_map(
-    'strval',
-    $config->list('check.slow'),
-);
-
-if ($requested === '' && !$full) {
-    $checks = array_values(
-        array_filter(
-            $checks,
-            static fn(string $key): bool => !in_array($key, $slowChecks, true),
-        ),
-    );
-}
-
-$isEnabled = static function(string $key) use ($config): bool {
-    $cliKey = "{$key}.cli";
-
-    return !$config->has($cliKey) || (bool)($config->list($cliKey)[0] ?? true);
-};
-
-$total = $requested !== ''
-    ? 1
-    : count(array_filter($checks, $isEnabled));
-$current = 0;
-
-$titleWidth = 20;
-$green = static fn(string $s): string => "\033[32m{$s}\033[0m";
-$red = static fn(string $s): string => "\033[31m{$s}\033[0m";
-$gray = static fn(string $s): string => "\033[90m{$s}\033[0m";
-$formatTime = static function(float $seconds): string {
-    if ($seconds < 60) {
-        return sprintf('%.1fs', $seconds);
-    }
-
-    $total = (int)$seconds;
-
-    return sprintf('%dm%02ds', intdiv($total, 60), $total % 60);
-};
-
-$totalStart = microtime(true);
-
-$yellow = static fn(string $s): string => "\033[33m{$s}\033[0m";
-
-$runCheck = static function(string $key, bool $force = false) use ($projectRoot, $isEnabled, $green, $red, $gray, $yellow, $formatTime, $titleWidth, $total, &$current, $verbose): bool {
-    $command = "{$projectRoot}/.piqule/{$key}/command.sh";
-
-    if (!file_exists($command)) {
-        echo ($red)("Unknown check: {$key}") . "\n";
-
-        return false;
-    }
-
-    if (!$isEnabled($key)) {
-        if (!$force) {
-            echo ($gray)("[SKIP] {$key}") . "\n";
-
-            return true;
-        }
-
-        echo ($yellow)("[TIP]  {$key}.cli is false — running because explicitly requested") . "\n";
-    }
-
-    $current++;
-
-    if ($total > 1) {
-        echo ($gray)(sprintf('[RUN]  %-' . $titleWidth . 's', $key)) . ($gray)(sprintf('%5s', "{$current}/{$total}")) . "\n";
-    } else {
-        echo ($gray)("[RUN]  {$key}") . "\n";
-    }
-
-    $output = [];
-    $start = microtime(true);
-
-    if ($verbose) {
-        passthru('bash ' . escapeshellarg($command), $status);
-    } else {
-        exec('bash ' . escapeshellarg($command) . ' 2>&1', $output, $status);
-    }
-
-    $elapsed = sprintf('%5s', $formatTime(microtime(true) - $start));
-
-    if ($status !== 0) {
-        if ($output !== []) {
-            /** @var list<string> $lines */
-            $lines = $output;
-            echo implode("\n", $lines) . "\n";
-        }
-
-        echo ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', $key)) . ($red)($elapsed) . "\n";
-
-        return false;
-    }
-
-    echo ($green)(sprintf('[OK]   %-' . $titleWidth . 's', $key)) . ($green)($elapsed) . "\n";
-
-    return true;
-};
-
-if ($requested !== '') {
-    exit($runCheck($requested, force: true) ? 0 : 1);
-}
-
-if (!$parallel) {
-    foreach ($checks as $key) {
-        if (!$runCheck($key)) {
-            $totalElapsed = sprintf('%5s', $formatTime(microtime(true) - $totalStart));
-            echo "\n" . ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', 'Checks failed')) . ($red)($totalElapsed) . "\n";
-            exit(1);
-        }
-    }
-
-    $totalElapsed = sprintf('%5s', $formatTime(microtime(true) - $totalStart));
-    echo "\n" . ($green)(sprintf('[OK]   %-' . $titleWidth . 's', 'All checks passed')) . ($green)($totalElapsed) . "\n";
-    exit(0);
-}
-
-$failed = false;
-
-$runCheckAsync = static function(string $key) use ($projectRoot, $isEnabled, $red, $gray, &$current, &$failed): ?array {
-    $command = "{$projectRoot}/.piqule/{$key}/command.sh";
-
-    if (!file_exists($command)) {
-        echo ($red)("Unknown check: {$key}") . "\n";
-        $failed = true;
-
-        return null;
-    }
-
-    if (!$isEnabled($key)) {
-        echo ($gray)("[SKIP] {$key}") . "\n";
-
-        return null;
-    }
-
-    $current++;
-
-    $stdout = tmpfile();
-    $stderr = tmpfile();
-
-    if ($stdout === false || $stderr === false) {
-        echo ($red)("Failed to create temp files for: {$key}") . "\n";
-        $failed = true;
-
-        return null;
-    }
-
-    $proc = proc_open(
-        'bash ' . escapeshellarg($command),
-        [1 => $stdout, 2 => $stderr],
-        $pipes,
-    );
-
-    if (!is_resource($proc)) {
-        echo ($red)("Failed to start: {$key}") . "\n";
-        $failed = true;
-
-        return null;
-    }
-
-    return ['proc' => $proc, 'stdout' => $stdout, 'stderr' => $stderr, 'key' => $key, 'start' => microtime(true), 'num' => $current];
-};
-
-$dependsOn = [
-    'sonar' => ['phpunit'],
-    'infection' => ['phpunit'],
-];
-
-$independent = [];
-$dependent = [];
-
-foreach ($checks as $key) {
-    if (array_key_exists($key, $dependsOn)) {
-        $dependent[$key] = $dependsOn[$key];
-    } else {
-        $independent[] = $key;
-    }
-}
-
-$running = [];
-
-foreach ($independent as $key) {
-    $handle = $runCheckAsync($key);
-
-    if ($handle !== null) {
-        echo ($gray)(sprintf('[RUN]  %-' . $titleWidth . 's', $key)) . ($gray)(sprintf('%5s', "{$handle['num']}/{$total}")) . "\n";
-        $running[] = $handle;
-    }
-}
-
-$awaitAll = static function(array $handles) use ($green, $red, $formatTime, $titleWidth, $verbose, &$failed): void {
-    /** @var array<int, array{proc: resource, stdout: resource, stderr: resource, key: string, start: float, num: int}> $pending */
-    $pending = $handles;
-
-    while ($pending !== []) {
-        foreach ($pending as $i => $handle) {
-            $info = proc_get_status($handle['proc']);
-
-            if ($info['running']) {
-                continue;
-            }
-
-            $elapsed = sprintf('%5s', $formatTime(microtime(true) - $handle['start']));
-            $status = $info['exitcode'];
-
-            if ($status === -1) {
-                $status = proc_close($handle['proc']);
-            } else {
-                proc_close($handle['proc']);
-            }
-
-            rewind($handle['stdout']);
-            $out = stream_get_contents($handle['stdout']);
-            fclose($handle['stdout']);
-
-            rewind($handle['stderr']);
-            $err = stream_get_contents($handle['stderr']);
-            fclose($handle['stderr']);
-
-            if ($status !== 0 || $verbose) {
-                if ($out !== '' && $out !== false) {
-                    echo $out;
-                }
-
-                if ($err !== '' && $err !== false) {
-                    fwrite(STDERR, $err);
-                }
-            }
-
-            if ($status !== 0) {
-                echo ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', $handle['key'])) . ($red)($elapsed) . "\n";
-                $failed = true;
-            } else {
-                echo ($green)(sprintf('[OK]   %-' . $titleWidth . 's', $handle['key'])) . ($green)($elapsed) . "\n";
-            }
-
-            unset($pending[$i]);
-        }
-
-        if ($pending !== []) {
-            usleep(50000);
-        }
-    }
-};
-
-$awaitAll($running);
-
-if (!$failed && $dependent !== []) {
-    $depRunning = [];
-
-    foreach (array_keys($dependent) as $key) {
-        $handle = $runCheckAsync($key);
-
-        if ($handle !== null) {
-            echo ($gray)(sprintf('[RUN]  %-' . $titleWidth . 's', $key)) . ($gray)(sprintf('%5s', "{$handle['num']}/{$total}")) . "\n";
-            $depRunning[] = $handle;
-        }
-    }
-
-    $awaitAll($depRunning);
-}
-
-$totalElapsed = sprintf('%5s', $formatTime(microtime(true) - $totalStart));
-
-if ($failed) {
-    echo "\n" . ($red)(sprintf('[FAIL] %-' . $titleWidth . 's', 'Checks failed')) . ($red)($totalElapsed) . "\n";
-    exit(1);
-}
-
-echo "\n" . ($green)(sprintf('[OK]   %-' . $titleWidth . 's', 'All checks passed')) . ($green)($totalElapsed) . "\n";
-exit(0);
