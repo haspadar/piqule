@@ -11,14 +11,7 @@ use Haspadar\Piqule\Envs\EmptyEnvs;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
 use Haspadar\Piqule\Formula\Action\Action;
-use Haspadar\Piqule\Formula\Action\ConfigAction;
-use Haspadar\Piqule\Formula\Action\EnvsAction;
-use Haspadar\Piqule\Formula\Action\FirstAction;
-use Haspadar\Piqule\Formula\Action\FormatAction;
-use Haspadar\Piqule\Formula\Action\FormatEachAction;
-use Haspadar\Piqule\Formula\Action\IfEmptyAction;
-use Haspadar\Piqule\Formula\Action\IfNotEmptyAction;
-use Haspadar\Piqule\Formula\Action\JoinAction;
+use Haspadar\Piqule\Formula\Actions\FormulaActions;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFileContents;
 use Haspadar\Piqule\Tests\Constraint\HasFormulaError;
@@ -283,26 +276,6 @@ final class ConfiguredFileTest extends TestCase
     /** @return array<string, callable(string): Action> */
     private function actions(Config $config): array
     {
-        $envs = new EmptyEnvs();
-
-        return [
-            'config' => fn(string $raw): Action => new ConfigAction($config, $raw),
-            'envs' => fn(string $raw): Action => new EnvsAction($envs, $raw),
-            'first' => static fn(string $raw): Action => match (trim($raw)) {
-                '' => new FirstAction(),
-                default => throw new PiquleException('Action "first" does not accept arguments'),
-            },
-            'format' => static fn(string $raw): Action => new FormatAction($raw),
-            'format_each' => static fn(string $raw): Action => new FormatEachAction($raw),
-            'if_empty' => static fn(string $raw): Action => match (trim($raw)) {
-                '' => new IfEmptyAction(),
-                default => throw new PiquleException('Action "if_empty" does not accept arguments'),
-            },
-            'if_not_empty' => static fn(string $raw): Action => match (trim($raw)) {
-                '' => new IfNotEmptyAction(),
-                default => throw new PiquleException('Action "if_not_empty" does not accept arguments'),
-            },
-            'join' => static fn(string $raw): Action => new JoinAction($raw),
-        ];
+        return (new FormulaActions($config, new EmptyEnvs()))->map();
     }
 }
