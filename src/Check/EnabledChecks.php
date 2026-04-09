@@ -21,7 +21,7 @@ final readonly class EnabledChecks implements Checks
         foreach ($this->origin->all() as $check) {
             $key = $check->name() . '.cli';
 
-            if ($this->config->has($key) && !((bool) ($this->config->list($key)[0] ?? true))) {
+            if ($this->config->has($key) && !(bool) ($this->config->list($key)[0] ?? true)) {
                 continue;
             }
 
