@@ -439,7 +439,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | `phpmetrics.extensions` | `["php"]` | File extensions |
 | `phpmetrics.complexity.max_cyclomatic_per_method` | `10` | Max cyclomatic per method |
 | `phpmetrics.complexity.max_weighted_methods_per_class` | `20` | Max WMC per class |
-| `phpmetrics.coupling.max_afferent` | `12` | Max afferent coupling |
+| `phpmetrics.coupling.max_afferent` | `14` | Max afferent coupling |
 | `phpmetrics.coupling.max_efferent` | `10` | Max efferent coupling |
 | `phpmetrics.halstead.max_bugs_per_method` | `0.5` | Max Halstead bugs per method |
 | `phpmetrics.halstead.max_difficulty_per_method` | `15` | Max Halstead difficulty |
