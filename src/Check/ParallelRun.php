@@ -52,7 +52,7 @@ final readonly class ParallelRun implements Runnable
         if ($failed) {
             $report->failed('Checks failed', microtime(true) - $start);
 
-            throw new PiquleException('Checks failed');
+            throw new PiquleException('');
         }
 
         $report->passed('All checks passed', microtime(true) - $start);

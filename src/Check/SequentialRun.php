@@ -43,7 +43,7 @@ final readonly class SequentialRun implements Runnable
                 $report->failed($check->name(), $result->elapsed());
                 $report->failed('Checks failed', microtime(true) - $start);
 
-                throw new PiquleException('Checks failed');
+                throw new PiquleException('');
             }
 
             $report->passed($check->name(), $result->elapsed());

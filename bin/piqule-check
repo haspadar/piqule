@@ -53,6 +53,9 @@ try {
         : new SequentialRun($checks, $output, $verbose)
     )->run();
 } catch (PiquleException $e) {
-    fwrite(STDERR, $e->getMessage() . "\n");
+    if ($e->getMessage() !== '') {
+        fwrite(STDERR, $e->getMessage() . "\n");
+    }
+
     exit(1);
 }
