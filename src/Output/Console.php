@@ -37,4 +37,13 @@ final readonly class Console implements Output
             "\033[31m$text\033[0m" . PHP_EOL,
         );
     }
+
+    #[Override]
+    public function muted(string $text): void
+    {
+        fwrite(
+            STDOUT,
+            "\033[90m$text\033[0m" . PHP_EOL,
+        );
+    }
 }

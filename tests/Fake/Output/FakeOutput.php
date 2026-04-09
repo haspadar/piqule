@@ -17,6 +17,9 @@ final class FakeOutput implements Output
     /** @var list<string> */
     private array $errors = [];
 
+    /** @var list<string> */
+    private array $muteds = [];
+
     public function info(string $text): void
     {
         $this->infos[] = $text;
@@ -30,6 +33,11 @@ final class FakeOutput implements Output
     public function error(string $text): void
     {
         $this->errors[] = $text;
+    }
+
+    public function muted(string $text): void
+    {
+        $this->muteds[] = $text;
     }
 
     /** @return list<string> */
@@ -48,5 +56,11 @@ final class FakeOutput implements Output
     public function errors(): array
     {
         return $this->errors;
+    }
+
+    /** @return list<string> */
+    public function muteds(): array
+    {
+        return $this->muteds;
     }
 }
