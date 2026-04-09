@@ -25,7 +25,7 @@ final class EnvsActionTest extends TestCase
             new HasArgsValues([
                 "      - name: Set environment variables\n"
                 . "        run: |\n"
-                . "          git fetch --tags\n"
+                . "          git fetch --tags --unshallow 2>/dev/null || git fetch --tags\n"
                 . '          echo "MY_VAR=$(echo hello)" >> "$GITHUB_ENV"',
             ]),
             'EnvsAction must render a step that exports one variable',
@@ -43,7 +43,7 @@ final class EnvsActionTest extends TestCase
             new HasArgsValues([
                 "      - name: Set environment variables\n"
                 . "        run: |\n"
-                . "          git fetch --tags\n"
+                . "          git fetch --tags --unshallow 2>/dev/null || git fetch --tags\n"
                 . "          echo \"A=\$(cmd-a)\" >> \"\$GITHUB_ENV\"\n"
                 . '          echo "B=$(cmd-b)" >> "$GITHUB_ENV"',
             ]),

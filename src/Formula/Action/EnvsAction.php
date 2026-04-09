@@ -29,7 +29,7 @@ final readonly class EnvsAction implements Action
         }
 
         $indent = $this->unquotedIndent();
-        $lines = [sprintf('%s    git fetch --tags', $indent)];
+        $lines = [sprintf('%s    git fetch --tags --unshallow 2>/dev/null || git fetch --tags', $indent)];
 
         foreach ($vars as $name => $command) {
             $lines[] = sprintf(
