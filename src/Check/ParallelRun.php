@@ -72,7 +72,7 @@ final readonly class ParallelRun implements Runnable
             $handle = $this->spawn($check);
 
             if ($handle === false) {
-                continue;
+                throw new PiquleException("Failed to start: {$check->name()}");
             }
 
             $report->started($check->name(), $offset + $index + 1);
