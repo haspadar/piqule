@@ -33,4 +33,12 @@ final readonly class StorageReactions implements StorageReaction
             $reaction->updated($path);
         }
     }
+
+    #[Override]
+    public function skipped(string $path): void
+    {
+        foreach ($this->reactions as $reaction) {
+            $reaction->skipped($path);
+        }
+    }
 }

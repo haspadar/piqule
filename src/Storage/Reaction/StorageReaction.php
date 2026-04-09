@@ -18,4 +18,9 @@ interface StorageReaction
      * Called when an existing file is overwritten at the given path
      */
     public function updated(string $path): void;
+
+    /**
+     * Called when a file is unchanged and writing is skipped
+     */
+    public function skipped(string $path): void;
 }
