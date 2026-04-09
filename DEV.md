@@ -107,6 +107,7 @@ Example:
 ### Supported actions
 
 - `config(key)` — loads a list of values from configuration
+- `envs(indent)` — renders a GitHub Actions step that exports environment variables via `$GITHUB_ENV`; returns empty string when no envs configured
 - `first()` — extracts the first element from the list; empty input becomes `['']`
 - `format_each(template)` — formats each list item via `sprintf`
 - `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
@@ -168,6 +169,25 @@ append:
 Keys are flat and use dot-separated names. All valid keys are declared in `templates/always/.piqule/config.yaml`.
 
 `override` replaces the default value entirely. `append` adds to the default list.
+
+### Environment variables
+
+The `envs` section declares environment variables exported in CI workflows before dependency installation. Each value is a shell command whose stdout becomes the variable value at runtime:
+
+```yaml
+envs:
+    COMPOSER_ROOT_VERSION: "git describe --tags --abbrev=0 | sed 's/^v//'"
+```
+
+This generates a workflow step:
+
+```yaml
+      - name: Set environment variables
+        run: |
+          echo "COMPOSER_ROOT_VERSION=$(git describe --tags --abbrev=0 | sed 's/^v//')" >> "$GITHUB_ENV"
+```
+
+Variable names must match `^[A-Za-z_][A-Za-z0-9_]*$`. If `envs` is absent or empty, no step is generated.
 
 If the file does not exist, defaults are used.
 

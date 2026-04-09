@@ -7,9 +7,12 @@ use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\ConfigPaths;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\YamlConfig;
+use Haspadar\Piqule\Envs\EmptyEnvs;
+use Haspadar\Piqule\Envs\YamlEnvs;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\File;
 use Haspadar\Piqule\File\PrefixedFile;
+use Haspadar\Piqule\Formula\Actions\FormulaActions;
 use Haspadar\Piqule\Files\EachFile;
 use Haspadar\Piqule\Files\FilteredFiles;
 use Haspadar\Piqule\Files\FolderFiles;
@@ -42,7 +45,9 @@ try {
     $yamlPath = $projectRoot . '/.piqule.yaml';
     $defaults = new DefaultConfig(paths: new ConfigPaths($projectRoot . '/composer.json'));
 
-    if (file_exists($yamlPath)) {
+    $hasYaml = file_exists($yamlPath);
+
+    if ($hasYaml) {
         $config = new YamlConfig($yamlPath, $defaults);
     } elseif (file_exists($projectRoot . '/.piqule.php')) {
         $loaded = require $projectRoot . '/.piqule.php';
@@ -56,6 +61,12 @@ try {
         $config = $defaults;
     }
 
+    $envs = $hasYaml
+        ? new YamlEnvs($yamlPath)
+        : new EmptyEnvs();
+
+    $actions = (new FormulaActions($config, $envs))->map();
+
     $reactions = new StorageReactions([new ReportingStorageReaction($output)]);
     $disk = new DiskStorage($projectRoot);
 
@@ -64,7 +75,7 @@ try {
             new DiskStorage($libraryRoot . '/templates/always'),
             '',
         ),
-        fn(File $file): File => new ConfiguredFile($file, $config),
+        fn(File $file): File => new ConfiguredFile($file, $actions),
     );
 
     $gitFiles = new MappedFiles(
@@ -80,7 +91,7 @@ try {
             new DiskStorage($libraryRoot . '/templates/once'),
             '',
         ),
-        fn(File $file): File => new ConfiguredFile($file, $config),
+        fn(File $file): File => new ConfiguredFile($file, $actions),
     );
 
     $gitDiffFiles = new FilteredFiles(

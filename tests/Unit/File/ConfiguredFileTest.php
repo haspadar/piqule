@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\File;
 
+use Haspadar\Piqule\Config\Config;
 use Haspadar\Piqule\Config\DefaultConfig;
 use Haspadar\Piqule\Config\OverrideConfig;
+use Haspadar\Piqule\Envs\EmptyEnvs;
 use Haspadar\Piqule\File\ConfiguredFile;
 use Haspadar\Piqule\File\TextFile;
+use Haspadar\Piqule\Formula\Action\Action;
+use Haspadar\Piqule\Formula\Actions\FormulaActions;
 use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Tests\Constraint\Files\HasFileContents;
 use Haspadar\Piqule\Tests\Constraint\HasFormulaError;
@@ -30,7 +34,7 @@ final class ConfiguredFileTest extends TestCase
                     'file',
                     '<< config(php.versions)|format_each("%s")|join(",") >>',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('8.3,8.4'),
             'placeholder must resolve to joined matrix values',
@@ -40,18 +44,13 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function leavesFileUntouchedWhenNoPlaceholdersPresent(): void
     {
-        $config = new OverrideConfig(
-            new DefaultConfig(),
-            [],
-        );
-
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'plain.txt',
                     "just text\nno placeholders here",
                 ),
-                $config,
+                $this->actions(new OverrideConfig(new DefaultConfig(), [])),
             ),
             new HasFileContents("just text\nno placeholders here"),
             'file without placeholders must be returned unchanged',
@@ -72,7 +71,7 @@ final class ConfiguredFileTest extends TestCase
                     'config.yaml',
                     'coverage: << config(coverage.patch.target)|format("%s%%") >>',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('coverage: 85%'),
         );
@@ -81,18 +80,13 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function usesDefaultValueWhenKeyNotOverridden(): void
     {
-        $config = new OverrideConfig(
-            new DefaultConfig(),
-            [],
-        );
-
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'broken.yaml',
                     'value: << config(shellcheck.shell)|join("") >>',
                 ),
-                $config,
+                $this->actions(new OverrideConfig(new DefaultConfig(), [])),
             ),
             new HasFileContents('value: bash'),
         );
@@ -101,18 +95,13 @@ final class ConfiguredFileTest extends TestCase
     #[Test]
     public function wrapsUnknownActionWithFileContext(): void
     {
-        $config = new OverrideConfig(
-            new DefaultConfig(),
-            [],
-        );
-
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'broken.yaml',
                     '<< unknown(a) >>',
                 ),
-                $config,
+                $this->actions(new OverrideConfig(new DefaultConfig(), [])),
             ),
             new HasFormulaError(
                 'broken.yaml',
@@ -137,7 +126,7 @@ final class ConfiguredFileTest extends TestCase
                 'file',
                 '<< config(php.versions) >>',
             ),
-            $config,
+            $this->actions($config),
         ))->contents();
     }
 
@@ -151,7 +140,7 @@ final class ConfiguredFileTest extends TestCase
                 'file',
                 '<< config(shellcheck.shell)|first(something) >>',
             ),
-            new OverrideConfig(new DefaultConfig(), []),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
         ))->contents();
     }
 
@@ -169,7 +158,7 @@ final class ConfiguredFileTest extends TestCase
                     'file',
                     '<< config(php.versions)|format_each("%s")|join(",")|if_not_empty()|format("[%s]") >>',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('[8.3,8.4]'),
             'if_not_empty must pass non-empty value through to format',
@@ -190,7 +179,7 @@ final class ConfiguredFileTest extends TestCase
                     'file',
                     'before|<< config(psalm.project.files)|format_each("%s")|join(",")|if_not_empty() >>|after',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('before||after'),
             'if_not_empty must produce empty string for empty config list',
@@ -211,7 +200,7 @@ final class ConfiguredFileTest extends TestCase
                     'file',
                     '<< config(psalm.project.files)|join(",")|if_empty()|format("none") >>',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('none'),
             'if_empty must pass empty value through to format',
@@ -232,7 +221,7 @@ final class ConfiguredFileTest extends TestCase
                     'file',
                     'x<< config(php.versions)|join(",")|if_empty() >>y',
                 ),
-                $config,
+                $this->actions($config),
             ),
             new HasFileContents('xy'),
             'if_empty must produce empty string for non-empty config list',
@@ -250,7 +239,7 @@ final class ConfiguredFileTest extends TestCase
                 'file',
                 '<< config(shellcheck.shell)|if_not_empty(something) >>',
             ),
-            new OverrideConfig(new DefaultConfig(), []),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
         ))->contents();
     }
 
@@ -265,7 +254,7 @@ final class ConfiguredFileTest extends TestCase
                 'file',
                 '<< config(shellcheck.shell)|if_empty(something) >>',
             ),
-            new OverrideConfig(new DefaultConfig(), []),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
         ))->contents();
     }
 
@@ -278,9 +267,15 @@ final class ConfiguredFileTest extends TestCase
                 '<< config(shellcheck.shell)|join("") >>',
                 0o755,
             ),
-            new OverrideConfig(new DefaultConfig(), []),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
         );
 
         self::assertSame(0o755, $file->mode(), 'ConfiguredFile must preserve the origin file mode');
+    }
+
+    /** @return array<string, callable(string): Action> */
+    private function actions(Config $config): array
+    {
+        return (new FormulaActions($config, new EmptyEnvs()))->map();
     }
 }
