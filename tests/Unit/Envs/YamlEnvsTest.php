@@ -120,4 +120,17 @@ final class YamlEnvsTest extends TestCase
 
         (new YamlEnvs($path))->vars();
     }
+
+    #[Test]
+    public function throwsWhenYamlRootIsNotMapping(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        $path = $this->folder->withFile(
+            '.piqule.yaml',
+            "just a string\n",
+        )->path() . '/.piqule.yaml';
+
+        (new YamlEnvs($path))->vars();
+    }
 }

@@ -31,10 +31,14 @@ final readonly class YamlEnvs implements Envs
             );
         }
 
+        if (!is_array($yaml)) {
+            throw new PiquleException(
+                sprintf('Expected a mapping in "%s", got %s', $this->path, get_debug_type($yaml)),
+            );
+        }
+
         /** @var mixed $envs */
-        $envs = is_array($yaml)
-            ? ($yaml['envs'] ?? [])
-            : [];
+        $envs = $yaml['envs'] ?? [];
 
         if (!is_array($envs)) {
             throw new PiquleException(
