@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Haspadar\Piqule\Check;
+
+use Override;
+
+/**
+ * A quality check discovered from a config key with a matching command.sh.
+ *
+ * Example:
+ *
+ *     new ConfigCheck('phpstan', '/path/to/project');
+ */
+final readonly class ConfigCheck implements Check
+{
+    /** Initializes with the check name and project root path. */
+    public function __construct(private string $name, private string $projectRoot) {}
+
+    #[Override]
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    #[Override]
+    public function command(): string
+    {
+        return $this->projectRoot . '/.piqule/' . $this->name . '/command.sh';
+    }
+}
