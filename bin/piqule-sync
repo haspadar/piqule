@@ -3,10 +3,7 @@
 
 declare(strict_types=1);
 
-use Haspadar\Piqule\Config\Config;
-use Haspadar\Piqule\Config\ConfigPaths;
-use Haspadar\Piqule\Config\DefaultConfig;
-use Haspadar\Piqule\Config\YamlConfig;
+use Haspadar\Piqule\Config\ProjectConfig;
 use Haspadar\Piqule\Envs\EmptyEnvs;
 use Haspadar\Piqule\Envs\YamlEnvs;
 use Haspadar\Piqule\File\ConfiguredFile;
@@ -42,26 +39,10 @@ try {
 
     $libraryRoot = $installPath;
 
+    $config = new ProjectConfig($projectRoot);
+
     $yamlPath = $projectRoot . '/.piqule.yaml';
-    $defaults = new DefaultConfig(paths: new ConfigPaths($projectRoot . '/composer.json'));
-
-    $hasYaml = file_exists($yamlPath);
-
-    if ($hasYaml) {
-        $config = new YamlConfig($yamlPath, $defaults);
-    } elseif (file_exists($projectRoot . '/.piqule.php')) {
-        $loaded = require $projectRoot . '/.piqule.php';
-
-        if (!$loaded instanceof Config) {
-            throw new PiquleException('.piqule.php must return an instance of Config');
-        }
-
-        $config = $loaded;
-    } else {
-        $config = $defaults;
-    }
-
-    $envs = $hasYaml
+    $envs = file_exists($yamlPath)
         ? new YamlEnvs($yamlPath)
         : new EmptyEnvs();
 

@@ -22,6 +22,5 @@
             </errorLevel>
         </UnusedClass>
 << config(psalm.suppress.possibly_unused)|format_each('                <directory name="%s" />')|join("\n")|if_not_empty()|format('        <PossiblyUnusedMethod errorLevel="suppress">\n            <errorLevel type="suppress">\n%s\n            </errorLevel>\n        </PossiblyUnusedMethod>') >>
-<< config(psalm.project.files)|format_each('                <file name="%s" />')|join("\n")|if_not_empty()|format('        <UnresolvableInclude errorLevel="suppress">\n            <errorLevel type="suppress">\n%s\n            </errorLevel>\n        </UnresolvableInclude>') >>
     </issueHandlers>
 </psalm>
