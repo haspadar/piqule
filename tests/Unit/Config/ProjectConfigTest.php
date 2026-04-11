@@ -16,12 +16,14 @@ final class ProjectConfigTest extends TestCase
     {
         $folder = new TempFolder();
 
-        self::assertTrue(
-            (new ProjectConfig($folder->path()))->has('phpstan.level'),
-            'ProjectConfig must load defaults when no .piqule.yaml exists',
-        );
-
-        $folder->close();
+        try {
+            self::assertTrue(
+                (new ProjectConfig($folder->path()))->has('phpstan.level'),
+                'ProjectConfig must load defaults when no .piqule.yaml exists',
+            );
+        } finally {
+            $folder->close();
+        }
     }
 
     #[Test]
@@ -32,12 +34,14 @@ final class ProjectConfigTest extends TestCase
             "override:\n    phpstan.level: 5",
         );
 
-        self::assertSame(
-            [5],
-            (new ProjectConfig($folder->path()))->list('phpstan.level'),
-            'ProjectConfig must apply overrides from .piqule.yaml',
-        );
-
-        $folder->close();
+        try {
+            self::assertSame(
+                [5],
+                (new ProjectConfig($folder->path()))->list('phpstan.level'),
+                'ProjectConfig must apply overrides from .piqule.yaml',
+            );
+        } finally {
+            $folder->close();
+        }
     }
 }

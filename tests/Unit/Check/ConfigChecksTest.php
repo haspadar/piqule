@@ -25,18 +25,20 @@ final class ConfigChecksTest extends TestCase
             $folder->path(),
         );
 
-        $names = [];
-        foreach ($checks->all() as $check) {
-            $names[] = $check->name();
+        try {
+            $names = [];
+            foreach ($checks->all() as $check) {
+                $names[] = $check->name();
+            }
+
+            self::assertSame(
+                ['phpstan'],
+                $names,
+                'ConfigChecks must yield checks with existing command files',
+            );
+        } finally {
+            $folder->close();
         }
-
-        $folder->close();
-
-        self::assertSame(
-            ['phpstan'],
-            $names,
-            'ConfigChecks must yield checks with existing command files',
-        );
     }
 
     #[Test]
