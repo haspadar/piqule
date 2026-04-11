@@ -12,6 +12,19 @@ use PHPUnit\Framework\TestCase;
 final class ConfigOptionTest extends TestCase
 {
     #[Test]
+    public function returnsFalseWhenAllFlagsDisabled(): void
+    {
+        self::assertFalse(
+            (new ConfigOption(
+                new FakeCliOption(false),
+                new FakeCliOption(false),
+                new FakeCliOption(false),
+            ))->enabled(),
+            'ConfigOption must be disabled when all flags are off',
+        );
+    }
+
+    #[Test]
     public function returnsTrueWhenPositiveFlagEnabled(): void
     {
         self::assertTrue(
