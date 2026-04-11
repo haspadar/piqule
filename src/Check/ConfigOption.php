@@ -13,7 +13,7 @@ final readonly class ConfigOption implements CliOption
 {
     /** Initializes with positive flag, negative flag, and default. */
     public function __construct(
-        private CliOption $on,
+        private CliOption $yes,
         private CliOption $off,
         private CliOption $default,
     ) {}
@@ -25,6 +25,6 @@ final readonly class ConfigOption implements CliOption
             return false;
         }
 
-        return $this->on->enabled() || $this->default->enabled();
+        return $this->yes->enabled() || $this->default->enabled();
     }
 }

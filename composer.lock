@@ -1735,16 +1735,16 @@
         },
         {
             "name": "haspadar/phpstan-rules",
-            "version": "v0.30.1",
+            "version": "v0.30.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haspadar/phpstan-rules.git",
-                "reference": "460c6afd0d61bb12383babcaaa118bcf381a8285"
+                "reference": "70513a9e85f3513b951ed332edeacce3194168d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/460c6afd0d61bb12383babcaaa118bcf381a8285",
-                "reference": "460c6afd0d61bb12383babcaaa118bcf381a8285",
+                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/70513a9e85f3513b951ed332edeacce3194168d7",
+                "reference": "70513a9e85f3513b951ed332edeacce3194168d7",
                 "shasum": ""
             },
             "require": {
@@ -1782,9 +1782,9 @@
             "description": "PHPStan design rules for immutability and structure",
             "support": {
                 "issues": "https://github.com/haspadar/phpstan-rules/issues",
-                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.30.1"
+                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.30.4"
             },
-            "time": "2026-04-07T12:53:39+00:00"
+            "time": "2026-04-11T08:57:20+00:00"
         },
         {
             "name": "infection/abstract-testframework-adapter",
