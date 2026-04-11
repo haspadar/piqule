@@ -13,7 +13,7 @@ use Override;
 final readonly class ConfigChecks implements Checks
 {
     /** Initializes with project configuration and root path. */
-    public function __construct(private Config $config, private string $projectRoot) {}
+    public function __construct(private Config $config, private string $root) {}
 
     #[Override]
     public function all(): iterable
@@ -24,7 +24,7 @@ final readonly class ConfigChecks implements Checks
             }
 
             $name = substr($key, 0, -4);
-            $check = new ConfigCheck($name, $this->projectRoot);
+            $check = new ConfigCheck($name, $this->root);
 
             if (file_exists($check->command())) {
                 yield $check;

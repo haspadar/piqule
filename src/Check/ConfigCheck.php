@@ -16,7 +16,7 @@ use Override;
 final readonly class ConfigCheck implements Check
 {
     /** Initializes with the check name and project root path. */
-    public function __construct(private string $name, private string $projectRoot) {}
+    public function __construct(private string $name, private string $root) {}
 
     #[Override]
     public function name(): string
@@ -27,6 +27,6 @@ final readonly class ConfigCheck implements Check
     #[Override]
     public function command(): string
     {
-        return $this->projectRoot . '/.piqule/' . $this->name . '/command.sh';
+        return $this->root . '/.piqule/' . $this->name . '/command.sh';
     }
 }

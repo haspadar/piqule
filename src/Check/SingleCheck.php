@@ -12,11 +12,11 @@ use Override;
 final readonly class SingleCheck implements Checks
 {
     /** Initializes with the check name and project root path. */
-    public function __construct(private string $name, private string $projectRoot) {}
+    public function __construct(private string $name, private string $root) {}
 
     #[Override]
     public function all(): iterable
     {
-        yield new ConfigCheck($this->name, $this->projectRoot);
+        yield new ConfigCheck($this->name, $this->root);
     }
 }

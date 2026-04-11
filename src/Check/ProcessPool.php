@@ -44,9 +44,9 @@ final readonly class ProcessPool
      * @param array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float} $handle
      * @return array{check: Check, result: CheckResult, elapsed: float}
      */
-    private function collect(array $handle, int $exitCode, float $elapsed): array
+    private function collect(array $handle, int $code, float $elapsed): array
     {
-        $status = $exitCode;
+        $status = $code;
 
         if ($status === -1) {
             $status = proc_close($handle['proc']);
