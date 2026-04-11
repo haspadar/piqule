@@ -11,19 +11,19 @@ final readonly class ConfigPaths
 {
     /** Initializes with optional custom paths for composer.json and config.yaml. */
     public function __construct(
-        private string $composerJson = '',
-        private string $configYaml = __DIR__ . '/../../templates/always/.piqule/config.yaml',
+        private string $composer = '',
+        private string $config = __DIR__ . '/../../templates/always/.piqule/config.yaml',
     ) {}
 
     /** Returns the composer.json file path. */
     public function composerJson(): string
     {
-        return $this->composerJson;
+        return $this->composer;
     }
 
     /** Returns the config.yaml file path. */
     public function configYaml(): string
     {
-        return $this->configYaml;
+        return $this->config;
     }
 }

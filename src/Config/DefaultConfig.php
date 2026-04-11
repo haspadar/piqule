@@ -21,7 +21,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  *     new DefaultConfig();
  *
- *     new DefaultConfig(paths: new ConfigPaths(composerJson: '/path/to/composer.json'));
+ *     new DefaultConfig(paths: new ConfigPaths(composer: '/path/to/composer.json'));
  */
 final class DefaultConfig implements Config
 {
@@ -31,11 +31,11 @@ final class DefaultConfig implements Config
     /**
      * Initializes with source directories, exclusions, and config paths.
      *
-     * @param list<string> $phpSrc
+     * @param list<string> $source
      * @param list<string> $exclude
      */
     public function __construct(
-        private readonly array $phpSrc = [],
+        private readonly array $source = [],
         private readonly array $exclude = [],
         private readonly ConfigPaths $paths = new ConfigPaths(),
     ) {
@@ -104,8 +104,8 @@ final class DefaultConfig implements Config
         $base = $yaml['defaults'];
 
         /** @var list<string> $resolvedPhpSrc */
-        $resolvedPhpSrc = $this->phpSrc !== []
-            ? $this->phpSrc
+        $resolvedPhpSrc = $this->source !== []
+            ? $this->source
             : ($base['php.src'] ?? []);
 
         /** @var list<string> $resolvedExclude */
@@ -123,16 +123,16 @@ final class DefaultConfig implements Config
     /**
      * Reads dynamic defaults derived from composer.json paths and directory lists.
      *
-     * @param list<string> $phpSrc
+     * @param list<string> $source
      * @param list<string> $exclude
      * @return array<string, scalar|list<scalar>>
      */
-    private function dynamic(array $phpSrc, array $exclude): array
+    private function dynamic(array $source, array $exclude): array
     {
-        $projectIncludes = (new ProjectDirs($phpSrc))->toList();
+        $projectIncludes = (new ProjectDirs($source))->toList();
 
         return [
-            'php.src' => $phpSrc,
+            'php.src' => $source,
             'exclude' => $exclude,
             'hadolint.ignore' => $exclude,
             'jsonlint.patterns' => array_merge(
@@ -144,7 +144,7 @@ final class DefaultConfig implements Config
             'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
             'phpcs.files' => $projectIncludes,
             'phpcs.root_namespace' => (new ComposerRootNamespace($this->paths->composerJson()))->toString(),
-            'phpmd.paths' => $phpSrc,
+            'phpmd.paths' => $source,
             'phpmetrics.includes' => $projectIncludes,
             'phpmetrics.excludes' => $exclude,
             'phpstan.paths' => $projectIncludes,
@@ -153,7 +153,7 @@ final class DefaultConfig implements Config
             'psalm.project.ignore' => (new ProjectDirs($exclude))->toList(),
             'infection.source.directories' => $projectIncludes,
             'shellcheck.ignore_dirs' => $exclude,
-            'sonar.sources' => $phpSrc,
+            'sonar.sources' => $source,
             'typos.exclude' => (new TrailingSlashDirs($exclude))->toList(),
             'yamllint.ignore' => array_merge(
                 (new TrailingGlobDirs($exclude))->toList(),

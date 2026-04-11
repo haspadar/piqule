@@ -22,10 +22,10 @@ final readonly class ComposerRootNamespace
         $contents = @file_get_contents($this->path);
         /** @var array{autoload?: array{psr-4?: array<string, string>}} $data */
         $data = json_decode($contents === false ? '{}' : $contents, true) ?? [];
-        $psr4 = $data['autoload']['psr-4'] ?? [];
+        $namespaces = $data['autoload']['psr-4'] ?? [];
 
-        return $psr4 !== []
-            ? rtrim(array_key_first($psr4), '\\')
+        return $namespaces !== []
+            ? rtrim(array_key_first($namespaces), '\\')
             : '';
     }
 }

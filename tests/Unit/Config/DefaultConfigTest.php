@@ -160,7 +160,7 @@ final class DefaultConfigTest extends TestCase
         $this->expectException(PiquleException::class);
         $this->expectExceptionMessage('Missing "defaults" section');
 
-        $config = new DefaultConfig(paths: new ConfigPaths(configYaml: $folder->path() . '/empty.yaml'));
+        $config = new DefaultConfig(paths: new ConfigPaths(config: $folder->path() . '/empty.yaml'));
 
         try {
             $config->has('any');
@@ -177,7 +177,7 @@ final class DefaultConfigTest extends TestCase
         $this->expectException(PiquleException::class);
         $this->expectExceptionMessage('Failed to parse config');
 
-        $config = new DefaultConfig(paths: new ConfigPaths(configYaml: $folder->path() . '/broken.yaml'));
+        $config = new DefaultConfig(paths: new ConfigPaths(config: $folder->path() . '/broken.yaml'));
 
         try {
             $config->has('any');
