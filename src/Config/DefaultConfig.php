@@ -103,8 +103,8 @@ final class DefaultConfig implements Config
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];
 
-        /** @var list<string> $resolvedPhpSrc */
-        $resolvedPhpSrc = $this->source !== []
+        /** @var list<string> $resolvedSource */
+        $resolvedSource = $this->source !== []
             ? $this->source
             : ($base['php.src'] ?? []);
 
@@ -114,7 +114,7 @@ final class DefaultConfig implements Config
             : ($base['exclude'] ?? []);
 
         /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $this->dynamic($resolvedPhpSrc, $resolvedExclude));
+        $defaults = array_merge($base, $this->dynamic($resolvedSource, $resolvedExclude));
         $this->cache = $defaults;
 
         return $defaults;
