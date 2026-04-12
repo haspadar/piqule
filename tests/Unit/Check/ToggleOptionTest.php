@@ -45,4 +45,13 @@ final class ToggleOptionTest extends TestCase
             'ToggleOption must be disabled when argv is empty',
         );
     }
+
+    #[Test]
+    public function disabledWhenFlagHasValueSuffix(): void
+    {
+        self::assertFalse(
+            (new ToggleOption(['check', '--verbose=1'], ['-v', '--verbose']))->enabled(),
+            'ToggleOption must not match --verbose=1 as --verbose',
+        );
+    }
 }
