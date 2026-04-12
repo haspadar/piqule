@@ -105,4 +105,13 @@ final class FormatActionTest extends TestCase
         (new FormatAction('%1$s %2$s'))
             ->transformed(new ListArgs(['only-one']));
     }
+
+    #[Test]
+    public function throwsWhenSprintfRaisesValueError(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new FormatAction('"%z"'))
+            ->transformed(new ListArgs(['a']));
+    }
 }
