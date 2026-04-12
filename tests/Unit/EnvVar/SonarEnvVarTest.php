@@ -94,6 +94,56 @@ final class SonarEnvVarTest extends TestCase
     }
 
     #[Test]
+    public function enabledWhenCloudFalseAndCliKeyPresentButEmpty(): void
+    {
+        self::assertSame(
+            true,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [false],
+                'sonar.cli' => [],
+            ])),
+            'SonarEnvVar must be enabled when sonar.cli is present but list is empty',
+        );
+    }
+
+    #[Test]
+    public function enabledWhenCloudFalseAndCliValueNotParsableAsBoolean(): void
+    {
+        self::assertSame(
+            true,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [false],
+                'sonar.cli' => ['maybe'],
+            ])),
+            'SonarEnvVar must be enabled when sonar.cli value cannot be parsed as boolean',
+        );
+    }
+
+    #[Test]
+    public function disabledWhenCloudKeyPresentButEmpty(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => [],
+            ])),
+            'SonarEnvVar must treat empty sonar.cloud list as cloud enabled and be disabled',
+        );
+    }
+
+    #[Test]
+    public function disabledWhenCloudValueNotParsableAsBoolean(): void
+    {
+        self::assertSame(
+            false,
+            (new SonarEnvVar())->enabled(new FakeConfig([
+                'sonar.cloud' => ['maybe'],
+            ])),
+            'SonarEnvVar must treat non-parsable sonar.cloud as true (cloud mode) and be disabled',
+        );
+    }
+
+    #[Test]
     public function returnsCorrectName(): void
     {
         self::assertSame(
