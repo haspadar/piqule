@@ -122,4 +122,16 @@ final class OnceStorageTest extends TestCase
             'mode() must delegate to origin storage',
         );
     }
+
+    #[Test]
+    public function checksExistenceViaOrigin(): void
+    {
+        self::assertTrue(
+            (new OnceStorage(
+                new InMemoryStorage(['app.php' => new TextFile('app.php', '<?php')]),
+                new FakeStorageReaction(),
+            ))->exists('app.php'),
+            'exists() must delegate to origin storage',
+        );
+    }
 }
