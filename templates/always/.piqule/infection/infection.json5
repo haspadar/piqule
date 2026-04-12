@@ -18,6 +18,8 @@
 
   "initialTestsPhpOptions": "<< config(infection.php_options) >>",
   "timeout": << config(infection.timeout) >>,
+  "minMsi": << config(infection.min_msi) >>,
+  "minCoveredMsi": << config(infection.min_covered_msi) >>,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",
