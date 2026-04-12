@@ -12,49 +12,63 @@ use PHPUnit\Framework\TestCase;
 final class CheckReportTest extends TestCase
 {
     #[Test]
-    public function writesMutedMessageWhenCheckStartsInBatch(): void
-    {
-        $output = new FakeOutput();
-
-        (new CheckReport($output, 3))->started('phpstan', 1);
-
-        self::assertCount(
-            1,
-            $output->muteds(),
-            'started() must write one muted message for a batch run',
-        );
-    }
-
-    #[Test]
-    public function includesCheckNumberInBatchStartMessage(): void
+    public function formatsStartedMessageWithCounterInBatch(): void
     {
         $output = new FakeOutput();
 
         (new CheckReport($output, 3))->started('phpstan', 2);
 
-        self::assertStringContainsString(
-            '2/3',
+        self::assertSame(
+            '[RUN]  phpstan               2/3',
             $output->muteds()[0],
-            'started() must include check number and total in batch run',
+            'started() must format [RUN] with padded name and counter in batch',
         );
     }
 
     #[Test]
-    public function omitsCounterWhenSingleCheck(): void
+    public function formatsStartedMessageWithoutCounterWhenSingle(): void
     {
         $output = new FakeOutput();
 
         (new CheckReport($output, 1))->started('phpstan', 1);
 
-        self::assertStringNotContainsString(
-            '1/1',
+        self::assertSame(
+            '[RUN]  phpstan',
             $output->muteds()[0],
-            'started() must omit counter when only one check runs',
+            'started() must format [RUN] with name only when single check',
         );
     }
 
     #[Test]
-    public function writesSuccessMessageWhenCheckPasses(): void
+    public function formatsPassedMessageWithElapsedTime(): void
+    {
+        $output = new FakeOutput();
+
+        (new CheckReport($output, 1))->passed('phpstan', 2.0);
+
+        self::assertSame(
+            '[OK]   phpstan              2.0s',
+            $output->successes()[0],
+            'passed() must format [OK] with padded name and elapsed time',
+        );
+    }
+
+    #[Test]
+    public function formatsFailedMessageWithElapsedTime(): void
+    {
+        $output = new FakeOutput();
+
+        (new CheckReport($output, 1))->failed('phpstan', 3.0);
+
+        self::assertSame(
+            '[FAIL] phpstan              3.0s',
+            $output->errors()[0],
+            'failed() must format [FAIL] with padded name and elapsed time',
+        );
+    }
+
+    #[Test]
+    public function writesSuccessOutputChannelWhenPassed(): void
     {
         $output = new FakeOutput();
 
@@ -63,26 +77,12 @@ final class CheckReportTest extends TestCase
         self::assertCount(
             1,
             $output->successes(),
-            'passed() must write one success message',
+            'passed() must write exactly one success message',
         );
     }
 
     #[Test]
-    public function includesElapsedTimeInPassedMessage(): void
-    {
-        $output = new FakeOutput();
-
-        (new CheckReport($output, 1))->passed('phpstan', 2.0);
-
-        self::assertStringContainsString(
-            '2.0s',
-            $output->successes()[0],
-            'passed() must include elapsed time',
-        );
-    }
-
-    #[Test]
-    public function writesErrorMessageWhenCheckFails(): void
+    public function writesErrorOutputChannelWhenFailed(): void
     {
         $output = new FakeOutput();
 
@@ -91,49 +91,21 @@ final class CheckReportTest extends TestCase
         self::assertCount(
             1,
             $output->errors(),
-            'failed() must write one error message',
+            'failed() must write exactly one error message',
         );
     }
 
     #[Test]
-    public function includesFailPrefixInFailedMessage(): void
+    public function writesMutedOutputChannelWhenStarted(): void
     {
         $output = new FakeOutput();
 
-        (new CheckReport($output, 1))->failed('phpstan', 0.5);
+        (new CheckReport($output, 3))->started('phpstan', 1);
 
-        self::assertStringContainsString(
-            '[FAIL]',
-            $output->errors()[0],
-            'failed() must include [FAIL] prefix',
-        );
-    }
-
-    #[Test]
-    public function includesElapsedTimeInFailedMessage(): void
-    {
-        $output = new FakeOutput();
-
-        (new CheckReport($output, 1))->failed('phpstan', 3.0);
-
-        self::assertStringContainsString(
-            '3.0s',
-            $output->errors()[0],
-            'failed() must include elapsed time',
-        );
-    }
-
-    #[Test]
-    public function includesRunPrefixWhenSingleCheck(): void
-    {
-        $output = new FakeOutput();
-
-        (new CheckReport($output, 1))->started('phpstan', 1);
-
-        self::assertStringContainsString(
-            '[RUN]  phpstan',
-            $output->muteds()[0],
-            'started() must include [RUN] prefix and check name for single check',
+        self::assertCount(
+            1,
+            $output->muteds(),
+            'started() must write exactly one muted message',
         );
     }
 }
