@@ -259,6 +259,64 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function acceptsWhitespaceOnlyArgumentForFirst(): void
+    {
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(shellcheck.shell)|first( ) >>',
+                ),
+                $this->actions(new OverrideConfig(new DefaultConfig(), [])),
+            ),
+            new HasFileContents('bash'),
+            'first() must accept whitespace-only argument as empty',
+        );
+    }
+
+    #[Test]
+    public function acceptsWhitespaceOnlyArgumentForIfEmpty(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['psalm.project.files' => []],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(psalm.project.files)|join(",")|if_empty(  )|format("none") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents('none'),
+            'if_empty() must accept whitespace-only argument as empty',
+        );
+    }
+
+    #[Test]
+    public function acceptsWhitespaceOnlyArgumentForIfNotEmpty(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php.versions' => ['8.3']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(php.versions)|join(",")|if_not_empty(  )|format("[%s]") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents('[8.3]'),
+            'if_not_empty() must accept whitespace-only argument as empty',
+        );
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
