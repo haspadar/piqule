@@ -108,4 +108,32 @@ final class CheckReportTest extends TestCase
             'failed() must include [FAIL] prefix',
         );
     }
+
+    #[Test]
+    public function includesElapsedTimeInFailedMessage(): void
+    {
+        $output = new FakeOutput();
+
+        (new CheckReport($output, 1))->failed('phpstan', 3.0);
+
+        self::assertStringContainsString(
+            '3.0s',
+            $output->errors()[0],
+            'failed() must include elapsed time',
+        );
+    }
+
+    #[Test]
+    public function includesRunPrefixWhenSingleCheck(): void
+    {
+        $output = new FakeOutput();
+
+        (new CheckReport($output, 1))->started('phpstan', 1);
+
+        self::assertStringContainsString(
+            '[RUN]  phpstan',
+            $output->muteds()[0],
+            'started() must include [RUN] prefix and check name for single check',
+        );
+    }
 }
