@@ -59,4 +59,14 @@ final class ElapsedTimeTest extends TestCase
             'ElapsedTime must format zero as 0.0s',
         );
     }
+
+    #[Test]
+    public function switchesToMinutesWhenRoundedToSixty(): void
+    {
+        self::assertSame(
+            '1m00s',
+            (new ElapsedTime(59.95))->formatted(),
+            'ElapsedTime must use minutes format when rounding pushes value to 60',
+        );
+    }
 }
