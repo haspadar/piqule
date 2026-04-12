@@ -42,6 +42,26 @@ final class CodecovSecretTest extends TestCase
     }
 
     #[Test]
+    public function enabledWhenKeyPresentButEmpty(): void
+    {
+        self::assertSame(
+            true,
+            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.cli' => []])),
+            'CodecovSecret must be enabled when phpunit.cli key is present but list is empty',
+        );
+    }
+
+    #[Test]
+    public function enabledWhenValueIsNotParsableAsBoolean(): void
+    {
+        self::assertSame(
+            true,
+            (new CodecovSecret())->enabled(new FakeConfig(['phpunit.cli' => ['maybe']])),
+            'CodecovSecret must be enabled when phpunit.cli value cannot be parsed as boolean',
+        );
+    }
+
+    #[Test]
     public function returnsCorrectName(): void
     {
         self::assertSame(
