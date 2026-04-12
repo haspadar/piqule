@@ -83,4 +83,46 @@ final class UnquotedArgsTest extends TestCase
             'UnquotedArgs must remove only the outermost layer of wrapping quotes',
         );
     }
+
+    #[Test]
+    public function preservesMismatchedDoubleAndSingleQuotes(): void
+    {
+        $args = new UnquotedArgs(
+            new ListArgs(['"value\'']),
+        );
+
+        self::assertSame(
+            ['"value\''],
+            $args->values(),
+            'UnquotedArgs must not strip mismatched quote types',
+        );
+    }
+
+    #[Test]
+    public function preservesMismatchedSingleAndDoubleQuotes(): void
+    {
+        $args = new UnquotedArgs(
+            new ListArgs(['\'value"']),
+        );
+
+        self::assertSame(
+            ['\'value"'],
+            $args->values(),
+            'UnquotedArgs must not strip when opening single quote does not match closing double quote',
+        );
+    }
+
+    #[Test]
+    public function removesSingleQuotes(): void
+    {
+        $args = new UnquotedArgs(
+            new ListArgs(["'hello'"]),
+        );
+
+        self::assertSame(
+            ['hello'],
+            $args->values(),
+            'UnquotedArgs must remove matching single quotes',
+        );
+    }
 }

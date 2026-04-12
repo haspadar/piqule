@@ -153,4 +153,38 @@ final class InMemoryStorageTest extends TestCase
 
         (new InMemoryStorage())->mode('missing.txt');
     }
+
+    #[Test]
+    public function listsEntriesWhenLocationHasTrailingSlash(): void
+    {
+        self::assertThat(
+            (new InMemoryStorage())
+                ->write(new TextFile('dir/a.txt', '1'))
+                ->write(new TextFile('dir/b.txt', '2')),
+            new HasEntries('dir/', [
+                'dir/a.txt',
+                'dir/b.txt',
+            ]),
+            'InMemoryStorage must handle trailing slash in location',
+        );
+    }
+
+    #[Test]
+    public function collectsAllMatchingEntriesNotJustFirst(): void
+    {
+        $storage = (new InMemoryStorage())
+            ->write(new TextFile('other/skip.txt', 'x'))
+            ->write(new TextFile('dir/first.txt', '1'))
+            ->write(new TextFile('another/skip.txt', 'x'))
+            ->write(new TextFile('dir/second.txt', '2'));
+
+        self::assertThat(
+            $storage,
+            new HasEntries('dir', [
+                'dir/first.txt',
+                'dir/second.txt',
+            ]),
+            'InMemoryStorage must collect all matching entries even when non-matching entries are interleaved',
+        );
+    }
 }

@@ -95,6 +95,34 @@ final class DiskStorageTest extends TestCase
     }
 
     #[Test]
+    public function listsEntriesFromRootDirectory(): void
+    {
+        self::assertThat(
+            new DiskStorage(
+                (new TempFolder())
+                    ->withFile('root-file.txt', 'data')
+                    ->path(),
+            ),
+            new HasEntries('', ['root-file.txt']),
+            'DiskStorage must list entries from root directory without leading slash',
+        );
+    }
+
+    #[Test]
+    public function listsNestedEntriesFromRootDirectory(): void
+    {
+        self::assertThat(
+            new DiskStorage(
+                (new TempFolder())
+                    ->withFile('sub/nested.txt', 'data')
+                    ->path(),
+            ),
+            new HasEntries('', ['sub/nested.txt']),
+            'DiskStorage must list nested entries from root without leading slash',
+        );
+    }
+
+    #[Test]
     public function listsNoEntriesForNonDirectoryLocation(): void
     {
         self::assertThat(

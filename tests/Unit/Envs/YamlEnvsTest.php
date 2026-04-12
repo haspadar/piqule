@@ -122,6 +122,19 @@ final class YamlEnvsTest extends TestCase
     }
 
     #[Test]
+    public function throwsWhenEnvsNameHasInvalidSuffix(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        $path = $this->folder->withFile(
+            '.piqule.yaml',
+            "envs:\n  VALID_START!: \"echo hello\"\n",
+        )->path() . '/.piqule.yaml';
+
+        (new YamlEnvs($path))->vars();
+    }
+
+    #[Test]
     public function throwsWhenYamlRootIsNotMapping(): void
     {
         $this->expectException(PiquleException::class);

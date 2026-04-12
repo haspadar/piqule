@@ -16,7 +16,7 @@
   "initialTestsPhpOptions": "-d memory_limit=1G",
   "timeout": 30,
   "minMsi": 80,
-  "minCoveredMsi": 85,
+  "minCoveredMsi": 90,
   "logs": {
     "text": "infection.log",
     "summary": "infection-summary.log",

@@ -42,6 +42,26 @@ final class InfectionSecretTest extends TestCase
     }
 
     #[Test]
+    public function enabledWhenKeyPresentButEmpty(): void
+    {
+        self::assertSame(
+            true,
+            (new InfectionSecret())->enabled(new FakeConfig(['infection.cli' => []])),
+            'InfectionSecret must be enabled when infection.cli key is present but list is empty',
+        );
+    }
+
+    #[Test]
+    public function enabledWhenValueIsNotParsableAsBoolean(): void
+    {
+        self::assertSame(
+            true,
+            (new InfectionSecret())->enabled(new FakeConfig(['infection.cli' => ['maybe']])),
+            'InfectionSecret must be enabled when infection.cli value cannot be parsed as boolean',
+        );
+    }
+
+    #[Test]
     public function returnsCorrectName(): void
     {
         self::assertSame(

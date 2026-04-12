@@ -96,6 +96,27 @@ final class DiffingStorageTest extends TestCase
     }
 
     #[Test]
+    public function reportsSkippedWhenContentsAndModeAreTheSame(): void
+    {
+        $reaction = new FakeStorageReaction();
+
+        (new DiffingStorage(
+            new InMemoryStorage([
+                'same.txt' => new TextFile('same.txt', 'data', 0o644),
+            ]),
+            $reaction,
+        ))->write(
+            new TextFile('same.txt', 'data', 0o644),
+        );
+
+        self::assertSame(
+            ['same.txt'],
+            $reaction->skippedPaths(),
+            'DiffingStorage must report skipped() when contents and mode are identical',
+        );
+    }
+
+    #[Test]
     public function doesNotReportUpdatedWhenContentsAndModeAreTheSame(): void
     {
         $reaction = new FakeStorageReaction();

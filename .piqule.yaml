@@ -7,7 +7,7 @@ override:
   sonar.organization: haspadar-org
   sonar.projectKey: haspadar_piqule
   infection.min_msi: 80
-  infection.min_covered_msi: 85
+  infection.min_covered_msi: 90
   psalm.project.files:
     - "../../bin/piqule"
     - "../../bin/piqule-check"
