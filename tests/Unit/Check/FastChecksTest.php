@@ -24,9 +24,14 @@ final class FastChecksTest extends TestCase
             new FakeConfig(['check.slow' => []]),
         );
 
-        self::assertCount(
-            2,
+        $names = array_map(
+            static fn($c) => $c->name(),
             iterator_to_array($checks->all()),
+        );
+
+        self::assertSame(
+            ['phpstan', 'phpunit'],
+            $names,
             'FastChecks must yield all checks when check.slow is empty',
         );
     }

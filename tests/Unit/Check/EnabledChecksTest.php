@@ -24,9 +24,14 @@ final class EnabledChecksTest extends TestCase
             new FakeConfig([]),
         );
 
-        self::assertCount(
-            2,
+        $names = array_map(
+            static fn($c) => $c->name(),
             iterator_to_array($checks->all()),
+        );
+
+        self::assertSame(
+            ['phpstan', 'phpunit'],
+            $names,
             'EnabledChecks must yield all checks when no cli config disables them',
         );
     }
@@ -62,9 +67,14 @@ final class EnabledChecksTest extends TestCase
             new FakeConfig(['phpstan.cli' => [true]]),
         );
 
-        self::assertCount(
-            1,
+        $names = array_map(
+            static fn($c) => $c->name(),
             iterator_to_array($checks->all()),
+        );
+
+        self::assertSame(
+            ['phpstan'],
+            $names,
             'EnabledChecks must yield check when .cli config is true',
         );
     }
