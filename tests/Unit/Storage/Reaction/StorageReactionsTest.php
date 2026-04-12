@@ -42,4 +42,20 @@ final class StorageReactionsTest extends TestCase
             'StorageReactions must delegate updated() to all contained reactions',
         );
     }
+
+    #[Test]
+    public function delegatesSkippedToAllReactions(): void
+    {
+        $first = new FakeStorageReaction();
+        $second = new FakeStorageReaction();
+
+        (new StorageReactions([$first, $second]))
+            ->skipped('file.txt');
+
+        self::assertSame(
+            ['file.txt'],
+            $first->skippedPaths(),
+            'StorageReactions must delegate skipped() to all contained reactions',
+        );
+    }
 }
