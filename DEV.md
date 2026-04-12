@@ -511,6 +511,8 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `infection.cli` | `true` | Enable Infection mutation testing |
+| `infection.min_msi` | `50` | Minimum Mutation Score Indicator (0–100) |
+| `infection.min_covered_msi` | `80` | Minimum Covered Code MSI (0–100) |
 | `infection.php_options` | `"-d memory_limit=1G"` | PHP CLI options |
 | `infection.source.directories` | `["../../src"]` | Source directories |
 | `infection.timeout` | `30` | Timeout per mutant (seconds) |
