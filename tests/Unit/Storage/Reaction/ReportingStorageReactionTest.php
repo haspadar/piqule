@@ -40,4 +40,19 @@ final class ReportingStorageReactionTest extends TestCase
             'ReportingStorageReaction must write one info message when a file is updated',
         );
     }
+
+    #[Test]
+    public function writesMutedMessageWhenFileIsSkipped(): void
+    {
+        $output = new FakeOutput();
+
+        (new ReportingStorageReaction($output))
+            ->skipped('file.txt');
+
+        self::assertCount(
+            1,
+            $output->muteds(),
+            'ReportingStorageReaction must write one muted message when a file is skipped',
+        );
+    }
 }
