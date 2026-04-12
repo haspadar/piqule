@@ -61,6 +61,16 @@ final class ElapsedTimeTest extends TestCase
     }
 
     #[Test]
+    public function staysInSecondsWhenRoundedBelowSixty(): void
+    {
+        self::assertSame(
+            '59.9s',
+            (new ElapsedTime(59.94))->formatted(),
+            'ElapsedTime must stay in seconds format when rounding keeps value below 60',
+        );
+    }
+
+    #[Test]
     public function switchesToMinutesWhenRoundedToSixty(): void
     {
         self::assertSame(
