@@ -49,4 +49,44 @@ final class ConsoleTest extends TestCase
             'muted() must write gray ANSI text to stdout',
         );
     }
+
+    #[Test]
+    public function writesNothingToStderrOnInfo(): void
+    {
+        self::assertSame(
+            '',
+            (new ConsoleProcess('info', 'hello'))->stderr(),
+            'info() must not write to stderr',
+        );
+    }
+
+    #[Test]
+    public function writesNothingToStderrOnSuccess(): void
+    {
+        self::assertSame(
+            '',
+            (new ConsoleProcess('success', 'done'))->stderr(),
+            'success() must not write to stderr',
+        );
+    }
+
+    #[Test]
+    public function writesNothingToStdoutOnError(): void
+    {
+        self::assertSame(
+            '',
+            (new ConsoleProcess('error', 'fail'))->stdout(),
+            'error() must not write to stdout',
+        );
+    }
+
+    #[Test]
+    public function writesNothingToStderrOnMuted(): void
+    {
+        self::assertSame(
+            '',
+            (new ConsoleProcess('muted', 'skip'))->stderr(),
+            'muted() must not write to stderr',
+        );
+    }
 }
