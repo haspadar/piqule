@@ -42,7 +42,13 @@ final readonly class ConsoleProcess
         $this->stderr = (string) stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        proc_close($proc);
+        $exitCode = proc_close($proc);
+
+        if ($exitCode !== 0) {
+            throw new \RuntimeException(
+                sprintf('Subprocess exited with code %d: %s', $exitCode, $this->stderr),
+            );
+        }
     }
 
     public function stdout(): string
