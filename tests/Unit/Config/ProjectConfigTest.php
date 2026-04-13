@@ -89,12 +89,21 @@ final class ProjectConfigTest extends TestCase
     #[Test]
     public function returnsConfigAsArray(): void
     {
-        $folder = new TempFolder();
+        $folder = (new TempFolder())->withFile(
+            '.piqule.php',
+            <<<'PHP'
+            <?php
+            return new \Haspadar\Piqule\Tests\Fake\Config\FakeConfig([
+                'custom.key' => ['custom-value'],
+            ]);
+            PHP,
+        );
 
         try {
-            self::assertIsArray(
+            self::assertSame(
+                ['custom.key' => ['custom-value']],
                 (new ProjectConfig($folder->path()))->toArray(),
-                'ProjectConfig must return config as array',
+                'ProjectConfig must return the resolved config as array',
             );
         } finally {
             $folder->close();
@@ -102,19 +111,26 @@ final class ProjectConfigTest extends TestCase
     }
 
     #[Test]
-    public function cachesConfigBetweenCalls(): void
+    public function returnsCachedConfigOnSecondCall(): void
     {
-        $folder = new TempFolder();
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "override:\n    phpstan.level: 5",
+        );
 
         try {
             $config = new ProjectConfig($folder->path());
-            $first = $config->has('phpstan.level');
-            $second = $config->has('phpstan.level');
+            $config->has('phpstan.level');
+
+            file_put_contents(
+                $folder->path() . '/.piqule.yaml',
+                "override:\n    phpstan.level: 9",
+            );
 
             self::assertSame(
-                $first,
-                $second,
-                'ProjectConfig must return consistent results from cache',
+                [5],
+                $config->list('phpstan.level'),
+                'ProjectConfig must return cached value even after file changes',
             );
         } finally {
             $folder->close();
