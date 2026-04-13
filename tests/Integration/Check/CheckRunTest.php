@@ -98,7 +98,7 @@ final class CheckRunTest extends TestCase
     #[Test]
     public function measuresElapsedTime(): void
     {
-        $folder = (new TempFolder())->withFile('command.sh', 'true');
+        $folder = (new TempFolder())->withFile('command.sh', 'sleep 0.05');
 
         try {
             $result = (new CheckRun(
