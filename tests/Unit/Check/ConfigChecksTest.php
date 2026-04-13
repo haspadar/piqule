@@ -42,6 +42,38 @@ final class ConfigChecksTest extends TestCase
     }
 
     #[Test]
+    public function skipsKeysNotEndingWithCli(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule/phpstan/command.sh',
+            '#!/bin/bash',
+        );
+
+        $checks = new ConfigChecks(
+            new FakeConfig([
+                'phpstan.level' => [9],
+                'phpstan.cli' => [true],
+            ]),
+            $folder->path(),
+        );
+
+        try {
+            $names = [];
+            foreach ($checks->all() as $check) {
+                $names[] = $check->name();
+            }
+
+            self::assertSame(
+                ['phpstan'],
+                $names,
+                'ConfigChecks must skip config keys not ending with .cli',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
+
+    #[Test]
     public function skipsCheckWhenCommandFileMissing(): void
     {
         $checks = new ConfigChecks(
