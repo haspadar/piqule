@@ -6,25 +6,38 @@ namespace Haspadar\Piqule\Tests\Fixture;
 
 final readonly class ConsoleProcess
 {
+    private const array ALLOWED = ['info', 'success', 'error', 'muted'];
+
     private string $stdout;
 
     private string $stderr;
 
     public function __construct(string $method, string $text)
     {
+        if (!in_array($method, self::ALLOWED, true)) {
+            throw new \InvalidArgumentException(
+                sprintf('Method %s is not allowed', var_export($method, true)),
+            );
+        }
+
         $script = sprintf(
             'require %s; (new \Haspadar\Piqule\Output\Console())->%s(%s);',
-            escapeshellarg(dirname(__DIR__, 2) . '/vendor/autoload.php'),
+            var_export(dirname(__DIR__, 2) . '/vendor/autoload.php', true),
             $method,
             var_export($text, true),
         );
 
         $proc = proc_open(
-            ['php', '-r', $script],
-            [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+            [PHP_BINARY, '-r', $script],
+            [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
         );
 
+        if (!is_resource($proc)) {
+            throw new \RuntimeException('Failed to start subprocess');
+        }
+
+        fclose($pipes[0]);
         $this->stdout = (string) stream_get_contents($pipes[1]);
         $this->stderr = (string) stream_get_contents($pipes[2]);
         fclose($pipes[1]);
