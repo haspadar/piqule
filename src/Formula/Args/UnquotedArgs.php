@@ -13,6 +13,10 @@ use Override;
  */
 final readonly class UnquotedArgs implements Args
 {
+    private const int MIN_QUOTED_LENGTH = 2;
+
+    private const int STRIP_LAST_CHAR = -1;
+
     /** Initializes with the args to unquote. */
     public function __construct(private Args $origin) {}
 
@@ -31,7 +35,7 @@ final readonly class UnquotedArgs implements Args
     {
         $length = strlen($text);
 
-        if ($length < 2) {
+        if ($length < self::MIN_QUOTED_LENGTH) {
             return $text;
         }
 
@@ -42,7 +46,7 @@ final readonly class UnquotedArgs implements Args
             ($first === '"' && $last === '"')
             || ($first === "'" && $last === "'")
         ) {
-            return substr($text, 1, -1);
+            return substr($text, 1, self::STRIP_LAST_CHAR);
         }
 
         return $text;

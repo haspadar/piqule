@@ -9,6 +9,8 @@ namespace Haspadar\Piqule\Check;
  */
 final readonly class ElapsedTime
 {
+    private const int SECONDS_PER_MINUTE = 60;
+
     /** Initializes with elapsed seconds. */
     public function __construct(private float $seconds) {}
 
@@ -17,12 +19,12 @@ final readonly class ElapsedTime
     {
         $rounded = round($this->seconds, 1);
 
-        if ($rounded < 60) {
+        if ($rounded < self::SECONDS_PER_MINUTE) {
             return sprintf('%.1fs', $rounded);
         }
 
         $total = (int) round($this->seconds);
 
-        return sprintf('%dm%02ds', intdiv($total, 60), $total % 60);
+        return sprintf('%dm%02ds', intdiv($total, self::SECONDS_PER_MINUTE), $total % self::SECONDS_PER_MINUTE);
     }
 }

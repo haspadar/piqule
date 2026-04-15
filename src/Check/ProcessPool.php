@@ -9,6 +9,10 @@ namespace Haspadar\Piqule\Check;
  */
 final readonly class ProcessPool
 {
+    private const int POLL_INTERVAL_USEC = 50_000;
+
+    private const int UNKNOWN_EXIT_CODE = -1;
+
     /**
      * Waits for all processes to finish and yields each result.
      *
@@ -34,7 +38,7 @@ final readonly class ProcessPool
                 unset($pending[$i]);
             }
 
-            usleep(50_000);
+            usleep(self::POLL_INTERVAL_USEC);
         }
     }
 
@@ -48,7 +52,7 @@ final readonly class ProcessPool
     {
         $status = $code;
 
-        if ($status === -1) {
+        if ($status === self::UNKNOWN_EXIT_CODE) {
             $status = proc_close($handle['proc']);
         } else {
             proc_close($handle['proc']);

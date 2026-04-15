@@ -12,6 +12,8 @@ use Override;
  */
 final readonly class ConfigChecks implements Checks
 {
+    private const int CLI_SUFFIX_LENGTH = 4;
+
     /** Initializes with project configuration and root path. */
     public function __construct(private Config $config, private string $root) {}
 
@@ -23,7 +25,7 @@ final readonly class ConfigChecks implements Checks
                 continue;
             }
 
-            $name = substr($key, 0, -4);
+            $name = substr($key, 0, -self::CLI_SUFFIX_LENGTH);
             $check = new ConfigCheck($name, $this->root);
 
             if (file_exists($check->command())) {

@@ -13,6 +13,8 @@ use Override;
  */
 final readonly class ParsedActions implements Actions
 {
+    private const int ARGS_MATCH_INDEX = 2;
+
     /**
      * Initializes with a DSL expression and available action factories.
      *
@@ -39,7 +41,7 @@ final readonly class ParsedActions implements Actions
                 );
             }
 
-            return ($this->actions[$name])($m[2]);
+            return ($this->actions[$name])($m[self::ARGS_MATCH_INDEX]);
         }, $matches);
     }
 }
