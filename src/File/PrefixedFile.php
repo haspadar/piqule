@@ -22,7 +22,7 @@ final readonly class PrefixedFile implements File
 
         return $prefix === ''
             ? $name
-            : $prefix . '/' . $name;
+            : "{$prefix}/{$name}";
     }
 
     #[Override]

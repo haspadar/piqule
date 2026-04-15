@@ -21,6 +21,6 @@ final readonly class TrailingSlashDirs implements Dirs
     #[Override]
     public function toList(): array
     {
-        return array_map(static fn(string $dir): string => $dir . '/', $this->dirs);
+        return array_map(static fn(string $dir): string => "{$dir}/", $this->dirs);
     }
 }

@@ -21,7 +21,7 @@ final readonly class CheckRun
      */
     public function result(): CheckResult
     {
-        $command = 'bash ' . escapeshellarg($this->check->command());
+        $command = sprintf('bash %s', escapeshellarg($this->check->command()));
         $start = microtime(true);
 
         if ($this->verbose->enabled()) {
@@ -35,7 +35,7 @@ final readonly class CheckRun
         }
 
         $output = [];
-        exec($command . ' 2>&1', $output, $status);
+        exec("{$command} 2>&1", $output, $status);
 
         /** @var list<string> $lines */
         $lines = $output;

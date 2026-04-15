@@ -27,6 +27,6 @@ final readonly class ConfigCheck implements Check
     #[Override]
     public function command(): string
     {
-        return $this->root . '/.piqule/' . $this->name . '/command.sh';
+        return "{$this->root}/.piqule/{$this->name}/command.sh";
     }
 }

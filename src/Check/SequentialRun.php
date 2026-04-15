@@ -37,7 +37,7 @@ final readonly class SequentialRun implements Runnable
 
             if (!$result->passed()) {
                 if ($result->output() !== '') {
-                    echo $result->output() . "\n";
+                    echo "{$result->output()}\n";
                 }
 
                 $report->failed($check->name(), $result->elapsed());

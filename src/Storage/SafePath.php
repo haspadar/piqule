@@ -41,6 +41,6 @@ final readonly class SafePath
             $parts[] = $part;
         }
 
-        return rtrim($this->root, '/') . '/' . implode('/', $parts);
+        return sprintf('%s/%s', rtrim($this->root, '/'), implode('/', $parts));
     }
 }
