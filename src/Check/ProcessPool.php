@@ -68,7 +68,7 @@ final readonly class ProcessPool
 
         return [
             'check' => $handle['check'],
-            'result' => new CheckResult($status, $out . $err, $elapsed),
+            'result' => new CheckResult($status, "{$out}{$err}", $elapsed),
             'elapsed' => $elapsed,
         ];
     }

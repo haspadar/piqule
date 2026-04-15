@@ -12,7 +12,7 @@ use Override;
  */
 final readonly class ConfigChecks implements Checks
 {
-    private const int CLI_SUFFIX_LENGTH = 4;
+    private const string CLI_SUFFIX = '.cli';
 
     /** Initializes with project configuration and root path. */
     public function __construct(private Config $config, private string $root) {}
@@ -21,11 +21,11 @@ final readonly class ConfigChecks implements Checks
     public function all(): iterable
     {
         foreach (array_keys($this->config->toArray()) as $key) {
-            if (!str_ends_with($key, '.cli')) {
+            if (!str_ends_with($key, self::CLI_SUFFIX)) {
                 continue;
             }
 
-            $name = substr($key, 0, -self::CLI_SUFFIX_LENGTH);
+            $name = substr($key, 0, -strlen(self::CLI_SUFFIX));
             $check = new ConfigCheck($name, $this->root);
 
             if (file_exists($check->command())) {
