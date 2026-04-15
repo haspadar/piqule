@@ -17,6 +17,8 @@ use function assert;
  */
 final readonly class DiskStorage implements Storage
 {
+    private const int FULL_PERMISSIONS = 0o777;
+
     /** Initializes storage rooted at the given directory path. */
     public function __construct(private string $root) {}
 
@@ -57,14 +59,14 @@ final readonly class DiskStorage implements Storage
 
             if ($item->isFile()) {
                 yield ltrim(
-                    $location . '/' . $item->getFilename(),
+                    "{$location}/{$item->getFilename()}",
                     '/',
                 );
             }
 
             if ($item->isDir()) {
                 yield from $this->entries(
-                    ltrim($location . '/' . $item->getFilename(), '/'),
+                    ltrim("{$location}/{$item->getFilename()}", '/'),
                 );
             }
         }
@@ -84,7 +86,7 @@ final readonly class DiskStorage implements Storage
         $directory = dirname($path);
 
         if (!is_dir($directory)
-            && !mkdir($directory, 0o777, true)
+            && !mkdir($directory, self::FULL_PERMISSIONS, true)
             && !is_dir($directory)
         ) {
             throw new PiquleException("Unable to create directory: $directory");
@@ -116,7 +118,7 @@ final readonly class DiskStorage implements Storage
             throw new PiquleException("Unable to read permissions: $location");
         }
 
-        return $perms & 0o777;
+        return $perms & self::FULL_PERMISSIONS;
     }
 
     /**

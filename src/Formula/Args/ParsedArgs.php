@@ -13,6 +13,8 @@ use Override;
  */
 final readonly class ParsedArgs implements Args
 {
+    private const int JSON_MAX_DEPTH = 512;
+
     /** Initializes with the args containing a JSON list literal. */
     public function __construct(private Args $origin) {}
 
@@ -76,7 +78,7 @@ final readonly class ParsedArgs implements Args
             $decoded = json_decode(
                 $raw,
                 true,
-                512,
+                self::JSON_MAX_DEPTH,
                 JSON_THROW_ON_ERROR,
             );
         } catch (JsonException) {

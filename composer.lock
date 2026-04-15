@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1643b9c668c8421c31c5da9785b4732",
+    "content-hash": "b968e1709dca99bb63f62379dd7bf7d3",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1805,16 +1805,16 @@
         },
         {
             "name": "haspadar/phpstan-rules",
-            "version": "v0.30.4",
+            "version": "v0.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haspadar/phpstan-rules.git",
-                "reference": "70513a9e85f3513b951ed332edeacce3194168d7"
+                "reference": "55a104a3116fa5efffc3733187bbb18bcfc4a5f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/70513a9e85f3513b951ed332edeacce3194168d7",
-                "reference": "70513a9e85f3513b951ed332edeacce3194168d7",
+                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/55a104a3116fa5efffc3733187bbb18bcfc4a5f6",
+                "reference": "55a104a3116fa5efffc3733187bbb18bcfc4a5f6",
                 "shasum": ""
             },
             "require": {
@@ -1852,9 +1852,9 @@
             "description": "PHPStan design rules for immutability and structure",
             "support": {
                 "issues": "https://github.com/haspadar/phpstan-rules/issues",
-                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.30.4"
+                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.31.0"
             },
-            "time": "2026-04-11T08:57:20+00:00"
+            "time": "2026-04-15T07:30:17+00:00"
         },
         {
             "name": "infection/abstract-testframework-adapter",

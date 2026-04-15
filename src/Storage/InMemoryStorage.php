@@ -64,7 +64,7 @@ final readonly class InMemoryStorage implements Storage
             return $keys;
         }
 
-        $prefix = rtrim($location, '/') . '/';
+        $prefix = sprintf('%s/', rtrim($location, '/'));
         $entries = [];
 
         foreach ($keys as $key) {

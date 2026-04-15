@@ -21,8 +21,7 @@ final readonly class CheckReport
     {
         $this->output->muted(
             $this->total > 1
-                ? sprintf('[RUN]  %-' . self::TITLE_WIDTH . 's', $name)
-                    . sprintf('%5s', "{$number}/{$this->total}")
+                ? sprintf('[RUN]  %-*s%5s', self::TITLE_WIDTH, $name, "{$number}/{$this->total}")
                 : "[RUN]  {$name}",
         );
     }
@@ -31,8 +30,7 @@ final readonly class CheckReport
     public function passed(string $name, float $elapsed): void
     {
         $this->output->success(
-            sprintf('[OK]   %-' . self::TITLE_WIDTH . 's', $name)
-                . sprintf('%5s', (new ElapsedTime($elapsed))->formatted()),
+            sprintf('[OK]   %-*s%5s', self::TITLE_WIDTH, $name, (new ElapsedTime($elapsed))->formatted()),
         );
     }
 
@@ -40,8 +38,7 @@ final readonly class CheckReport
     public function failed(string $name, float $elapsed): void
     {
         $this->output->error(
-            sprintf('[FAIL] %-' . self::TITLE_WIDTH . 's', $name)
-                . sprintf('%5s', (new ElapsedTime($elapsed))->formatted()),
+            sprintf('[FAIL] %-*s%5s', self::TITLE_WIDTH, $name, (new ElapsedTime($elapsed))->formatted()),
         );
     }
 }

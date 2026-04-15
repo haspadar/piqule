@@ -14,32 +14,32 @@ use Override;
  *
  *     new ProjectConfig('/path/to/project');
  */
-final class ProjectConfig implements Config
+final readonly class ProjectConfig implements Config
 {
-    private ?Config $cache;
+    private StickyConfig $config;
 
     /** Initializes with the project root directory path. */
-    public function __construct(private readonly string $root)
+    public function __construct(private string $root)
     {
-        $this->cache = null;
+        $this->config = new StickyConfig($this->resolve(...));
     }
 
     #[Override]
     public function has(string $name): bool
     {
-        return $this->config()->has($name);
+        return $this->config->has($name);
     }
 
     #[Override]
     public function list(string $name): array
     {
-        return $this->config()->list($name);
+        return $this->config->list($name);
     }
 
     #[Override]
     public function toArray(): array
     {
-        return $this->config()->toArray();
+        return $this->config->toArray();
     }
 
     /**
@@ -47,35 +47,31 @@ final class ProjectConfig implements Config
      *
      * @throws PiquleException
      */
-    private function config(): Config
+    private function resolve(): Config
     {
-        if ($this->cache !== null) {
-            return $this->cache;
-        }
-
         $defaults = new DefaultConfig(
             [],
             [],
-            new ConfigPaths($this->root . '/composer.json'),
+            new ConfigPaths(sprintf('%s/composer.json', $this->root)),
         );
 
-        $yamlPath = $this->root . '/.piqule.yaml';
-        $phpPath = $this->root . '/.piqule.php';
+        $yamlPath = sprintf('%s/.piqule.yaml', $this->root);
+        $phpPath = sprintf('%s/.piqule.php', $this->root);
 
         if (file_exists($yamlPath)) {
-            $this->cache = new YamlConfig($yamlPath, $defaults);
-        } elseif (file_exists($phpPath)) {
+            return new YamlConfig($yamlPath, $defaults);
+        }
+
+        if (file_exists($phpPath)) {
             $loaded = require $phpPath;
 
             if (!$loaded instanceof Config) {
                 throw new PiquleException('.piqule.php must return an instance of Config');
             }
 
-            $this->cache = $loaded;
-        } else {
-            $this->cache = $defaults;
+            return $loaded;
         }
 
-        return $this->cache;
+        return $defaults;
     }
 }

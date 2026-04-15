@@ -41,7 +41,7 @@ final readonly class AppendingStorage implements Storage
 
         $merged = new TextFile(
             $path,
-            $current . "\n" . $file->contents(),
+            "{$current}\n{$file->contents()}",
             $this->origin->mode($path),
         );
         $newOrigin = $this->origin->write($merged);

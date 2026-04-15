@@ -14,6 +14,10 @@ use Override;
  */
 final readonly class ParallelRun implements Runnable
 {
+    private const int STDOUT_FD = 1;
+
+    private const int STDERR_FD = 2;
+
     private const array DEPENDS_ON = [
         'sonar' => ['phpunit'],
         'infection' => ['phpunit'],
@@ -127,8 +131,8 @@ final readonly class ParallelRun implements Runnable
         }
 
         $proc = proc_open(
-            'bash ' . escapeshellarg($check->command()),
-            [1 => $stdout, 2 => $stderr],
+            sprintf('bash %s', escapeshellarg($check->command())),
+            [self::STDOUT_FD => $stdout, self::STDERR_FD => $stderr],
             $pipes,
         );
 
