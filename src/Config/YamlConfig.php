@@ -26,36 +26,34 @@ use Symfony\Component\Yaml\Yaml;
  *         exclude:
  *             - legacy
  */
-final class YamlConfig implements Config
+final readonly class YamlConfig implements Config
 {
-    private ?Config $cache;
+    private StickyConfig $config;
 
     /**
      * Initializes with a YAML file path and default configuration.
      */
-    public function __construct(
-        private readonly string $path,
-        private readonly DefaultConfig $defaults,
-    ) {
-        $this->cache = null;
+    public function __construct(private string $path, private DefaultConfig $defaults)
+    {
+        $this->config = new StickyConfig($this->parse(...));
     }
 
     #[Override]
     public function has(string $name): bool
     {
-        return $this->config()->has($name);
+        return $this->config->has($name);
     }
 
     #[Override]
     public function list(string $name): array
     {
-        return $this->config()->list($name);
+        return $this->config->list($name);
     }
 
     #[Override]
     public function toArray(): array
     {
-        return $this->config()->toArray();
+        return $this->config->toArray();
     }
 
     /**
@@ -63,12 +61,8 @@ final class YamlConfig implements Config
      *
      * @throws PiquleException
      */
-    private function config(): Config
+    private function parse(): Config
     {
-        if ($this->cache !== null) {
-            return $this->cache;
-        }
-
         try {
             $data = Yaml::parseFile($this->path);
         } catch (YamlParseException $e) {
@@ -97,7 +91,7 @@ final class YamlConfig implements Config
         $pathKeys = new YamlPathKeys($overrides, $appends, $this->defaults);
         $remaining = ['exclude', 'php.src'];
 
-        $this->cache = new AppendConfig(
+        return new AppendConfig(
             new OverrideConfig(
                 new DefaultConfig(
                     $pathKeys->phpSrc(),
@@ -108,7 +102,5 @@ final class YamlConfig implements Config
             ),
             array_diff_key($appends, array_flip($remaining)),
         );
-
-        return $this->cache;
     }
 }

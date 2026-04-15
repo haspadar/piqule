@@ -11,6 +11,7 @@ use Haspadar\Piqule\Config\Dirs\TrailingGlobDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingSlashDirs;
 use Haspadar\Piqule\PiquleException;
 use Override;
+use stdClass;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -23,10 +24,9 @@ use Symfony\Component\Yaml\Yaml;
  *
  *     new DefaultConfig(paths: new ConfigPaths(composer: '/path/to/composer.json'));
  */
-final class DefaultConfig implements Config
+final readonly class DefaultConfig implements Config
 {
-    /** @var array<string, scalar|list<scalar>>|null */
-    private ?array $cache;
+    private stdClass $cache;
 
     /**
      * Initializes with source directories, exclusions, and config paths.
@@ -35,11 +35,11 @@ final class DefaultConfig implements Config
      * @param list<string> $exclude
      */
     public function __construct(
-        private readonly array $source = [],
-        private readonly array $exclude = [],
-        private readonly ConfigPaths $paths = new ConfigPaths(),
+        private array $source = [],
+        private array $exclude = [],
+        private ConfigPaths $paths = new ConfigPaths(),
     ) {
-        $this->cache = null;
+        $this->cache = new stdClass();
     }
 
     #[Override]
@@ -82,8 +82,11 @@ final class DefaultConfig implements Config
      */
     private function defaults(): array
     {
-        if ($this->cache !== null) {
-            return $this->cache;
+        if (isset($this->cache->value)) {
+            /** @var array<string, scalar|list<scalar>> $cached */
+            $cached = $this->cache->value;
+
+            return $cached;
         }
 
         try {
@@ -115,7 +118,7 @@ final class DefaultConfig implements Config
 
         /** @var array<string, scalar|list<scalar>> $defaults */
         $defaults = array_merge($base, $this->dynamic($resolvedSource, $resolvedExclude));
-        $this->cache = $defaults;
+        $this->cache->value = $defaults;
 
         return $defaults;
     }
