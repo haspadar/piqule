@@ -15,6 +15,7 @@ use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\IfEmptyAction;
 use Haspadar\Piqule\Formula\Action\IfNotEmptyAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
+use Haspadar\Piqule\Formula\Action\ReplaceAction;
 use Haspadar\Piqule\PiquleException;
 
 /**
@@ -59,6 +60,7 @@ final readonly class FormulaActions
                 default => throw new PiquleException('Action "if_not_empty" does not accept arguments'),
             },
             'join' => static fn(string $raw): Action => new JoinAction($raw),
+            'replace' => static fn(string $raw): Action => new ReplaceAction($raw),
         ];
     }
 }
