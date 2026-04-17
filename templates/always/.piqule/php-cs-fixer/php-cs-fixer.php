@@ -26,9 +26,7 @@ return (new PhpCsFixer\Config())
     [
 
         '@PER-CS2.0' => true,
-        '@PHP8x3Migration' => true,
-        '@PHP8x4Migration' => true,
-        '@PHP8x5Migration' => true,
+<< config(php.versions)|replace(".", "x")|format_each("        '@PHP%sMigration' => true,")|join("\n") >>
 
         // Arrays
         'array_syntax' => ['syntax' => 'short'],

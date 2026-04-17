@@ -317,6 +317,48 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function appliesReplaceWithinPipeline(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php.versions' => ['8.3', '8.4']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(php.versions)|replace(".", "x")|format_each("@PHP%sMigration") |join(",") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents('@PHP8x3Migration,@PHP8x4Migration'),
+            'replace must slug each version before formatting',
+        );
+    }
+
+    #[Test]
+    public function emitsSingleMigrationRuleSetForSinglePhpVersion(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php.versions' => ['8.3']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'file',
+                    '<< config(php.versions)|replace(".", "x")|format_each("@PHP%sMigration")|join(",") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents('@PHP8x3Migration'),
+            'single version must not produce rule sets for absent versions',
+        );
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
