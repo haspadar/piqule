@@ -49,7 +49,7 @@ final readonly class ReplaceAction implements Action
     /**
      * Splits the raw argument string into (search, replace) with escape sequences resolved.
      *
-     * @throws InvalidArgumentException When UnquotedArgs cannot yield scalar values.
+     * @throws InvalidArgumentException When the wrapped args contain non-scalar values.
      * @throws PiquleException When the raw argument does not contain exactly two comma-separated values.
      * @return array{string, string}
      */
