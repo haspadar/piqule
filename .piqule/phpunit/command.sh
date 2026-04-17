@@ -8,8 +8,8 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "tests" ]; then
-  echo "No tests directory found, skipping PHPUnit"
+if [ ! -d "tests" ] || [ -z "$(find tests -name '*Test.php' -maxdepth 3 | head -1)" ]; then
+  echo "No PHP tests found, skipping PHPUnit"
   exit 0
 fi
 
