@@ -8,8 +8,8 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "src" ]; then
-  echo "No src directory found, skipping PHPStan"
+if [ ! -d "src" ] || [ -z "$(find src -name '*.php' -maxdepth 3 | head -1)" ]; then
+  echo "No PHP source files found, skipping PHPStan"
   exit 0
 fi
 
