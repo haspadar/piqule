@@ -8,7 +8,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "tests" ] || [ -z "$(find tests -name '*Test.php' -maxdepth 3 | head -1)" ]; then
+if [ ! -d "tests" ] || [ -z "$(find tests -name '*Test.php' -print -quit)" ]; then
   echo "No PHP tests found, skipping PHPUnit"
   exit 0
 fi

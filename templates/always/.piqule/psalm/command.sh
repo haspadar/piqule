@@ -8,7 +8,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "src" ] || [ -z "$(find src -name '*.php' -maxdepth 3 | head -1)" ]; then
+if [ ! -d "src" ] || [ -z "$(find src -name '*.php' -print -quit)" ]; then
   echo "No PHP source files found, skipping Psalm"
   exit 0
 fi
