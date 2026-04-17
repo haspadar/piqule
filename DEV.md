@@ -111,7 +111,7 @@ Example:
 - `first()` — extracts the first element from the list; empty input becomes `['']`
 - `format_each(template)` — formats each list item via `sprintf`
 - `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
-- `replace(search, replace)` — replaces every occurrence of `search` with `replace` in each list item; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
+- `replace(search, replace)` — replaces every occurrence of `search` with `replace` in each list item; supports escape sequences (`\n`, `\t`, `\r`, `\\`); arguments are split on the first `,` so `search` and `replace` cannot contain a literal comma
 - `if_not_empty()` — guard: empty input (`[]` or `['']`) becomes `[]`, non-empty passes through unchanged
 - `if_empty()` — inverse guard: non-empty input becomes `[]`, empty passes through unchanged
 - `format(template)` — formats a single value via `sprintf`; empty input (`[]`) passes through as `[]`; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
