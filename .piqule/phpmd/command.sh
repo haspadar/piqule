@@ -8,6 +8,11 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
+if [ ! -d "src" ] || [ -z "$(find src -name '*.php' -maxdepth 3 | head -1)" ]; then
+  echo "No PHP source files found, skipping PHPMD"
+  exit 0
+fi
+
 BIN="$(.piqule/_composer.sh phpmd)"
 
 "$BIN" \
