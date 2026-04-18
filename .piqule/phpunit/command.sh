@@ -8,10 +8,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "tests" ] || [ -z "$(find tests -name '*Test.php' -print -quit)" ]; then
-  echo "No PHP tests found, skipping PHPUnit"
-  exit 0
-fi
+.piqule/_skip_if_empty.sh tests '*Test.php' PHPUnit "PHP tests" || exit 0
 
 SEED="${PHPUNIT_SEED:-}"
 
