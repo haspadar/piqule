@@ -8,11 +8,10 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-. .piqule/_skip_if_empty.sh src '*.php' Infection
-
 INFECTION_BIN="$(.piqule/_composer.sh infection)"
 
-XDEBUG_MODE=coverage \
+exec .piqule/_skip_if_empty.sh src '*.php' Infection -- \
+  env XDEBUG_MODE=coverage \
   "$INFECTION_BIN" \
   --configuration="$CONFIG" \
   --threads=max

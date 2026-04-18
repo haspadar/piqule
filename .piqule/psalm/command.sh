@@ -8,11 +8,10 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-. .piqule/_skip_if_empty.sh src '*.php' Psalm
-
 BIN="$(.piqule/_composer.sh psalm)"
 
-"$BIN" \
+exec .piqule/_skip_if_empty.sh src '*.php' Psalm -- \
+  "$BIN" \
   --root=. \
   --config="$CONFIG" \
   --no-cache

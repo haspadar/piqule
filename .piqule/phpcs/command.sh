@@ -8,8 +8,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-. .piqule/_skip_if_empty.sh src '*.php' PHPCS
-
 BIN="$(.piqule/_composer.sh phpcs)"
 
-"$BIN" --standard="$CONFIG"
+exec .piqule/_skip_if_empty.sh src '*.php' PHPCS -- \
+  "$BIN" --standard="$CONFIG"

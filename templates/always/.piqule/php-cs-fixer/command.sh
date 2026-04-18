@@ -8,11 +8,10 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-. .piqule/_skip_if_empty.sh src '*.php' "PHP CS Fixer"
-
 BIN="$(.piqule/_composer.sh php-cs-fixer)"
 
-"$BIN" fix \
+exec .piqule/_skip_if_empty.sh src '*.php' "PHP CS Fixer" -- \
+  "$BIN" fix \
   --config="$CONFIG" \
   --dry-run \
   --diff

@@ -8,10 +8,9 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-. .piqule/_skip_if_empty.sh src '*.php' PHPStan
-
 BIN="$(.piqule/_composer.sh phpstan)"
 
-"$BIN" analyse \
+exec .piqule/_skip_if_empty.sh src '*.php' PHPStan -- \
+  "$BIN" analyse \
   -c "$CONFIG" \
   --memory-limit=<< config(phpstan.memory) >>
