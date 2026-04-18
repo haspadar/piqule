@@ -14,6 +14,7 @@ override:
     - "../../bin/piqule-fix"
     - "../../bin/piqule-sync"
     - "../../bin/piqule-tokens-check"
+  phpstan.afferent_coupling.excluded_classes: ['\Haspadar\Piqule\PiquleException']
 
 append:
   exclude:

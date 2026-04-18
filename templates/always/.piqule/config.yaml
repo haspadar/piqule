@@ -102,7 +102,7 @@ defaults:
   phpstan.checked_exceptions: ['\Throwable']
   phpstan.neon_includes: ["../../vendor/phpstan/phpstan-strict-rules/rules.neon", "../../vendor/haspadar/phpstan-rules/rules.neon"]
   phpstan.afferent_coupling.ignore_interfaces: true
-  phpstan.afferent_coupling.excluded_classes: ['\Haspadar\Piqule\PiquleException']
+  phpstan.afferent_coupling.excluded_classes: []
 
   phpunit.cli: true
   phpunit.php_options: "-d memory_limit=1G"
