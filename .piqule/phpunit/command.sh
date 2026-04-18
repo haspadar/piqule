@@ -8,7 +8,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-.piqule/_skip_if_empty.sh tests '*Test.php' PHPUnit "PHP tests" || exit 0
+. .piqule/_skip_if_empty.sh tests '*Test.php' PHPUnit "PHP tests"
 
 SEED="${PHPUNIT_SEED:-}"
 

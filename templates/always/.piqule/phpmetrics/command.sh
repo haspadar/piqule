@@ -9,7 +9,7 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-.piqule/_skip_if_empty.sh src '*.php' PHPMetrics || exit 0
+. .piqule/_skip_if_empty.sh src '*.php' PHPMetrics
 
 BIN="$(.piqule/_composer.sh phpmetrics)"
 
