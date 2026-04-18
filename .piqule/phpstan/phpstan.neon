@@ -20,3 +20,9 @@ parameters:
             missingCheckedExceptionInThrows: true
         checkedExceptionClasses:
             - \Throwable
+
+    haspadar:
+        afferentCoupling:
+            ignoreInterfaces: true
+            excludedClasses:
+                - \Haspadar\Piqule\PiquleException

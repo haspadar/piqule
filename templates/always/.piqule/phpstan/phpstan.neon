@@ -19,3 +19,9 @@ parameters:
             missingCheckedExceptionInThrows: true
         checkedExceptionClasses:
 << config(phpstan.checked_exceptions)|format_each("            - %s")|join("\n") >>
+
+    haspadar:
+        afferentCoupling:
+            ignoreInterfaces: << config(phpstan.afferent_coupling.ignore_interfaces)|join("") >>
+            excludedClasses:
+<< config(phpstan.afferent_coupling.excluded_classes)|format_each("                - %s")|join("\n") >>
