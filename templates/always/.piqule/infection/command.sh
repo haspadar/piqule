@@ -8,14 +8,10 @@ if [ ! -f "$CONFIG" ]; then
   exit 1
 fi
 
-if [ ! -d "src" ] || [ -z "$(find src -name '*.php' -maxdepth 3 | head -1)" ]; then
-  echo "No PHP source files found, skipping Infection"
-  exit 0
-fi
-
 INFECTION_BIN="$(.piqule/_composer.sh infection)"
 
-XDEBUG_MODE=coverage \
+exec .piqule/_skip_if_empty.sh src '*.php' Infection -- \
+  env XDEBUG_MODE=coverage \
   "$INFECTION_BIN" \
   --configuration="$CONFIG" \
   --threads=max

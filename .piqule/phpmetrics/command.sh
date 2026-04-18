@@ -11,11 +11,11 @@ fi
 
 BIN="$(.piqule/_composer.sh phpmetrics)"
 
-php -d error_reporting='E_ALL & ~E_DEPRECATED' \
+.piqule/_skip_if_empty.sh src '*.php' PHPMetrics -- \
+  php -d error_reporting='E_ALL & ~E_DEPRECATED' \
   "$BIN" \
   --config="$CONFIG"
 
 if [ -f "$VERIFY" ]; then
   php "$VERIFY"
 fi
-

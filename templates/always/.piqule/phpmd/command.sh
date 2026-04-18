@@ -10,9 +10,10 @@ fi
 
 BIN="$(.piqule/_composer.sh phpmd)"
 
-"$BIN" \
+exec .piqule/_skip_if_empty.sh src '*.php' PHPMD -- \
+  "$BIN" \
 << config(phpmd.paths)
    |join(" ")
 >> \
-text \
-"$CONFIG"
+  text \
+  "$CONFIG"
