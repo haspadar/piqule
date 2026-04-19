@@ -125,6 +125,7 @@ The DSL operates in stages:
 2. List-level actions:
    - `first` — picks the first element
    - `format_each`
+   - `shell_quote` — wraps each item in POSIX single quotes
 3. `join` reduces the list to a single value
 4. Conditional guards (optional, placed after `join`):
    - `if_not_empty` — drops empty values, enabling conditional block rendering
@@ -147,6 +148,10 @@ Final value formatting:
 Conditional block (rendered only when config key is non-empty):
 
 `<< config(psalm.project.files)|format_each('        <file name="%s" />')|join("\n")|if_not_empty()|format('<handler>\n%s\n</handler>') >>`
+
+Shell argv composition (safe interpolation of arbitrary values into a shell command):
+
+`<< config(phpunit.php_options)|shell_quote()|join(' ') >>`
 
 ---
 
