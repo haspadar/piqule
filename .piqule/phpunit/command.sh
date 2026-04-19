@@ -30,16 +30,6 @@ if [ -n "$SEED" ]; then
   ARGS+=(--random-order-seed="$SEED")
 fi
 
-COVERAGE_FILE=".piqule/codecov/coverage.xml"
-
-if php -r 'exit(extension_loaded("xdebug") ? 0 : 1);' 2>/dev/null; then
-  mkdir -p "$(dirname "$COVERAGE_FILE")"
-  ARGS+=(--coverage-clover="$COVERAGE_FILE")
-  XDEBUG_MODE=coverage
-else
-  XDEBUG_MODE=off
-fi
-
 PHP_OPTIONS_STR="-d memory_limit=1G"
 PHP_OPTIONS=()
 if [ -n "$PHP_OPTIONS_STR" ]; then
@@ -52,6 +42,16 @@ if [ "$PHP_OPTIONS_RC" -ne 0 ] || [ -n "$PHP_OPTIONS_DIAG" ]; then
   echo "Invalid phpunit.php_options: $PHP_OPTIONS_STR" >&2
   [ -n "$PHP_OPTIONS_DIAG" ] && printf '%s\n' "$PHP_OPTIONS_DIAG" >&2
   exit 1
+fi
+
+COVERAGE_FILE=".piqule/codecov/coverage.xml"
+
+if php "${PHP_OPTIONS[@]+"${PHP_OPTIONS[@]}"}" -r 'exit(extension_loaded("xdebug") ? 0 : 1);' 2>/dev/null; then
+  mkdir -p "$(dirname "$COVERAGE_FILE")"
+  ARGS+=(--coverage-clover="$COVERAGE_FILE")
+  XDEBUG_MODE=coverage
+else
+  XDEBUG_MODE=off
 fi
 
 export XDEBUG_MODE
