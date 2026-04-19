@@ -113,6 +113,7 @@ Example:
 - `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
 - `replace(search, replace)` — replaces every occurrence of `search` with `replace` in each list item; supports escape sequences (`\n`, `\t`, `\r`, `\\`); arguments are split on the first `,`, so `search` cannot contain a literal comma (any commas after the first separator are preserved as part of `replace`)
 - `shell_quote()` — wraps each list item in POSIX single-quoted form for safe interpolation into shell commands; combines with `join(' ')` to produce a list of safe argv tokens
+- `json_escape()` — escapes each list item for safe interpolation inside a JSON string literal (quotes, backslashes, control chars become escape sequences); does not add surrounding quotes
 - `if_not_empty()` — guard: empty input (`[]` or `['']`) becomes `[]`, non-empty passes through unchanged
 - `if_empty()` — inverse guard: non-empty input becomes `[]`, empty passes through unchanged
 - `format(template)` — formats a single value via `sprintf`; empty input (`[]`) passes through as `[]`; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
@@ -126,6 +127,7 @@ The DSL operates in stages:
    - `first` — picks the first element
    - `format_each`
    - `shell_quote` — wraps each item in POSIX single quotes
+   - `json_escape` — escapes each item for a JSON string literal
 3. `join` reduces the list to a single value
 4. Conditional guards (optional, placed after `join`):
    - `if_not_empty` — drops empty values, enabling conditional block rendering
@@ -152,6 +154,10 @@ Conditional block (rendered only when config key is non-empty):
 Shell argv composition (safe interpolation of arbitrary values into a shell command):
 
 `<< config(phpunit.php_options)|shell_quote()|join(' ') >>`
+
+JSON string interpolation (safe insertion of arbitrary values into a JSON string literal):
+
+`"description": "<< config(project.description)|json_escape()|join("") >>"`
 
 ---
 

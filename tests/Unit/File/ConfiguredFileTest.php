@@ -274,6 +274,21 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function throwsWhenJsonEscapeReceivesArguments(): void
+    {
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "json_escape" does not accept arguments');
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(shellcheck.shell)|json_escape(something) >>',
+            ),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
+        ))->contents();
+    }
+
+    #[Test]
     public function acceptsWhitespaceOnlyArgumentForFirst(): void
     {
         self::assertThat(
