@@ -16,7 +16,7 @@
     "configDir": "../phpunit"
   },
 
-  "initialTestsPhpOptions": "<< config(infection.php_options) >>",
+  "initialTestsPhpOptions": "<< config(infection.php_options)|join(' ') >>",
   "timeout": << config(infection.timeout) >>,
   "minMsi": << config(infection.min_msi) >>,
   "minCoveredMsi": << config(infection.min_covered_msi) >>,
