@@ -10,8 +10,12 @@ fi
 
 INFECTION_BIN="$(.piqule/_composer.sh infection)"
 
+PHP_OPTIONS_STR="<< config(infection.php_options) >>"
+read -ra PHP_OPTIONS <<< "$PHP_OPTIONS_STR"
+
 exec .piqule/_skip_if_empty.sh src '*.php' Infection -- \
   env XDEBUG_MODE=coverage \
+  php "${PHP_OPTIONS[@]}" \
   "$INFECTION_BIN" \
   --configuration="$CONFIG" \
   --threads=max

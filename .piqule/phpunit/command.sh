@@ -40,8 +40,9 @@ else
   XDEBUG_MODE=off
 fi
 
-PHP_OPTIONS="-d memory_limit=1G"
+PHP_OPTIONS_STR="-d memory_limit=1G"
+read -ra PHP_OPTIONS <<< "$PHP_OPTIONS_STR"
 export XDEBUG_MODE
 
 exec .piqule/_skip_if_empty.sh tests '*Test.php' PHPUnit "PHP tests" -- \
-  php "$PHP_OPTIONS" "$BIN" "${ARGS[@]}"
+  php "${PHP_OPTIONS[@]}" "$BIN" "${ARGS[@]}"
