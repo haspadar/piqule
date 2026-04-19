@@ -40,7 +40,7 @@ else
   XDEBUG_MODE=off
 fi
 
-PHP_OPTIONS_STR="<< config(phpunit.php_options) >>"
+PHP_OPTIONS_STR="<< config(phpunit.php_options)|join(' ') >>"
 read -ra PHP_OPTIONS <<< "$PHP_OPTIONS_STR"
 export XDEBUG_MODE
 
