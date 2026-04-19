@@ -15,6 +15,7 @@ use Haspadar\Piqule\Formula\Action\FormatEachAction;
 use Haspadar\Piqule\Formula\Action\IfEmptyAction;
 use Haspadar\Piqule\Formula\Action\IfNotEmptyAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
+use Haspadar\Piqule\Formula\Action\JsonEscapeAction;
 use Haspadar\Piqule\Formula\Action\ReplaceAction;
 use Haspadar\Piqule\Formula\Action\ShellQuoteAction;
 use Haspadar\Piqule\PiquleException;
@@ -61,6 +62,10 @@ final readonly class FormulaActions
                 default => throw new PiquleException('Action "if_not_empty" does not accept arguments'),
             },
             'join' => static fn(string $raw): Action => new JoinAction($raw),
+            'json_escape' => static fn(string $raw): Action => match (trim($raw)) {
+                '' => new JsonEscapeAction(),
+                default => throw new PiquleException('Action "json_escape" does not accept arguments'),
+            },
             'replace' => static fn(string $raw): Action => new ReplaceAction($raw),
             'shell_quote' => static fn(string $raw): Action => match (trim($raw)) {
                 '' => new ShellQuoteAction(),
