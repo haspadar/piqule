@@ -16,6 +16,7 @@ use Haspadar\Piqule\Formula\Action\IfEmptyAction;
 use Haspadar\Piqule\Formula\Action\IfNotEmptyAction;
 use Haspadar\Piqule\Formula\Action\JoinAction;
 use Haspadar\Piqule\Formula\Action\ReplaceAction;
+use Haspadar\Piqule\Formula\Action\ShellQuoteAction;
 use Haspadar\Piqule\PiquleException;
 
 /**
@@ -61,6 +62,10 @@ final readonly class FormulaActions
             },
             'join' => static fn(string $raw): Action => new JoinAction($raw),
             'replace' => static fn(string $raw): Action => new ReplaceAction($raw),
+            'shell_quote' => static fn(string $raw): Action => match (trim($raw)) {
+                '' => new ShellQuoteAction(),
+                default => throw new PiquleException('Action "shell_quote" does not accept arguments'),
+            },
         ];
     }
 }
