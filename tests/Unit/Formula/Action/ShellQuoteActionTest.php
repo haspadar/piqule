@@ -110,4 +110,15 @@ final class ShellQuoteActionTest extends TestCase
             'ShellQuoteAction must quote each list element independently',
         );
     }
+
+    #[Test]
+    public function coercesScalarsToQuotedStrings(): void
+    {
+        self::assertThat(
+            (new ShellQuoteAction())
+                ->transformed(new ListArgs([42, true, false])),
+            new HasArgsValues(["'42'", "'true'", "'false'"]),
+            'ShellQuoteAction must stringify scalars via StringifiedArgs before quoting',
+        );
+    }
 }
