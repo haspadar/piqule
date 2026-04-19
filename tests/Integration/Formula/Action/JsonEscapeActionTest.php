@@ -24,6 +24,8 @@ final class JsonEscapeActionTest extends TestCase
         yield 'value with tab' => ["a\tb"];
         yield 'value with control char' => ["bell\x07here"];
         yield 'non-ASCII value' => ['привет'];
+        yield 'line separator' => ["a\u{2028}b"];
+        yield 'paragraph separator' => ["a\u{2029}b"];
         yield 'forward slash' => ['path/to/file'];
         yield 'empty string' => [''];
     }

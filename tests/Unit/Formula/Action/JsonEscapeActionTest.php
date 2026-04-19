@@ -90,6 +90,28 @@ final class JsonEscapeActionTest extends TestCase
     }
 
     #[Test]
+    public function escapesLineSeparatorAsUnicodeEscape(): void
+    {
+        self::assertThat(
+            (new JsonEscapeAction())
+                ->transformed(new ListArgs(["a\u{2028}b"])),
+            new HasArgsValues(['a\\u2028b']),
+            'JsonEscapeAction must encode U+2028 as \\u2028 to remain safe inside JSON5 string literals',
+        );
+    }
+
+    #[Test]
+    public function escapesParagraphSeparatorAsUnicodeEscape(): void
+    {
+        self::assertThat(
+            (new JsonEscapeAction())
+                ->transformed(new ListArgs(["a\u{2029}b"])),
+            new HasArgsValues(['a\\u2029b']),
+            'JsonEscapeAction must encode U+2029 as \\u2029 to remain safe inside JSON5 string literals',
+        );
+    }
+
+    #[Test]
     public function preservesNonAsciiLiteral(): void
     {
         self::assertThat(
