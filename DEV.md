@@ -112,6 +112,7 @@ Example:
 - `format_each(template)` — formats each list item via `sprintf`
 - `join(delimiter)` — reduces the list to a single scalar value; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
 - `replace(search, replace)` — replaces every occurrence of `search` with `replace` in each list item; supports escape sequences (`\n`, `\t`, `\r`, `\\`); arguments are split on the first `,`, so `search` cannot contain a literal comma (any commas after the first separator are preserved as part of `replace`)
+- `shell_quote()` — wraps each list item in POSIX single-quoted form for safe interpolation into shell commands; combines with `join(' ')` to produce a list of safe argv tokens
 - `if_not_empty()` — guard: empty input (`[]` or `['']`) becomes `[]`, non-empty passes through unchanged
 - `if_empty()` — inverse guard: non-empty input becomes `[]`, empty passes through unchanged
 - `format(template)` — formats a single value via `sprintf`; empty input (`[]`) passes through as `[]`; supports escape sequences (`\n`, `\t`, `\r`, `\\`)
@@ -124,6 +125,7 @@ The DSL operates in stages:
 2. List-level actions:
    - `first` — picks the first element
    - `format_each`
+   - `shell_quote` — wraps each item in POSIX single quotes
 3. `join` reduces the list to a single value
 4. Conditional guards (optional, placed after `join`):
    - `if_not_empty` — drops empty values, enabling conditional block rendering
@@ -146,6 +148,10 @@ Final value formatting:
 Conditional block (rendered only when config key is non-empty):
 
 `<< config(psalm.project.files)|format_each('        <file name="%s" />')|join("\n")|if_not_empty()|format('<handler>\n%s\n</handler>') >>`
+
+Shell argv composition (safe interpolation of arbitrary values into a shell command):
+
+`<< config(phpunit.php_options)|shell_quote()|join(' ') >>`
 
 ---
 

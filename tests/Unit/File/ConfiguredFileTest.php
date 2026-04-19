@@ -259,6 +259,21 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function throwsWhenShellQuoteReceivesArguments(): void
+    {
+        $this->expectException(PiquleException::class);
+        $this->expectExceptionMessage('Action "shell_quote" does not accept arguments');
+
+        (new ConfiguredFile(
+            new TextFile(
+                'file',
+                '<< config(shellcheck.shell)|shell_quote(something) >>',
+            ),
+            $this->actions(new OverrideConfig(new DefaultConfig(), [])),
+        ))->contents();
+    }
+
+    #[Test]
     public function acceptsWhitespaceOnlyArgumentForFirst(): void
     {
         self::assertThat(
