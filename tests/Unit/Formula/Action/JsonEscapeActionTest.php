@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Tests\Unit\Formula\Action;
 use Haspadar\Piqule\Formula\Action\JsonEscapeAction;
 use Haspadar\Piqule\Formula\Args\ListArgs;
 use Haspadar\Piqule\Tests\Constraint\Formula\Args\HasArgsValues;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -175,5 +176,14 @@ final class JsonEscapeActionTest extends TestCase
             new HasArgsValues(['42', 'true', 'false']),
             'JsonEscapeAction must stringify scalars via StringifiedArgs before escaping',
         );
+    }
+
+    #[Test]
+    public function throwsWhenInputContainsMalformedUtf8(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot JSON-encode value:');
+
+        (new JsonEscapeAction())->transformed(new ListArgs(["\xB1\x31"]));
     }
 }
