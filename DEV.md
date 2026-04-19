@@ -127,6 +127,7 @@ The DSL operates in stages:
    - `first` — picks the first element
    - `format_each`
    - `shell_quote` — wraps each item in POSIX single quotes
+   - `json_escape` — escapes each item for a JSON string literal
 3. `join` reduces the list to a single value
 4. Conditional guards (optional, placed after `join`):
    - `if_not_empty` — drops empty values, enabling conditional block rendering
@@ -153,6 +154,10 @@ Conditional block (rendered only when config key is non-empty):
 Shell argv composition (safe interpolation of arbitrary values into a shell command):
 
 `<< config(phpunit.php_options)|shell_quote()|join(' ') >>`
+
+JSON string interpolation (safe insertion of arbitrary values into a JSON string literal):
+
+`"description": "<< config(project.description)|json_escape()|join("") >>"`
 
 ---
 
