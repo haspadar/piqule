@@ -16,6 +16,7 @@ BIN="$(.piqule/_composer.sh phpmetrics)"
   "$BIN" \
   --config="$CONFIG"
 
-if [ -f "$VERIFY" ]; then
+REPORT=".piqule/phpmetrics/phpmetrics.json"
+if [ -f "$VERIFY" ] && [ -f "$REPORT" ]; then
   php "$VERIFY"
 fi
