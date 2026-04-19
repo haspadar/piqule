@@ -485,6 +485,8 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | `phpstan.paths` | `["../../src"]` | Paths to analyze |
 | `phpstan.checked_exceptions` | `['\Throwable']` | Checked exception classes |
 | `phpstan.neon_includes` | `["../../vendor/phpstan/phpstan-strict-rules/rules.neon", "../../vendor/haspadar/phpstan-rules/rules.neon"]` | Neon includes |
+| `phpstan.afferent_coupling.ignore_interfaces` | `true` | Skip interfaces when counting afferent coupling (haspadar rule) |
+| `phpstan.afferent_coupling.excluded_classes` | `[]` | FQCNs excluded from the haspadar afferent coupling rule |
 
 ### phpunit
 
