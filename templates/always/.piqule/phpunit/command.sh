@@ -41,8 +41,12 @@ else
 fi
 
 PHP_OPTIONS_STR="<< config(phpunit.php_options)|join(' ') >>"
-read -ra PHP_OPTIONS <<< "$PHP_OPTIONS_STR"
+PHP_OPTIONS=()
+if [ -n "$PHP_OPTIONS_STR" ]; then
+  read -ra PHP_OPTIONS <<< "$PHP_OPTIONS_STR"
+fi
+
 export XDEBUG_MODE
 
 exec .piqule/_skip_if_empty.sh tests '*Test.php' PHPUnit "PHP tests" -- \
-  php "${PHP_OPTIONS[@]}" "$BIN" "${ARGS[@]}"
+  php "${PHP_OPTIONS[@]+"${PHP_OPTIONS[@]}"}" "$BIN" "${ARGS[@]}"
