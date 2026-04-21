@@ -140,7 +140,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: .piqule/codecov/coverage.xml
-          codecov_yml_path: .piqule/codecov/.codecov.yml
           fail_ci_if_error: true
 
       # ------------------------------------------------------------
