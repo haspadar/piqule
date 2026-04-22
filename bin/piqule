@@ -19,12 +19,14 @@ case "$COMMAND" in
     "$(dirname "$0")/piqule-sync" "$@"
     "$(dirname "$0")/piqule-pin"
     "$(dirname "$0")/piqule-tokens-check"
+    "$(dirname "$0")/piqule-agent-rules-check"
     ;;
   check|fix)
     ensure_project_root
     "$(dirname "$0")/piqule-verify"
     "$(dirname "$0")/piqule-${COMMAND}" "$@"
     "$(dirname "$0")/piqule-tokens-check"
+    "$(dirname "$0")/piqule-agent-rules-check"
     ;;
   agent-rules-install)
     "$(dirname "$0")/piqule-agent-rules-install" "$@"
