@@ -1814,16 +1814,16 @@
         },
         {
             "name": "haspadar/phpstan-rules",
-            "version": "v0.37.1",
+            "version": "v0.38.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haspadar/phpstan-rules.git",
-                "reference": "9bd7630bab82b0943a26a7a24ed2e3d46c417550"
+                "reference": "30ced28f65329d146dd02eb378aa11764b2771e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/9bd7630bab82b0943a26a7a24ed2e3d46c417550",
-                "reference": "9bd7630bab82b0943a26a7a24ed2e3d46c417550",
+                "url": "https://api.github.com/repos/haspadar/phpstan-rules/zipball/30ced28f65329d146dd02eb378aa11764b2771e9",
+                "reference": "30ced28f65329d146dd02eb378aa11764b2771e9",
                 "shasum": ""
             },
             "require": {
@@ -1861,9 +1861,9 @@
             "description": "PHPStan design rules for immutability and structure",
             "support": {
                 "issues": "https://github.com/haspadar/phpstan-rules/issues",
-                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.37.1"
+                "source": "https://github.com/haspadar/phpstan-rules/tree/v0.38.1"
             },
-            "time": "2026-04-18T20:12:58+00:00"
+            "time": "2026-04-22T11:33:48+00:00"
         },
         {
             "name": "infection/abstract-testframework-adapter",
@@ -3477,11 +3477,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.50",
+            "version": "2.1.51",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
-                "reference": "d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dc3b523c45e714c70de2ac5113b958223b55dc59",
+                "reference": "dc3b523c45e714c70de2ac5113b958223b55dc59",
                 "shasum": ""
             },
             "require": {
@@ -3526,7 +3526,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-17T13:10:32+00:00"
+            "time": "2026-04-21T18:22:01+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
