@@ -18,22 +18,6 @@ final class AgentRulesInstallTest extends TestCase
     private const string MARKER = '<!-- piqule:begin -->';
 
     #[Test]
-    public function skipsWhenNoAgentFilePresent(): void
-    {
-        $folder = new TempFolder();
-
-        try {
-            self::assertSame(
-                0,
-                $this->runScript($folder->path()),
-                'exit code must be 0 when no agent files exist in project root',
-            );
-        } finally {
-            $folder->close();
-        }
-    }
-
-    #[Test]
     public function leavesDirectoryUntouchedWhenNoAgentFilePresent(): void
     {
         $folder = new TempFolder();
@@ -123,7 +107,7 @@ final class AgentRulesInstallTest extends TestCase
         }
     }
 
-    private function runScript(string $cwd): int
+    private function runScript(string $cwd): void
     {
         $proc = proc_open(
             [PHP_BINARY, self::SCRIPT],
@@ -138,10 +122,17 @@ final class AgentRulesInstallTest extends TestCase
 
         fclose($pipes[0]);
         stream_get_contents($pipes[1]);
-        stream_get_contents($pipes[2]);
+        $stderr = (string) stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
+        $exitCode = proc_close($proc);
 
-        return proc_close($proc);
+        if ($exitCode !== 0) {
+            self::fail(sprintf(
+                'piqule-agent-rules-install exited with code %d: %s',
+                $exitCode,
+                $stderr,
+            ));
+        }
     }
 }
