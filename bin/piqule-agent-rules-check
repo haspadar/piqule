@@ -14,9 +14,10 @@ const AGENT_FILES = ['CLAUDE.md', 'AGENTS.md'];
 
 $output = new Console();
 
-$projectRoot = getcwd() ?: throw new RuntimeException('Cannot determine cwd');
-
 try {
+    $projectRoot = getcwd()
+        ?: throw new PiquleException('Cannot determine current working directory');
+
     $disk = new DiskStorage($projectRoot);
 
     foreach (AGENT_FILES as $name) {
