@@ -1,0 +1,60 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Composer\InstalledVersions;
+use Haspadar\Piqule\Output\Console;
+use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Skill\AgentTarget;
+use Haspadar\Piqule\Skill\ClaudeTarget;
+use Haspadar\Piqule\Skill\RequestedAgents;
+use Haspadar\Piqule\Skill\SkillFile;
+use Haspadar\Piqule\Skill\SkillInstall;
+use Haspadar\Piqule\Storage\DiskStorage;
+use Haspadar\Piqule\Storage\Reaction\ReportingStorageReaction;
+
+require_once __DIR__ . '/bootstrap-autoload.php';
+
+$output = new Console();
+
+try {
+    $subcommand = $argv[1] ?? '';
+
+    if ($subcommand !== 'install') {
+        throw new PiquleException('Usage: piqule skill install --agent=<name>[,<name>...]');
+    }
+
+    $projectRoot = getcwd()
+        ?: throw new PiquleException('Cannot determine current working directory');
+
+    $libraryRoot = InstalledVersions::getInstallPath('haspadar/piqule');
+
+    if ($libraryRoot === null || $libraryRoot === '') {
+        throw new PiquleException('Cannot determine piqule install path');
+    }
+
+    $bodyPath = $libraryRoot . '/templates/skill/piqule.md';
+    $body = file_get_contents($bodyPath);
+
+    if ($body === false) {
+        throw new PiquleException(sprintf('Cannot read skill body: %s', $bodyPath));
+    }
+
+    $available = ['claude' => new ClaudeTarget()];
+    $targets = (new RequestedAgents($argv, $available))->targets();
+
+    $files = array_map(
+        fn(AgentTarget $target): SkillFile => new SkillFile($target, $body),
+        $targets,
+    );
+
+    (new SkillInstall(
+        $files,
+        new DiskStorage($projectRoot),
+        new ReportingStorageReaction($output),
+    ))->run();
+} catch (PiquleException $e) {
+    $output->error($e->getMessage());
+    exit(1);
+}

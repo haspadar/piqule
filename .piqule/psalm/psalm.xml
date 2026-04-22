@@ -12,6 +12,7 @@
         <file name="../../bin/piqule" />
         <file name="../../bin/piqule-check" />
         <file name="../../bin/piqule-fix" />
+        <file name="../../bin/piqule-skill" />
         <file name="../../bin/piqule-sync" />
         <file name="../../bin/piqule-tokens-check" />
         <ignoreFiles>

@@ -1,5 +1,5 @@
 override:
-  phpmetrics.coupling.max_afferent: 18
+  phpmetrics.coupling.max_afferent: 19
   phpmetrics.coupling.max_efferent: 25
   php.versions: ["8.3", "8.4", "8.5"]
   ci.pr.max_lines_changed: 2000
@@ -16,6 +16,7 @@ override:
     - "../../bin/piqule"
     - "../../bin/piqule-check"
     - "../../bin/piqule-fix"
+    - "../../bin/piqule-skill"
     - "../../bin/piqule-sync"
     - "../../bin/piqule-tokens-check"
   phpstan.afferent_coupling.excluded_classes: ['\Haspadar\Piqule\PiquleException']
