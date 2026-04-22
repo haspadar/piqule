@@ -26,8 +26,11 @@ case "$COMMAND" in
     "$(dirname "$0")/piqule-${COMMAND}" "$@"
     "$(dirname "$0")/piqule-tokens-check"
     ;;
+  agent-rules-install)
+    "$(dirname "$0")/piqule-agent-rules-install" "$@"
+    ;;
   *)
-    echo "Usage: piqule [sync|check|fix]"
+    echo "Usage: piqule [sync|check|fix|agent-rules-install]"
     exit 1
     ;;
 esac
