@@ -16,7 +16,7 @@ final readonly class ProcessPool
     /**
      * Waits for all processes to finish and yields each result.
      *
-     * @param list<array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float}> $handles
+     * @param list<array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float}> $handles Running process records to drain
      * @return iterable<array{check: Check, result: CheckResult, elapsed: float}>
      */
     public function results(array $handles): iterable
@@ -45,7 +45,9 @@ final readonly class ProcessPool
     /**
      * Closes a finished process and returns its result.
      *
-     * @param array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float} $handle
+     * @param array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float} $handle Process record to finalize
+     * @param int $code Reported exit code (negative means unknown)
+     * @param float $elapsed Wall-clock duration in seconds
      * @return array{check: Check, result: CheckResult, elapsed: float}
      */
     private function collect(array $handle, int $code, float $elapsed): array

@@ -23,7 +23,13 @@ final readonly class ParallelRun implements Runnable
         'infection' => ['phpunit'],
     ];
 
-    /** Initializes with checks, output channel, and verbosity option. */
+    /**
+     * Initializes with checks, output channel, and verbosity option.
+     *
+     * @param Checks $checks Checks to execute in parallel
+     * @param Output $output Channel to stream progress messages to
+     * @param CliOption $verbose When enabled, each check's output is streamed live
+     */
     public function __construct(
         private Checks $checks,
         private Output $output,
@@ -65,7 +71,9 @@ final readonly class ParallelRun implements Runnable
     /**
      * Launches a batch of checks and collects results.
      *
-     * @param list<Check> $checks
+     * @param list<Check> $checks Checks to launch together
+     * @param int $offset Ordinal offset of the first check in the overall run
+     * @param CheckReport $report Reporter used to announce starts and outcomes
      * @throws PiquleException
      */
     private function batch(array $checks, int $offset, CheckReport $report): bool
@@ -89,7 +97,8 @@ final readonly class ParallelRun implements Runnable
     /**
      * Collects results from running processes and reports each one.
      *
-     * @param list<array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float}> $handles
+     * @param list<array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float}> $handles Running process records produced by spawn()
+     * @param CheckReport $report Reporter used to announce outcomes
      * @throws PiquleException
      */
     private function collect(array $handles, CheckReport $report): bool
@@ -119,6 +128,7 @@ final readonly class ParallelRun implements Runnable
     /**
      * Spawns a check process.
      *
+     * @param Check $check Check to launch as a background process
      * @return array{proc: resource, stdout: resource, stderr: resource, check: Check, start: float}|false
      */
     private function spawn(Check $check): array|false

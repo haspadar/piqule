@@ -12,7 +12,12 @@ use Override;
  */
 final readonly class EnabledChecks implements Checks
 {
-    /** Initializes with a check collection and project configuration. */
+    /**
+     * Initializes with a check collection and project configuration.
+     *
+     * @param Checks $origin Underlying collection to filter
+     * @param Config $config Configuration holding the "<tool>.cli" toggles
+     */
     public function __construct(private Checks $origin, private Config $config) {}
 
     #[Override]

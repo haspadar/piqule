@@ -11,7 +11,11 @@ final readonly class ElapsedTime
 {
     private const int SECONDS_PER_MINUTE = 60;
 
-    /** Initializes with elapsed seconds. */
+    /**
+     * Initializes with elapsed seconds.
+     *
+     * @param float $seconds Wall-clock duration to format
+     */
     public function __construct(private float $seconds) {}
 
     /** Formats as "1.2s" or "2m05s". */

@@ -13,10 +13,20 @@ final readonly class CheckReport
 {
     private const int TITLE_WIDTH = 20;
 
-    /** Initializes with output channel and total check count. */
+    /**
+     * Initializes with output channel and total check count.
+     *
+     * @param Output $output Channel to write progress messages to
+     * @param int $total Total number of checks in the run
+     */
     public function __construct(private Output $output, private int $total) {}
 
-    /** Reports a check starting. */
+    /**
+     * Reports a check starting.
+     *
+     * @param string $name Human-readable check name
+     * @param int $number One-based ordinal of this check within the run
+     */
     public function started(string $name, int $number): void
     {
         $this->output->muted(
@@ -26,7 +36,12 @@ final readonly class CheckReport
         );
     }
 
-    /** Reports a check that passed. */
+    /**
+     * Reports a check that passed.
+     *
+     * @param string $name Human-readable check name
+     * @param float $elapsed Wall-clock duration in seconds
+     */
     public function passed(string $name, float $elapsed): void
     {
         $this->output->success(
@@ -34,7 +49,12 @@ final readonly class CheckReport
         );
     }
 
-    /** Reports a check that failed. */
+    /**
+     * Reports a check that failed.
+     *
+     * @param string $name Human-readable check name
+     * @param float $elapsed Wall-clock duration in seconds
+     */
     public function failed(string $name, float $elapsed): void
     {
         $this->output->error(
