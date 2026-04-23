@@ -24,6 +24,16 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
+    public function psalmProjectIgnoreIsEmptyByDefault(): void
+    {
+        self::assertThat(
+            new DefaultConfig(),
+            new HasConfigYamlKey('psalm.project.ignore', []),
+            'psalm.project.ignore must be empty so .git is never passed as a <directory> to psalm',
+        );
+    }
+
+    #[Test]
     public function overrideReplacesConfigValue(): void
     {
         $folder = (new TempFolder())->withFile(
@@ -43,18 +53,18 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
-    public function appendAddsNewValueToExclude(): void
+    public function appendAddsNewValueToInfraExclude(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
-            "append:\n    exclude:\n        - legacy\n",
+            "append:\n    infra.exclude:\n        - dist\n",
         );
 
         try {
             self::assertThat(
                 new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
-                new HasConfigYamlKey('exclude', ['vendor', 'tests', '.git', 'legacy']),
-                'Append must add "legacy" to the exclude list',
+                new HasConfigYamlKey('infra.exclude', ['vendor', 'tests', '.git', 'dist']),
+                'Append must add "dist" to infra.exclude',
             );
         } finally {
             $folder->close();
@@ -62,18 +72,37 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
-    public function overrideExcludeCascadesToDerivedKeys(): void
+    public function overrideInfraExcludeCascadesToDerivedKeys(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
-            "override:\n    exclude:\n        - build\n",
+            "override:\n    infra.exclude:\n        - dist\n",
         );
 
         try {
             self::assertThat(
                 new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
-                new HasConfigYamlKey('shellcheck.ignore_dirs', ['build']),
-                'Override exclude must cascade to shellcheck.ignore_dirs',
+                new HasConfigYamlKey('shellcheck.ignore_dirs', ['dist']),
+                'Override infra.exclude must cascade to shellcheck.ignore_dirs',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
+
+    #[Test]
+    public function appendInfraExcludeCascadesToDerivedKeys(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "append:\n    infra.exclude:\n        - dist\n",
+        );
+
+        try {
+            self::assertThat(
+                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new HasConfigYamlKey('shellcheck.ignore_dirs', ['vendor', 'tests', '.git', 'dist']),
+                'Append infra.exclude must cascade to shellcheck.ignore_dirs',
             );
         } finally {
             $folder->close();

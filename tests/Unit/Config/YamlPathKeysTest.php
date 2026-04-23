@@ -23,23 +23,23 @@ final class YamlPathKeysTest extends TestCase
     }
 
     #[Test]
-    public function throwsWhenOverrideExcludeContainsNonString(): void
+    public function throwsWhenOverrideInfraExcludeContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
-        $this->expectExceptionMessageMatches('/override\.exclude/');
+        $this->expectExceptionMessageMatches('/override\.infra\.exclude/');
 
-        $keys = new YamlPathKeys(['exclude' => [true]], [], new DefaultConfig());
-        $keys->exclude();
+        $keys = new YamlPathKeys(['infra.exclude' => [true]], [], new DefaultConfig());
+        $keys->infraExclude();
     }
 
     #[Test]
-    public function throwsWhenAppendExcludeContainsNonString(): void
+    public function throwsWhenAppendInfraExcludeContainsNonString(): void
     {
         $this->expectException(PiquleException::class);
-        $this->expectExceptionMessageMatches('/append\.exclude/');
+        $this->expectExceptionMessageMatches('/append\.infra\.exclude/');
 
-        $keys = new YamlPathKeys([], ['exclude' => [null]], new DefaultConfig());
-        $keys->exclude();
+        $keys = new YamlPathKeys([], ['infra.exclude' => [null]], new DefaultConfig());
+        $keys->infraExclude();
     }
 
     #[Test]
@@ -69,18 +69,18 @@ final class YamlPathKeysTest extends TestCase
     }
 
     #[Test]
-    public function deduplicatesAppendedExcludeEntries(): void
+    public function deduplicatesAppendedInfraExcludeEntries(): void
     {
         $keys = new YamlPathKeys(
-            ['exclude' => ['vendor']],
-            ['exclude' => ['vendor', 'tests']],
+            ['infra.exclude' => ['.git']],
+            ['infra.exclude' => ['.git', 'dist']],
             new DefaultConfig(),
         );
 
         self::assertSame(
-            ['vendor', 'tests'],
-            $keys->exclude(),
-            'Appended exclude entries must be deduplicated',
+            ['.git', 'dist'],
+            $keys->infraExclude(),
+            'Appended infra.exclude entries must be deduplicated',
         );
     }
 
@@ -101,18 +101,18 @@ final class YamlPathKeysTest extends TestCase
     }
 
     #[Test]
-    public function normalizesAssociativeOverrideExcludeKeys(): void
+    public function normalizesAssociativeOverrideInfraExcludeKeys(): void
     {
         $keys = new YamlPathKeys(
-            ['exclude' => ['x' => 'vendor', 'y' => 'tests']],
+            ['infra.exclude' => ['x' => '.git', 'y' => 'dist']],
             [],
             new DefaultConfig(),
         );
 
         self::assertSame(
-            ['vendor', 'tests'],
-            $keys->exclude(),
-            'Associative exclude overrides must be normalized to a sequential list',
+            ['.git', 'dist'],
+            $keys->infraExclude(),
+            'Associative infra.exclude overrides must be normalized to a sequential list',
         );
     }
 
@@ -133,18 +133,18 @@ final class YamlPathKeysTest extends TestCase
     }
 
     #[Test]
-    public function normalizesAssociativeAppendExcludeKeys(): void
+    public function normalizesAssociativeAppendInfraExcludeKeys(): void
     {
         $keys = new YamlPathKeys(
-            ['exclude' => ['vendor']],
-            ['exclude' => ['a' => 'tests']],
+            ['infra.exclude' => ['.git']],
+            ['infra.exclude' => ['a' => 'dist']],
             new DefaultConfig(),
         );
 
         self::assertSame(
-            ['vendor', 'tests'],
-            $keys->exclude(),
-            'Associative append exclude must be normalized before merging',
+            ['.git', 'dist'],
+            $keys->infraExclude(),
+            'Associative append infra.exclude must be normalized before merging',
         );
     }
 }

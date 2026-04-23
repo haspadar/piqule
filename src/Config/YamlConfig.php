@@ -23,8 +23,8 @@ use Symfony\Component\Yaml\Yaml;
  *     append:
  *         phpstan.neon_includes:
  *             - ../../rules.neon
- *         exclude:
- *             - legacy
+ *         infra.exclude:
+ *             - dist
  */
 final readonly class YamlConfig implements Config
 {
@@ -92,13 +92,13 @@ final readonly class YamlConfig implements Config
             : [];
 
         $pathKeys = new YamlPathKeys($overrides, $appends, $this->defaults);
-        $remaining = ['exclude', 'php.src'];
+        $remaining = ['infra.exclude', 'php.src'];
 
         return new AppendConfig(
             new OverrideConfig(
                 new DefaultConfig(
                     $pathKeys->phpSrc(),
-                    $pathKeys->exclude(),
+                    $pathKeys->infraExclude(),
                     $this->defaults->configPaths(),
                 ),
                 array_diff_key($overrides, array_flip($remaining)),

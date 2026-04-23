@@ -14,7 +14,7 @@ use Override;
  *
  *     new AppendConfig(new DefaultConfig(), [
  *         'phpstan.neon_includes' => ['../../rules.neon'],
- *         'exclude' => ['legacy'],
+ *         'infra.exclude' => ['legacy'],
  *     ]);
  */
 final readonly class AppendConfig implements Config
