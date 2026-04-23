@@ -16,7 +16,12 @@ use Override;
  */
 final readonly class EnvsAction implements Action
 {
-    /** Initializes with environment variables and YAML indentation prefix. */
+    /**
+     * Initializes with environment variables and YAML indentation prefix.
+     *
+     * @param Envs $envs Environment variables to export in the rendered step
+     * @param string $indent Raw indentation prefix used for nested YAML output
+     */
     public function __construct(private Envs $envs, private string $indent) {}
 
     #[Override]

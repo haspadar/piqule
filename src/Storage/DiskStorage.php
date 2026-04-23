@@ -19,7 +19,11 @@ final readonly class DiskStorage implements Storage
 {
     private const int FULL_PERMISSIONS = 0o777;
 
-    /** Initializes storage rooted at the given directory path. */
+    /**
+     * Initializes storage rooted at the given directory path.
+     *
+     * @param string $root Absolute filesystem path used as the storage root
+     */
     public function __construct(private string $root) {}
 
     #[Override]

@@ -14,7 +14,7 @@ final readonly class ListArgs implements Args
     /**
      * Initializes with a plain list of scalar values.
      *
-     * @param list<int|float|string|bool> $values
+     * @param list<int|float|string|bool> $values Scalar values exposed as formula arguments
      */
     public function __construct(private array $values) {}
 

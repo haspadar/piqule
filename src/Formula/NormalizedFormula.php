@@ -11,7 +11,11 @@ use Override;
  */
 final readonly class NormalizedFormula implements Formula
 {
-    /** Initializes with a raw DSL expression string. */
+    /**
+     * Initializes with a raw DSL expression string.
+     *
+     * @param string $expression Raw DSL expression whose pipe whitespace will be normalized
+     */
     public function __construct(private string $expression) {}
 
     #[Override]

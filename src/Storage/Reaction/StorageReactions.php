@@ -14,7 +14,7 @@ final readonly class StorageReactions implements StorageReaction
     /**
      * Initializes with a list of reactions to broadcast to.
      *
-     * @param list<StorageReaction> $reactions
+     * @param list<StorageReaction> $reactions Reactions that receive each event in order
      */
     public function __construct(private array $reactions) {}
 

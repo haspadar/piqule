@@ -15,7 +15,11 @@ use Override;
  */
 final readonly class FormatEachAction implements Action
 {
-    /** Initializes with the raw sprintf template string. */
+    /**
+     * Initializes with the raw sprintf template string.
+     *
+     * @param string $raw Raw sprintf template, including any quoting
+     */
     public function __construct(private string $raw) {}
 
     #[Override]

@@ -15,7 +15,12 @@ use Override;
  */
 final readonly class ConfigAction implements Action
 {
-    /** Initializes with a configuration source and a key to look up. */
+    /**
+     * Initializes with a configuration source and a key to look up.
+     *
+     * @param Config $config Configuration to read the value from
+     * @param string $key Dot-separated key identifying the configuration entry
+     */
     public function __construct(private Config $config, private string $key) {}
 
     #[Override]

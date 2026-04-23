@@ -11,7 +11,11 @@ use Override;
  */
 final readonly class StringifiedArgs implements Args
 {
-    /** Initializes with the args to stringify. */
+    /**
+     * Initializes with the args to stringify.
+     *
+     * @param Args $origin Args whose scalar values will be converted to strings
+     */
     public function __construct(private Args $origin) {}
 
     #[Override]

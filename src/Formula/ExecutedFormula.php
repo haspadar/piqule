@@ -14,7 +14,11 @@ use Override;
  */
 final readonly class ExecutedFormula implements Formula
 {
-    /** Initializes with a sequence of actions to evaluate. */
+    /**
+     * Initializes with a sequence of actions to evaluate.
+     *
+     * @param Actions $actions Ordered actions applied in a pipeline to reduce to a scalar
+     */
     public function __construct(private Actions $actions) {}
 
     #[Override]

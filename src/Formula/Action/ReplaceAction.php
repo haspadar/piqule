@@ -26,7 +26,11 @@ final readonly class ReplaceAction implements Action
 
     private const int PAIR_COUNT = 2;
 
-    /** Initializes with the raw "search, replace" argument string. */
+    /**
+     * Initializes with the raw "search, replace" argument string.
+     *
+     * @param string $raw Raw two-argument string in the form "search, replace"
+     */
     public function __construct(private string $raw) {}
 
     #[Override]

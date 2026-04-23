@@ -13,7 +13,12 @@ use Override;
  */
 final readonly class DiffingStorage implements Storage
 {
-    /** Initializes with underlying storage and a change reaction. */
+    /**
+     * Initializes with underlying storage and a change reaction.
+     *
+     * @param Storage $origin Underlying storage to write through
+     * @param StorageReaction $reaction Receives created, updated, and skipped notifications
+     */
     public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
     #[Override]

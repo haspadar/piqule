@@ -13,7 +13,12 @@ use Override;
  */
 final readonly class OnceStorage implements Storage
 {
-    /** Initializes with underlying storage and a creation reaction. */
+    /**
+     * Initializes with underlying storage and a creation reaction.
+     *
+     * @param Storage $origin Underlying storage to write through
+     * @param StorageReaction $reaction Receives a created notification on the first write
+     */
     public function __construct(private Storage $origin, private StorageReaction $reaction) {}
 
     #[Override]
