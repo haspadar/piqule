@@ -102,12 +102,12 @@ final class DefaultConfigTest extends TestCase
     }
 
     #[Test]
-    public function defaultsExcludeToVendorTestsGit(): void
+    public function defaultsInfraExcludeToVendorTestsGit(): void
     {
         self::assertSame(
             ['vendor', 'tests', '.git'],
-            (new DefaultConfig())->list('exclude'),
-            'exclude must default to vendor, tests, .git',
+            (new DefaultConfig())->list('infra.exclude'),
+            'infra.exclude must default to vendor, tests, and .git',
         );
     }
 
