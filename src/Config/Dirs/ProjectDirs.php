@@ -14,7 +14,7 @@ final readonly class ProjectDirs implements Dirs
     /**
      * Initializes with directory paths to prefix.
      *
-     * @param list<string> $dirs
+     * @param list<string> $dirs Directory paths to prefix with ../../ for tool subdirectory
      */
     public function __construct(private array $dirs) {}
 

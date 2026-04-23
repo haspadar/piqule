@@ -32,6 +32,9 @@ final readonly class YamlConfig implements Config
 
     /**
      * Initializes with a YAML file path and default configuration.
+     *
+     * @param string $path Path to the .piqule.yaml project configuration file
+     * @param DefaultConfig $defaults Base configuration providing built-in key defaults
      */
     public function __construct(private string $path, private DefaultConfig $defaults)
     {

@@ -14,7 +14,7 @@ final readonly class TrailingGlobDirs implements Dirs
     /**
      * Initializes with directory paths to transform.
      *
-     * @param list<string> $dirs
+     * @param list<string> $dirs Directory paths to suffix with /** recursive glob
      */
     public function __construct(private array $dirs) {}
 

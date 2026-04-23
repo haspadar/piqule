@@ -16,8 +16,9 @@ final readonly class YamlPathKeys
     /**
      * Initializes with override and append maps alongside the base defaults.
      *
-     * @param array<string, mixed> $overrides
-     * @param array<string, mixed> $appends
+     * @param array<string, mixed> $overrides Values that replace the matching defaults
+     * @param array<string, mixed> $appends Values to append to matching list defaults
+     * @param DefaultConfig $defaults Base configuration providing built-in key defaults
      */
     public function __construct(
         private array $overrides,

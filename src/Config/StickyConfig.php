@@ -22,7 +22,7 @@ final readonly class StickyConfig implements Config
     /**
      * Initializes with a config factory closure.
      *
-     * @param Closure(): Config $origin
+     * @param Closure(): Config $origin Factory invoked on first access to produce the cached config
      */
     public function __construct(private Closure $origin)
     {

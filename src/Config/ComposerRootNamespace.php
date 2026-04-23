@@ -9,7 +9,11 @@ namespace Haspadar\Piqule\Config;
  */
 final readonly class ComposerRootNamespace
 {
-    /** Initializes with the composer.json file path. */
+    /**
+     * Initializes with the composer.json file path.
+     *
+     * @param string $path Absolute path to the composer.json file
+     */
     public function __construct(private string $path) {}
 
     /** Returns the first PSR-4 root namespace as a string. */

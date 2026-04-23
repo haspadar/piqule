@@ -22,7 +22,8 @@ final readonly class AppendConfig implements Config
     /**
      * Initializes with a base config and values to append.
      *
-     * @param array<string, mixed> $appends
+     * @param Config $defaults Underlying configuration to extend
+     * @param array<string, mixed> $appends Values to append to each matching list key
      */
     public function __construct(private Config $defaults, private array $appends) {}
 
