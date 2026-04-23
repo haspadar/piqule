@@ -14,8 +14,8 @@ final readonly class ToggleOption implements CliOption
     /**
      * Initializes with CLI arguments and flag variants.
      *
-     * @param list<string> $argv
-     * @param list<string> $flags
+     * @param list<string> $argv Raw CLI argument vector, including the script name
+     * @param list<string> $flags Flag aliases that activate this option when present in $argv
      */
     public function __construct(private array $argv, private array $flags) {}
 

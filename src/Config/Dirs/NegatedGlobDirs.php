@@ -14,7 +14,7 @@ final readonly class NegatedGlobDirs implements Dirs
     /**
      * Initializes with directory paths to negate.
      *
-     * @param list<string> $dirs
+     * @param list<string> $dirs Directory paths to wrap as !dir/** negated globs
      */
     public function __construct(private array $dirs) {}
 

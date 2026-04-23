@@ -18,7 +18,11 @@ final readonly class ProjectConfig implements Config
 {
     private StickyConfig $config;
 
-    /** Initializes with the project root directory path. */
+    /**
+     * Initializes with the project root directory path.
+     *
+     * @param string $root Absolute path to the project root directory
+     */
     public function __construct(private string $root)
     {
         $this->config = new StickyConfig($this->resolve(...));

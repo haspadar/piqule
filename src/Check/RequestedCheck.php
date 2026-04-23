@@ -18,7 +18,7 @@ final readonly class RequestedCheck
     /**
      * Initializes with the CLI argument list.
      *
-     * @param list<string> $argv
+     * @param list<string> $argv Raw CLI argument vector, including the script name
      */
     public function __construct(private array $argv) {}
 

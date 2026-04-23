@@ -11,7 +11,11 @@ use Override;
  */
 final readonly class TrimmedArgs implements Args
 {
-    /** Initializes with the args to trim. */
+    /**
+     * Initializes with the args to trim.
+     *
+     * @param Args $origin Args whose string values will be whitespace-trimmed
+     */
     public function __construct(private Args $origin) {}
 
     #[Override]

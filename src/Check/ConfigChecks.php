@@ -14,7 +14,12 @@ final readonly class ConfigChecks implements Checks
 {
     private const string CLI_SUFFIX = '.cli';
 
-    /** Initializes with project configuration and root path. */
+    /**
+     * Initializes with project configuration and root path.
+     *
+     * @param Config $config Configuration providing the set of ".cli" keys
+     * @param string $root Absolute path to the project root directory
+     */
     public function __construct(private Config $config, private string $root) {}
 
     #[Override]

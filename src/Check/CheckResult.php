@@ -9,7 +9,13 @@ namespace Haspadar\Piqule\Check;
  */
 final readonly class CheckResult
 {
-    /** Initializes with exit status, captured output, and elapsed time. */
+    /**
+     * Initializes with exit status, captured output, and elapsed time.
+     *
+     * @param int $status Process exit status (0 means success)
+     * @param string $output Captured stdout and stderr combined
+     * @param float $elapsed Wall-clock duration in seconds
+     */
     public function __construct(
         private int $status,
         private string $output,

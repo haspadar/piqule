@@ -14,7 +14,11 @@ use Symfony\Component\Yaml\Yaml;
  */
 final readonly class YamlEnvs implements Envs
 {
-    /** Initializes with the path to a .piqule.yaml file. */
+    /**
+     * Initializes with the path to a .piqule.yaml file.
+     *
+     * @param string $path Absolute path to the .piqule.yaml file to read
+     */
     public function __construct(private string $path) {}
 
     #[Override]

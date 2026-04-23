@@ -14,7 +14,11 @@ use Override;
  */
 final readonly class JoinAction implements Action
 {
-    /** Initializes with a raw delimiter string. */
+    /**
+     * Initializes with a raw delimiter string.
+     *
+     * @param string $raw Raw delimiter string, including any quoting and escape sequences
+     */
     public function __construct(private string $raw) {}
 
     #[Override]

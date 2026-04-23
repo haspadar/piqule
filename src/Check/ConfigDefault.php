@@ -12,7 +12,12 @@ use Override;
  */
 final readonly class ConfigDefault implements CliOption
 {
-    /** Initializes with project configuration and the config key. */
+    /**
+     * Initializes with project configuration and the config key.
+     *
+     * @param Config $config Configuration to read the boolean value from
+     * @param string $key Dot-separated config key holding the boolean default
+     */
     public function __construct(private Config $config, private string $key) {}
 
     #[Override]

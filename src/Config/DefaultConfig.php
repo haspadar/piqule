@@ -31,8 +31,9 @@ final readonly class DefaultConfig implements Config
     /**
      * Initializes with source directories, exclusions, and config paths.
      *
-     * @param list<string> $source
-     * @param list<string> $exclude
+     * @param list<string> $source PHP source directories (empty falls back to YAML defaults)
+     * @param list<string> $exclude Directories to exclude from analysis
+     * @param ConfigPaths $paths File locations for composer.json and defaults YAML
      */
     public function __construct(
         private array $source = [],

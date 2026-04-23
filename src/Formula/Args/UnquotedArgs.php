@@ -17,7 +17,11 @@ final readonly class UnquotedArgs implements Args
 
     private const int STRIP_LAST_CHAR = -1;
 
-    /** Initializes with the args to unquote. */
+    /**
+     * Initializes with the args to unquote.
+     *
+     * @param Args $origin Args whose string values may carry matching outer quotes
+     */
     public function __construct(private Args $origin) {}
 
     #[Override]

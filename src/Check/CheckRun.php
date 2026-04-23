@@ -11,7 +11,12 @@ use Haspadar\Piqule\PiquleException;
  */
 final readonly class CheckRun
 {
-    /** Initializes with the check to run and verbosity flag. */
+    /**
+     * Initializes with the check to run and verbosity flag.
+     *
+     * @param Check $check Check definition to execute
+     * @param CliOption $verbose When enabled, streams output instead of capturing
+     */
     public function __construct(private Check $check, private CliOption $verbose) {}
 
     /**

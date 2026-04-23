@@ -11,12 +11,17 @@ use Haspadar\Piqule\PiquleException;
  */
 final readonly class SafePath
 {
-    /** Initializes with the storage root directory. */
+    /**
+     * Initializes with the storage root directory.
+     *
+     * @param string $root Absolute filesystem path used as the storage root
+     */
     public function __construct(private string $root) {}
 
     /**
      * Returns the safe absolute path for a relative location.
      *
+     * @param string $location Relative location under the storage root
      * @throws PiquleException
      */
     public function resolve(string $location): string

@@ -14,7 +14,13 @@ use Override;
  */
 final readonly class AppendingStorage implements Storage
 {
-    /** Initializes with underlying storage, a reaction, and a duplicate marker. */
+    /**
+     * Initializes with underlying storage, a reaction, and a duplicate marker.
+     *
+     * @param Storage $origin Underlying storage to append to
+     * @param StorageReaction $reaction Receives created and updated notifications
+     * @param string $marker Marker string whose presence in the file skips the append
+     */
     public function __construct(
         private Storage $origin,
         private StorageReaction $reaction,

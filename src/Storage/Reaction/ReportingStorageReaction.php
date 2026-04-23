@@ -12,7 +12,11 @@ use Override;
  */
 final readonly class ReportingStorageReaction implements StorageReaction
 {
-    /** Initializes with the output channel for reporting. */
+    /**
+     * Initializes with the output channel for reporting.
+     *
+     * @param Output $output Channel to write storage event messages to
+     */
     public function __construct(private Output $output) {}
 
     #[Override]

@@ -14,7 +14,13 @@ use Override;
  */
 final readonly class SequentialRun implements Runnable
 {
-    /** Initializes with checks, output channel, and verbosity option. */
+    /**
+     * Initializes with checks, output channel, and verbosity option.
+     *
+     * @param Checks $checks Checks to execute in order
+     * @param Output $output Channel to stream progress messages to
+     * @param CliOption $verbose When enabled, each check's output is streamed live
+     */
     public function __construct(
         private Checks $checks,
         private Output $output,

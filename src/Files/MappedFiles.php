@@ -16,7 +16,8 @@ final readonly class MappedFiles implements Files
     /**
      * Initializes with a file collection and a transformation closure.
      *
-     * @param Closure(File): File $map
+     * @param Files $origin Underlying file collection to transform
+     * @param Closure(File): File $map Transformation applied to each file in $origin
      */
     public function __construct(private Files $origin, private Closure $map) {}
 

@@ -11,7 +11,13 @@ use Override;
  */
 final readonly class ConfigOption implements CliOption
 {
-    /** Initializes with positive flag, negative flag, and default. */
+    /**
+     * Initializes with positive flag, negative flag, and default.
+     *
+     * @param CliOption $yes Flag that explicitly enables the option
+     * @param CliOption $off Flag that explicitly disables the option (wins over $yes)
+     * @param CliOption $default Fallback used when neither flag is set
+     */
     public function __construct(
         private CliOption $yes,
         private CliOption $off,

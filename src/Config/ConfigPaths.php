@@ -9,7 +9,12 @@ namespace Haspadar\Piqule\Config;
  */
 final readonly class ConfigPaths
 {
-    /** Initializes with optional custom paths for composer.json and config.yaml. */
+    /**
+     * Initializes with optional custom paths for composer.json and config.yaml.
+     *
+     * @param string $composer Path to the project composer.json (empty means none)
+     * @param string $config Path to the piqule defaults YAML file
+     */
     public function __construct(
         private string $composer = '',
         private string $config = __DIR__ . '/../../templates/always/.piqule/config.yaml',

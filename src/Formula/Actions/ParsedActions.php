@@ -18,7 +18,8 @@ final readonly class ParsedActions implements Actions
     /**
      * Initializes with a DSL expression and available action factories.
      *
-     * @param array<string, callable(string): Action> $actions
+     * @param string $expression Raw DSL expression to parse into actions
+     * @param array<string, callable(string): Action> $actions Action factories keyed by DSL action name
      */
     public function __construct(private string $expression, private array $actions) {}
 

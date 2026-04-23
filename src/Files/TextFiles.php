@@ -15,7 +15,7 @@ final readonly class TextFiles implements Files
     /**
      * Initializes with a map of file paths to their contents.
      *
-     * @param array<string, string> $files
+     * @param array<string, string> $files Relative file paths mapped to their text contents
      */
     public function __construct(private array $files) {}
 

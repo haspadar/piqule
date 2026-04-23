@@ -15,7 +15,11 @@ final readonly class ParsedArgs implements Args
 {
     private const int JSON_MAX_DEPTH = 512;
 
-    /** Initializes with the args containing a JSON list literal. */
+    /**
+     * Initializes with the args containing a JSON list literal.
+     *
+     * @param Args $origin Args carrying a single JSON list literal to decode
+     */
     public function __construct(private Args $origin) {}
 
     #[Override]

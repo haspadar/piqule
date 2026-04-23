@@ -11,7 +11,12 @@ use Override;
  */
 final readonly class SingleCheck implements Checks
 {
-    /** Initializes with the check name and project root path. */
+    /**
+     * Initializes with the check name and project root path.
+     *
+     * @param string $name Tool name matching the .piqule subdirectory
+     * @param string $root Absolute path to the project root directory
+     */
     public function __construct(private string $name, private string $root) {}
 
     #[Override]

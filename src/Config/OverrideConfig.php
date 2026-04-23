@@ -15,7 +15,8 @@ final readonly class OverrideConfig implements Config
     /**
      * Initializes with a base config and override values.
      *
-     * @param array<string, mixed> $overrides
+     * @param Config $defaults Underlying configuration to override
+     * @param array<string, mixed> $overrides Values that replace the matching defaults
      */
     public function __construct(private Config $defaults, private array $overrides) {}
 

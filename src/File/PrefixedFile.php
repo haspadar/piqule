@@ -11,7 +11,12 @@ use Override;
  */
 final readonly class PrefixedFile implements File
 {
-    /** Initializes with a path prefix and the file to decorate. */
+    /**
+     * Initializes with a path prefix and the file to decorate.
+     *
+     * @param string $prefix Path segment to prepend to the file name
+     * @param File $origin File whose name will be prefixed
+     */
     public function __construct(private string $prefix, private File $origin) {}
 
     #[Override]
