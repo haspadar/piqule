@@ -15,10 +15,7 @@
         <file name="../../bin/piqule-sync" />
         <file name="../../bin/piqule-tokens-check" />
         <ignoreFiles>
-            <directory name="../../vendor" />
-            <directory name="../../tests" />
-            <directory name="../../.git" />
-            <directory name="../../templates" />
+
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>

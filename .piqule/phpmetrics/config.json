@@ -6,8 +6,7 @@
   "excludes": [
     "vendor",
     "tests",
-    ".git",
-    "templates"
+    ".git"
   ],
   "extensions": [
     "php"
