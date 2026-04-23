@@ -18,7 +18,7 @@ final readonly class EachFile implements Runnable
      * Initializes with a file collection and an action to apply.
      *
      * @param Files $files File collection to iterate
-     * @param Closure(File): void $action
+     * @param Closure(File): void $action Side-effectful callback invoked once per file
      */
     public function __construct(private Files $files, private Closure $action) {}
 

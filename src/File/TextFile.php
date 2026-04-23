@@ -11,7 +11,13 @@ use Override;
  */
 final readonly class TextFile implements File
 {
-    /** Initializes with a file name, contents, and optional permission mode. */
+    /**
+     * Initializes with a file name, contents, and optional permission mode.
+     *
+     * @param string $name Relative file path used as the file's identity
+     * @param string $contents Raw text content of the file
+     * @param int $mode POSIX permission bits to apply when the file is written
+     */
     public function __construct(
         private string $name,
         private string $contents,

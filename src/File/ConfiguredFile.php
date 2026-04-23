@@ -20,7 +20,8 @@ final readonly class ConfiguredFile implements File
     /**
      * Wraps a file with a set of named action factories for placeholder resolution.
      *
-     * @param array<string, callable(string): Action> $actions
+     * @param File $origin File whose contents may contain DSL placeholders
+     * @param array<string, callable(string): Action> $actions Action factories keyed by DSL action name
      */
     public function __construct(private File $origin, private array $actions) {}
 

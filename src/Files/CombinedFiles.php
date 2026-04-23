@@ -14,7 +14,7 @@ final readonly class CombinedFiles implements Files
     /**
      * Initializes with multiple file sources to merge.
      *
-     * @param list<Files> $sources
+     * @param list<Files> $sources File collections concatenated in the order given
      */
     public function __construct(private array $sources) {}
 

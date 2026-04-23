@@ -11,7 +11,13 @@ use Override;
  */
 final readonly class ReplacedFile implements File
 {
-    /** Initializes with the original file and replacement pair. */
+    /**
+     * Initializes with the original file and replacement pair.
+     *
+     * @param File $origin File whose contents are subject to replacement
+     * @param string $search Literal substring to search for
+     * @param string $replace Literal substring to substitute for each match
+     */
     public function __construct(
         private File $origin,
         private string $search,

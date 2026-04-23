@@ -9,7 +9,11 @@ namespace Haspadar\Piqule\Output;
  */
 final readonly class Message
 {
-    /** Initializes with the message text. */
+    /**
+     * Initializes with the message text.
+     *
+     * @param string $body Raw message text
+     */
     public function __construct(private string $body) {}
 
     /** Returns the message text. */

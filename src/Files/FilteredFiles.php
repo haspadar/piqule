@@ -16,7 +16,8 @@ final readonly class FilteredFiles implements Files
     /**
      * Initializes with a file collection and a filtering predicate.
      *
-     * @param Closure(File): bool $predicate
+     * @param Files $origin Underlying file collection to filter
+     * @param Closure(File): bool $predicate Callback returning true for files to keep
      */
     public function __construct(private Files $origin, private Closure $predicate) {}
 

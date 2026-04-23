@@ -12,7 +12,7 @@ final readonly class Secrets
     /**
      * Initializes with a list of CI secrets.
      *
-     * @param list<Secret> $items
+     * @param list<Secret> $items CI secrets included in this collection
      */
     public function __construct(private array $items) {}
 
