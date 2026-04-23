@@ -24,6 +24,16 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
+    public function psalmProjectIgnoreIsEmptyByDefault(): void
+    {
+        self::assertThat(
+            new DefaultConfig(),
+            new HasConfigYamlKey('psalm.project.ignore', []),
+            'psalm.project.ignore must be empty so .git is never passed as a <directory> to psalm',
+        );
+    }
+
+    #[Test]
     public function overrideReplacesConfigValue(): void
     {
         $folder = (new TempFolder())->withFile(

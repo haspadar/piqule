@@ -6,8 +6,8 @@
 #     override:
 #         phpstan.level: 8
 #     append:
-#         php.exclude:
-#             - legacy
+#         infra.exclude:
+#             - dist
 
 defaults:
   php.src: ["src"]
