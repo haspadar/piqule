@@ -1,4 +1,5 @@
 override:
+  phpstan.parameter_number.max_parameters: 4
   phpmetrics.coupling.max_afferent: 18
   phpmetrics.coupling.max_efferent: 25
   php.versions: ["8.3", "8.4", "8.5"]
@@ -21,5 +22,5 @@ override:
   phpstan.afferent_coupling.excluded_classes: ['\Haspadar\Piqule\PiquleException']
 
 append:
-  exclude:
+  infra.exclude:
     - templates
