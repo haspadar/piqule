@@ -47,19 +47,19 @@ final readonly class YamlPathKeys
     }
 
     /**
-     * Resolves the effective exclude patterns after overrides and appends.
+     * Resolves the effective infrastructure exclude patterns after overrides and appends.
      *
      * @throws PiquleException
      * @return list<string>
      */
-    public function exclude(): array
+    public function infraExclude(): array
     {
-        $result = array_key_exists('exclude', $this->overrides) && is_array($this->overrides['exclude'])
-            ? $this->toStringList(array_values($this->overrides['exclude']), 'override.exclude')
-            : $this->toStringList($this->defaults->list('exclude'), 'exclude');
+        $result = array_key_exists('infra.exclude', $this->overrides) && is_array($this->overrides['infra.exclude'])
+            ? $this->toStringList(array_values($this->overrides['infra.exclude']), 'override.infra.exclude')
+            : $this->toStringList($this->defaults->list('infra.exclude'), 'infra.exclude');
 
-        if (array_key_exists('exclude', $this->appends) && is_array($this->appends['exclude'])) {
-            $extra = $this->toStringList(array_values($this->appends['exclude']), 'append.exclude');
+        if (array_key_exists('infra.exclude', $this->appends) && is_array($this->appends['infra.exclude'])) {
+            $extra = $this->toStringList(array_values($this->appends['infra.exclude']), 'append.infra.exclude');
             $result = array_values(array_unique(array_merge($result, $extra)));
         }
 

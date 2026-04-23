@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Config;
 
-use Haspadar\Piqule\Config\Dirs\GlobDirs;
 use Haspadar\Piqule\Config\Dirs\NegatedGlobDirs;
 use Haspadar\Piqule\Config\Dirs\ProjectDirs;
 use Haspadar\Piqule\Config\Dirs\TrailingGlobDirs;
@@ -29,15 +28,15 @@ final readonly class DefaultConfig implements Config
     private stdClass $cache;
 
     /**
-     * Initializes with source directories, exclusions, and config paths.
+     * Initializes with source directories, infra exclusions, and config paths.
      *
      * @param list<string> $source PHP source directories (empty falls back to YAML defaults)
-     * @param list<string> $exclude Directories to exclude from analysis
+     * @param list<string> $infra Directories skipped by infrastructure linters (empty falls back to YAML defaults)
      * @param ConfigPaths $paths File locations for composer.json and defaults YAML
      */
     public function __construct(
         private array $source = [],
-        private array $exclude = [],
+        private array $infra = [],
         private ConfigPaths $paths = new ConfigPaths(),
     ) {
         $this->cache = new stdClass();
@@ -76,6 +75,23 @@ final readonly class DefaultConfig implements Config
     }
 
     /**
+     * Resolves source and infra-exclude lists from constructor overrides and YAML base.
+     *
+     * @param array<string, mixed> $base Raw YAML defaults section
+     * @return array{list<string>, list<string>}
+     */
+    private function resolve(array $base): array
+    {
+        /** @var list<string> $source */
+        $source = $this->source !== [] ? $this->source : ($base['php.src'] ?? []);
+
+        /** @var list<string> $infra */
+        $infra = $this->infra !== [] ? $this->infra : ($base['infra.exclude'] ?? []);
+
+        return [$source, $infra];
+    }
+
+    /**
      * Parses YAML and computes all defaults with dynamic path derivations.
      *
      * @throws PiquleException
@@ -107,18 +123,13 @@ final readonly class DefaultConfig implements Config
         /** @var array<string, mixed> $base */
         $base = $yaml['defaults'];
 
-        /** @var list<string> $resolvedSource */
-        $resolvedSource = $this->source !== []
-            ? $this->source
-            : ($base['php.src'] ?? []);
-
-        /** @var list<string> $resolvedExclude */
-        $resolvedExclude = $this->exclude !== []
-            ? $this->exclude
-            : ($base['exclude'] ?? []);
+        [$resolvedSource, $resolvedInfra] = $this->resolve($base);
 
         /** @var array<string, scalar|list<scalar>> $defaults */
-        $defaults = array_merge($base, $this->dynamic($resolvedSource, $resolvedExclude));
+        $defaults = array_merge(
+            $base,
+            $this->dynamic($resolvedSource, $resolvedInfra),
+        );
         $this->cache->value = $defaults;
 
         return $defaults;
@@ -127,40 +138,36 @@ final readonly class DefaultConfig implements Config
     /**
      * Reads dynamic defaults derived from composer.json paths and directory lists.
      *
-     * @param list<string> $source
-     * @param list<string> $exclude
+     * @param list<string> $source Project source directories
+     * @param list<string> $infra Directories skipped by infrastructure linters
      * @return array<string, scalar|list<scalar>>
      */
-    private function dynamic(array $source, array $exclude): array
+    private function dynamic(array $source, array $infra): array
     {
         $projectIncludes = (new ProjectDirs($source))->toList();
 
         return [
             'php.src' => $source,
-            'exclude' => $exclude,
-            'hadolint.ignore' => $exclude,
+            'infra.exclude' => $infra,
+            'hadolint.ignore' => $infra,
             'jsonlint.patterns' => array_merge(
                 ['**/*.json', '**/*.json5', '**/*.jsonc'],
-                (new NegatedGlobDirs($exclude))->toList(),
+                (new NegatedGlobDirs($infra))->toList(),
             ),
-            'markdownlint.ignores' => (new TrailingGlobDirs($exclude))->toList(),
-            'php_cs_fixer.exclude' => $exclude,
-            'phpcs.excludes' => (new GlobDirs($exclude))->toList(),
+            'markdownlint.ignores' => (new TrailingGlobDirs($infra))->toList(),
             'phpcs.files' => $projectIncludes,
             'phpcs.root_namespace' => (new ComposerRootNamespace($this->paths->composerJson()))->toString(),
             'phpmd.paths' => $source,
             'phpmetrics.includes' => $projectIncludes,
-            'phpmetrics.excludes' => $exclude,
             'phpstan.paths' => $projectIncludes,
             'phpunit.source.include' => $projectIncludes,
             'psalm.project.directories' => $projectIncludes,
-            'psalm.project.ignore' => (new ProjectDirs($exclude))->toList(),
             'infection.source.directories' => $projectIncludes,
-            'shellcheck.ignore_dirs' => $exclude,
+            'shellcheck.ignore_dirs' => $infra,
             'sonar.sources' => $source,
-            'typos.exclude' => (new TrailingSlashDirs($exclude))->toList(),
+            'typos.exclude' => (new TrailingSlashDirs($infra))->toList(),
             'yamllint.ignore' => array_merge(
-                (new TrailingGlobDirs($exclude))->toList(),
+                (new TrailingGlobDirs($infra))->toList(),
                 ['.piqule/**/html/**', '.piqule/**/coverage-report/**'],
             ),
         ];
