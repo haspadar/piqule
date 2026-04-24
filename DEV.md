@@ -445,6 +445,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `phpcs.cli` | `true` | Enable PHP_CodeSniffer |
+| `phpcs.disabled_rules` | `[]` | Rule names rendered as `<rule ref="..."><severity>0</severity></rule>` to silence them (overrides rules inherited from referenced rulesets) |
 | `phpcs.excludes` | `["vendor/*", "tests/*", ".git/*"]` | Excluded patterns |
 | `phpcs.files` | `["../../src"]` | Files/directories to check |
 | `phpcs.root_namespace` | `""` | Root namespace for PSR-4 check |

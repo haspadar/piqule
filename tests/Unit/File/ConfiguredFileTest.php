@@ -410,6 +410,35 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function rendersDisabledPhpcsRulesAsSilencedEntries(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            [
+                'phpcs.disabled_rules' => [
+                    'SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly',
+                    'SlevomatCodingStandard.PHP.RequireExplicitAssertion',
+                ],
+            ],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'phpcs.xml',
+                    '<< config(phpcs.disabled_rules)|format_each(\'    <rule ref="%s"><severity>0</severity></rule>\')|join("\n") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents(
+                '    <rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly"><severity>0</severity></rule>' . "\n"
+                . '    <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"><severity>0</severity></rule>',
+            ),
+            'phpcs.disabled_rules template formula must render each rule as a silenced ruleset entry',
+        );
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(

@@ -61,6 +61,7 @@ defaults:
   php_cs_fixer.paths: ["../.."]
 
   phpcs.cli: true
+  phpcs.disabled_rules: []
   phpcs.excludes: ["vendor/*", "tests/*", ".git/*"]
   phpcs.files: ["../../src"]
   phpcs.root_namespace: ""

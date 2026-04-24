@@ -22,4 +22,5 @@
     <rule ref=".piqule/phpcs/slevomat-flow.xml"/>
     <rule ref=".piqule/phpcs/slevomat-style.xml"/>
 
+<< config(phpcs.disabled_rules)|format_each('    <rule ref="%s"><severity>0</severity></rule>')|join("\n") >>
 </ruleset>
