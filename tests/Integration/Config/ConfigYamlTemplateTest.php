@@ -185,4 +185,33 @@ final class ConfigYamlTemplateTest extends TestCase
             $folder->close();
         }
     }
+
+    #[Test]
+    public function phpcsDisabledRulesIsEmptyByDefault(): void
+    {
+        self::assertThat(
+            new DefaultConfig(),
+            new HasConfigYamlKey('phpcs.disabled_rules', []),
+            'phpcs.disabled_rules must be empty so no rule overrides are emitted by default',
+        );
+    }
+
+    #[Test]
+    public function appendPhpcsDisabledRulesAddsRuleNames(): void
+    {
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "append:\n    phpcs.disabled_rules:\n        - SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly\n",
+        );
+
+        try {
+            self::assertThat(
+                new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
+                new HasConfigYamlKey('phpcs.disabled_rules', ['SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly']),
+                'Append must add rule name to phpcs.disabled_rules',
+            );
+        } finally {
+            $folder->close();
+        }
+    }
 }
