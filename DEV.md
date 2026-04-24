@@ -436,6 +436,7 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 |-----|---------|-------------|
 | `php-cs-fixer.cli` | `true` | Enable PHP CS Fixer |
 | `php_cs_fixer.allow_unsupported` | `["true"]` | Allow unsupported PHP versions |
+| `php_cs_fixer.disabled_rules` | `[]` | Rule names appended as `false` at the end of `setRules()` to turn them off (overrides preset and built-in entries) |
 | `php_cs_fixer.exclude` | `["vendor", "tests", ".git"]` | Excluded directories |
 | `php_cs_fixer.paths` | `["../.."]` | Paths to fix |
 
