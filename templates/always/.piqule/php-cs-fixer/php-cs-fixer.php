@@ -106,6 +106,6 @@ return (new PhpCsFixer\Config())
         // PHP 8.4 compatibility: keep parentheses around `new` expressions
         // so tools based on pdepend (phpmd) can still parse the code
         'new_expression_parentheses' => ['use_parentheses' => true],
-<< config(php_cs_fixer.disabled_rules)|format_each("        '%s' => false,")|join("\n") >>
+<< config(php_cs_fixer.extend)|join("") >>
     ]))
     ->setUnsupportedPhpVersionAllowed(<< config(php_cs_fixer.allow_unsupported)|join("") >>);
