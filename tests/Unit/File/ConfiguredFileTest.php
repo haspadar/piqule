@@ -389,6 +389,27 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
+    public function rendersDisabledPhpCsFixerRulesAsFalseEntries(): void
+    {
+        $config = new OverrideConfig(
+            new DefaultConfig(),
+            ['php_cs_fixer.disabled_rules' => ['phpdoc_scalar', 'phpdoc_types']],
+        );
+
+        self::assertThat(
+            new ConfiguredFile(
+                new TextFile(
+                    'php-cs-fixer.php',
+                    '<< config(php_cs_fixer.disabled_rules)|format_each("        \'%s\' => false,")|join("\n") >>',
+                ),
+                $this->actions($config),
+            ),
+            new HasFileContents("        'phpdoc_scalar' => false,\n        'phpdoc_types' => false,"),
+            'disabled_rules template formula must render each rule as => false entry',
+        );
+    }
+
+    #[Test]
     public function preservesOriginMode(): void
     {
         $file = new ConfiguredFile(
