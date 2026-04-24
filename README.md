@@ -35,13 +35,7 @@ append:
         - lib
     exclude:
         - legacy
-    php_cs_fixer.disabled_rules:
-        - phpdoc_scalar
-    phpcs.disabled_rules:
-        - SlevomatCodingStandard.PHP.RequireExplicitAssertion
 ```
-
-`php_cs_fixer.disabled_rules` and `phpcs.disabled_rules` turn off individual rules — useful when a rule clashes with project code (for example, a class named `Scalar` being lowercased by `phpdoc_scalar`).
 
 Use `override` to replace individual keys:
 
@@ -51,6 +45,16 @@ override:
     php.versions: ["8.3", "8.4", "8.5"]
     ci.pr.max_lines_changed: 400
 ```
+
+Use `php_cs_fixer.extend` and `phpcs.extend` to inject native-syntax fragments at the end of the generated config. Useful when a built-in rule clashes with project code — for example, narrowing `phpdoc_types` instead of disabling it entirely:
+
+```yaml
+override:
+    php_cs_fixer.extend: "        'phpdoc_types' => ['exclude' => ['scalar']],"
+    phpcs.extend: "    <rule ref=\"Foo.Bar\"><severity>0</severity></rule>"
+```
+
+The value is passed through verbatim; piqule does not parse it. Use a YAML block scalar (`|` or `|-`) for multi-line fragments.
 
 Use `envs` to export environment variables in CI workflows. Each value is a shell command evaluated at runtime:
 

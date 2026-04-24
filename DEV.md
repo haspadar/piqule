@@ -436,8 +436,8 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 |-----|---------|-------------|
 | `php-cs-fixer.cli` | `true` | Enable PHP CS Fixer |
 | `php_cs_fixer.allow_unsupported` | `["true"]` | Allow unsupported PHP versions |
-| `php_cs_fixer.disabled_rules` | `[]` | Rule names appended as `false` at the end of `setRules()` to turn them off (overrides preset and built-in entries) |
 | `php_cs_fixer.exclude` | `["vendor", "tests", ".git"]` | Excluded directories |
+| `php_cs_fixer.extend` | `""` | Raw PHP fragment inserted at the end of the `setRules()` array (overrides preset and built-in entries) |
 | `php_cs_fixer.paths` | `["../.."]` | Paths to fix |
 
 ### phpcs
@@ -445,8 +445,8 @@ All keys below are declared in `templates/always/.piqule/config.yaml` with their
 | Key | Default | Description |
 |-----|---------|-------------|
 | `phpcs.cli` | `true` | Enable PHP_CodeSniffer |
-| `phpcs.disabled_rules` | `[]` | Rule names rendered as `<rule ref="..."><severity>0</severity></rule>` to silence them (overrides rules inherited from referenced rulesets) |
 | `phpcs.excludes` | `["vendor/*", "tests/*", ".git/*"]` | Excluded patterns |
+| `phpcs.extend` | `""` | Raw XML fragment inserted at the end of the generated `<ruleset>` (lets you silence or tune inherited sniffs) |
 | `phpcs.files` | `["../../src"]` | Files/directories to check |
 | `phpcs.root_namespace` | `""` | Root namespace for PSR-4 check |
 
