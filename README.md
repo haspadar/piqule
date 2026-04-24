@@ -35,7 +35,11 @@ append:
         - lib
     exclude:
         - legacy
+    php_cs_fixer.disabled_rules:
+        - phpdoc_scalar
 ```
+
+`php_cs_fixer.disabled_rules` turns off individual PHP CS Fixer rules — useful when a rule clashes with project code (for example, a class named `Scalar` being lowercased by `phpdoc_scalar`).
 
 Use `override` to replace individual keys:
 
