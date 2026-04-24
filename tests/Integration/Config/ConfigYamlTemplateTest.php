@@ -158,28 +158,28 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
-    public function phpCsFixerDisabledRulesIsEmptyByDefault(): void
+    public function phpCsFixerExtendIsEmptyByDefault(): void
     {
         self::assertThat(
             new DefaultConfig(),
-            new HasConfigYamlKey('php_cs_fixer.disabled_rules', []),
-            'php_cs_fixer.disabled_rules must be empty so no rule overrides are emitted by default',
+            new HasConfigYamlKey('php_cs_fixer.extend', ['']),
+            'php_cs_fixer.extend must be an empty string by default',
         );
     }
 
     #[Test]
-    public function appendPhpCsFixerDisabledRulesAddsRuleNames(): void
+    public function overridePhpCsFixerExtendStoresRawString(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
-            "append:\n    php_cs_fixer.disabled_rules:\n        - phpdoc_scalar\n",
+            "override:\n    php_cs_fixer.extend: \"'phpdoc_scalar' => false,\"\n",
         );
 
         try {
             self::assertThat(
                 new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
-                new HasConfigYamlKey('php_cs_fixer.disabled_rules', ['phpdoc_scalar']),
-                'Append must add "phpdoc_scalar" to php_cs_fixer.disabled_rules',
+                new HasConfigYamlKey('php_cs_fixer.extend', ["'phpdoc_scalar' => false,"]),
+                'Override must store the extend scalar verbatim',
             );
         } finally {
             $folder->close();
@@ -187,28 +187,28 @@ final class ConfigYamlTemplateTest extends TestCase
     }
 
     #[Test]
-    public function phpcsDisabledRulesIsEmptyByDefault(): void
+    public function phpcsExtendIsEmptyByDefault(): void
     {
         self::assertThat(
             new DefaultConfig(),
-            new HasConfigYamlKey('phpcs.disabled_rules', []),
-            'phpcs.disabled_rules must be empty so no rule overrides are emitted by default',
+            new HasConfigYamlKey('phpcs.extend', ['']),
+            'phpcs.extend must be an empty string by default',
         );
     }
 
     #[Test]
-    public function appendPhpcsDisabledRulesAddsRuleNames(): void
+    public function overridePhpcsExtendStoresRawString(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
-            "append:\n    phpcs.disabled_rules:\n        - SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly\n",
+            "override:\n    phpcs.extend: \"<rule ref='Foo.Bar'><severity>0</severity></rule>\"\n",
         );
 
         try {
             self::assertThat(
                 new YamlConfig($folder->path() . '/.piqule.yaml', new DefaultConfig()),
-                new HasConfigYamlKey('phpcs.disabled_rules', ['SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly']),
-                'Append must add rule name to phpcs.disabled_rules',
+                new HasConfigYamlKey('phpcs.extend', ["<rule ref='Foo.Bar'><severity>0</severity></rule>"]),
+                'Override must store the extend scalar verbatim',
             );
         } finally {
             $folder->close();

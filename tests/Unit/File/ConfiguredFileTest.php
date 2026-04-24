@@ -389,52 +389,44 @@ final class ConfiguredFileTest extends TestCase
     }
 
     #[Test]
-    public function rendersDisabledPhpCsFixerRulesAsFalseEntries(): void
+    public function rendersPhpCsFixerExtendAsRawString(): void
     {
         $config = new OverrideConfig(
             new DefaultConfig(),
-            ['php_cs_fixer.disabled_rules' => ['phpdoc_scalar', 'phpdoc_types']],
+            ['php_cs_fixer.extend' => "        'phpdoc_types' => ['exclude' => ['scalar']],"],
         );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'php-cs-fixer.php',
-                    '<< config(php_cs_fixer.disabled_rules)|format_each("        \'%s\' => false,")|join("\n") >>',
+                    '<< config(php_cs_fixer.extend)|join("") >>',
                 ),
                 $this->actions($config),
             ),
-            new HasFileContents("        'phpdoc_scalar' => false,\n        'phpdoc_types' => false,"),
-            'disabled_rules template formula must render each rule as => false entry',
+            new HasFileContents("        'phpdoc_types' => ['exclude' => ['scalar']],"),
+            'php_cs_fixer.extend must pass the raw PHP fragment through to the template',
         );
     }
 
     #[Test]
-    public function rendersDisabledPhpcsRulesAsSilencedEntries(): void
+    public function rendersPhpcsExtendAsRawString(): void
     {
         $config = new OverrideConfig(
             new DefaultConfig(),
-            [
-                'phpcs.disabled_rules' => [
-                    'SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly',
-                    'SlevomatCodingStandard.PHP.RequireExplicitAssertion',
-                ],
-            ],
+            ['phpcs.extend' => '    <rule ref="Foo.Bar"><severity>0</severity></rule>'],
         );
 
         self::assertThat(
             new ConfiguredFile(
                 new TextFile(
                     'phpcs.xml',
-                    '<< config(phpcs.disabled_rules)|format_each(\'    <rule ref="%s"><severity>0</severity></rule>\')|join("\n") >>',
+                    '<< config(phpcs.extend)|join("") >>',
                 ),
                 $this->actions($config),
             ),
-            new HasFileContents(
-                '    <rule ref="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly"><severity>0</severity></rule>' . "\n"
-                . '    <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"><severity>0</severity></rule>',
-            ),
-            'phpcs.disabled_rules template formula must render each rule as a silenced ruleset entry',
+            new HasFileContents('    <rule ref="Foo.Bar"><severity>0</severity></rule>'),
+            'phpcs.extend must pass the raw XML fragment through to the template',
         );
     }
 
