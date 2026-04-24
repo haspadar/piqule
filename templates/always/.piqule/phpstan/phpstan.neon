@@ -15,8 +15,6 @@ parameters:
     checkDynamicProperties: true
 
     exceptions:
-        check:
-            missingCheckedExceptionInThrows: true
         checkedExceptionClasses:
 << config(phpstan.checked_exceptions)|format_each("            - %s")|join("\n") >>
 
