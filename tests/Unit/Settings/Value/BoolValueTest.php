@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Haspadar\Piqule\Tests\Unit\Settings\Value;
+
+use Haspadar\Piqule\Settings\Value\BoolValue;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+final class BoolValueTest extends TestCase
+{
+    #[Test]
+    public function exposesBooleanPayload(): void
+    {
+        self::assertSame(
+            true,
+            (new BoolValue(true))->raw,
+            'BoolValue must expose its boolean payload through the raw property',
+        );
+    }
+}
