@@ -13,7 +13,8 @@ final class BoolValueTest extends TestCase
     #[Test]
     public function exposesBooleanPayload(): void
     {
-        self::assertTrue(
+        self::assertSame(
+            true,
             (new BoolValue(true))->raw,
             'BoolValue must expose its boolean payload through the raw property',
         );
