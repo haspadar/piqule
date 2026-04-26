@@ -18,6 +18,8 @@ interface Settings
 
     /**
      * Returns the configuration value bound to the given key.
+     *
+     * Throws when the key is not declared.
      */
     public function value(string $name): Value;
 }
