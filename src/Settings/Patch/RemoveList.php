@@ -42,24 +42,13 @@ final readonly class RemoveList implements Patch
             );
         }
 
+        $blocked = array_map('serialize', $this->items->children);
+
         $kept = array_filter(
             $base->children,
-            fn(Value $child): bool => !$this->matches($child),
+            static fn(Value $child): bool => !in_array(serialize($child), $blocked, true),
         );
 
         return new ListValue(array_values($kept));
-    }
-
-    private function matches(Value $child): bool
-    {
-        $signature = serialize($child);
-
-        foreach ($this->items->children as $item) {
-            if (serialize($item) === $signature) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
