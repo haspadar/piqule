@@ -52,6 +52,34 @@ final class RemoveTreeTest extends TestCase
     }
 
     #[Test]
+    public function dropsEveryListedKeyAtOnce(): void
+    {
+        $base = new TreeValue([
+            'kept' => new IntValue(1),
+            'first' => new BoolValue(true),
+            'second' => new BoolValue(false),
+        ]);
+
+        self::assertEquals(
+            new TreeValue(['kept' => new IntValue(1)]),
+            (new RemoveTree('phpstan.parameters', ['first', 'second']))->applied($base),
+            'RemoveTree must drop every key listed for removal in a single application',
+        );
+    }
+
+    #[Test]
+    public function returnsEmptyTreeWhenAllKeysRemoved(): void
+    {
+        $base = new TreeValue(['only' => new IntValue(1)]);
+
+        self::assertEquals(
+            new TreeValue([]),
+            (new RemoveTree('phpstan.parameters', ['only']))->applied($base),
+            'RemoveTree must return an empty tree when every base entry is removed',
+        );
+    }
+
+    #[Test]
     public function rejectsBaseValueThatIsNotATree(): void
     {
         $this->expectException(TypeError::class);
