@@ -72,4 +72,18 @@ final class PatchedSettingsTest extends TestCase
             'PatchedSettings must delegate has() to the base settings',
         );
     }
+
+    #[Test]
+    public function ignoresPatchKeyWhenCheckingHas(): void
+    {
+        $settings = new PatchedSettings(
+            new FakeSettings(['phpstan.level' => new IntValue(9)]),
+            new FakePatch('absent.key', new IntValue(7)),
+        );
+
+        self::assertFalse(
+            $settings->has('absent.key'),
+            'PatchedSettings must not report has() true for a key only declared by the patch',
+        );
+    }
 }
