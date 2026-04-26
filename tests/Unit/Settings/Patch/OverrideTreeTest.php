@@ -106,6 +106,7 @@ final class OverrideTreeTest extends TestCase
     public function rejectsBaseValueThatIsNotATree(): void
     {
         $this->expectException(TypeError::class);
+        $this->expectExceptionMessage('phpstan.parameters');
 
         (new OverrideTree('phpstan.parameters', new TreeValue([])))->applied(new IntValue(8));
     }
