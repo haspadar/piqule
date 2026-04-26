@@ -81,6 +81,19 @@ final class MergedTreeTest extends TestCase
     }
 
     #[Test]
+    public function replacesScalarBaseWithTreeOverride(): void
+    {
+        self::assertEquals(
+            new TreeValue(['tag' => new TreeValue(['name' => new StringValue('new')])]),
+            (new MergedTree(
+                new TreeValue(['tag' => new StringValue('old')]),
+                new TreeValue(['tag' => new TreeValue(['name' => new StringValue('new')])]),
+            ))->value(),
+            'MergedTree must replace a scalar base with the override tree at a shared key',
+        );
+    }
+
+    #[Test]
     public function recursesIntoNestedTreesAtSharedKeys(): void
     {
         $base = new TreeValue([
