@@ -6,6 +6,7 @@ namespace Haspadar\Piqule\Tests\Unit\Settings;
 
 use Haspadar\Piqule\Settings\PatchedSettings;
 use Haspadar\Piqule\Settings\Value\IntValue;
+use Haspadar\Piqule\Tests\Fake\Settings\EchoPatch;
 use Haspadar\Piqule\Tests\Fake\Settings\FakePatch;
 use Haspadar\Piqule\Tests\Fake\Settings\FakeSettings;
 use PHPUnit\Framework\Attributes\Test;
@@ -40,6 +41,21 @@ final class PatchedSettingsTest extends TestCase
             new IntValue(9),
             $settings->value('phpstan.level'),
             'PatchedSettings must return the base value for keys outside the patch scope',
+        );
+    }
+
+    #[Test]
+    public function passesBaseValueToPatch(): void
+    {
+        $settings = new PatchedSettings(
+            new FakeSettings(['phpstan.level' => new IntValue(9)]),
+            new EchoPatch('phpstan.level'),
+        );
+
+        self::assertEquals(
+            new IntValue(9),
+            $settings->value('phpstan.level'),
+            'PatchedSettings must pass the base value to the patch and return the patch result',
         );
     }
 
