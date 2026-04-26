@@ -8,7 +8,7 @@ use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Settings\Settings;
 use Haspadar\Piqule\Settings\Value\Value;
 
-final class FakeSettings implements Settings
+final readonly class FakeSettings implements Settings
 {
     /**
      * @param array<string, Value> $values
