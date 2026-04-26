@@ -71,6 +71,30 @@ final class RemoveListTest extends TestCase
     }
 
     #[Test]
+    public function returnsEmptyListWhenAllEntriesRemoved(): void
+    {
+        $base = new ListValue([new StringValue('a'), new StringValue('b')]);
+        $items = new ListValue([new StringValue('a'), new StringValue('b')]);
+
+        self::assertEquals(
+            new ListValue([]),
+            (new RemoveList('foo', $items))->applied($base),
+            'RemoveList must return an empty list when every base entry is removed',
+        );
+    }
+
+    #[Test]
+    public function returnsEmptyListWhenBaseIsEmpty(): void
+    {
+        self::assertEquals(
+            new ListValue([]),
+            (new RemoveList('foo', new ListValue([new StringValue('a')])))
+                ->applied(new ListValue([])),
+            'RemoveList must return an empty list when the base list itself is empty',
+        );
+    }
+
+    #[Test]
     public function rejectsBaseValueThatIsNotAList(): void
     {
         $this->expectException(TypeError::class);
