@@ -75,6 +75,42 @@ final class OverridePatchesTest extends TestCase
     }
 
     #[Test]
+    public function buildsOverrideScalarForBooleanValue(): void
+    {
+        $patches = (new OverridePatches(['phpstan.cli' => true]))->patches();
+
+        self::assertInstanceOf(
+            OverrideScalar::class,
+            $patches[0],
+            'OverridePatches must produce OverrideScalar for a boolean value',
+        );
+    }
+
+    #[Test]
+    public function buildsOverrideScalarForFloatValue(): void
+    {
+        $patches = (new OverridePatches(['threshold' => 0.5]))->patches();
+
+        self::assertInstanceOf(
+            OverrideScalar::class,
+            $patches[0],
+            'OverridePatches must produce OverrideScalar for a float value',
+        );
+    }
+
+    #[Test]
+    public function buildsOverrideScalarForStringValue(): void
+    {
+        $patches = (new OverridePatches(['phpstan.memory' => '1G']))->patches();
+
+        self::assertInstanceOf(
+            OverrideScalar::class,
+            $patches[0],
+            'OverridePatches must produce OverrideScalar for a string value',
+        );
+    }
+
+    #[Test]
     public function rejectsNullPayloadAsConfigError(): void
     {
         $this->expectException(PiquleException::class);
