@@ -46,4 +46,14 @@ final class NeonTreeTest extends TestCase
             'NeonTree must indent nested trees one level deeper than the parent',
         );
     }
+
+    #[Test]
+    public function rendersEmptyNestedTreeAsInlineMappingAfterKey(): void
+    {
+        self::assertSame(
+            "\n    parameters: {}",
+            (new NeonTree(new TreeValue(['parameters' => new TreeValue([])])))->rendered(),
+            'NeonTree must render an empty nested tree as "key: {}" with a space before the inline mapping',
+        );
+    }
 }

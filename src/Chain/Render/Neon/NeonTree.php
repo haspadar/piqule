@@ -58,7 +58,9 @@ final readonly class NeonTree implements Rendered
     private function lineFor(Value $child): string
     {
         if ($child instanceof TreeValue) {
-            return (new self($child, $this->depth + 1))->rendered();
+            return $child->entries === []
+                ? ' {}'
+                : (new self($child, $this->depth + 1))->rendered();
         }
 
         return sprintf(' %s', (new NeonOf($child))->renderer()->rendered());
