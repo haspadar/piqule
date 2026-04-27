@@ -13,6 +13,11 @@ use TypeError;
 /**
  * Translates the `remove` section of `.piqule.yaml` into Patch instances.
  *
+ * Yaml input always produces RemoveList. RemoveTree (drop named keys from a
+ * tree) is constructed programmatically because the parser cannot tell a
+ * list of items from a list of key names without knowing the configured
+ * key's default type.
+ *
  * Example:
  *
  *     (new RemovePatches([
