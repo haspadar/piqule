@@ -27,6 +27,10 @@ final readonly class NeonFloat implements Rendered
     #[Override]
     public function rendered(): string
     {
-        return (string) $this->value->raw;
+        $rendered = (string) $this->value->raw;
+
+        return str_contains($rendered, '.')
+            ? $rendered
+            : sprintf('%s.0', $rendered);
     }
 }

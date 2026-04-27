@@ -20,4 +20,14 @@ final class NeonFloatTest extends TestCase
             'NeonFloat must render the float payload as a bare neon literal',
         );
     }
+
+    #[Test]
+    public function preservesDecimalPointForWholeNumberFloats(): void
+    {
+        self::assertSame(
+            '1.0',
+            (new NeonFloat(new FloatValue(1.0)))->rendered(),
+            'NeonFloat must keep the decimal point so a whole-number float stays distinguishable from an integer',
+        );
+    }
 }
