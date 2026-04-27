@@ -44,10 +44,17 @@ final readonly class NeonTree implements Rendered
         $lines = [];
 
         foreach ($this->value->entries as $key => $child) {
-            $lines[] = sprintf('%s%s:%s', $prefix, $key, $this->lineFor($child));
+            $lines[] = sprintf('%s%s:%s', $prefix, $this->keyLiteral($key), $this->lineFor($child));
         }
 
         return sprintf("\n%s", implode("\n", $lines));
+    }
+
+    private function keyLiteral(string $key): string
+    {
+        return preg_match('/\A[A-Za-z_][A-Za-z0-9_-]*\z/', $key) === 1
+            ? $key
+            : sprintf('"%s"', addcslashes($key, '"\\'));
     }
 
     /**

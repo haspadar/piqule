@@ -56,4 +56,14 @@ final class NeonTreeTest extends TestCase
             'NeonTree must render an empty nested tree as "key: {}" with a space before the inline mapping',
         );
     }
+
+    #[Test]
+    public function quotesKeysThatAreNotBarewords(): void
+    {
+        self::assertSame(
+            "\n    \"first key\": 1",
+            (new NeonTree(new TreeValue(['first key' => new IntValue(1)])))->rendered(),
+            'NeonTree must wrap keys with characters outside the bareword alphabet in double quotes',
+        );
+    }
 }
