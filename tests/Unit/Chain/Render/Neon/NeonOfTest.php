@@ -17,8 +17,10 @@ use Haspadar\Piqule\Settings\Value\IntValue;
 use Haspadar\Piqule\Settings\Value\ListValue;
 use Haspadar\Piqule\Settings\Value\StringValue;
 use Haspadar\Piqule\Settings\Value\TreeValue;
+use Haspadar\Piqule\Settings\Value\Value;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 final class NeonOfTest extends TestCase
 {
@@ -80,5 +82,16 @@ final class NeonOfTest extends TestCase
             (new NeonOf(new TreeValue([])))->renderer(),
             'NeonOf must pair TreeValue with the NeonTree renderer',
         );
+    }
+
+    #[Test]
+    public function rejectsValueSubtypeWithoutMatchingRenderer(): void
+    {
+        $this->expectException(TypeError::class);
+
+        $unknown = new class () implements Value {
+        };
+
+        (new NeonOf($unknown))->renderer();
     }
 }
