@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Haspadar\Piqule\Tests\Unit\Settings\Patch;
+
+use Haspadar\Piqule\PiquleException;
+use Haspadar\Piqule\Settings\Patch\RemoveList;
+use Haspadar\Piqule\Settings\Patch\RemovePatches;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+final class RemovePatchesTest extends TestCase
+{
+    #[Test]
+    public function returnsEmptyListForEmptySection(): void
+    {
+        self::assertSame(
+            [],
+            (new RemovePatches([]))->patches(),
+            'RemovePatches must return no patches when the remove section is empty',
+        );
+    }
+
+    #[Test]
+    public function buildsRemoveListForListValue(): void
+    {
+        $patches = (new RemovePatches(['phpstan.checked_exceptions' => ['\\Throwable']]))->patches();
+
+        self::assertInstanceOf(
+            RemoveList::class,
+            $patches[0],
+            'RemovePatches must produce RemoveList for a yaml list of items to drop',
+        );
+    }
+
+    #[Test]
+    public function preservesTargetKeyOnTheBuiltPatch(): void
+    {
+        $patches = (new RemovePatches(['phpstan.checked_exceptions' => ['\\Throwable']]))->patches();
+
+        self::assertSame(
+            'phpstan.checked_exceptions',
+            $patches[0]->key(),
+            'RemovePatches must put the yaml key onto the produced patch',
+        );
+    }
+
+    #[Test]
+    public function rejectsScalarPayloadAsConfigError(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new RemovePatches(['phpstan.level' => 8]))->patches();
+    }
+
+    #[Test]
+    public function rejectsMappingPayloadAsConfigError(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new RemovePatches(['phpstan.parameters' => ['nested' => true]]))->patches();
+    }
+}
