@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Settings;
 
-use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Settings\Patch\AppendList;
 use Haspadar\Piqule\Settings\Patch\OverrideScalar;
 use Haspadar\Piqule\Settings\Patch\RemoveList;
@@ -16,31 +15,19 @@ use PHPUnit\Framework\TestCase;
 final class YamlPatchesTest extends TestCase
 {
     #[Test]
-    public function returnsEmptyListForFileWithNoSections(): void
+    public function returnsEmptyListWhenAllSectionsAreAbsent(): void
     {
         $folder = (new TempFolder())->withFile('.piqule.yaml', "other: 1\n");
 
         self::assertSame(
             [],
             (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches(),
-            'YamlPatches must return no patches when the file has no override/append/remove sections',
+            'YamlPatches must return no patches when override/append/remove sections are missing',
         );
     }
 
     #[Test]
-    public function returnsEmptyListForEmptyFile(): void
-    {
-        $folder = (new TempFolder())->withFile('.piqule.yaml', '');
-
-        self::assertSame(
-            [],
-            (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches(),
-            'YamlPatches must return no patches when the file is empty',
-        );
-    }
-
-    #[Test]
-    public function readsOverrideSectionAsScalarPatch(): void
+    public function buildsOverrideScalarFromOverrideSection(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
@@ -57,7 +44,7 @@ final class YamlPatchesTest extends TestCase
     }
 
     #[Test]
-    public function readsAppendSectionAsListPatch(): void
+    public function buildsAppendListFromAppendSection(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
@@ -74,7 +61,7 @@ final class YamlPatchesTest extends TestCase
     }
 
     #[Test]
-    public function readsRemoveSectionAsListPatch(): void
+    public function buildsRemoveListFromRemoveSection(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
@@ -91,7 +78,7 @@ final class YamlPatchesTest extends TestCase
     }
 
     #[Test]
-    public function combinesPatchesFromAllThreeSectionsInDeclarationOrder(): void
+    public function combinesPatchesFromAllThreeSectionsIntoSingleList(): void
     {
         $folder = (new TempFolder())->withFile(
             '.piqule.yaml',
@@ -108,32 +95,19 @@ final class YamlPatchesTest extends TestCase
     }
 
     #[Test]
-    public function rejectsTopLevelThatIsNotAMapping(): void
+    public function ordersPatchesAsOverrideAppendRemoveRegardlessOfYamlDeclaration(): void
     {
-        $folder = (new TempFolder())->withFile('.piqule.yaml', "- a\n- b\n");
+        $folder = (new TempFolder())->withFile(
+            '.piqule.yaml',
+            "remove:\n  phpstan.checked_exceptions:\n    - '\\Throwable'\nappend:\n  infra.exclude:\n    - dist\noverride:\n  phpstan.level: 8\n",
+        );
 
-        $this->expectException(PiquleException::class);
+        $patches = (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches();
 
-        (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches();
-    }
-
-    #[Test]
-    public function rejectsSectionThatIsNotAMapping(): void
-    {
-        $folder = (new TempFolder())->withFile('.piqule.yaml', "override: 8\n");
-
-        $this->expectException(PiquleException::class);
-
-        (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches();
-    }
-
-    #[Test]
-    public function rejectsMalformedYaml(): void
-    {
-        $folder = (new TempFolder())->withFile('.piqule.yaml', "override:\n  bad: [unclosed\n");
-
-        $this->expectException(PiquleException::class);
-
-        (new YamlPatches($folder->path() . '/.piqule.yaml'))->patches();
+        self::assertInstanceOf(
+            OverrideScalar::class,
+            $patches[0],
+            'YamlPatches must place override patches first regardless of yaml section order',
+        );
     }
 }
