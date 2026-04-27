@@ -7,6 +7,7 @@ namespace Haspadar\Piqule\Chain\Render\Neon;
 use Haspadar\Piqule\Chain\Rendered;
 use Haspadar\Piqule\Settings\Value\FloatValue;
 use Override;
+use UnexpectedValueException;
 
 /**
  * Renders a FloatValue as a neon floating-point literal.
@@ -27,6 +28,12 @@ final readonly class NeonFloat implements Rendered
     #[Override]
     public function rendered(): string
     {
+        if (!is_finite($this->value->raw)) {
+            throw new UnexpectedValueException(
+                sprintf('NeonFloat cannot render non-finite payload: %s', (string) $this->value->raw),
+            );
+        }
+
         $rendered = (string) $this->value->raw;
 
         return str_contains($rendered, '.')

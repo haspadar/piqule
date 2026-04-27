@@ -8,6 +8,7 @@ use Haspadar\Piqule\Chain\Render\Neon\NeonFloat;
 use Haspadar\Piqule\Settings\Value\FloatValue;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 final class NeonFloatTest extends TestCase
 {
@@ -29,5 +30,21 @@ final class NeonFloatTest extends TestCase
             (new NeonFloat(new FloatValue(1.0)))->rendered(),
             'NeonFloat must keep the decimal point so a whole-number float stays distinguishable from an integer',
         );
+    }
+
+    #[Test]
+    public function rejectsInfinityPayload(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new NeonFloat(new FloatValue(INF)))->rendered();
+    }
+
+    #[Test]
+    public function rejectsNanPayload(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        (new NeonFloat(new FloatValue(NAN)))->rendered();
     }
 }
