@@ -62,6 +62,20 @@ final class AppendPatchesTest extends TestCase
     }
 
     #[Test]
+    public function preservesTargetKeyOnTreePatch(): void
+    {
+        $patches = (new AppendPatches([
+            'phpstan.parameters' => ['ignoreErrors' => ['#new#']],
+        ]))->patches();
+
+        self::assertSame(
+            'phpstan.parameters',
+            $patches[0]->key(),
+            'AppendPatches must put the yaml key onto the produced tree patch',
+        );
+    }
+
+    #[Test]
     public function rejectsScalarPayloadAsConfigError(): void
     {
         $this->expectException(PiquleException::class);
