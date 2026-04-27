@@ -59,6 +59,12 @@ final readonly class YamlDocument
      */
     private function mapping(): array
     {
+        if (!is_file($this->path) || !is_readable($this->path)) {
+            throw new PiquleException(
+                sprintf('Yaml file "%s" is missing or not readable', $this->path),
+            );
+        }
+
         try {
             /** @var mixed $parsed */
             $parsed = Yaml::parseFile($this->path);
