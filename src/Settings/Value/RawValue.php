@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Settings\Value;
 
+use Haspadar\Piqule\PiquleException;
 use TypeError;
 
 /**
@@ -27,11 +28,15 @@ final readonly class RawValue
     /**
      * Returns the Value implementation matching the payload's runtime type.
      *
+     * @throws PiquleException
      * @throws TypeError
      */
     public function value(): Value
     {
         return match (true) {
+            $this->raw === null => throw new PiquleException(
+                'Null config values are not supported; declare an explicit default',
+            ),
             is_bool($this->raw) => new BoolValue($this->raw),
             is_int($this->raw) => new IntValue($this->raw),
             is_float($this->raw) => new FloatValue($this->raw),
@@ -47,6 +52,7 @@ final readonly class RawValue
      * Wraps an array payload as a ListValue or TreeValue depending on its shape.
      *
      * @param array<int|string, mixed> $raw
+     * @throws PiquleException
      * @throws TypeError
      */
     private function fromArray(array $raw): Value

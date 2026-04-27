@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Haspadar\Piqule\Tests\Unit\Settings\Value;
 
+use Haspadar\Piqule\PiquleException;
 use Haspadar\Piqule\Settings\Value\BoolValue;
 use Haspadar\Piqule\Settings\Value\FloatValue;
 use Haspadar\Piqule\Settings\Value\IntValue;
@@ -106,5 +107,13 @@ final class RawValueTest extends TestCase
         $this->expectException(TypeError::class);
 
         (new RawValue(new stdClass()))->value();
+    }
+
+    #[Test]
+    public function rejectsNullPayloadAsConfigError(): void
+    {
+        $this->expectException(PiquleException::class);
+
+        (new RawValue(null))->value();
     }
 }
