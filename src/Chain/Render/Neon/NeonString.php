@@ -27,6 +27,11 @@ final readonly class NeonString implements Rendered
     #[Override]
     public function rendered(): string
     {
-        return sprintf('"%s"', addcslashes($this->value->raw, '"\\'));
+        $escaped = strtr(
+            addcslashes($this->value->raw, '"\\'),
+            ["\n" => '\\n', "\r" => '\\r', "\t" => '\\t'],
+        );
+
+        return sprintf('"%s"', $escaped);
     }
 }

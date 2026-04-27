@@ -40,4 +40,24 @@ final class NeonStringTest extends TestCase
             'NeonString must backslash-escape an embedded backslash',
         );
     }
+
+    #[Test]
+    public function escapesEmbeddedNewline(): void
+    {
+        self::assertSame(
+            '"a\\nb"',
+            (new NeonString(new StringValue("a\nb")))->rendered(),
+            'NeonString must escape newline so the literal stays on a single line of valid neon',
+        );
+    }
+
+    #[Test]
+    public function escapesEmbeddedTab(): void
+    {
+        self::assertSame(
+            '"a\\tb"',
+            (new NeonString(new StringValue("a\tb")))->rendered(),
+            'NeonString must escape tab so the literal stays well-formed neon',
+        );
+    }
 }
