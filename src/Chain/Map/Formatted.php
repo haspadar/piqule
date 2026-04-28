@@ -11,9 +11,10 @@ use Override;
 /**
  * Wraps an Op's rendered output into a sprintf template.
  *
- * The template is fed straight to PHP's sprintf, so it must contain exactly
- * one %s placeholder. Templates with no %s, several %s, or trailing % will
- * trigger ValueError or ArgumentCountError at render time.
+ * The template is fed straight to PHP's sprintf and may carry zero or one %s
+ * placeholder. A template without %s is returned unchanged, with one %s the
+ * origin's rendered output is inserted. Multiple %s or a trailing % is a
+ * misuse: sprintf raises ArgumentCountError or ValueError at render time.
  *
  * Example:
  *
@@ -26,7 +27,7 @@ final readonly class Formatted implements Mapped
      * Initializes with the source op and a sprintf template.
      *
      * @param Op $origin Source op whose rendered output is substituted into the template
-     * @param string $template Sprintf template with exactly one %s placeholder
+     * @param string $template Sprintf template with zero or one %s placeholder
      */
     public function __construct(private Op $origin, private string $template) {}
 
