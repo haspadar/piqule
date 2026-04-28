@@ -32,6 +32,26 @@ final class EachFormattedTest extends TestCase
     }
 
     #[Test]
+    public function preservesPartOrderAndCountWhenWrapping(): void
+    {
+        self::assertSame(
+            ['- src', '- tests', '- docs'],
+            array_map(
+                fn (object $part): string => $part->rendered(),
+                (new EachFormatted(
+                    new ListText(new ListValue([
+                        new StringValue('src'),
+                        new StringValue('tests'),
+                        new StringValue('docs'),
+                    ])),
+                    '- %s',
+                ))->parts(),
+            ),
+            'EachFormatted must keep the order and count of source parts intact',
+        );
+    }
+
+    #[Test]
     public function appliesTemplateToEachRenderedPart(): void
     {
         $parts = (new EachFormatted(

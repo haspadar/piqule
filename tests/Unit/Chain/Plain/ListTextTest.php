@@ -35,6 +35,23 @@ final class ListTextTest extends TestCase
     }
 
     #[Test]
+    public function preservesChildOrderInRenderedParts(): void
+    {
+        self::assertSame(
+            ['src', 'tests', 'docs'],
+            array_map(
+                fn (object $part): string => $part->rendered(),
+                (new ListText(new ListValue([
+                    new StringValue('src'),
+                    new StringValue('tests'),
+                    new StringValue('docs'),
+                ])))->parts(),
+            ),
+            'ListText must preserve the order of children when exposing parts',
+        );
+    }
+
+    #[Test]
     public function dispatchesEachScalarChildToItsMatchingPlainOp(): void
     {
         $parts = (new ListText(new ListValue([
