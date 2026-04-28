@@ -27,9 +27,9 @@ final class FormattedTest extends TestCase
     public function preservesPercentSignsInsideRenderedOutput(): void
     {
         self::assertSame(
-            'coverage: 90% complete',
-            (new Formatted(new NeonBool(new BoolValue(true)), 'coverage: 90%% complete'))->rendered(),
-            'Formatted must keep literal percent signs intact via sprintf escape semantics',
+            'coverage: 90% true',
+            (new Formatted(new NeonBool(new BoolValue(true)), 'coverage: 90%% %s'))->rendered(),
+            'Formatted must escape literal percents and still substitute the source op output',
         );
     }
 
